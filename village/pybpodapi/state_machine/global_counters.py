@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class GlobalCounters(object):
+class GlobalCounters:
     def __init__(self, max_states, n_global_counters):
         self.matrix = [[] for i in range(max_states)]
 

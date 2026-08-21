@@ -2,7 +2,7 @@ from village.pybpodapi.bpod.bpod_base import BpodErrorException
 from village.pybpodapi.com.arcom import ArduinoTypes
 
 
-class BpodModule(object):
+class BpodModule:
     def __init__(
         self,
         connected=False,

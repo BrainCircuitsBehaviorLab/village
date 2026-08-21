@@ -1,7 +1,8 @@
 import json
 import traceback
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Tuple
+from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
@@ -476,7 +477,7 @@ class TaskBase:
         self.session_df = pd.concat([self.session_df, self.row_df], ignore_index=True)
         self.trial_data = {}
 
-    def disconnect_and_save(self, run_mode: str) -> Tuple[Save, float, int, int, str]:
+    def disconnect_and_save(self, run_mode: str) -> tuple[Save, float, int, int, str]:
         """Stops the task, disconnects devices, and saves session data.
 
         Args:
@@ -576,7 +577,7 @@ class TaskBase:
 
         return json_string
 
-    def save_csv(self, run_mode: str) -> Tuple[float, int, int, bool]:
+    def save_csv(self, run_mode: str) -> tuple[float, int, int, bool]:
         """Saves the session data to CSV files.
 
         Processes raw data, saves raw and clean session files, and updates the

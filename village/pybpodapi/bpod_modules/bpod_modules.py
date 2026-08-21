@@ -3,7 +3,7 @@ import importlib
 import time
 
 
-class BpodModules(object):
+class BpodModules:
 
     LOADED_MODULES = []
     BPOD_API_MODULES = []

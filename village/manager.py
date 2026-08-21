@@ -1,8 +1,9 @@
 import os
 import traceback
+from collections.abc import Callable
 from pathlib import Path
 from threading import Thread
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
@@ -15,6 +16,7 @@ from village.classes.enums import (
     Active,
     ControllerEnum,
     Cycle,
+    CycleDay,
     DataTable,
     Info,
     OldVersion,
@@ -31,12 +33,14 @@ from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
+from village.custom_classes.custom_area_base import CustomAreaBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.gpio_base import GpioBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
 from village.custom_classes.task_base import TaskBase
+from village.custom_classes.telegram_command_base import TelegramCommandBase
 from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.devices.chip import (
@@ -103,6 +107,8 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
+        self.custom_areas: list[CustomAreaBase] = []
+        self.custom_telegram_commands: list[TelegramCommandBase] = []
         self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
         self.gpio: GpioBase = GpioBase()
         self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
@@ -162,6 +168,7 @@ class Manager:
             hours=int(settings.get("NO_SESSION_HOURS") or 6)
         )
         self.hour_change_detector = time_utils.HourChangeDetector()
+        self.mice_alarm_sent_for: str = ""
         self.detection_change = True
         self.error_in_manual_task = False
         self.rfid_changed = False
@@ -594,20 +601,25 @@ class Manager:
             ]
         )
 
-    def corridor_visible_on(self) -> bool:
-        """Whether the corridor visible light is (or, in AUTO, will be) on."""
-        if self.visible_corridor_cycle == Cycle.ON:
+    @property
+    def camera_corridor_day(self) -> bool:
+        mode = settings.get("THRESHOLDS_CORRIDOR")
+        if mode == CycleDay.DAY:
             return True
-        if self.visible_corridor_cycle == Cycle.OFF:
+        if mode == CycleDay.NIGHT:
             return False
-        return self.cycle_change_detector.cycle_text == "DAY"
+        return self.cycle_change_detector.is_day
 
     def check_corridor_lights(self) -> None:
         """Checks the state of the corridor lights and sets them based
         on the current cycle."""
         cycle = self.cycle_change_detector.cycle_text
 
-        if self.corridor_visible_on():
+        if self.visible_corridor_cycle == Cycle.ON:
+            visible_light_corridor.on()
+        if self.visible_corridor_cycle == Cycle.OFF:
+            visible_light_corridor.off()
+        elif cycle == "DAY":
             visible_light_corridor.on()
         else:
             visible_light_corridor.off()
@@ -808,6 +820,51 @@ class Manager:
             low_water_subjects,
             sync,
         )
+
+    def mice_checked(self, who: str) -> None:
+        """Confirms that the mice have been checked, until the reset time.
+
+        Args:
+            who (str): Who checked them, shown in the GUI and in the log.
+        """
+        settings.set("MICE_CHECKED_AT", time_utils.now_string())
+        settings.set("MICE_CHECKED_BY", who)
+        settings.sync()  # save in case of reboot
+        log.info("Mice checked by " + who)
+
+    def mice_check_done(self) -> bool:
+        """Whether the mice have been checked since the last reset time.
+
+        Returns:
+            bool: True if someone confirmed the check.
+        """
+        reset = time_utils.time_from_setting_string(
+            settings.get("CHECK_MICE_RESET_TIME")
+        )
+        try:
+            checked = time_utils.date_from_string(settings.get("MICE_CHECKED_AT"))
+        except (ValueError, TypeError):
+            return False
+        return checked >= time_utils.previous_init_time(reset)
+
+    def check_mice_deadline(self) -> None:
+        """Alarms once a day if nobody has confirmed the check of the mice.
+
+        Called from the manager background checks, it only triggers after
+        CHECK_MICE_TIME, and only once for each day.
+        """
+        reset = time_utils.time_from_setting_string(
+            settings.get("CHECK_MICE_RESET_TIME")
+        )
+        expired = time_utils.previous_init_time(reset)
+        sent_for = time_utils.string_from_date(expired)
+        if self.mice_alarm_sent_for == sent_for or self.mice_check_done():
+            return  # already sent or already done
+        deadline = time_utils.time_from_setting_string(settings.get("CHECK_MICE_TIME"))
+        if time_utils.previous_init_time(deadline) < expired:
+            return  # the deadline not reached yet today
+        self.mice_alarm_sent_for = sent_for
+        log.alarm("Nobody has checked the mice today", repeat=True)
 
     def send_heartbeat(self) -> None:
         """Sends a heartbeat signal to the healthcheck URL if configured."""

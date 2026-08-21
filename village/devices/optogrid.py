@@ -34,7 +34,6 @@ import os
 import struct
 import threading
 from dataclasses import asdict, dataclass
-from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -211,7 +210,7 @@ class OptoGrid:
     logging. BLE work happens on a private background thread; public methods
     block the calling thread for the BLE round-trip but never block the loop."""
 
-    _active: Optional["OptoGrid"] = None
+    _active: OptoGrid | None = None
 
     def __init__(
         self,
@@ -221,7 +220,7 @@ class OptoGrid:
         command_timeout: float = 5.0,
         scan_timeout: float = 4.0,
         device_log: bool = False,
-        imu_config: Optional[IMUConfig] = None,
+        imu_config: IMUConfig | None = None,
     ):
         self.device_name = device_name
         self.command_timeout = command_timeout
@@ -232,10 +231,10 @@ class OptoGrid:
         self.sessions_directory = sessions_directory
         self.filename = filename
 
-        self._client: Optional[BleakClient] = None
-        self._selected: Optional[BLEDevice] = None
-        self._loop: Optional[asyncio.AbstractEventLoop] = None
-        self._thread: Optional[threading.Thread] = None
+        self._client: BleakClient | None = None
+        self._selected: BLEDevice | None = None
+        self._loop: asyncio.AbstractEventLoop | None = None
+        self._thread: threading.Thread | None = None
 
         self._connecting: bool = False
 
@@ -246,7 +245,7 @@ class OptoGrid:
         self._pending_sync: list = []
         self._parquet_writer = None
         self._parquet_schema = None
-        self._parquet_file: Optional[str] = None
+        self._parquet_file: str | None = None
         self._imu_columns: list[str] = []
 
         # orientation / EKF state
@@ -308,7 +307,7 @@ class OptoGrid:
             self._thread = None
             print("OptoGrid BLE thread stopped")
 
-    def _submit(self, coro, timeout: Optional[float] = None):
+    def _submit(self, coro, timeout: float | None = None):
         if self._loop is None:
             raise RuntimeError("OptoGrid not started. Call start() first.")
         fut = asyncio.run_coroutine_threadsafe(coro, self._loop)
@@ -325,7 +324,7 @@ class OptoGrid:
         return self._connecting
 
     @property
-    def address(self) -> Optional[str]:
+    def address(self) -> str | None:
         return getattr(self._selected, "address", None)
 
     def status(self) -> str:
@@ -336,7 +335,7 @@ class OptoGrid:
         address = getattr(self._selected, "address", "Unknown Address")
         return f"Connected to {name} ({address})"
 
-    def connect(self, identifier: Optional[str] = None, timeout: float = 10.0) -> bool:
+    def connect(self, identifier: str | None = None, timeout: float = 10.0) -> bool:
         target = identifier or self.device_name
         try:
             if self._submit(self._connect(target), timeout=timeout):
@@ -424,7 +423,7 @@ class OptoGrid:
 
     def connect_async(
         self,
-        identifier: Optional[str] = None,
+        identifier: str | None = None,
         timeout: float = 10.0,
         imu_logging: bool = False,
     ) -> None:
@@ -440,7 +439,7 @@ class OptoGrid:
         ).start()
 
     def _run_connect_async(
-        self, identifier: Optional[str], timeout: float, imu_logging: bool
+        self, identifier: str | None, timeout: float, imu_logging: bool
     ) -> None:
         self._connecting = True
         try:
@@ -622,7 +621,7 @@ class OptoGrid:
 
     # ---- IMU: enable / logging ------------------------------------------- #
 
-    def start_imu_logging(self) -> Optional[str]:
+    def start_imu_logging(self) -> str | None:
         """Enable the IMU on the device and start logging to a Parquet file.
         Returns the file path, or None on failure."""
         if not self.is_connected:
@@ -637,7 +636,7 @@ class OptoGrid:
             print(f"Error: Failed to start IMU logging: {e}")
             return None
 
-    async def _start_imu(self) -> Optional[str]:
+    async def _start_imu(self) -> str | None:
         assert self._client is not None
 
         # (re)build EKF in case orientation flag changed since connect
@@ -761,7 +760,7 @@ class OptoGrid:
                 print(f"Error closing parquet writer: {e}")
             self._parquet_writer = None
 
-    def stop_imu_logging(self) -> Optional[str]:
+    def stop_imu_logging(self) -> str | None:
         """Disable the IMU on the device and close the Parquet file. Returns the
         file path that was written."""
         if not self._imu_active:
@@ -819,7 +818,7 @@ class OptoGrid:
             print(f"Error: Failed to set {label}: {e}")
             return False
 
-    def read_battery_mv(self) -> Optional[int]:
+    def read_battery_mv(self) -> int | None:
         if not self.is_connected:
             return None
         try:
@@ -828,7 +827,7 @@ class OptoGrid:
             print(f"Error: Battery read failed: {e}")
             return None
 
-    def read_last_stim_ms(self) -> Optional[int]:
+    def read_last_stim_ms(self) -> int | None:
         if not self.is_connected:
             return None
         try:
@@ -837,7 +836,7 @@ class OptoGrid:
             print(f"Error: Last-stim read failed: {e}")
             return None
 
-    def read_uled_check(self) -> Optional[int]:
+    def read_uled_check(self) -> int | None:
         if not self.is_connected:
             return None
         try:
@@ -846,7 +845,7 @@ class OptoGrid:
             print(f"Error: uLED check read failed: {e}")
             return None
 
-    def read_device_id(self) -> Optional[str]:
+    def read_device_id(self) -> str | None:
         if not self.is_connected:
             return None
         try:
@@ -855,7 +854,7 @@ class OptoGrid:
             print(f"Error: Device-id read failed: {e}")
             return None
 
-    def read_params(self) -> Optional[dict[str, str]]:
+    def read_params(self) -> dict[str, str] | None:
         """Read all opto parameters and device info from the connected device."""
         if not self.is_connected:
             return None
@@ -879,7 +878,7 @@ class OptoGrid:
 
     # ---- context manager ------------------------------------------------- #
 
-    def __enter__(self) -> "OptoGrid":
+    def __enter__(self) -> OptoGrid:
         self.start()
         return self
 
@@ -916,7 +915,7 @@ def og_connect(
 # --------------------------------------------------------------------------- #
 
 
-def export_csv(parquet_path: str, csv_path: Optional[str] = None) -> str:
+def export_csv(parquet_path: str, csv_path: str | None = None) -> str:
     """Convert a Parquet IMU log to CSV. If csv_path is omitted, uses the same
     name with a .csv extension. Returns the CSV path."""
     if csv_path is None:

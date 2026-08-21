@@ -1,7 +1,8 @@
 import threading
 import time
 import traceback
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from village.classes.null_classes import (
     NullBpod,

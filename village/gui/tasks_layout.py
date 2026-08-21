@@ -3,7 +3,7 @@ from __future__ import annotations
 import textwrap
 import traceback
 from pathlib import Path
-from typing import TYPE_CHECKING, Type, Union
+from typing import TYPE_CHECKING
 
 import pandas as pd
 from PyQt5.QtCore import Qt
@@ -277,7 +277,7 @@ class TasksLayout(Layout):
 
     # ── Task / training selection ──────────────────────────────────────────────
 
-    def select_task(self, cls: Type, name: str) -> None:
+    def select_task(self, cls: type, name: str) -> None:
         if issubclass(cls, TaskBase):
             self.testing_training = False
             self.selected = name
@@ -393,7 +393,7 @@ class TasksLayout(Layout):
             self.right_tabs.removeTab(self.right_tabs.indexOf(hide_tab))
         self.update_gui()
 
-    def find_tab_by_label(self, label: str) -> Union[QWidget, None]:
+    def find_tab_by_label(self, label: str) -> QWidget | None:
         for index in range(self.right_tabs.count()):
             if self.right_tabs.tabText(index) == label:
                 return self.right_tabs.widget(index)

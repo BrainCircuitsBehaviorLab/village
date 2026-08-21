@@ -52,8 +52,8 @@ class TempSensor:
         temp = round(temp, 2)
         RH = round(RH, 2)
 
-        temp_string = "{:.2f}ºC".format(temp)
-        RH_string = "{:.2f}%".format(RH)
+        temp_string = f"{temp:.2f}ºC"
+        RH_string = f"{RH:.2f}%"
         temp_RH_string = temp_string + " / " + RH_string
 
         log.info("temperature and humidity: " + temp_RH_string)

@@ -25,7 +25,7 @@ class BpodErrorException(Exception):
     pass
 
 
-class BpodBase(object):
+class BpodBase:
     """
     API to interact with Bpod
 
@@ -535,7 +535,7 @@ class BpodBase(object):
                             sma.current_state
                         ]
                         if event_id == sma.hardware.channels.events_positions.Tup:
-                            if not (this_state_timer_transition == sma.current_state):
+                            if this_state_timer_transition != sma.current_state:
                                 if (
                                     sma.use_255_back_signal
                                     and this_state_timer_transition == 255
@@ -628,7 +628,9 @@ class BpodBase(object):
             ]
 
             # update the timestamps of the events
-            for event, timestamp in zip(current_trial.events_occurrences, timestamps):
+            for event, timestamp in zip(
+                current_trial.events_occurrences, timestamps, strict=False
+            ):
                 event.host_timestamp = timestamp
 
         current_trial.event_timestamps = timestamps

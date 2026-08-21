@@ -1,4 +1,3 @@
-import socket
 from queue import Empty, Queue
 from threading import Event, Thread
 
@@ -34,7 +33,7 @@ class NonBlockingSocketReceive:
                             data = self.socket.recv(64)
                             if not data:
                                 self.event.set()
-                        except socket.timeout:
+                        except TimeoutError:
                             pass
                         if data:
                             self.queue.put(data)

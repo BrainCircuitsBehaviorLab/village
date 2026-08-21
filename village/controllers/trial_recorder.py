@@ -179,7 +179,7 @@ class TrialRecorder:
 
             for state, start_times in self._states_start.items():
                 end_times = self._states_end.get(state.replace("START", "END"), [])
-                for start, end in zip(start_times, end_times):
+                for start, end in zip(start_times, end_times, strict=False):
                     self._write_csv_row(
                         f"{start:.4f}",
                         f"{end:.4f}",

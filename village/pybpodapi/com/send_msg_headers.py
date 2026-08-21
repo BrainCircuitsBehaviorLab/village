@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class SendMessageHeader(object):
+class SendMessageHeader:
     """
     Define names for message headers sent to the Bpod device.
 

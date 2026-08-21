@@ -4,7 +4,6 @@ import asyncio
 import os
 import threading
 from functools import partial
-from typing import Optional
 
 from PyQt5.QtCore import QRect, Qt
 from PyQt5.QtGui import QColor, QFont, QPainter, QPixmap
@@ -59,7 +58,7 @@ class _BrainMapWidget(QWidget):
         super().__init__(parent)
         self.selection: int = 0
         self._on_changed = on_changed
-        self._bg: Optional[QPixmap] = None
+        self._bg: QPixmap | None = None
         if os.path.exists(_BRAIN_MAP_PATH):
             px = QPixmap(_BRAIN_MAP_PATH)
             if not px.isNull():
@@ -184,8 +183,8 @@ class OptoGridCalibration(CalibrationBase):
         self._connecting = False
         self._connect_done = False
         self._connect_name = ""
-        self._connect_params: Optional[dict[str, str]] = None
-        self._battery_mv: Optional[int] = None
+        self._connect_params: dict[str, str] | None = None
+        self._battery_mv: int | None = None
         self._connect_error = ""
         # brain-map state
         self._led_selection: int = 0

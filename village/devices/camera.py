@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 import pandas as pd
 
-from village.classes.enums import Active, AreaActive, CycleDay
+from village.classes.enums import Active, AreaActive
 
 try:
     from libcamera import controls
@@ -26,11 +26,14 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.null_classes import NullCamera
+from village.custom_classes.custom_area_base import CustomAreaBase
 from village.manager import manager
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import Color, settings
+
+BLACK_FRAME_MAX = 5
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 
@@ -115,21 +118,6 @@ def decode_exposure_setting(value: int) -> tuple[int, float, str]:
     if level == 1:
         return 2, 0.0, "long EV0"
     return 2, 1.0, "long EV+1"
-
-
-def corridor_night(auto_night: bool) -> bool:
-    """Resolve the corridor day/night selection from THRESHOLDS_CORRIDOR.
-
-    Used for both the detection thresholds and the exposure. DAY/NIGHT force the
-    choice; AUTO falls back to `auto_night` (the real day/night state the caller
-    passes in).
-    """
-    mode = settings.get("THRESHOLDS_CORRIDOR")
-    if mode == CycleDay.DAY:
-        return False
-    if mode == CycleDay.NIGHT:
-        return True
-    return auto_night
 
 
 # the camera class
@@ -245,7 +233,6 @@ class Camera:
         self.cam.pre_callback = self.pre_process
 
         self.change = True
-        self._applied_cycle: str = ""  # last cycle ("DAY"/"NIGHT") applied to exposure
         self.task_is_running: bool = False
         self.annotation = ""
         self.trial = 0
@@ -285,6 +272,7 @@ class Camera:
         self.camera_timestamp = time_utils.now_timestamp()
         self._hour_occupied: list[int] = [0, 0, 0, 0]
         self._hour_total: int = 0
+        self.last_good_frame = self.camera_timestamp  # last non-black frame
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -305,17 +293,13 @@ class Camera:
         self.number_of_areas = 4
 
         # Corridor areas carry two thresholds: index 4 = day (visible light,
-        # black mouse), index 5 = night (IR only, greyish mouse). Keyed to the
-        # actual visible-light state so it follows AUTO and manual overrides.
-        # Reloaded on cycle change / light toggle / edit via self.change.
-        night = self.name == "CORRIDOR" and corridor_night(
-            not manager.corridor_visible_on()
-        )
+        # black mouse), index 5 = night (IR only, greyish mouse).
+        day = self.name == "CORRIDOR" and manager.camera_corridor_day
 
         for i in range(1, self.number_of_areas + 1):
             area = settings.get("AREA" + str(i) + "_" + self.name)
             self.areas.append(area[0:4])
-            self.thresholds.append(area[5] if (night and len(area) > 5) else area[4])
+            self.thresholds.append(area[5] if (not day and len(area) > 5) else area[4])
 
         # areas active and allowed settings
         self.areas_active: list[bool] = []
@@ -374,24 +358,14 @@ class Camera:
 
         self.cam.set_controls({"LensPosition": lensposition})
         self.cam.set_controls({"Sharpness": sharpness})
-        self.apply_exposure()
 
-    def apply_exposure(self) -> None:
-        """Applies the exposure level (0-2) for this camera and cycle.
-
-        The corridor camera uses EXPOSURE_DAY_CORRIDOR by day and
-        EXPOSURE_NIGHT_CORRIDOR at night; the box camera always uses
-        EXPOSURE_BOX. Editing the value in the MONITOR tab applies it live.
-        """
-        cycle = manager.cycle_change_detector.cycle_text
-        self._applied_cycle = cycle
+        # exposure settings
         if self.name == "CORRIDOR":
-            night = corridor_night(cycle == "NIGHT")
-            key = "EXPOSURE_NIGHT_CORRIDOR" if night else "EXPOSURE_DAY_CORRIDOR"
+            key = "EXPOSURE_DAY_CORRIDOR" if day else "EXPOSURE_NIGHT_CORRIDOR"
         else:
             key = "EXPOSURE_BOX"
         value = settings.get(key)
-        ae_mode, ev, mode_name = decode_exposure_setting(value)
+        ae_mode, ev, _mode_name = decode_exposure_setting(value)
         self.cam.set_controls({"ExposureValue": ev, "AeExposureMode": ae_mode})
 
     def start_camera(self) -> None:
@@ -510,6 +484,7 @@ class Camera:
                     camera_timestamps,
                     x_positions,
                     y_positions,
+                    strict=False,
                 )
             )
 
@@ -537,6 +512,7 @@ class Camera:
                     trials,
                     annotations,
                     camera_timestamps,
+                    strict=False,
                 )
             )
 
@@ -562,7 +538,7 @@ class Camera:
         """Restarts the camera if it froze OR if the ffmpeg recorder died."""
         reason = ""
         try:
-            if time_utils.now_timestamp() - self.camera_timestamp > 10:
+            if time_utils.now_timestamp() - self.last_good_frame > 10:
                 reason = "no frames in 10s"
             elif self.is_recording:
                 ff = getattr(self.output, "ffmpeg", None)
@@ -606,6 +582,8 @@ class Camera:
             started = True
         except Exception:
             pass
+        self.camera_timestamp = time_utils.now_timestamp()
+        self.last_good_frame = self.camera_timestamp
         self.watchdog_timer.start()
         if started and self.name == "CORRIDOR":
             self.start_recording()
@@ -619,9 +597,6 @@ class Camera:
         if self.change:
             self.set_properties()
             self.change = False
-        elif manager.cycle_change_detector.cycle_text != self._applied_cycle:
-            # day<->night flipped: re-bias exposure without a full settings reload
-            self.apply_exposure()
         self.frame_number += 1
 
         with MappedArray(request, "main") as m:
@@ -639,6 +614,8 @@ class Camera:
                 )
                 self.task_is_running = manager.state.task_is_running()
                 self.get_gray_frame()
+                if int(self.gray_frame.max()) > BLACK_FRAME_MAX:
+                    self.last_good_frame = self.camera_timestamp
                 self.detect_and_trigger()
                 manager.camera_draw.draw(self)
                 self.write_csv()
@@ -807,6 +784,23 @@ class Camera:
             self.x_position = -1
             self.y_position = -1
 
+    @property
+    def custom_areas(self) -> list[CustomAreaBase]:
+        """Custom detection areas (lives on manager; exposed here for the cam API)."""
+        return manager.custom_areas
+
+    def _add_custom_area_mask(self, mask: np.ndarray, invert: bool) -> None:
+        if self.name != "BOX" or not self.custom_areas:
+            return
+        h, w = self.gray_frame.shape[:2]
+        flag = cv2.THRESH_BINARY_INV if invert else cv2.THRESH_BINARY
+        for area in self.custom_areas:
+            if not area.active:
+                continue
+            _, frame_bin = cv2.threshold(self.gray_frame, area.threshold, 255, flag)
+            inside = cv2.bitwise_and(frame_bin, frame_bin, mask=area.mask(h, w))
+            np.maximum(mask, inside, out=mask)
+
     def detect_black_position_contours(self) -> None:
         """Detects position of black mouse using contours."""
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
@@ -827,6 +821,8 @@ class Camera:
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
+
+        self._add_custom_area_mask(mask, invert=True)
 
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -873,6 +869,8 @@ class Camera:
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
+
+        self._add_custom_area_mask(mask, invert=False)
 
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -978,10 +976,14 @@ class Camera:
         pixels_not_allowed = 0
 
         pixels_allowed = sum(
-            count for count, allow in zip(self.counts, self.areas_allowed) if allow
+            count
+            for count, allow in zip(self.counts, self.areas_allowed, strict=False)
+            if allow
         )
         pixels_not_allowed = sum(
-            count for count, allow in zip(self.counts, self.areas_allowed) if not allow
+            count
+            for count, allow in zip(self.counts, self.areas_allowed, strict=False)
+            if not allow
         )
 
         if pixels_allowed > self.one_or_two_mice:

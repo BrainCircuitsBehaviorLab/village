@@ -5,7 +5,8 @@ import queue
 import subprocess
 import time
 import traceback
-from typing import TYPE_CHECKING, Callable, Optional
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import cv2
 import numpy as np
@@ -51,12 +52,12 @@ class VideoWorker(QObject):
         """
         super().__init__()
         self.path = path
-        self.cap: Optional[cv2.VideoCapture] = None
+        self.cap: cv2.VideoCapture | None = None
 
         self._running: bool = False
         self.mtx = QMutex()
 
-        self._latest_img: Optional[QImage] = None
+        self._latest_img: QImage | None = None
         self._latest_idx: int = -1
 
         self._fps: float = 0.0
@@ -144,7 +145,7 @@ class VideoWorker(QObject):
             self._running = False
             self.finished.emit()
 
-    def get_latest_qimage(self) -> Optional[QImage]:
+    def get_latest_qimage(self) -> QImage | None:
         """Returns the current video frame.
 
         The decode loop paces itself to real time, so the latest decoded frame
@@ -197,7 +198,7 @@ class Screen(QOpenGLWidget):
         self.error: str = ""
 
         self.active: bool = False
-        self._draw_fn: Optional[Callable] = None
+        self._draw_fn: Callable | None = None
 
         self._start_timing: float = 0.0
         self._swap_connected: bool = False
@@ -206,10 +207,10 @@ class Screen(QOpenGLWidget):
         # set_off drive the GPIO_OUT pin for the sync pulse (see GpioBase).
         self.gpio: GpioBase | NullGpio = NullGpio()
 
-        self._video_thread: Optional[QThread] = None
-        self._video_worker: Optional[VideoWorker] = None
-        self._audio_left: Optional[np.ndarray] = None
-        self._audio_right: Optional[np.ndarray] = None
+        self._video_thread: QThread | None = None
+        self._video_worker: VideoWorker | None = None
+        self._audio_left: np.ndarray | None = None
+        self._audio_right: np.ndarray | None = None
 
         self.frame = 0
         self.elapsed_time = 0.0
@@ -219,11 +220,11 @@ class Screen(QOpenGLWidget):
         self.x = 0
         self.y = 0
         self.blend = False
-        self.image: Optional[QPixmap] = None
+        self.image: QPixmap | None = None
         # When new visual content is requested, this holds its label until the
         # first paintGL that actually draws it -- at which point that frame's
         # timestamp is recorded as the on-screen onset, then this is cleared.
-        self._pending_onset_label: Optional[str] = None
+        self._pending_onset_label: str | None = None
         # Injected by manager.run_task() to the running task's recorder, so
         # paintGL can log the on-screen onset without importing manager (which
         # would be a circular import). None until a task is running.
@@ -246,7 +247,7 @@ class Screen(QOpenGLWidget):
         self.stop_video()
         event.ignore()
 
-    def load_draw_function(self, draw_fn: Optional[Callable]) -> None:
+    def load_draw_function(self, draw_fn: Callable | None) -> None:
         """Sets the drawing function. Stops any active rendering.
 
         Call load_image() or load_video() separately before or after this.
@@ -304,7 +305,7 @@ class Screen(QOpenGLWidget):
 
     def _extract_audio(
         self, video_path: str
-    ) -> tuple[Optional[np.ndarray], Optional[np.ndarray]]:
+    ) -> tuple[np.ndarray | None, np.ndarray | None]:
         samplerate = int(settings.get("SAMPLERATE"))
         try:
             result = subprocess.run(
@@ -395,7 +396,7 @@ class Screen(QOpenGLWidget):
                 pass
             self._video_thread = None
 
-    def get_video_frame(self) -> Optional[QImage]:
+    def get_video_frame(self) -> QImage | None:
         """Retrieves current video frame if available.
 
         Returns:
@@ -445,7 +446,7 @@ class Screen(QOpenGLWidget):
             painter.fillRect(self.rect(), self.background_color)
 
 
-def get_screen() -> "Screen | NullScreen":
+def get_screen() -> Screen | NullScreen:
     try:
         secondary_screen = QGuiApplication.screens()[1]
         geometry = secondary_screen.geometry()

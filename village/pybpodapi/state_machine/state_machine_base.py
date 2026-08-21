@@ -10,7 +10,7 @@ from village.scripts.parse_bpod_messages import parse_output_to_tuple
 logger = logging.getLogger(__name__)
 
 
-class StateMachineBase(object):
+class StateMachineBase:
     """
     Each Bpod trial is programmed as a virtual finite state machine.
     This ensures precise timing of events - for any
@@ -187,21 +187,14 @@ class StateMachineBase(object):
                     (event_code, destination_state_number)
                 )
 
-            elif EventName.is_global_timer_trigger(event_name):
+            elif EventName.is_global_timer_trigger(
+                event_name
+            ) or EventName.is_global_timer_cancel(event_name):
 
                 if isinstance(event_state_transition, str):
                     v = int(event_state_transition, 2)
                 else:
                     v = event_state_transition
-                self.global_timers.end_matrix[state_name_idx] = v
-
-            elif EventName.is_global_timer_cancel(event_name):
-
-                if isinstance(event_state_transition, str):
-                    v = int(event_state_transition, 2)
-                else:
-                    v = event_state_transition
-
                 self.global_timers.end_matrix[state_name_idx] = v
 
             elif EventName.is_global_timer_end(event_name):
@@ -306,9 +299,7 @@ class StateMachineBase(object):
                     channel
                 )  # type: int
             except:  # noqa: E722
-                raise SMAError(
-                    "Error: {0} is an invalid output channel name.".format(channel)
-                )
+                raise SMAError(f"Error: {channel} is an invalid output channel name.")
 
         index = timer_id - 1
 

@@ -7,7 +7,6 @@ in the operant box.
 """
 
 from pathlib import Path
-from typing import Optional
 
 from village.classes.enums import SyncType
 from village.scripts.safe_removal_of_data import main as safe_removal_script
@@ -32,7 +31,7 @@ class ChangeCycleBase:
         self.remote_host = settings.get("SERVER_HOST")
         self.sync_type = settings.get("SYNC_TYPE")
         try:
-            self.port: Optional[int] = int(settings.get("SERVER_PORT"))
+            self.port: int | None = int(settings.get("SERVER_PORT"))
         except ValueError:
             self.port = None
 

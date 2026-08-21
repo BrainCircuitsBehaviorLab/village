@@ -942,7 +942,12 @@ class SettingsLayout(Layout):
         )
         label.setProperty("type", type)
 
-        if s.key in ("DAYTIME", "NIGHTTIME"):
+        if s.key in (
+            "DAYTIME",
+            "NIGHTTIME",
+            "CHECK_MICE_TIME",
+            "CHECK_MICE_RESET_TIME",
+        ):
             value = self._get(s.key)
             time_edit = self.create_and_add_time_edit(
                 value, row, column + width, size4, 2, self.settings_changed
@@ -1032,16 +1037,7 @@ class SettingsLayout(Layout):
                     2,
                     self.settings_changed,
                 )
-            elif s.key == "SESSIONS_DIRECTORY":
-                line_edit = self.create_and_add_line_edit(
-                    value,
-                    row,
-                    column + width,
-                    size2,
-                    2,
-                    self.settings_changed,
-                )
-            elif s.key == "SYSTEM_DIRECTORY":
+            elif s.key == "SESSIONS_DIRECTORY" or s.key == "SYSTEM_DIRECTORY":
                 line_edit = self.create_and_add_line_edit(
                     value,
                     row,
@@ -1077,16 +1073,7 @@ class SettingsLayout(Layout):
                     2,
                     self.settings_changed,
                 )
-            elif s.key == "APP_DIRECTORY":
-                line_edit = self.create_and_add_line_edit(
-                    value,
-                    row,
-                    column + width,
-                    size2,
-                    2,
-                    self.settings_changed,
-                )
-            elif s.key in [
+            elif s.key == "APP_DIRECTORY" or s.key in [
                 "SERVER_USER",
                 "SERVER_HOST",
                 "SERVER_PORT",

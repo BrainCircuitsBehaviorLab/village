@@ -97,7 +97,7 @@ def apply_motor_fields(
     Bad input for a field falls back to the current value (the placeholder).
     """
     vals: list[int] = []
-    for (_, current), edit in zip(fields, edits):
+    for (_, current), edit in zip(fields, edits, strict=False):
         try:
             vals.append(int(edit.text()))
         except ValueError:
@@ -816,6 +816,7 @@ class CorridorLayout(Layout):
     def toggle_ir_button(self, value: str, key: str) -> None:
         manager.ir_corridor_cycle = Cycle[value]
         settings.set(key, value)
+        cam_corridor.change = True
         match value:
             case "OFF":
                 ir_light_corridor.off()
@@ -863,7 +864,7 @@ class CorridorLayout(Layout):
             manager.log_weight = True
         else:
             weight = scale.get_weight()
-            weight_str = "weight: {:.2f} g".format(weight)
+            weight_str = f"weight: {weight:.2f} g"
             log.info(weight_str)
 
     def get_temperature_clicked(self) -> None:
@@ -2024,7 +2025,9 @@ class CorridorPlotLayout(Layout):
         pixmap = QPixmap()
         try:
             subjects_df = manager.subjects.df
-            active_states = dict(zip(subjects_df["name"], subjects_df["active"]))
+            active_states = dict(
+                zip(subjects_df["name"], subjects_df["active"], strict=False)
+            )
             figure = corridor_plot(
                 manager.events.df.copy(),
                 self.subjects,

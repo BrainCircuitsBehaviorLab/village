@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from typing import Union
 
 import pandas as pd
 from matplotlib import dates as mdates
@@ -19,8 +18,8 @@ def corridor_plot(
     width: float,
     height: float,
     ndays: int = 3,
-    from_date: Union[str, None, datetime] = None,
-    active_states: Union[dict[str, str], None] = None,
+    from_date: str | None | datetime = None,
+    active_states: dict[str, str] | None = None,
 ) -> Figure:
     """Generates a corridor activity plot for multiple subjects.
 

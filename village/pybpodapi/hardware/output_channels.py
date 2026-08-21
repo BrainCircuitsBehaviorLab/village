@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class OutputChannel(object):
+class OutputChannel:
     """
     Available output channels
     These values must be set according to Bpod firmware specification.

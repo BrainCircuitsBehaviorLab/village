@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class GlobalTimers(object):
+class GlobalTimers:
     def __init__(self, max_states, n_global_timers):
 
         self.start_matrix = [[] for i in range(max_states)]

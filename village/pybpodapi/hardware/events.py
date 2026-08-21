@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class EventName(object):
+class EventName:
     """
     Input event codes
     These values must be set according to Bpod firmware specification.

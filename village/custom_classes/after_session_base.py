@@ -6,7 +6,6 @@ This module runs at the end of each session when the animal is back home.
 """
 
 import threading
-from typing import Optional
 
 from village.classes.enums import SyncType
 from village.scripts.rsync_to_hard_drive import main as rsync_to_hard_drive
@@ -30,7 +29,7 @@ class AfterSessionBase:
         self.maximum_sync_time = settings.get("MAXIMUM_SYNC_TIME")
         self.sync_type = settings.get("SYNC_TYPE")
         try:
-            self.port: Optional[int] = int(settings.get("SERVER_PORT"))
+            self.port: int | None = int(settings.get("SERVER_PORT"))
         except Exception:
             self.port = None
         self.cancel_event = threading.Event()

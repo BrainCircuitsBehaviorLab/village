@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ChannelType(object):
+class ChannelType:
     """
     Define if channel type is input or output.
     These values must be set according to Bpod firmware specification.
@@ -16,7 +16,7 @@ class ChannelType(object):
     OUTPUT = 2
 
 
-class ChannelName(object):
+class ChannelName:
     """
     Available channel names.
     These values must be set according to Bpod firmware specification.
@@ -38,7 +38,7 @@ class ChannelName(object):
     SERIAL = "Serial"
 
 
-class EventsPositions(object):
+class EventsPositions:
     """ """
 
     def __init__(self) -> None:
@@ -61,7 +61,7 @@ class EventsPositions(object):
         self.output_PWM = 0  # type: int
 
 
-class Channels(object):
+class Channels:
     """
     Bpod main class
     """
@@ -250,19 +250,19 @@ class Channels(object):
 
         buff = "\n****************** EVENTS ******************\n"
         for idx, event in enumerate(self.event_names):
-            buff += "{0: >3} : {1: <24}".format(idx, event)
+            buff += f"{idx: >3} : {event: <24}"
             if ((idx + 1) % 3) == 0 and idx != 0:
                 buff += "\n"
 
         buff += "\n\n****************** INPUT CHANNELS ******************\n"
         for idx, channel in enumerate(self.input_channel_names):
-            buff += "{0: >3} : {1: <24}".format(idx, channel)
+            buff += f"{idx: >3} : {channel: <24}"
             if ((idx + 1) % 3) == 0 and idx != 0:
                 buff += "\n"
 
         buff += "\n\n****************** OUTPUT CHANNELS ******************\n"
         for idx, channel in enumerate(self.output_channel_names):
-            buff += "{0: >3} : {1: <24}".format(idx, channel)
+            buff += f"{idx: >3} : {channel: <24}"
             if ((idx + 1) % 3) == 0 and idx != 0:
                 buff += "\n"
 

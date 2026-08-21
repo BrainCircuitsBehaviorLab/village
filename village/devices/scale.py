@@ -1,7 +1,6 @@
 import struct
 import time
 import traceback
-from typing import List
 
 import numpy as np
 import smbus2
@@ -98,7 +97,7 @@ class Scale(NullScale):
         Returns:
             int: The mean of the raw values.
         """
-        values: List[int] = []
+        values: list[int] = []
         for i in range(samples):
             try:
                 data = self.i2cbus.read_i2c_block_data(

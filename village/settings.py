@@ -408,6 +408,20 @@ triggered.""",
 If any animal drinks less than the specified minimum water intake (in µL) over a 24-hour
 period, an alarm is triggered.""",
     ),
+    Setting(
+        "CHECK_MICE_TIME",
+        "20:00",
+        str,
+        """Deadline to confirm that the mice have been checked.
+        If nobody has confirmed it by this time, an alarm is triggered.""",
+    ),
+    Setting(
+        "CHECK_MICE_RESET_TIME",
+        "00:00",
+        str,
+        """Time at which the confirmation that the mice have been checked
+        expires, so that it has to be done again for the next day.""",
+    ),
 ]
 
 session_alarm_settings = [
@@ -887,6 +901,8 @@ visual_settings = [
 hidden_settings = [
     Setting("FIRST_LAUNCH", "OFF", Active, "First launch of the system."),
     Setting("LAST_SUBJECT", "None", str, "The last subject selected in the TASKS tab."),
+    Setting("MICE_CHECKED_AT", "", str, "When the mice were last checked."),
+    Setting("MICE_CHECKED_BY", "", str, "Who checked the mice last."),
     Setting(
         "GITHUB_REPOSITORIES_DOWNLOADED",
         "OFF",

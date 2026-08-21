@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 import cv2
 import numpy as np
 from PyQt5.QtCore import QPoint, QRect
-from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen
+from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen, QPolygon
 
 from village.classes.enums import Color
 from village.custom_classes.task_base import TaskBase
@@ -133,6 +133,7 @@ class CameraDrawBase:
             scale_x = device.width() / cam.width
             scale_y = device.height() / cam.height
 
+            self.draw_custom_areas_box(cam, painter, scale_x, scale_y)
             self.draw_detection_mask_box(cam, painter, scale_x, scale_y)
             self.draw_detection_areas_box(cam, painter, scale_x, scale_y)
             self.draw_detection_position_box(cam, painter, scale_x, scale_y)
@@ -321,6 +322,23 @@ class CameraDrawBase:
                 if not cam.areas_allowed[i]:
                     painter.drawLine(x1, y1, x2, y2)
                     painter.drawLine(x2, y1, x1, y2)
+
+    def draw_custom_areas_box(
+        self,
+        cam: Camera,
+        painter: QPainter,
+        scale_x: float,
+        scale_y: float,
+    ) -> None:
+        """Outlines custom-area polygons via QPainter (screen only)."""
+        painter.setBrush(QBrush())
+        for area in cam.custom_areas:
+            if not area.active:
+                continue
+            painter.setPen(QPen(QColor(0, 255, 255), self.thickness_line))
+            for poly in area.polygons:
+                pts = [QPoint(int(x * scale_x), int(y * scale_y)) for x, y in poly]
+                painter.drawPolygon(QPolygon(pts))
 
     def draw_detection_position_box(
         self,

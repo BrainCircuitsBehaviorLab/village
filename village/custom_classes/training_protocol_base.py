@@ -1,5 +1,5 @@
 import json
-from typing import Any, Tuple
+from typing import Any
 
 import pandas as pd
 
@@ -203,14 +203,14 @@ class TrainingProtocolBase:
         if not isinstance(current_dict, dict):
             current_dict = {}
         new_dict: dict[str, Any] = self.get_default_dict()
-        for key in new_dict.keys():
+        for key in new_dict:
             if key in current_dict:
                 new_dict[key] = current_dict[key]
         return json.dumps(new_dict)
 
     def correct_types_in_dict(
         self, current_dict: dict[str, Any]
-    ) -> Tuple[list[str], dict[str, Any]]:
+    ) -> tuple[list[str], dict[str, Any]]:
         """Ensures that dictionary values match the types of default settings.
 
         Args:
@@ -227,13 +227,13 @@ class TrainingProtocolBase:
                 try:
                     if isinstance(default_dict[key], bool):
                         value = value.lower() in ["true", "1", "yes"]
-                    elif isinstance(default_dict[key], int):
+                    elif isinstance(default_dict[key], int) or isinstance(
+                        default_dict[key], float
+                    ):
                         value = float(value)
-                    elif isinstance(default_dict[key], float):
-                        value = float(value)
-                    elif isinstance(default_dict[key], list):
-                        value = eval(value)
-                    elif isinstance(default_dict[key], dict):
+                    elif isinstance(default_dict[key], list) or isinstance(
+                        default_dict[key], dict
+                    ):
                         value = eval(value)
                 except Exception:
                     wrong_keys.append(key)

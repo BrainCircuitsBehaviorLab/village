@@ -6,7 +6,7 @@ from village.pybpodapi.hardware.channels import Channels
 logger = logging.getLogger(__name__)
 
 
-class Hardware(object):
+class Hardware:
     """
     Represents an hardware description based on information received
     from the current connected Bpod deviced.
@@ -112,23 +112,17 @@ class Hardware(object):
     @property
     def bnc_inputports_names(self):
         return [
-            "BNC{0}".format(i)
-            for i, input_type in enumerate(self.inputs)
-            if input_type == "B"
+            f"BNC{i}" for i, input_type in enumerate(self.inputs) if input_type == "B"
         ]
 
     @property
     def wired_inputports_names(self):
         return [
-            "Wire{0}".format(i)
-            for i, input_type in enumerate(self.inputs)
-            if input_type == "W"
+            f"Wire{i}" for i, input_type in enumerate(self.inputs) if input_type == "W"
         ]
 
     @property
     def behavior_inputports_names(self):
         return [
-            "Port{0}".format(i)
-            for i, input_type in enumerate(self.inputs)
-            if input_type == "P"
+            f"Port{i}" for i, input_type in enumerate(self.inputs) if input_type == "P"
         ]

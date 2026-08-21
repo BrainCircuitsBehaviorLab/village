@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 import traceback
-from typing import TYPE_CHECKING, Any, Optional, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import cv2
 import numpy as np
@@ -69,7 +69,7 @@ def _get_calibration_by_name(name: str) -> CalibrationBase | None:
 class TableView(QTableView):
     """Custom QTableView with enhanced event handling."""
 
-    def __init__(self, model: "Table | None" = None) -> None:
+    def __init__(self, model: Table | None = None) -> None:
         """Initializes the TableView.
 
         Args:
@@ -81,7 +81,7 @@ class TableView(QTableView):
             self.setModel(model)
         self.setEditTriggers(QAbstractItemView.DoubleClicked)
 
-    def _model(self) -> "Table":
+    def _model(self) -> Table:
         """Returns the casted Table model.
 
         Raises:
@@ -310,7 +310,9 @@ class DaysSelectionDialog(QDialog):
             grid.addWidget(lbl, 0, hour + 1)
 
         # Day rows
-        for row_idx, (day, label) in enumerate(zip(self.DAYS, self.DAY_LABELS)):
+        for row_idx, (day, label) in enumerate(
+            zip(self.DAYS, self.DAY_LABELS, strict=False)
+        ):
             day_cb = QCheckBox(label)
             day_cb.setFixedWidth(self._DAY_COL_WIDTH)
             grid.addWidget(day_cb, row_idx + 1, 0)
@@ -468,7 +470,7 @@ class Table(QAbstractTableModel):
         self,
         df: pd.DataFrame,
         complete_df: pd.DataFrame,
-        layout_parent: "DfLayout",
+        layout_parent: DfLayout,
         editable: bool = False,
     ) -> None:
         """Initializes the Table model.
@@ -484,7 +486,7 @@ class Table(QAbstractTableModel):
         self.complete_df = complete_df
         self.editable = editable
         self.layout_parent = layout_parent
-        self.table_view: Optional[TableView] = None
+        self.table_view: TableView | None = None
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
         """Returns the number of rows in the table.
@@ -1685,10 +1687,10 @@ class DfLayout(Layout):
                 path, seconds = self.get_path_and_seconds_from_events_row(selected_row)
             elif manager.table == DataTable.SESSIONS_SUMMARY:
                 path = self.get_paths_from_sessions_summary_row(selected_row)[3]
-            elif manager.table == DataTable.OLD_SESSION:
-                path = self.video_selected_path
-                seconds = self.get_seconds_from_session_row()
-            elif manager.table == DataTable.OLD_SESSION_RAW:
+            elif (
+                manager.table == DataTable.OLD_SESSION
+                or manager.table == DataTable.OLD_SESSION_RAW
+            ):
                 path = self.video_selected_path
                 seconds = self.get_seconds_from_session_row()
         else:
@@ -1699,13 +1701,15 @@ class DfLayout(Layout):
     def plot_button_clicked(self) -> None:
         """Actions to take when the PLOT button is clicked."""
         selected_row = self.get_selected_row_series()
-        if selected_row is not None:
-            self.plot_change_requested.emit("")
-        elif manager.table in [
-            DataTable.OLD_SESSION,
-            DataTable.OLD_SESSION_RAW,
-            DataTable.TEMPERATURES,
-        ] or isinstance(manager.table, str):
+        if selected_row is not None or (
+            manager.table
+            in [
+                DataTable.OLD_SESSION,
+                DataTable.OLD_SESSION_RAW,
+                DataTable.TEMPERATURES,
+            ]
+            or isinstance(manager.table, str)
+        ):
             self.plot_change_requested.emit("")
 
     def plot_weights_button_clicked(self) -> None:
@@ -2015,7 +2019,7 @@ class DfLayout(Layout):
 class SubjectsLayout(Layout):
     """Standalone layout for the SUBJECTS tab (full-width, no left menu)."""
 
-    def __init__(self, window: "GuiWindow") -> None:
+    def __init__(self, window: GuiWindow) -> None:
         super().__init__(window)
         self._highlight_nav_button(self.subjects_button)
         manager.table = DataTable.SUBJECTS

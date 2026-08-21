@@ -106,6 +106,7 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
 import_all(manager)
+telegram_bot.register_custom(manager.custom_telegram_commands)
 manager.send_heartbeat()
 device_errors = [
     ("cam_corridor", cam_corridor),
@@ -199,6 +200,8 @@ def system_run() -> None:
                 cam_corridor.stop_recording()
                 cam_corridor.start_recording()
 
+            manager.check_mice_deadline()
+
             if manager.hour_change_detector.has_hour_changed():
                 cam_corridor.check_hourly_occupation()
                 manager.hourly_checks()
@@ -229,7 +232,7 @@ def system_run() -> None:
         elif manager.getting_weights:
             weight = scale.get_weight()
             if manager.log_weight:
-                weight_str = "weight: {:.2f} g".format(weight)
+                weight_str = f"weight: {weight:.2f} g"
                 log.info(weight_str)
                 manager.log_weight = False
         else:

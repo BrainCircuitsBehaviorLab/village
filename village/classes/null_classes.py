@@ -1,5 +1,6 @@
 import threading
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 import pandas as pd
 from PyQt5.QtGui import QImage
@@ -89,6 +90,14 @@ class NullTelegramBot:
             message (str): The alarm message.
             repeat (bool, optional): If True, the alarm is resent in telegram until
                 acknowledged. Defaults to False.
+        """
+        return
+
+    def register_custom(self, commands: list) -> None:
+        """Registers custom commands collected from the project code directory.
+
+        Args:
+            commands (list): TelegramCommandBase instances.
         """
         return
 
@@ -364,7 +373,6 @@ class NullScreen(QWidget):
     background_color = None
     width_px: int = 0
     height_px: int = 0
-    height_mm: int = 0
 
     def start_drawing(self) -> None:
         """Starts the drawing mode."""
@@ -376,7 +384,7 @@ class NullScreen(QWidget):
 
     def load_draw_function(
         self,
-        draw_fn: Optional[Callable],
+        draw_fn: Callable | None,
         image: str | None = None,
         video: str | None = None,
     ) -> None:
@@ -407,7 +415,7 @@ class NullScreen(QWidget):
         """
         return
 
-    def get_video_frame(self) -> Optional[QImage]:
+    def get_video_frame(self) -> QImage | None:
         """Gets the current video frame.
 
         Returns:
@@ -442,7 +450,7 @@ class NullGpio:
 class NullLEDStrip:
     """Base class for LED strip"""
 
-    error: str = "Error connecting to the LED strip "
+    error: str = ""
     num_leds: int = 10
 
     def set_led_color(self, index: int, red: int, green: int, blue: int) -> None:

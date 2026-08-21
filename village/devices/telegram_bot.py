@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import json
 import os
 import threading
@@ -23,6 +24,47 @@ from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
+# increase alarm message salience!
+ALARM_EMOJI = "⚠️⚠️⚠️"  # ⚠️💀
+
+
+class Alarm:
+    """An alarm waiting to be acknowledged.
+
+    Attributes:
+        message (str): The text of the alarm.
+        start (datetime): When the alarm was triggered the first time.
+        repeats (int): How many times it has been resent.
+        next_due (datetime): When it has to be resent again.
+        message_id (int): The message showing the alarm in the chat, 0 if none.
+    """
+
+    def __init__(self, message: str, minutes: int) -> None:
+        """Initializes an Alarm due in minutes.
+
+        Args:
+            message (str): The text of the alarm.
+            minutes (int): Minutes until the first reminder.
+        """
+        self.message = message
+        self.start = time_utils.now()
+        self.repeats = 0
+        self.next_due = self.start + datetime.timedelta(minutes=minutes)
+        self.message_id = 0
+
+    def text(self) -> str:
+        """Builds the message shown in the chat.
+
+        Returns:
+            str: The alarm, with the time it started and the number of repeats.
+        """
+        text = ALARM_EMOJI + self.message
+        text += "\n\nalarm at " + self.start.strftime("%H:%M")
+        if self.repeats > 0:
+            text += ", repeated " + str(self.repeats) + " times"
+            text += " (last " + time_utils.now().strftime("%H:%M") + ")"
+        return text
+
 
 class TelegramBot:
     """A Telegram Bot for controlling and monitoring the village system.
@@ -46,7 +88,7 @@ class TelegramBot:
         self.connected = False
         self.error_running = False
         self.error = ""
-        self.pending: dict[int, str] = {}
+        self.pending: dict[int, Alarm] = {}
         self.alarm_id = 0
 
         self.thread = threading.Thread(target=self.botloop, daemon=True)
@@ -59,10 +101,11 @@ class TelegramBot:
             update (Update): The update object.
             context (ContextTypes.DEFAULT_TYPE): The context object.
         """
-        text = "Hi! Use /report <hours> to get a report of the last hours."
+        text = "Hi! Use /report <hours> to get a report of the last hours.\n"
+        text += "Use /mice_checked to confirm that you checked the mice today."
         await update.message.reply_text(text)
 
-    def alarm(self, message: str, repeat: bool = False) -> None:
+    def alarm(self, message: str, repeat: bool = False, report: bool = False) -> None:
         """Sends an alarm message to the configured chat.
 
         Repeatable alarms are kept in self.pending and resent every
@@ -72,31 +115,45 @@ class TelegramBot:
         Args:
             message (str): The message content.
             repeat (bool): True to resend the alarm until it is acknowledged.
+            report (bool): True for the daily report, sent without the emoji
+            so that it only marks the messages that need attention.
         """
-        if repeat:
-            first_line = message.split("\n")[0]
-            self.pending = {
-                k: v for k, v in self.pending.items() if v.split("\n")[0] != first_line
-            }
-            self.alarm_id += 1
-            self.pending[self.alarm_id] = message
-            self.send(message, self.alarm_id)
-        else:
-            self.send(message, None)
+        if not repeat:
+            self.send(("" if report else ALARM_EMOJI) + message, None)
+            return
 
-    def send(self, message: str, ack_id: int | None) -> None:
+        # keep only one pending with same first line (because is same alarm).
+        first_line = message.split("\n")[0]
+        self.pending = {
+            k: v
+            for k, v in self.pending.items()
+            if v.message.split("\n")[0] != first_line
+        }
+        self.alarm_id += 1
+        alarm = Alarm(message, self.repeat_minutes())
+        self.pending[self.alarm_id] = alarm
+        alarm.message_id = self.send(alarm.text(), self.alarm_id)
+
+    def repeat_minutes(self) -> int:
+        """Minutes between reminders"""
+        return settings.get("TELEGRAM_REPEAT_MINUTES") or 30
+
+    def send(self, text: str, ack_id: int | None) -> int:
         """Sends a message, optionally with an acknowledge button.
 
         Uses plain http because it is called from threads outside the bot
         asyncio loop.
 
         Args:
-            message (str): The message content.
+            text (str): The message content.
             ack_id (int | None): Id of the alarm to acknowledge, if any.
+
+        Returns:
+            int: The id of the message sent, 0 if it could not be sent.
         """
         try:
             url = "https://api.telegram.org/bot%s/sendMessage" % self.token
-            values = {"chat_id": self.chat, "text": message}
+            values = {"chat_id": self.chat, "text": text}
             if ack_id is not None:
                 values["reply_markup"] = json.dumps(
                     {
@@ -111,9 +168,11 @@ class TelegramBot:
                     }
                 )
             data = parse.urlencode(values)
-            request.urlopen(url, data.encode("utf-8"), timeout=10)
+            with request.urlopen(url, data.encode("utf-8"), timeout=10) as answer:
+                return json.load(answer)["result"]["message_id"]
         except Exception:
             log.error("Telegram error sending alarm", exception=traceback.format_exc())
+            return 0
 
     async def ack(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Acknowledges an alarm from the button in Telegram.
@@ -127,18 +186,56 @@ class TelegramBot:
             await query.answer()
             self.pending.pop(int(query.data.split(":")[1]), None)
             await query.edit_message_text(
-                query.message.text + "\n\n✅ Acknowledged by " + query.from_user.name
+                query.message.text + "\n\n✅ acknowledged by " + query.from_user.name
             )
         except Exception:
             log.error("Telegram error acknowledging", exception=traceback.format_exc())
 
     async def repeat_alarms(self) -> None:
-        """Resends unacknowledged alarms until they are acknowledged."""
+        """Resends unacknowledged alarms, each one on its own schedule."""
         while True:
-            minutes = settings.get("TELEGRAM_REPEAT_MINUTES") or 30
-            await asyncio.sleep(60 * minutes)
-            for ack_id, message in list(self.pending.items()):
-                self.send(message, ack_id)
+            await asyncio.sleep(30)
+            for ack_id, alarm in list(self.pending.items()):
+                if time_utils.now() < alarm.next_due:
+                    continue
+                alarm.repeats += 1
+                minutes = self.repeat_minutes()
+                alarm.next_due = time_utils.now() + datetime.timedelta(minutes=minutes)
+                self.update(alarm, ack_id)
+
+    def update(self, alarm: Alarm, ack_id: int) -> None:
+        """Updates the alarm in the telegram chat, with number of repeats.
+        Need to delete/send again otherwise no notification!
+
+        Args:
+            alarm (Alarm): The alarm to update.
+            ack_id (int): Id used by its acknowledge button.
+        """
+        if alarm.message_id != 0:
+            try:  # delete old message
+                t = self.token
+                url = "https://api.telegram.org/bot%s/deleteMessage" % t
+                values = {"chat_id": self.chat, "message_id": alarm.message_id}
+                data = parse.urlencode(values)
+                request.urlopen(url, data.encode("utf-8"), timeout=10)
+            except Exception:
+                pass  # already gone or too old
+        alarm.message_id = self.send(alarm.text(), ack_id)  # send update
+
+    async def mice_checked(
+        self, update: Update, context: ContextTypes.DEFAULT_TYPE
+    ) -> None:
+        """Confirms with /mice_checked that the mice have been checked.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
+        try:
+            manager.mice_checked(update.effective_user.name)
+            await update.message.reply_text("Mice checked! 🐭")
+        except Exception:
+            log.error("Telegram error checking mice", exception=traceback.format_exc())
 
     async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Generates and sends a report for the specified number of hours.
@@ -195,12 +292,8 @@ class TelegramBot:
         """
         try:
             path = os.path.join(settings.get("SYSTEM_DIRECTORY"), "PLOT.jpg")
-            subjects_df = manager.subjects.df
-            subjects = subjects_df["name"].tolist()
-            active_states = dict(zip(subjects_df["name"], subjects_df["active"]))
-            fig = corridor_plot(
-                manager.events.df.copy(), subjects, 4, 2, active_states=active_states
-            )
+            subjects = manager.subjects.df["name"].tolist()
+            fig = corridor_plot(manager.events.df.copy(), subjects, 4, 2)
             fig.savefig(path, format="jpg", dpi=300)
             plt.close(fig)
             await asyncio.sleep(1)
@@ -211,6 +304,19 @@ class TelegramBot:
         except Exception:
             log.error("Telegram error sending plot", exception=traceback.format_exc())
 
+    def register_custom(self, commands: list) -> None:
+        """Registers custom commands collected from the project code directory.
+
+        Called from main after import_all has populated the list. add_handler
+        works on the already-running application.
+
+        Args:
+            commands (list): TelegramCommandBase instances.
+        """
+        for c in commands:
+            if c.command:
+                self.application.add_handler(CommandHandler(c.command, c.handler))
+
     async def main(self) -> None:
         """Main asyncio loop for the bot application."""
         self.application = ApplicationBuilder().token(self.token).build()
@@ -219,6 +325,7 @@ class TelegramBot:
         self.application.add_handler(CommandHandler("report", self.report))
         self.application.add_handler(CommandHandler("plot", self.plot))
         self.application.add_handler(CommandHandler("cam", self.cam))
+        self.application.add_handler(CommandHandler("mice_checked", self.mice_checked))
         self.application.add_handler(CallbackQueryHandler(self.ack))
 
         try:

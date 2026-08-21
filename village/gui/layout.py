@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import os
 import traceback
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QTime
@@ -26,6 +27,7 @@ from PyQt5.QtWidgets import (
 from village.classes.enums import DataTable, State
 from village.manager import manager
 from village.scripts.log import log
+from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:
@@ -368,10 +370,21 @@ class Layout(QGridLayout):
         self.calibration_button = NavTabProxy(self.nav_tab_bar, 5)
         self.settings_button = NavTabProxy(self.nav_tab_bar, 6)
 
+        self.mice_button = self.create_and_add_button(
+            "MICE",
+            3,
+            155,
+            15,
+            3,
+            self.mice_button_clicked,
+            "Confirm that the mice have been checked today",
+            "lightgray",
+        )
+
         self.alarm_button = self.create_and_add_button(
             "ALARM",
             3,
-            155,
+            170,
             15,
             2,
             self.alarm_button_clicked,
@@ -427,7 +440,9 @@ class Layout(QGridLayout):
             " color: #999999}" + _tt
         )
         manager.update_text()
-        for sub_label, part in zip(self.status_sub_labels, manager.status_parts):
+        for sub_label, part in zip(
+            self.status_sub_labels, manager.status_parts, strict=False
+        ):
             sub_label.setText(part)
 
         alarms = len(log.telegram_bot.pending)
@@ -438,15 +453,22 @@ class Layout(QGridLayout):
         sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
         self.alarm_button.setStyleSheet(sty)
 
+        checked = manager.mice_check_done()
+        self.mice_button.setText("MICE OK" if checked else "CHECK MICE")
+        self.mice_button.setEnabled(not checked)
+        if checked:
+            at = time_utils.date_from_string(settings.get("MICE_CHECKED_AT"))
+            tooltip = "Mice checked by " + str(settings.get("MICE_CHECKED_BY"))
+            tooltip += " at " + at.strftime("%H:%M")
+        else:
+            tooltip = "Confirm that the mice have been checked today"
+        self.mice_button.setToolTip(tooltip)
+        c = "lightgray" if checked else "orange"
+        sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
+        self.mice_button.setStyleSheet(sty)
+
         state = manager.state
-        if state == State.RUN_MANUAL:
-            self.stop_button.setText("STOP TASK")
-            self.stop_button.setToolTip("Stop the running task")
-            self.stop_button.setEnabled(True)
-            self.stop_button.setStyleSheet(_red)
-            self.online_button.setEnabled(True)
-            self.online_button.setStyleSheet(_gray)
-        elif state.task_is_running():
+        if state == State.RUN_MANUAL or state.task_is_running():
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop the running task")
             self.stop_button.setEnabled(True)
@@ -484,7 +506,10 @@ class Layout(QGridLayout):
             self.online_button.setEnabled(False)
             self.online_button.setStyleSheet(_off)
 
-        self.online_button.setText("ONLINE PLOTS")
+    def mice_button_clicked(self) -> None:
+        """Confirms that the mice have been checked, until the reset time."""
+        manager.mice_checked("GUI")
+        self.update_status_label_buttons()
 
     def alarm_button_clicked(self) -> None:
         """Acknowledges all active alarms, stopping the telegram reminders."""

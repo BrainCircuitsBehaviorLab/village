@@ -3,7 +3,8 @@ from __future__ import annotations
 import datetime
 import os
 import time
-from typing import Any, Callable, Tuple
+from collections.abc import Callable
+from typing import Any
 
 
 class TimeUtils:
@@ -210,7 +211,7 @@ class TimeUtils:
         second: datetime.time,
         days: int,
         time_to_end: datetime.datetime | None = None,
-    ) -> Tuple[datetime.datetime, datetime.datetime]:
+    ) -> tuple[datetime.datetime, datetime.datetime]:
         """Calculates initialization times for a previous day.
 
         Args:
@@ -262,9 +263,22 @@ class TimeUtils:
             microsecond=first.microsecond,
         )
 
+    def previous_init_time(self, first: datetime.time) -> datetime.datetime:
+        """Opposite of tomorrow_init_time, gives the last time it happened.
+        Asking for 20:00 returns today at 20:00 when it is already 21:00, and
+        yesterday at 20:00 when it is only 19:00.
+
+        Args:
+            first (datetime.time): The time of the day to look for.
+
+        Returns:
+            datetime.datetime: The last date and time when it happened.
+        """
+        return self.tomorrow_init_time(first) - datetime.timedelta(days=1)
+
     def range_24_hours(
         self, day_date: datetime.datetime, first_init_time: datetime.time
-    ) -> Tuple[datetime.datetime, datetime.datetime]:
+    ) -> tuple[datetime.datetime, datetime.datetime]:
         """Calculates a 24-hour range starting from a specific time.
 
         Args:
@@ -299,7 +313,7 @@ class TimeUtils:
 
     def find_closest_file_and_seconds(
         self, directory: str, prefix: str, date: datetime.datetime
-    ) -> Tuple[str, int]:
+    ) -> tuple[str, int]:
         """Finds the file closest to a given date and calculates time difference.
 
         Args:
@@ -501,21 +515,21 @@ class TimeUtils:
                 self.night_time = datetime.datetime.strptime(night_time, "%H:%M").time()
             except (ValueError, TypeError):
                 self.night_time = datetime.time(20, 0)
-            self.last_state = self._get_current_cycle()
-            self.is_day: bool = self.last_state == "day"
+            self.is_day: bool = self._current_cycle_is_day()
+            self.previous: bool = self.is_day
             self.cycle_text: str = "DAY" if self.is_day else "NIGHT"
 
-        def _get_current_cycle(self) -> str:
+        def _current_cycle_is_day(self) -> bool:
             """Determines current cycle state.
 
             Returns:
-                str: 'day' or 'night'.
+                bool: True if day, False if night.
             """
             t = datetime.datetime.now().time()
             if self.day_time < self.night_time:
-                return "day" if self.day_time <= t < self.night_time else "night"
+                return self.day_time <= t < self.night_time
             else:
-                return "day" if (t >= self.day_time or t < self.night_time) else "night"
+                return bool(t >= self.day_time or t < self.night_time)
 
         def has_cycle_changed(self) -> bool:
             """Checks if the cycle has changed.
@@ -523,10 +537,9 @@ class TimeUtils:
             Returns:
                 bool: True if cycle changed.
             """
-            current = self._get_current_cycle()
-            if current != self.last_state:
-                self.last_state = current
-                self.is_day = current == "day"
+            self.is_day = self._current_cycle_is_day()
+            if self.is_day != self.previous:
+                self.previous = self.is_day
                 self.cycle_text = "DAY" if self.is_day else "NIGHT"
                 return True
             return False

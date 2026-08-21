@@ -3,7 +3,7 @@ import os
 import sys
 import traceback
 from pathlib import Path
-from typing import Any, Type, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -54,12 +54,12 @@ class Collection:
         pass
 
     def create_data_collection(
-        self, name: str, columns: list[str], types: list[Type]
+        self, name: str, columns: list[str], types: list[type]
     ) -> None:
         self.name: str = name
         self.columns: list[str] = columns
-        self.types: list[Type] = types
-        self.dict = {col: t for col, t in zip(self.columns, self.types)}
+        self.types: list[type] = types
+        self.dict = {col: t for col, t in zip(self.columns, self.types, strict=False)}
         filename = name if name.endswith(".csv") else name + ".csv"
         self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / filename
         self.df = pd.DataFrame()
@@ -126,7 +126,7 @@ class Collection:
         Returns:
             pd.DataFrame: The converted DataFrame.
         """
-        for col, type in zip(df.columns, self.types):
+        for col, type in zip(df.columns, self.types, strict=False):
             df[col] = df[col].apply(lambda x: self.convert_with_default(x, type))
         return df
 
@@ -146,7 +146,7 @@ class Collection:
             last.to_csv(self.path, index=False, sep=";")
             self.df = last
 
-    def get_last_entry(self, column: str, value: str) -> Union[pd.Series, None]:
+    def get_last_entry(self, column: str, value: str) -> pd.Series | None:
         """Gets the last entry matching a specific value in a column.
 
         Args:
@@ -182,7 +182,7 @@ class Collection:
                     pass
         return name
 
-    def get_first_entry(self, column: str, value: str) -> Union[pd.Series, None]:
+    def get_first_entry(self, column: str, value: str) -> pd.Series | None:
         """Gets the first entry matching a specific value in a column.
 
         Args:
