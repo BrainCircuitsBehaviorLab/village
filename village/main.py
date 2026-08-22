@@ -201,7 +201,8 @@ def system_run() -> None:
                 cam_corridor.stop_recording()
                 cam_corridor.start_recording()
 
-            manager.check_mice_deadline()
+            if manager.use_of_corridor:
+                manager.check_mice_deadline()
 
             if manager.hour_change_detector.has_hour_changed():
                 cam_corridor.check_hourly_occupation()

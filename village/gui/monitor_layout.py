@@ -47,9 +47,14 @@ from village.devices.chip import (
     motor_box1,
     motor_box2,
     motor_box3,
+    motor_box4,
+    motor_box5,
+    motor_box6,
+    motor_box7,
     motor_corridor1,
     motor_corridor2,
     motor_corridor3,
+    motor_corridor4,
     parse_motor_values,
     visible_light_box,
     visible_light_corridor,
@@ -154,6 +159,54 @@ def show_motor_angles_dialog(
 
     if dialog.exec_():
         apply_motor_fields(keys, motors, fields, edits)
+
+
+def show_motor_move_dialog(parent: Layout, name: str, motor: Any) -> None:
+    """Opens a dialog to move a motor to a chosen angle over a chosen duration.
+
+    Bad input for a field falls back to the placeholder shown in that field.
+    """
+    dialog = QDialog()
+    dialog.setWindowTitle(f"Move {name}")
+    x = parent.column_width * 74
+    y = parent.row_height * 21
+    width = parent.column_width * 40
+    height = parent.row_height * 8
+    dialog.setGeometry(x, y, width, height)
+
+    main_layout = QVBoxLayout()
+    grid = QGridLayout()
+    grid.addWidget(QLabel("Angle (0-180):"), 0, 0)
+    angle_edit = QLineEdit()
+    angle_edit.setPlaceholderText(str(motor.current_angle))
+    grid.addWidget(angle_edit, 0, 1)
+    grid.addWidget(QLabel("Time (ms):"), 1, 0)
+    time_edit = QLineEdit()
+    time_edit.setPlaceholderText("0")
+    grid.addWidget(time_edit, 1, 1)
+    main_layout.addLayout(grid)
+
+    btns_layout = QHBoxLayout()
+    btn_move = QPushButton("MOVE")
+    btn_cancel = QPushButton("CANCEL")
+    btns_layout.addWidget(btn_move)
+    btns_layout.addWidget(btn_cancel)
+    main_layout.addLayout(btns_layout)
+    dialog.setLayout(main_layout)
+
+    btn_move.clicked.connect(dialog.accept)
+    btn_cancel.clicked.connect(dialog.reject)
+
+    if dialog.exec_():
+        try:
+            angle = int(angle_edit.text())
+        except ValueError:
+            angle = motor.current_angle
+        try:
+            total_ms = int(time_edit.text())
+        except ValueError:
+            total_ms = 0
+        motor.move(angle, total_ms)
 
 
 class LabelButtons:
@@ -642,7 +695,7 @@ class CorridorLayout(Layout):
         """Draws the motor, scale and LEDs controls."""
         self.draw_motor_buttons("MOTOR1", 6, 2, motor_corridor1)
         self.draw_motor_buttons("MOTOR2", 11, 2, motor_corridor2)
-        self.draw_motor_buttons("MOTOR3", 16, 2, motor_corridor3)
+        self.draw_motor34_move_buttons(16, 2)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
             "RFID\nReader: ", 1, 3, 9, 2, "black"
@@ -785,6 +838,36 @@ class CorridorLayout(Layout):
         self.buttons.append(open_door)
         self.buttons.append(close_door)
 
+    def draw_motor34_move_buttons(self, row: int, column: int) -> None:
+        """Draws a MOVE button for corridor motors 3 and 4, one per active motor.
+
+        Each button only appears if its motor is active (MOTOR3_CORRIDOR /
+        MOTOR4_CORRIDOR) and actually wired up as a real Motor -- on old-HAT
+        hardware motor_corridor3/4 are always NullMotor regardless of that
+        setting, and NullMotor has no .move()/.current_angle. An inactive
+        motor's row is skipped entirely rather than left blank, so a lone
+        active motor 4 takes motor 3's position.
+        """
+        entries = [
+            ("MOTOR3_CORRIDOR", "MOTOR3", motor_corridor3),
+            ("MOTOR4_CORRIDOR", "MOTOR4", motor_corridor4),
+        ]
+        row_offset = 0
+        for active_key, name, motor in entries:
+            if settings.get(active_key) != Active.ON or not isinstance(motor, Motor):
+                continue
+            move_button: PushButton = self.create_and_add_button(
+                name + " MOVE",
+                row + row_offset * 2,
+                column,
+                16,
+                2,
+                partial(show_motor_move_dialog, self, name, motor),
+                f"Move {name} to a chosen angle over a chosen duration",
+            )
+            self.buttons.append(move_button)
+            row_offset += 1
+
     def toggle_rfid_reader_button(self, value: str, key: str) -> None:
         """Toggles the RFID reader setting.
 
@@ -830,11 +913,14 @@ class CorridorLayout(Layout):
         manager.taring_scale = True
 
     def change_angles_clicked(self) -> None:
-        """Opens a dialog to change corridor motor angles and times."""
+        """Opens a dialog to change corridor motor 1 and 2 angles and times.
+
+        Motors 3 and 4 are moved manually via their own MOVE buttons instead.
+        """
         show_motor_angles_dialog(
             self,
-            ["MOTOR1_VALUES", "MOTOR2_VALUES", "MOTOR3_VALUES"],
-            [motor_corridor1, motor_corridor2, motor_corridor3],
+            ["MOTOR1_VALUES", "MOTOR2_VALUES"],
+            [motor_corridor1, motor_corridor2],
         )
 
     def calibrate_scale_clicked(self) -> None:
@@ -914,61 +1000,56 @@ class BoxLayout(Layout):
             bpod_col = 12
 
         if manager.use_of_box_chip:
-            self.draw_motor_buttons("MOTOR1", box_row + 5, box_col, motor_box1)
-            self.draw_motor_buttons("MOTOR2", box_row + 10, box_col, motor_box2)
-            self.draw_motor_buttons("MOTOR3", box_row + 15, box_col, motor_box3)
+            self.draw_box_motor_move_buttons(box_row + 5, box_col)
 
-            self.visible_label: Label = self.create_and_add_label(
-                "Visible\nLight: ", box_row, 9, 12, 2, "black"
-            )
-            key = "VISIBLE_BOX"
-            possible_values = Cycle.values()
-            index = Cycle.get_index_from_value(manager.visible_box_cycle)
-            self.visible_button = self.create_and_add_toggle_button(
-                key,
-                box_row + 2,
-                9,
-                10,
-                2,
-                possible_values,
-                index,
-                self.toggle_visible_button,
-                "Visible light in the box: ON, OFF, AUTO",
-            )
+            if settings.get("VISIBLE_LIGHT_BOX") == Active.ON:
+                self.visible_label: Label = self.create_and_add_label(
+                    "Visible\nLight: ", box_row, 9, 12, 2, "black"
+                )
+                key = "VISIBLE_BOX"
+                possible_values = Cycle.values()
+                index = Cycle.get_index_from_value(manager.visible_box_cycle)
+                self.visible_button = self.create_and_add_toggle_button(
+                    key,
+                    box_row + 2,
+                    9,
+                    10,
+                    2,
+                    possible_values,
+                    index,
+                    self.toggle_visible_button,
+                    "Visible light in the box: ON, OFF, AUTO",
+                )
 
-            self.ir_label: Label = self.create_and_add_label(
-                "IR\nLight: ", box_row, 22, 12, 2, "black"
-            )
-            key = "IR_BOX"
-            possible_values = Cycle.values()
-            index = Cycle.get_index_from_value(manager.ir_box_cycle)
-            self.ir_button = self.create_and_add_toggle_button(
-                key,
-                box_row + 2,
-                22,
-                10,
-                2,
-                possible_values,
-                index,
-                self.toggle_ir_button,
-                "Infrared light in the box: ON, OFF, AUTO",
-            )
-
-            self.change_angles: PushButton = self.create_and_add_button(
-                "SET MOTOR ANGLES",
-                box_row + 20,
-                box_col,
-                16,
-                2,
-                self.change_angles_clicked,
-                "Modify the angle values for the motors.",
-            )
+            if settings.get("IR_LIGHT_BOX") == Active.ON:
+                self.ir_label: Label = self.create_and_add_label(
+                    "IR\nLight: ", box_row, 22, 12, 2, "black"
+                )
+                key = "IR_BOX"
+                possible_values = Cycle.values()
+                index = Cycle.get_index_from_value(manager.ir_box_cycle)
+                self.ir_button = self.create_and_add_toggle_button(
+                    key,
+                    box_row + 2,
+                    22,
+                    10,
+                    2,
+                    possible_values,
+                    index,
+                    self.toggle_ir_button,
+                    "Infrared light in the box: ON, OFF, AUTO",
+                )
 
         if manager.controller_type == ControllerEnum.BPOD:
+            behavior_ports = settings.get("BPOD_BEHAVIOR_PORTS")
+            row_offset = 0
             for i in range(8):
+                if behavior_ports[i] != Active.ON:
+                    continue
+
                 button1 = self.create_and_add_button(
                     "LED" + str(i + 1),
-                    i * 2 + bpod_row,
+                    row_offset * 2 + bpod_row,
                     bpod_col,
                     8,
                     2,
@@ -979,7 +1060,7 @@ class BoxLayout(Layout):
 
                 button2 = self.create_and_add_button(
                     "WATER" + str(i + 1),
-                    i * 2 + bpod_row,
+                    row_offset * 2 + bpod_row,
                     bpod_col + 8,
                     8,
                     2,
@@ -987,29 +1068,40 @@ class BoxLayout(Layout):
                     "Deliver water for 0.1 seconds" + str(i),
                 )
                 self.buttons.append(button2)
+                row_offset += 1
 
-    def draw_motor_buttons(
-        self, name: str, row: int, column: int, motor: Motor | MotorOld | NullMotor
-    ) -> None:
-        """Draws buttons for a specific motor.
+    def draw_box_motor_move_buttons(self, row: int, column: int) -> None:
+        """Draws a MOVE button for each active box motor (1 through 7).
 
-        Args:
-            name (str): The motor name.
-            row (int): The row position.
-            column (int): The column position.
-            motor (Motor | MotorOld | NullMotor): The motor object.
+        Each button only appears if its motor is active (MOTOR1_BOX .. MOTOR7_BOX)
+        and actually wired up as a real Motor. An inactive motor's row is
+        skipped entirely rather than left blank, so e.g. a lone active motor 4
+        takes motor 1's position.
         """
-        open_name: str = "OPEN " + name
-        open_door: PushButton = self.create_and_add_button(
-            open_name, row, column, 16, 2, motor.open, "Open the door"
-        )
-        close_name: str = "CLOSE " + name
-        close_door: PushButton = self.create_and_add_button(
-            close_name, row + 2, column, 16, 2, motor.close, "Close the door"
-        )
-
-        self.buttons.append(open_door)
-        self.buttons.append(close_door)
+        entries = [
+            ("MOTOR1_BOX", "MOTOR1", motor_box1),
+            ("MOTOR2_BOX", "MOTOR2", motor_box2),
+            ("MOTOR3_BOX", "MOTOR3", motor_box3),
+            ("MOTOR4_BOX", "MOTOR4", motor_box4),
+            ("MOTOR5_BOX", "MOTOR5", motor_box5),
+            ("MOTOR6_BOX", "MOTOR6", motor_box6),
+            ("MOTOR7_BOX", "MOTOR7", motor_box7),
+        ]
+        row_offset = 0
+        for active_key, name, motor in entries:
+            if settings.get(active_key) != Active.ON or not isinstance(motor, Motor):
+                continue
+            move_button: PushButton = self.create_and_add_button(
+                name + " MOVE",
+                row + row_offset * 2,
+                column,
+                16,
+                2,
+                partial(show_motor_move_dialog, self, name, motor),
+                f"Move {name} to a chosen angle over a chosen duration",
+            )
+            self.buttons.append(move_button)
+            row_offset += 1
 
     def toggle_visible_button(self, value: str, key: str) -> None:
         manager.visible_box_cycle = Cycle[value]
@@ -1032,14 +1124,6 @@ class BoxLayout(Layout):
                 ir_light_box.on()
             case "AUTO":
                 manager.check_box_lights()
-
-    def change_angles_clicked(self) -> None:
-        """Opens a dialog to change box motor angles and times."""
-        show_motor_angles_dialog(
-            self,
-            ["MOTOR1_BOX_VALUES", "MOTOR2_BOX_VALUES", "MOTOR3_BOX_VALUES"],
-            [motor_box1, motor_box2, motor_box3],
-        )
 
     def disable_all(self) -> None:
         """Disables all port buttons."""

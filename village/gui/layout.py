@@ -391,6 +391,10 @@ class Layout(QGridLayout):
             "lightgray",
         )
 
+        if not manager.use_of_corridor:
+            self.mice_button.hide()
+            self.alarm_button.hide()
+
         self.stop_button = self.create_and_add_button(
             "",
             0,

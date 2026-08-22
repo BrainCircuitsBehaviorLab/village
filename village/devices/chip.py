@@ -214,22 +214,65 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
 motor_corridor1: Motor | MotorOld | NullMotor
 motor_corridor2: Motor | MotorOld | NullMotor
 motor_corridor3: Motor | MotorOld | NullMotor
+motor_corridor4: Motor | MotorOld | NullMotor
 
-motor_box1 = get_motor(
-    settings.get("MOTOR1_BOX_INDEX"), settings.get("MOTOR1_BOX_VALUES"), pwm_box
+
+def get_motor_if_active(
+    key: str, index_key: str, values_key: str, pwm
+) -> Motor | NullMotor:
+    """Builds a Motor from its settings if the `key` presence flag is ON.
+
+    Args:
+        key (str): The Active setting that gates whether this motor exists.
+        index_key (str): The setting holding the motor's PWM channel index.
+        values_key (str): The setting holding the motor's [open, close,
+            time_open, time_close] values.
+        pwm: The PWM chip (or NullChip) the motor is wired to.
+
+    Returns:
+        Motor | NullMotor: A real Motor if enabled, otherwise a NullMotor.
+    """
+    if settings.get(key) != Active.ON:
+        return NullMotor()
+    return get_motor(settings.get(index_key), settings.get(values_key), pwm)
+
+
+motor_box1 = get_motor_if_active(
+    "MOTOR1_BOX", "MOTOR1_BOX_INDEX", "MOTOR1_BOX_VALUES", pwm_box
 )
-motor_box2 = get_motor(
-    settings.get("MOTOR2_BOX_INDEX"), settings.get("MOTOR2_BOX_VALUES"), pwm_box
+motor_box2 = get_motor_if_active(
+    "MOTOR2_BOX", "MOTOR2_BOX_INDEX", "MOTOR2_BOX_VALUES", pwm_box
 )
-motor_box3 = get_motor(
-    settings.get("MOTOR3_BOX_INDEX"), settings.get("MOTOR3_BOX_VALUES"), pwm_box
+motor_box3 = get_motor_if_active(
+    "MOTOR3_BOX", "MOTOR3_BOX_INDEX", "MOTOR3_BOX_VALUES", pwm_box
 )
+motor_box4 = get_motor_if_active(
+    "MOTOR4_BOX", "MOTOR4_BOX_INDEX", "MOTOR4_BOX_VALUES", pwm_box
+)
+motor_box5 = get_motor_if_active(
+    "MOTOR5_BOX", "MOTOR5_BOX_INDEX", "MOTOR5_BOX_VALUES", pwm_box
+)
+motor_box6 = get_motor_if_active(
+    "MOTOR6_BOX", "MOTOR6_BOX_INDEX", "MOTOR6_BOX_VALUES", pwm_box
+)
+motor_box7 = get_motor_if_active(
+    "MOTOR7_BOX", "MOTOR7_BOX_INDEX", "MOTOR7_BOX_VALUES", pwm_box
+)
+
 visible_light_corridor = LED(
     settings.get("VISIBLE_LIGHT_CORRIDOR_INDEX"), 1, pwm_corridor
 )
 ir_light_corridor = LED(settings.get("IR_LIGHT_CORRIDOR_INDEX"), 4, pwm_corridor)
-visible_light_box = LED(settings.get("VISIBLE_LIGHT_BOX_INDEX"), 1, pwm_box)
-ir_light_box = LED(settings.get("IR_LIGHT_BOX_INDEX"), 4, pwm_box)
+visible_light_box = LED(
+    settings.get("VISIBLE_LIGHT_BOX_INDEX"),
+    1,
+    pwm_box if settings.get("VISIBLE_LIGHT_BOX") == Active.ON else NullChip(),
+)
+ir_light_box = LED(
+    settings.get("IR_LIGHT_BOX_INDEX"),
+    4,
+    pwm_box if settings.get("IR_LIGHT_BOX") == Active.ON else NullChip(),
+)
 
 if old_version_motor:
     motor_corridor1 = get_motor_old(
@@ -238,7 +281,10 @@ if old_version_motor:
     motor_corridor2 = get_motor_old(
         settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES")
     )
+    # The old HAT only wires up 2 servo motors, regardless of MOTOR3_CORRIDOR /
+    # MOTOR4_CORRIDOR -- those settings only apply to the current PCA9685 HAT.
     motor_corridor3 = NullMotor()
+    motor_corridor4 = NullMotor()
 else:
     motor_corridor1 = get_motor(
         settings.get("MOTOR1_CORRIDOR_INDEX"),
@@ -250,8 +296,9 @@ else:
         settings.get("MOTOR2_VALUES"),
         pwm_corridor,
     )
-    motor_corridor3 = get_motor(
-        settings.get("MOTOR3_CORRIDOR_INDEX"),
-        settings.get("MOTOR3_VALUES"),
-        pwm_corridor,
+    motor_corridor3 = get_motor_if_active(
+        "MOTOR3_CORRIDOR", "MOTOR3_CORRIDOR_INDEX", "MOTOR3_VALUES", pwm_corridor
+    )
+    motor_corridor4 = get_motor_if_active(
+        "MOTOR4_CORRIDOR", "MOTOR4_CORRIDOR_INDEX", "MOTOR4_VALUES", pwm_corridor
     )

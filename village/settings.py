@@ -296,6 +296,13 @@ which is the one closer to the operant box.""",
 additional functions, such as raising or lowering a water bottle in the home cage.""",
     ),
     Setting(
+        "MOTOR4_CORRIDOR_INDEX",
+        7,
+        int,
+        """The index of the motor 4 of the corridor. This motor can be used for
+additional functions, such as raising or lowering a water bottle in the home cage.""",
+    ),
+    Setting(
         "VISIBLE_LIGHT_CORRIDOR_INDEX",
         8,
         int,
@@ -308,11 +315,21 @@ additional functions, such as raising or lowering a water bottle in the home cag
         "The index of the infrared light of the corridor.",
     ),
     Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
+    Setting(
+        "SCALE_BOX_ADDRESS",
+        "0x2A",
+        str,
+        """The I2C address of the box scale (only used if SCALE_BOX is ON).""",
+    ),
     Setting("TEMP_SENSOR_ADDRESS", "0x44", str, "The address of the temp sensor."),
     Setting("CHIP_BOX_ADDRESS", "0x6a", str, "The address of the box PWM chip."),
     Setting("MOTOR1_BOX_INDEX", 4, int, "The index of the motor 1 of the box."),
     Setting("MOTOR2_BOX_INDEX", 5, int, "The index of the motor 2 of the box."),
     Setting("MOTOR3_BOX_INDEX", 6, int, "The index of the motor 3 of the box."),
+    Setting("MOTOR4_BOX_INDEX", 7, int, """The index of the motor 4 of the box."""),
+    Setting("MOTOR5_BOX_INDEX", 8, int, """The index of the motor 5 of the box."""),
+    Setting("MOTOR6_BOX_INDEX", 9, int, """The index of the motor 6 of the box."""),
+    Setting("MOTOR7_BOX_INDEX", 10, int, """The index of the motor 7 of the box."""),
     Setting(
         "VISIBLE_LIGHT_BOX_INDEX",
         11,
@@ -413,14 +430,14 @@ period, an alarm is triggered.""",
         "20:00",
         str,
         """Deadline to confirm that the mice have been checked.
-        If nobody has confirmed it by this time, an alarm is triggered.""",
+If nobody has confirmed it by this time, an alarm is triggered.""",
     ),
     Setting(
         "CHECK_MICE_RESET_TIME",
         "00:00",
         str,
         """Time at which the confirmation that the mice have been checked
-        expires, so that it has to be done again for the next day.""",
+expires, so that it has to be done again for the next day.""",
     ),
 ]
 
@@ -561,6 +578,66 @@ threshold are discarded as they likely reflect movement artifacts
         int,
         "The interval in seconds at which the scale is tared.",
     ),
+    Setting(
+        "MOTOR3_CORRIDOR",
+        "ON",
+        Active,
+        """Whether the third corridor motor is physically present and used.""",
+    ),
+    Setting(
+        "MOTOR4_CORRIDOR",
+        "OFF",
+        Active,
+        """Whether a fourth corridor motor is physically present and used.""",
+    ),
+]
+
+box_settings = [
+    Setting(
+        "MOTOR1_BOX", "ON", Active, """Whether box motor 1 is physically present."""
+    ),
+    Setting(
+        "MOTOR2_BOX", "ON", Active, """Whether box motor 2 is physically present."""
+    ),
+    Setting(
+        "MOTOR3_BOX", "ON", Active, """Whether box motor 3 is physically present."""
+    ),
+    Setting(
+        "MOTOR4_BOX", "OFF", Active, """Whether box motor 4 is physically present."""
+    ),
+    Setting(
+        "MOTOR5_BOX", "OFF", Active, """Whether box motor 5 is physically present."""
+    ),
+    Setting(
+        "MOTOR6_BOX", "OFF", Active, """Whether box motor 6 is physically present."""
+    ),
+    Setting(
+        "MOTOR7_BOX", "OFF", Active, """Whether box motor 7 is physically present."""
+    ),
+    Setting(
+        "VISIBLE_LIGHT_BOX",
+        "ON",
+        Active,
+        """Whether the box's visible light is physically present.""",
+    ),
+    Setting(
+        "IR_LIGHT_BOX",
+        "ON",
+        Active,
+        """Whether the box's infrared light is physically present.""",
+    ),
+    Setting(
+        "LED_STRIP_BOX",
+        "OFF",
+        Active,
+        """Whether an LED strip is physically present in the box.""",
+    ),
+    Setting(
+        "SCALE_BOX",
+        "OFF",
+        Active,
+        """Whether a scale is physically present in the box.""",
+    ),
 ]
 
 extra_settings = [
@@ -602,7 +679,7 @@ preventing unnecessary processing.""",
         "OFF",
         OldVersion,
         """Use the old version of the Hardware Attached on Top (HAT) that only has
-        2 servo motors and no LEDs.""",
+2 servo motors and no LEDs.""",
     ),
 ]
 
@@ -612,9 +689,8 @@ controller_settings = [
         "RASPBERRY",
         ControllerEnum,
         """The controller used to run the operant box. The options are:
-        BPOD: The Bpod controller. ARDUINO: A custom controller that can be
-        Arduino based. RASPBERRY: No need for an external controller.
-        """,
+BPOD: The Bpod controller. ARDUINO: A custom controller that can be
+Arduino based. RASPBERRY: No need for an external controller.""",
     ),
     Setting(
         "CONTROLLER_PORT",
@@ -808,38 +884,38 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
         "THRESHOLDS_CORRIDOR",
         "AUTO",
         CycleDay,
-        "Which day/night values the corridor camera uses for its detection "
-        "thresholds and exposure. AUTO = follow the actual day/night; DAY = "
-        "always use the day values; NIGHT = always use the night values.",
+        """Which day/night values the corridor camera uses for its detection
+thresholds and exposure. AUTO = follow the actual day/night; DAY =
+always use the day values; NIGHT = always use the night values.""",
     ),
     Setting(
         "EXPOSURE_DAY_CORRIDOR",
         0,
         int,
-        "Corridor camera exposure during the day, 0-2 (higher = brighter). "
-        "0 = Normal auto-exposure. 1 = Long mode: lets the camera use longer "
-        "exposure times, so it is brighter and cleaner when there is little "
-        "light. 2 = Long plus a brighter target (digital gain -> brightest but "
-        "noisier).",
+        """Corridor camera exposure during the day, 0-2 (higher = brighter).
+0 = Normal auto-exposure. 1 = Long mode: lets the camera use longer
+exposure times, so it is brighter and cleaner when there is little
+light. 2 = Long plus a brighter target (digital gain -> brightest but
+noisier).""",
     ),
     Setting(
         "EXPOSURE_NIGHT_CORRIDOR",
         2,
         int,
-        "Corridor camera exposure at night / IR, 0-2 (higher = brighter). "
-        "0 = Normal auto-exposure. 1 = Long mode: lets the camera use longer "
-        "exposure times, so it is brighter and cleaner when there is little "
-        "light. 2 = Long plus a brighter target (digital gain -> brightest but "
-        "noisier).",
+        """Corridor camera exposure at night / IR, 0-2 (higher = brighter).
+0 = Normal auto-exposure. 1 = Long mode: lets the camera use longer
+exposure times, so it is brighter and cleaner when there is little
+light. 2 = Long plus a brighter target (digital gain -> brightest but
+noisier).""",
     ),
     Setting(
         "EXPOSURE_BOX",
         0,
         int,
-        "Box camera exposure, 0-2 (higher = brighter). 0 = Normal auto-exposure. "
-        "1 = Long mode: lets the camera use longer exposure times, so it is "
-        "brighter and cleaner when there is little light. 2 = Long plus a "
-        "brighter target (digital gain -> brightest but noisier).",
+        """Box camera exposure, 0-2 (higher = brighter). 0 = Normal auto-exposure.
+1 = Long mode: lets the camera use longer exposure times, so it is
+brighter and cleaner when there is little light. 2 = Long plus a
+brighter target (digital gain -> brightest but noisier).""",
     ),
 ]
 
@@ -848,43 +924,78 @@ motor_settings = [
         "MOTOR1_VALUES",
         [50, 80, 0, 300],
         list[int],
-        "Corridor door 1: [open, close, time_open, time_close]. Angles 0-180; "
-        "time_open/time_close = total ms to open/close (0 = instant).",
+        """Corridor door 1: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
     ),
     Setting(
         "MOTOR2_VALUES",
         [50, 80, 0, 300],
         list[int],
-        "Corridor door 2: [open, close, time_open, time_close]. Angles 0-180; "
-        "time_open/time_close = total ms to open/close (0 = instant).",
+        """Corridor door 2: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
     ),
     Setting(
         "MOTOR3_VALUES",
         [50, 80, 0, 300],
         list[int],
-        "Corridor door 3: [open, close, time_open, time_close]. Angles 0-180; "
-        "time_open/time_close = total ms to open/close (0 = instant).",
+        """Corridor door 3: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
+    ),
+    Setting(
+        "MOTOR4_VALUES",
+        [50, 80, 0, 300],
+        list[int],
+        """Corridor door 4: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
     ),
     Setting(
         "MOTOR1_BOX_VALUES",
         [50, 80, 0, 300],
         list[int],
-        "Box motor 1: [open, close, time_open, time_close]. Angles 0-180; "
-        "time_open/time_close = total ms to open/close (0 = instant).",
+        """Box motor 1: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
     ),
     Setting(
         "MOTOR2_BOX_VALUES",
         [50, 80, 0, 300],
         list[int],
-        "Box motor 2: [open, close, time_open, time_close]. Angles 0-180; "
-        "time_open/time_close = total ms to open/close (0 = instant).",
+        """Box motor 2: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
     ),
     Setting(
         "MOTOR3_BOX_VALUES",
         [50, 80, 0, 300],
         list[int],
-        "Box motor 3: [open, close, time_open, time_close]. Angles 0-180; "
-        "time_open/time_close = total ms to open/close (0 = instant).",
+        """Box motor 3: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
+    ),
+    Setting(
+        "MOTOR4_BOX_VALUES",
+        [50, 80, 0, 300],
+        list[int],
+        """Box motor 4: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
+    ),
+    Setting(
+        "MOTOR5_BOX_VALUES",
+        [50, 80, 0, 300],
+        list[int],
+        """Box motor 5: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
+    ),
+    Setting(
+        "MOTOR6_BOX_VALUES",
+        [50, 80, 0, 300],
+        list[int],
+        """Box motor 6: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
+    ),
+    Setting(
+        "MOTOR7_BOX_VALUES",
+        [50, 80, 0, 300],
+        list[int],
+        """Box motor 7: [open, close, time_open, time_close]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant).""",
     ),
 ]
 
@@ -934,10 +1045,22 @@ hidden_settings = [
         "Weight in grams used to calibrate the scale.",
     ),
     Setting(
+        "SCALE_BOX_WEIGHT_TO_CALIBRATE",
+        20,
+        float,
+        """Weight in grams used to calibrate the box scale.""",
+    ),
+    Setting(
         "SCALE_CALIBRATION_VALUE",
         1,
         float,
         "Factor to transform electric signal to grams.",
+    ),
+    Setting(
+        "SCALE_BOX_CALIBRATION_VALUE",
+        1,
+        float,
+        """Factor to transform electric signal to grams, for the box scale.""",
     ),
     Setting("RFID_READER", "ON", Active, "The RFID reader status."),
     Setting("VISIBLE_CORRIDOR", "ON", Cycle, "The visible light of the corridor."),
@@ -965,6 +1088,7 @@ settings = Settings(
     session_alarm_settings,
     cam_fixed_settings,
     corridor_settings,
+    box_settings,
     extra_settings,
     controller_settings,
     bpod_settings,

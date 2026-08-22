@@ -90,6 +90,7 @@ class Settings:
         session_alarm_settings: list[Setting],
         cam_framerate_settings: list[Setting],
         corridor_settings: list[Setting],
+        box_settings: list[Setting],
         extra_settings: list[Setting],
         controller_settings: list[Setting],
         bpod_settings: list[Setting],
@@ -114,6 +115,7 @@ class Settings:
         self.session_alarm_settings = session_alarm_settings
         self.cam_framerate_settings = cam_framerate_settings
         self.corridor_settings = corridor_settings
+        self.box_settings = box_settings
         self.extra_settings = extra_settings
         self.controller_settings = controller_settings
         self.bpod_settings = bpod_settings
@@ -126,20 +128,22 @@ class Settings:
         # main_settings is excluded on purpose: SYSTEM_NAME, USE_CORRIDOR and
         # USE_BOX_BOARD describe this specific machine's identity and physical
         # hardware, not trainable defaults, so a factory reset must not touch
-        # them (same reasoning as directory_settings below).
+        # them (same reasoning as directory_settings and device_settings below).
+        # device_settings (wiring addresses/indices) is fixed per-machine and not
+        # editable from the GUI, so it must not be touched by a factory reset either.
         self.restorable_settings = (
             sound_settings
             + screen_settings
             + touchscreen_settings
             + sync_settings
             + server_settings
-            + device_settings
             + led_strip_settings
             + hourly_alarm_settings
             + cycle_alarm_settings
             + session_alarm_settings
             + cam_framerate_settings
             + corridor_settings
+            + box_settings
             + extra_settings
             + controller_settings
             + bpod_settings
@@ -151,6 +155,7 @@ class Settings:
             + self.restorable_settings
             + telegram_settings
             + directory_settings
+            + device_settings
             + camera_settings
             + motor_settings
             + hidden_settings

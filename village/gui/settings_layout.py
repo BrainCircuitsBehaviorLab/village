@@ -55,6 +55,7 @@ mini_box = 7
 MENU_SECTIONS = [
     "MAIN SETTINGS",
     "CORRIDOR SETTINGS",
+    "BOX SETTINGS",
     "CONTROLLER SETTINGS",
     "CAMERA SETTINGS",
     "SOUND SETTINGS",
@@ -63,7 +64,6 @@ MENU_SECTIONS = [
     "SYNC SETTINGS",
     "TELEGRAM SETTINGS",
     "ADVANCED SETTINGS",
-    "DEVICE ADDRESSES",
 ]
 
 MENU_TOOLTIPS: dict[str, str] = {
@@ -71,6 +71,7 @@ MENU_TOOLTIPS: dict[str, str] = {
     "CORRIDOR SETTINGS": (
         "Detection thresholds, weight limits and timing for corridor access."
     ),
+    "BOX SETTINGS": ("Which box motors and hardware components are present."),
     "CONTROLLER SETTINGS": ("Behavior controller type (Bpod, Arduino, Raspberry)."),
     "CAMERA SETTINGS": ("Camera framerates, resolution and tracking settings."),
     "SOUND SETTINGS": "Soundcard and audio device configuration.",
@@ -79,55 +80,14 @@ MENU_TOOLTIPS: dict[str, str] = {
     "SYNC SETTINGS": "Data synchronization to external drive or remote server.",
     "TELEGRAM SETTINGS": ("Telegram and alarm settings for notifications."),
     "ADVANCED SETTINGS": ("Advanced and visual settings."),
-    "DEVICE ADDRESSES": ("Addresses for connected hardware devices."),
 }
 
 no_corridor = [
     "CAM_CORRIDOR_INDEX",
     "CAM_CORRIDOR_FRAMERATE",
     "CORRIDOR_VIDEO_DURATION",
-    "VISIBLE_LIGHT_CORRIDOR_INDEX",
-    "IR_LIGHT_CORRIDOR_INDEX",
-    "MOTOR1_CORRIDOR_INDEX",
-    "MOTOR2_CORRIDOR_INDEX",
-    "CHIP_CORRIDOR_ADDRESS",
-    "SCALE_ADDRESS",
-    "TEMP_SENSOR_ADDRESS",
     "OLD_VERSION",
 ]
-
-no_box_board = [
-    "VISIBLE_LIGHT_BOX_INDEX",
-    "IR_LIGHT_BOX_INDEX",
-    "MOTOR1_BOX_INDEX",
-    "MOTOR2_BOX_INDEX",
-    "CHIP_BOX_ADDRESS",
-]
-
-# Address groups that must not have repeated values within the group. A value may
-# repeat across groups (a corridor board address may equal a box board one, as
-# they are on different boards / GPIO is unrelated). I2C addresses (str) and PWM
-# indices (int) never collide with each other, so keeping them in one list per
-# board validates each namespace correctly.
-_CORRIDOR_ADDR_KEYS = [
-    "CHIP_CORRIDOR_ADDRESS",
-    "SCALE_ADDRESS",
-    "TEMP_SENSOR_ADDRESS",
-    "MOTOR1_CORRIDOR_INDEX",
-    "MOTOR2_CORRIDOR_INDEX",
-    "MOTOR3_CORRIDOR_INDEX",
-    "VISIBLE_LIGHT_CORRIDOR_INDEX",
-    "IR_LIGHT_CORRIDOR_INDEX",
-]
-_BOX_ADDR_KEYS = [
-    "CHIP_BOX_ADDRESS",
-    "MOTOR1_BOX_INDEX",
-    "MOTOR2_BOX_INDEX",
-    "MOTOR3_BOX_INDEX",
-    "VISIBLE_LIGHT_BOX_INDEX",
-    "IR_LIGHT_BOX_INDEX",
-]
-_GPIO_KEYS = ["GPIO_IN", "GPIO_OUT"]
 
 # Keys whose toggle value affects what is shown within their section
 _CONDITIONAL_KEYS: dict[str, str] = {
@@ -189,52 +149,17 @@ class SettingsLayout(Layout):
                 return [possible.index(str(v)) for v in vals]
         return settings.get_indices(key)
 
-    def _duplicate_address_error(self) -> str:
-        """Returns an error message if an address group has repeated values.
-
-        Corridor board addresses must be unique among themselves, box board
-        addresses among themselves, and GPIO_IN must differ from GPIO_OUT. A
-        value may repeat across groups. Returns "" if everything is fine.
-        """
-        groups = [
-            ("Corridor board", _CORRIDOR_ADDR_KEYS, manager.use_of_corridor),
-            ("Box board", _BOX_ADDR_KEYS, manager.use_of_box_chip),
-            ("GPIO", _GPIO_KEYS, True),
-        ]
-        for label, keys, enabled in groups:
-            if not enabled:
-                continue
-            seen: dict[Any, str] = {}
-            for key in keys:
-                raw = self._get(key)
-                try:
-                    if settings.get_type(key) is int:
-                        value: Any = int(str(raw).strip())
-                    else:
-                        value = str(raw).strip().lower()
-                except Exception:
-                    value = str(raw).strip().lower()
-                if value in seen:
-                    return (
-                        f"{label}: {key} and {seen[value]} have the same value "
-                        f"({raw}). Values must be unique within the group."
-                    )
-                seen[value] = key
-        return ""
-
     @property
     def _active_sections(self) -> list[str]:
         hidden: set[str] = set()
         if not manager.use_of_corridor:
             hidden.update({"CORRIDOR SETTINGS", "TELEGRAM SETTINGS"})
-            if not manager.use_of_box_chip:
-                hidden.update({"DEVICE ADDRESSES"})
+        if not manager.use_of_box_chip:
+            hidden.update({"BOX SETTINGS"})
         return [s for s in MENU_SECTIONS if s not in hidden]
 
     def _should_show(self, key: str) -> bool:
-        if not manager.use_of_corridor and key in no_corridor:
-            return False
-        return not (not manager.use_of_box_chip and key in no_box_board)
+        return not (not manager.use_of_corridor and key in no_corridor)
 
     # ── Tracking lists ─────────────────────────────────────────────────────────
 
@@ -480,6 +405,12 @@ class SettingsLayout(Layout):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
+        elif name == "BOX SETTINGS":
+            for s in settings.box_settings:
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+
         elif name == "CONTROLLER SETTINGS":
             for s in settings.controller_settings:
                 if self._should_show(s.key):
@@ -559,35 +490,6 @@ class SettingsLayout(Layout):
             row += 2
             for s in settings.session_alarm_settings:
                 if self._should_show(s.key):
-                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                    row += 2
-
-        elif name == "DEVICE ADDRESSES":
-            for s in settings.device_settings:
-                if self._should_show(s.key):
-                    if s.key == "CHIP_CORRIDOR_ADDRESS":
-                        sub = self.create_and_add_label(
-                            "CORRIDOR BOARD ADDRESSES",
-                            row,
-                            C_COL,
-                            C_LABEL_W,
-                            2,
-                            "black",
-                        )
-                        sub.setProperty("type", name)
-                        row += 2
-                    elif s.key == "CHIP_BOX_ADDRESS":
-                        sub = self.create_and_add_label(
-                            "BOX BOARD ADDRESSES", row, C_COL, C_LABEL_W, 2, "black"
-                        )
-                        sub.setProperty("type", name)
-                        row += 2
-                    elif s.key == "GPIO_IN":
-                        sub = self.create_and_add_label(
-                            "GPIO", row, C_COL, C_LABEL_W, 2, "black"
-                        )
-                        sub.setProperty("type", name)
-                        row += 2
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
@@ -689,14 +591,6 @@ class SettingsLayout(Layout):
         # Flush current section's widgets into _pending so save() sees everything
         self._flush_to_pending()
 
-        # Block saving repeated addresses within a board (or GPIO in == out).
-        # Not enforced on exit, so the user is never trapped by a bad value.
-        if not exiting:
-            dup = self._duplicate_address_error()
-            if dup:
-                QMessageBox.warning(self.window, "Repeated addresses", dup)
-                return
-
         sync_directory = self.create_sync_directory()
         self.save_button.setDisabled(True)
         manager.changing_settings = False
@@ -714,16 +608,6 @@ class SettingsLayout(Layout):
             "HEALTHCHECKS_URL",
             "PROJECT_DIRECTORY",
             "CONTROLLER_PORT",
-            "MOTOR1_CORRIDOR_INDEX",
-            "MOTOR2_CORRIDOR_INDEX",
-            "MOTOR1_BOX_INDEX",
-            "MOTOR2_BOX_INDEX",
-            "VISIBLE_LIGHT_CORRIDOR_INDEX",
-            "IR_LIGHT_CORRIDOR_INDEX",
-            "VISIBLE_LIGHT_BOX_INDEX",
-            "IR_LIGHT_BOX_INDEX",
-            "SCALE_ADDRESS",
-            "TEMP_SENSOR_ADDRESS",
             "CAM_BOX_INDEX",
             "CAM_CORRIDOR_INDEX",
             "NO_DETECTION_HOURS",
@@ -743,6 +627,7 @@ class SettingsLayout(Layout):
             "BPOD_BAUDRATE",
             "BPOD_SYNC_CHANNEL",
             "BPOD_SYNC_MODE",
+            "BPOD_BEHAVIOR_PORTS",
             "BEHAVIOR_CONTROLLER",
             "SYNC_TYPE",
             "SAFE_DELETE",
@@ -753,8 +638,6 @@ class SettingsLayout(Layout):
             "SERVER_HOST",
             "SERVER_PORT",
             "OLD_VERSION",
-            "CHIP_CORRIDOR_ADDRESS",
-            "CHIP_BOX_ADDRESS",
             "USE_CORRIDOR",
             "USE_BOX_BOARD",
             "CAM_BOX_TRACKING_POSITION",
@@ -762,8 +645,6 @@ class SettingsLayout(Layout):
             "NUMBER_OF_LEDS",
             "SPI_SPEED_KHZ",
             "PIXEL_TYPE",
-            "GPIO_IN",
-            "GPIO_OUT",
         ]
 
         # Keys in the current section's tracking lists (will be processed with

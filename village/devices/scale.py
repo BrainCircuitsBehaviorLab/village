@@ -11,7 +11,11 @@ from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
-use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
+scale_corridor_enabled: bool = settings.get("USE_CORRIDOR") == Active.ON
+scale_box_enabled: bool = (
+    settings.get("USE_BOX_BOARD") == Active.ON
+    and settings.get("SCALE_BOX") == Active.ON
+)
 
 
 class Scale(NullScale):
@@ -21,12 +25,20 @@ class Scale(NullScale):
         address (str): The I2C address of the scale as a hex string (e.g., "0x2A").
         min_threshold (float): The minimum weight threshold for valid measurements.
         max_threshold (float): The maximum weight threshold for valid measurements.
+        calibration_key (str): The setting key holding this scale's calibration
+            factor. Each physical scale needs its own key so calibrating one
+            does not overwrite another's calibration.
+        weight_to_calibrate_key (str): The setting key holding the known weight
+            last used to calibrate this scale.
 
     Attributes:
         I2C_ADDR (int): The I2C address of the scale.
         REG_DATA_GET_RAM_DATA (int): Register address for getting raw data.
         bus (int): The I2C bus number.
         calibration (float): Calibration factor.
+        calibration_key (str): The setting key this scale's calibration is stored under.
+        weight_to_calibrate_key (str): The setting key this scale's last
+            calibration weight is stored under.
         offset (float): Tare offset.
         i2cbus (smbus2.SMBus): The I2C bus connection.
         error (str): Error message if any.
@@ -37,7 +49,12 @@ class Scale(NullScale):
     """
 
     def __init__(
-        self, address: str, min_threshold: float, max_threshold: float
+        self,
+        address: str,
+        min_threshold: float,
+        max_threshold: float,
+        calibration_key: str = "SCALE_CALIBRATION_VALUE",
+        weight_to_calibrate_key: str = "SCALE_WEIGHT_TO_CALIBRATE",
     ) -> None:
         """Initializes the Scale.
 
@@ -45,13 +62,19 @@ class Scale(NullScale):
             address (str): The I2C address as a hex string (e.g., "0x2A").
             min_threshold (float): The minimum weight threshold.
             max_threshold (float): The maximum weight threshold.
+            calibration_key (str): The setting key holding this scale's
+                calibration factor.
+            weight_to_calibrate_key (str): The setting key holding the known
+                weight last used to calibrate this scale.
         """
         self.min = min_threshold
         self.max = max_threshold
         self.I2C_ADDR = int(address, 16)
         self.REG_DATA_GET_RAM_DATA = 0x00  # Get sensor raw data
         self.bus = 1
-        self.calibration: float = float(settings.get("SCALE_CALIBRATION_VALUE"))
+        self.calibration_key = calibration_key
+        self.weight_to_calibrate_key = weight_to_calibrate_key
+        self.calibration: float = float(settings.get(self.calibration_key))
         self.offset = 0.0
         self.i2cbus = smbus2.SMBus(self.bus)
         self.error = ""
@@ -82,8 +105,8 @@ class Scale(NullScale):
             raw_value: float = self.get_value()
             new_calibration = (raw_value - self.offset) / weight
             self.calibration = new_calibration
-            settings.set("SCALE_CALIBRATION_VALUE", new_calibration)
-            settings.set("SCALE_WEIGHT_TO_CALIBRATE", weight)
+            settings.set(self.calibration_key, new_calibration)
+            settings.set(self.weight_to_calibrate_key, weight)
         except Exception:
             log.error("Error calibrating scale", exception=traceback.format_exc())
 
@@ -162,23 +185,41 @@ class Scale(NullScale):
 
 
 def get_scale(
-    address: str, min_threshold: float, max_threshold: float
+    address: str,
+    min_threshold: float,
+    max_threshold: float,
+    enabled: bool,
+    calibration_key: str = "SCALE_CALIBRATION_VALUE",
+    weight_to_calibrate_key: str = "SCALE_WEIGHT_TO_CALIBRATE",
 ) -> Scale | NullScale:
     """Factory function to initialize the Scale.
 
     Args:
         address (str): The I2C address of the scale.
+        min_threshold (float): The minimum weight threshold for valid measurements.
+        max_threshold (float): The maximum weight threshold for valid measurements.
+        enabled (bool): Whether this scale is physically present and should be
+            initialized at all.
+        calibration_key (str): The setting key holding this scale's
+            calibration factor.
+        weight_to_calibrate_key (str): The setting key holding the known
+            weight last used to calibrate this scale.
 
     Returns:
-        Scale | NullScale: An initialized Scale instance or a null scale on failure.
+        Scale | NullScale: An initialized Scale instance or a null scale if
+        disabled or on failure.
     """
-    if not use_of_corridor:
+    if not enabled:
         scale = NullScale()
         scale.error = ""
         return scale
     try:
         scale = Scale(
-            address=address, min_threshold=min_threshold, max_threshold=max_threshold
+            address=address,
+            min_threshold=min_threshold,
+            max_threshold=max_threshold,
+            calibration_key=calibration_key,
+            weight_to_calibrate_key=weight_to_calibrate_key,
         )
         return scale
     except Exception:
@@ -193,4 +234,16 @@ scale = get_scale(
     settings.get("SCALE_ADDRESS"),
     float(settings.get("MIN_WEIGHT_THRESHOLD")),
     float(settings.get("MAX_WEIGHT_THRESHOLD")),
+    enabled=scale_corridor_enabled,
+)
+
+# Thresholds are set directly here rather than read from settings -- adjust
+# them by hand for the box scale's actual weight range.
+scale_box = get_scale(
+    settings.get("SCALE_BOX_ADDRESS"),
+    0.0,
+    100000.0,
+    enabled=scale_box_enabled,
+    calibration_key="SCALE_BOX_CALIBRATION_VALUE",
+    weight_to_calibrate_key="SCALE_BOX_WEIGHT_TO_CALIBRATE",
 )
