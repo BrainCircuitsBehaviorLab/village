@@ -433,7 +433,7 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
     columns_to_drop = [
         item
         for item in df4.columns
-        if type(item) == tuple
+        if isinstance(item, tuple)
         and (item[1].startswith("Tup") or item[1].startswith("_Transition"))
     ]
     df4.drop(columns=columns_to_drop, inplace=True)
@@ -447,7 +447,8 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
     df4.drop(columns=columns_to_drop2, inplace=True)
 
     df4.columns = [
-        item[1] + "_" + item[0] if type(item) == tuple else item for item in df4.columns
+        item[1] + "_" + item[0] if isinstance(item, tuple) else item
+        for item in df4.columns
     ]
 
     df4.replace("", np.nan, inplace=True)

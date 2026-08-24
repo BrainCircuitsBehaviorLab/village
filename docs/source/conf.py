@@ -130,8 +130,8 @@ autodoc_mock_imports = [
 
 # Add the module path to sys.path here.
 # If the directory is relative to the documentation root,
-# use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath("../.."))
+# use pathlib to make it absolute, like shown here.
+sys.path.insert(0, str(pathlib.Path("../..").resolve()))
 
 # village.settings hardcodes /home/<user>/village_projects/... as the default
 # project directory. That path only exists on the real device, so redirect
@@ -180,7 +180,7 @@ autodoc_default_options = {
 autodoc_preserve_defaults = True
 
 project = "village"
-copyright = "2024, Brain Circuits & Behavior Lab"
+copyright = "2024, Brain Circuits & Behavior Lab"  # noqa: A001
 author = "Rafael Marin"
 try:
     release = setuptools_scm.get_version(root="../..", relative_to=__file__)

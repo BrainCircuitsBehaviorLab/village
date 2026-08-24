@@ -81,7 +81,7 @@ class Manager:
         ir_box_cycle (Cycle): Infrared light cycle of the box.
         status_parts (list[str]): The 8 pieces of the status bar text, each
             shown in its own label, laid out as a 4x2 grid (row-major): top
-            row is project/task/RFID/state, bottom row is (empty)/subject/
+            row is (empty)/task/RFID/state, bottom row is project/subject/
             cycle/state description.
         day (bool): Indicates if it's day.
         changing_settings (bool): Indicates if settings are being changed.
@@ -285,13 +285,13 @@ class Manager:
             project_text = ""
 
         # Laid out as a 4-column x 2-row grid (row-major): top row is
-        # PROJECT/TASK/RFID/STATE, bottom row is (empty)/SUBJECT/CYCLE/description.
+        # (empty)/TASK/RFID/STATE, bottom row is PROJECT/SUBJECT/CYCLE/description.
         self.status_parts = [
-            "PROJECT: " + project_text,
+            "",
             "TASK: " + task_name,
             "RFID: " + rfid_reader_name,
             "STATE: " + state_name,
-            "",
+            "PROJECT: " + project_text,
             "SUBJECT: " + subject_name,
             "CYCLE: " + cycle_name,
             "(" + state_description + ")",

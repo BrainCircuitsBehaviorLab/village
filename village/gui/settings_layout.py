@@ -701,7 +701,7 @@ class SettingsLayout(Layout):
             if s.key in critical_keys and line_edit.text() != str(settings.get(s.key)):
                 self.critical_changes = True
 
-            if s.value_type == str:
+            if s.value_type is str:
                 value = line_edit.text()
 
                 if s.key == "SYSTEM_NAME":
@@ -713,14 +713,14 @@ class SettingsLayout(Layout):
                 if s.key == "SYSTEM_DIRECTORY":
                     continue
                 settings.set(s.key, value)
-            elif s.value_type == float:
+            elif s.value_type is float:
                 try:
                     value_float = float(line_edit.text())
                     settings.set(s.key, value_float)
                     line_edit.setText(str(value_float))
                 except ValueError:
                     line_edit.setText(str(settings.get(s.key)))
-            elif s.value_type == int:
+            elif s.value_type is int:
                 try:
                     value_int = round(float(line_edit.text()))
                     settings.set(s.key, value_int)

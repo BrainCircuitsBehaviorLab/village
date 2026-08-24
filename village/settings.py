@@ -121,16 +121,23 @@ telegram_settings = [
         "The Telegram chat ID where alarm messages will be sent.",
     ),
     Setting(
-        "TELEGRAM_REPEAT_MINUTES",
-        60,
-        int,
-        "Minutes between reminders for an alarm until it is acknowledged.",
-    ),
-    Setting(
         "HEALTHCHECKS_URL",
         "",
         str,
         "The URL of the healthchecks.io endpoint to notify when the system is running.",
+    ),
+    Setting(
+        "CHECK_MICE_TIME",
+        "20:00",
+        str,
+        """Deadline to confirm that the mice have been checked.
+If nobody has confirmed it by this time, an alarm is triggered.""",
+    ),
+    Setting(
+        "TELEGRAM_REPEAT_MINUTES",
+        60,
+        int,
+        "Minutes between reminders for an alarm until it is acknowledged.",
     ),
 ]
 
@@ -424,13 +431,6 @@ triggered.""",
         """This check is performed every time the system switches between day and night.
 If any animal drinks less than the specified minimum water intake (in µL) over a 24-hour
 period, an alarm is triggered.""",
-    ),
-    Setting(
-        "CHECK_MICE_TIME",
-        "20:00",
-        str,
-        """Deadline to confirm that the mice have been checked.
-If nobody has confirmed it by this time, an alarm is triggered.""",
     ),
 ]
 
