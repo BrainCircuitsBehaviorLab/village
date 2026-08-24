@@ -134,6 +134,18 @@ class TelegramBot:
         self.pending[self.alarm_id] = alarm
         alarm.message_id = self.send(alarm.text(), self.alarm_id)
 
+    def acknowledge(self, first_line: str) -> None:
+        """Clears pending alarms matching a first line, leaving others intact.
+
+        Args:
+            first_line (str): The first line of the alarm message(s) to clear.
+        """
+        self.pending = {
+            k: v
+            for k, v in self.pending.items()
+            if v.message.split("\n")[0] != first_line
+        }
+
     def repeat_minutes(self) -> int:
         """Minutes between reminders"""
         return settings.get("TELEGRAM_REPEAT_MINUTES") or 30
@@ -152,7 +164,7 @@ class TelegramBot:
             int: The id of the message sent, 0 if it could not be sent.
         """
         try:
-            url = "https://api.telegram.org/bot%s/sendMessage" % self.token
+            url = f"https://api.telegram.org/bot{self.token}/sendMessage"
             values = {"chat_id": self.chat, "text": text}
             if ack_id is not None:
                 values["reply_markup"] = json.dumps(
@@ -161,7 +173,7 @@ class TelegramBot:
                             [
                                 {
                                     "text": "✅ Acknowledge",
-                                    "callback_data": "ack:%d" % ack_id,
+                                    "callback_data": f"ack:{ack_id}",
                                 }
                             ]
                         ]
@@ -214,7 +226,7 @@ class TelegramBot:
         if alarm.message_id != 0:
             try:  # delete old message
                 t = self.token
-                url = "https://api.telegram.org/bot%s/deleteMessage" % t
+                url = f"https://api.telegram.org/bot{t}/deleteMessage"
                 values = {"chat_id": self.chat, "message_id": alarm.message_id}
                 data = parse.urlencode(values)
                 request.urlopen(url, data.encode("utf-8"), timeout=10)

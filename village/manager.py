@@ -1,3 +1,4 @@
+import datetime
 import traceback
 from collections.abc import Callable
 from pathlib import Path
@@ -836,9 +837,7 @@ class Manager:
         Returns:
             bool: True if someone confirmed the check.
         """
-        reset = time_utils.time_from_setting_string(
-            settings.get("CHECK_MICE_RESET_TIME")
-        )
+        reset = datetime.time(0, 0)
         try:
             checked = time_utils.date_from_string(settings.get("MICE_CHECKED_AT"))
         except (ValueError, TypeError):
@@ -851,9 +850,7 @@ class Manager:
         Called from the manager background checks, it only triggers after
         CHECK_MICE_TIME, and only once for each day.
         """
-        reset = time_utils.time_from_setting_string(
-            settings.get("CHECK_MICE_RESET_TIME")
-        )
+        reset = datetime.time(0, 0)
         expired = time_utils.previous_init_time(reset)
         sent_for = time_utils.string_from_date(expired)
         if self.mice_alarm_sent_for == sent_for or self.mice_check_done():

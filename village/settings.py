@@ -432,13 +432,6 @@ period, an alarm is triggered.""",
         """Deadline to confirm that the mice have been checked.
 If nobody has confirmed it by this time, an alarm is triggered.""",
     ),
-    Setting(
-        "CHECK_MICE_RESET_TIME",
-        "00:00",
-        str,
-        """Time at which the confirmation that the mice have been checked
-expires, so that it has to be done again for the next day.""",
-    ),
 ]
 
 session_alarm_settings = [

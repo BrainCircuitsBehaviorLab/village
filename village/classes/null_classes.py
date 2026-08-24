@@ -95,6 +95,14 @@ class NullTelegramBot:
         """
         return
 
+    def acknowledge(self, first_line: str) -> None:
+        """Clears pending alarms matching a first line, leaving others intact.
+
+        Args:
+            first_line (str): The first line of the alarm message(s) to clear.
+        """
+        return
+
     def register_custom(self, commands: list) -> None:
         """Registers custom commands collected from the project code directory.
 

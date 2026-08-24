@@ -838,7 +838,6 @@ class SettingsLayout(Layout):
             "DAYTIME",
             "NIGHTTIME",
             "CHECK_MICE_TIME",
-            "CHECK_MICE_RESET_TIME",
         ):
             value = self._get(s.key)
             time_edit = self.create_and_add_time_edit(
