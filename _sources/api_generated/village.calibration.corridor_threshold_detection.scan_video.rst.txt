@@ -1,0 +1,6 @@
+scan\_video
+===========
+
+.. currentmodule:: village.calibration.corridor_threshold_detection
+
+.. autofunction:: scan_video

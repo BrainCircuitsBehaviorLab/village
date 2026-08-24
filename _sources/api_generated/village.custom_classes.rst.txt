@@ -37,11 +37,14 @@
    camera_draw_base
    camera_trigger_base
    change_cycle_base
+   custom_area_base
    direct_functions_base
+   gpio_base
    online_plot_base
    session_plot_base
    subject_plot_base
    task_base
+   telegram_command_base
    touch_trigger_base
    training_protocol_base
 

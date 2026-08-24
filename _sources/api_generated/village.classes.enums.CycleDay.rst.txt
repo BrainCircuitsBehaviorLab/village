@@ -1,0 +1,37 @@
+CycleDay
+========
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: CycleDay
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~CycleDay.keys
+      ~CycleDay.values
+      ~CycleDay.get_index_from_value
+      ~CycleDay.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~CycleDay.AUTO
+      ~CycleDay.DAY
+      ~CycleDay.NIGHT
+   
+   

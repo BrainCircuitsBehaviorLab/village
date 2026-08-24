@@ -30,6 +30,7 @@ Settings
       ~Settings.restore_all_settings
       ~Settings.restore_directory_settings
       ~Settings.restore_factory_settings
+      ~Settings.restore_fixed_settings
       ~Settings.restore_visual_settings
       ~Settings.set
       ~Settings.sync

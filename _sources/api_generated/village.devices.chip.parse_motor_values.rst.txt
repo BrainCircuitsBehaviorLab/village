@@ -1,0 +1,6 @@
+parse\_motor\_values
+====================
+
+.. currentmodule:: village.devices.chip
+
+.. autofunction:: parse_motor_values

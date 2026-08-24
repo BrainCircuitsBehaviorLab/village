@@ -19,7 +19,9 @@ chip
       :template: custom_base_template.rst
    
       get_motor
+      get_motor_if_active
       get_motor_old
+      parse_motor_values
    
    
 

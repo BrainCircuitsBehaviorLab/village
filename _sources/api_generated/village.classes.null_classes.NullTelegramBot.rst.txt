@@ -17,7 +17,9 @@ NullTelegramBot
       :no-index:
    
       ~NullTelegramBot.__init__
+      ~NullTelegramBot.acknowledge
       ~NullTelegramBot.alarm
+      ~NullTelegramBot.register_custom
    
    
 
@@ -29,5 +31,6 @@ NullTelegramBot
       :no-index:
    
       ~NullTelegramBot.error
+      ~NullTelegramBot.pending
    
    

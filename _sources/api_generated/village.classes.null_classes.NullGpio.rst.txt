@@ -1,0 +1,36 @@
+NullGpio
+========
+
+.. currentmodule:: village.classes.null_classes
+
+.. autoclass:: NullGpio
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~NullGpio.__init__
+      ~NullGpio.set_off
+      ~NullGpio.set_on
+      ~NullGpio.start
+      ~NullGpio.stop
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~NullGpio.error
+   
+   

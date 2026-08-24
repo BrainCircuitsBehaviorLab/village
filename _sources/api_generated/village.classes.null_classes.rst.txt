@@ -27,6 +27,7 @@ null\_classes
       NullCamera
       NullChip
       NullCollection
+      NullGpio
       NullLEDStrip
       NullMotor
       NullScale

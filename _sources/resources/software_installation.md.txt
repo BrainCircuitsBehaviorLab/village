@@ -111,7 +111,7 @@ pip install python-dateutil
 pip install setuptools_scm
 pip install python-telegram-bot
 pip install scipy
-pip install gpiod
+pip install gpiozero
 pip install fire
 pip install pyserial
 pip install pandas

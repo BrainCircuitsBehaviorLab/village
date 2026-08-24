@@ -34,6 +34,7 @@ TimeUtils
       ~TimeUtils.now_string
       ~TimeUtils.now_string_for_filename
       ~TimeUtils.now_timestamp
+      ~TimeUtils.previous_init_time
       ~TimeUtils.previous_video_path
       ~TimeUtils.range_24_hours
       ~TimeUtils.seconds_since_start

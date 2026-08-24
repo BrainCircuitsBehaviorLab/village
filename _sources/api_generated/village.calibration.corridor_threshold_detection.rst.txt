@@ -1,0 +1,36 @@
+corridor\_threshold\_detection
+==============================
+
+.. automodule:: village.calibration.corridor_threshold_detection
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      area_count
+      scan_video
+      select_from_grays
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

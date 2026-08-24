@@ -28,6 +28,7 @@ enums
       Color
       ControllerEnum
       Cycle
+      CycleDay
       DataTable
       Info
       OldVersion

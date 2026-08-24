@@ -1,0 +1,6 @@
+select\_from\_grays
+===================
+
+.. currentmodule:: village.calibration.corridor_threshold_detection
+
+.. autofunction:: select_from_grays

@@ -34,6 +34,9 @@
    bpod_water_calibration
    camera_calibration
    camera_calibration_grid
+   camera_calibration_layout
+   corridor_threshold_calibration
+   corridor_threshold_detection
    optogrid_calibration
    sound_calibration
 

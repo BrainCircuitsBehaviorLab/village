@@ -1,0 +1,39 @@
+AutonomouseParam
+================
+
+.. currentmodule:: village.custom_classes.auto_no_mouse_base
+
+.. autoclass:: AutonomouseParam
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~AutonomouseParam.__init__
+      ~AutonomouseParam.clamp
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~AutonomouseParam.max_val
+      ~AutonomouseParam.min_val
+      ~AutonomouseParam.tooltip
+      ~AutonomouseParam.name
+      ~AutonomouseParam.type_
+      ~AutonomouseParam.default
+      ~AutonomouseParam.label
+   
+   

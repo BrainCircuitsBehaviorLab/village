@@ -1,7 +1,7 @@
-collection
-==========
+touch\_trigger\_base
+====================
 
-.. automodule:: village.classes.collection
+.. automodule:: village.custom_classes.touch_trigger_base
    :no-members:
    :no-undoc-members:
    :no-inherited-members:
@@ -11,14 +11,6 @@ collection
    
 
    
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-      :template: custom_base_template.rst
-   
-      convert_active
    
    
 
@@ -30,7 +22,7 @@ collection
       :toctree:
       :template: custom_class_template.rst
    
-      Collection
+      TouchTriggerBase
    
    
 

@@ -1,0 +1,33 @@
+TelegramCommandBase
+===================
+
+.. currentmodule:: village.custom_classes.telegram_command_base
+
+.. autoclass:: TelegramCommandBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~TelegramCommandBase.__init__
+      ~TelegramCommandBase.handler
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~TelegramCommandBase.command
+   
+   

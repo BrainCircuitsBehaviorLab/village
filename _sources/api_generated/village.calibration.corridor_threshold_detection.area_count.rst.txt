@@ -1,0 +1,6 @@
+area\_count
+===========
+
+.. currentmodule:: village.calibration.corridor_threshold_detection
+
+.. autofunction:: area_count

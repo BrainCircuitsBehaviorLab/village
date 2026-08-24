@@ -1,0 +1,6 @@
+get\_motor\_if\_active
+======================
+
+.. currentmodule:: village.devices.chip
+
+.. autofunction:: get_motor_if_active

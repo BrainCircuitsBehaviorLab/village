@@ -1,0 +1,38 @@
+CustomAreaBase
+==============
+
+.. currentmodule:: village.custom_classes.custom_area_base
+
+.. autoclass:: CustomAreaBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~CustomAreaBase.__init__
+      ~CustomAreaBase.build_mask
+      ~CustomAreaBase.contains
+      ~CustomAreaBase.mask
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~CustomAreaBase.active
+      ~CustomAreaBase.name
+      ~CustomAreaBase.polygons
+      ~CustomAreaBase.threshold
+   
+   
