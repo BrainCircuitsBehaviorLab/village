@@ -78,8 +78,10 @@ class Manager:
         actions (Actions): Actions settings.
         visible_box_cycle (Cycle): Visible light cycle of the box.
         ir_box_cycle (Cycle): Infrared light cycle of the box.
-        status_parts (list[str]): The 6 pieces of the status bar text (subject,
-            task, RFID, cycle, project, state), each shown in its own label.
+        status_parts (list[str]): The 8 pieces of the status bar text, each
+            shown in its own label, laid out as a 4x2 grid (row-major): top
+            row is project/task/RFID/state, bottom row is (empty)/subject/
+            cycle/state description.
         day (bool): Indicates if it's day.
         changing_settings (bool): Indicates if settings are being changed.
         tasks (dict[str, type]): Dictionary of tasks.
@@ -268,18 +270,30 @@ class Manager:
         subject_name = self.subject.name
         task_name = self.task.name
         rfid_reader_name = self.rfid_reader.name
+        mode = settings.get("CORRIDOR_CYCLE_MODE")
+        if mode == CycleDay.DAY:
+            cycle_name = "DAY (MANUAL)"
+        elif mode == CycleDay.NIGHT:
+            cycle_name = "NIGHT (MANUAL)"
+        else:
+            cycle_name = "DAY (AUTO)" if self.corridor_cycle_is_day else "NIGHT (AUTO)"
         try:
             project_text = settings.get("PROJECT_DIRECTORY")
             project_text = Path(project_text).name
         except Exception:
             project_text = ""
 
+        # Laid out as a 4-column x 2-row grid (row-major): top row is
+        # PROJECT/TASK/RFID/STATE, bottom row is (empty)/SUBJECT/CYCLE/description.
         self.status_parts = [
             "PROJECT: " + project_text,
-            "SUBJECT: " + subject_name,
             "TASK: " + task_name,
             "RFID: " + rfid_reader_name,
-            "STATE: " + state_name + "\n" + "(" + state_description + ")",
+            "STATE: " + state_name,
+            "",
+            "SUBJECT: " + subject_name,
+            "CYCLE: " + cycle_name,
+            "(" + state_description + ")",
         ]
 
     def multiple_detections(self, multiple: bool) -> bool:
@@ -708,8 +722,10 @@ class Manager:
         subjects = self.subjects.df.copy()
         sessions_summary = self.sessions_summary.df.copy()
 
-        events["date"] = pd.to_datetime(events["date"])
-        sessions_summary["date"] = pd.to_datetime(sessions_summary["date"])
+        events["date"] = pd.to_datetime(events["date"], errors="coerce")
+        sessions_summary["date"] = pd.to_datetime(
+            sessions_summary["date"], errors="coerce"
+        )
 
         time_hours_ago = time_utils.hours_ago(hours)
 

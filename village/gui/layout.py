@@ -297,21 +297,45 @@ class Layout(QGridLayout):
         top_background.setStyleSheet("background-color: #e0e0e0;")
         self.addWidget(top_background, 0, 0, 5, 200)
 
+        # 4 columns x 2 rows (row-major): PROJECT/TASK/RFID/STATE on top,
+        # (empty)/SUBJECT/CYCLE/state description below. Each column is sized
+        # to fit its own text (not a fixed 1/4-width slot). The first column
+        # sits at the left edge, the last at the right edge, and the 3 gaps
+        # between them share whatever space is left over (space-between),
+        # so the gap width varies with how much text is in each column.
+        # TASK+SUBJECT and RFID+CYCLE columns are left-aligned; STATE+
+        # description is centered within its own (content-sized) column.
         status_container = QWidget()
-        status_container.setFixedSize(155 * self.column_width, 3 * self.row_height)
+        status_container.setFixedSize(125 * self.column_width, 2 * self.row_height)
         status_container.setStyleSheet("background-color: powderblue;")
         status_hbox = QHBoxLayout(status_container)
         status_hbox.setContentsMargins(10, 0, 10, 0)
-        self.status_sub_labels: list[Label] = []
-        for i in range(6):
-            sub_label = Label("", "black", False, True, "", "")
-            if i == 5:  # state name + description, on two lines: center both
-                sub_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-            self.status_sub_labels.append(sub_label)
-            status_hbox.addWidget(sub_label)
-            if i < 5:
+        status_hbox.setSpacing(0)
+        _col_alignment = [
+            Qt.AlignLeft | Qt.AlignVCenter,
+            Qt.AlignLeft | Qt.AlignVCenter,
+            Qt.AlignLeft | Qt.AlignVCenter,
+            Qt.AlignHCenter | Qt.AlignVCenter,
+        ]
+        _labels_by_col: list[list[Label]] = []
+        for col in range(4):
+            cell = QVBoxLayout()
+            cell.setContentsMargins(0, 0, 0, 0)
+            cell.setSpacing(0)
+            col_labels = []
+            for _row in range(2):
+                sub_label = Label("", "black", False, True, "", "")
+                sub_label.setAlignment(_col_alignment[col])
+                cell.addWidget(sub_label)
+                col_labels.append(sub_label)
+            _labels_by_col.append(col_labels)
+            status_hbox.addLayout(cell)
+            if col < 3:
                 status_hbox.addStretch(1)
-        self.addWidget(status_container, 0, 0, 3, 152)
+        self.status_sub_labels = [
+            _labels_by_col[col][row] for row in range(2) for col in range(4)
+        ]
+        self.addWidget(status_container, 0, 0, 2, 125)
 
         _nav_items = [
             ("MAIN", "Go to the main menu"),
@@ -371,10 +395,10 @@ class Layout(QGridLayout):
 
         self.mice_button = self.create_and_add_button(
             "MICE",
-            3,
+            0,
             155,
             15,
-            3,
+            2,
             self.mice_button_clicked,
             "Confirm that the mice have been checked today",
             "lightgray",
@@ -382,7 +406,7 @@ class Layout(QGridLayout):
 
         self.alarm_button = self.create_and_add_button(
             "ALARM",
-            3,
+            0,
             170,
             15,
             2,
@@ -398,9 +422,9 @@ class Layout(QGridLayout):
         self.stop_button = self.create_and_add_button(
             "",
             0,
-            155,
+            125,
             15,
-            3,
+            2,
             self.stop_button_clicked,
             "",
             "lightgray",
@@ -409,9 +433,9 @@ class Layout(QGridLayout):
         self.online_button = self.create_and_add_button(
             "ONLINE PLOTS",
             0,
-            170,
+            140,
             15,
-            3,
+            2,
             self.online_button_clicked,
             "Show live plots while a task is running",
             "lightgray",
@@ -422,7 +446,7 @@ class Layout(QGridLayout):
             0,
             185,
             15,
-            3,
+            2,
             self.exit_button_clicked,
             "Exit the application",
             "lightcoral",
@@ -449,10 +473,10 @@ class Layout(QGridLayout):
             sub_label.setText(part)
 
         alarms = len(log.telegram_bot.pending)
-        button_text = "ALARM (" + str(alarms) + ")" if alarms else "ALARM"
+        button_text = "ALARMS (" + str(alarms) + ")" if alarms else "NO ALARMS"
         self.alarm_button.setText(button_text)
         self.alarm_button.setEnabled(alarms > 0)
-        c = "red" if alarms else "lightgray"
+        c = "orange" if alarms else "lightgray"
         sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
         self.alarm_button.setStyleSheet(sty)
 

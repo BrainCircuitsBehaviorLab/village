@@ -103,21 +103,38 @@ def show_motor_edit_dialog(
     dialog.setWindowTitle(f"{name} angles and times")
     x = parent.column_width * 74
     y = parent.row_height * 21
-    width = parent.column_width * 40
-    height = parent.row_height * 12
+    width = parent.column_width * 60
+    height = parent.row_height * 8
     dialog.setGeometry(x, y, width, height)
 
     main_layout = QVBoxLayout()
     grid = QGridLayout()
-    labels = ["Open angle:", "Close angle:", "Open time (ms):", "Close time (ms):"]
-    defaults = [open_a, close_a, time_o, time_c]
-    edits: list[QLineEdit] = []
-    for row, (label, default) in enumerate(zip(labels, defaults, strict=False)):
-        grid.addWidget(QLabel(label), row, 0)
-        edit = QLineEdit()
-        edit.setPlaceholderText(str(default))
-        grid.addWidget(edit, row, 1)
-        edits.append(edit)
+
+    open_angle_edit = QLineEdit()
+    open_angle_edit.setPlaceholderText(str(open_a))
+    open_time_edit = QLineEdit()
+    open_time_edit.setPlaceholderText(str(time_o))
+    close_angle_edit = QLineEdit()
+    close_angle_edit.setPlaceholderText(str(close_a))
+    close_time_edit = QLineEdit()
+    close_time_edit.setPlaceholderText(str(time_c))
+    edits = [open_angle_edit, close_angle_edit, open_time_edit, close_time_edit]
+
+    btn_open = QPushButton("OPEN")
+    btn_close = QPushButton("CLOSE")
+
+    grid.addWidget(QLabel("Open angle:"), 0, 0)
+    grid.addWidget(open_angle_edit, 0, 1)
+    grid.addWidget(QLabel("Open time (ms):"), 0, 2)
+    grid.addWidget(open_time_edit, 0, 3)
+    grid.addWidget(btn_open, 0, 4)
+
+    grid.addWidget(QLabel("Close angle:"), 1, 0)
+    grid.addWidget(close_angle_edit, 1, 1)
+    grid.addWidget(QLabel("Close time (ms):"), 1, 2)
+    grid.addWidget(close_time_edit, 1, 3)
+    grid.addWidget(btn_close, 1, 4)
+
     main_layout.addLayout(grid)
 
     def field(i: int, current: int) -> int:
@@ -131,13 +148,6 @@ def show_motor_edit_dialog(
         motor.close_angle = field(1, close_a)
         motor.time_open = field(2, time_o)
         motor.time_close = field(3, time_c)
-
-    move_layout = QHBoxLayout()
-    btn_open = QPushButton("OPEN")
-    btn_close = QPushButton("CLOSE")
-    move_layout.addWidget(btn_open)
-    move_layout.addWidget(btn_close)
-    main_layout.addLayout(move_layout)
 
     def open_clicked() -> None:
         apply_fields_to_motor()
@@ -705,10 +715,10 @@ class CorridorLayout(Layout):
         """Draws the motor, scale and LEDs controls."""
         self.draw_motor_buttons("MOTOR1", 4, 2, motor_corridor1)
         self.draw_motor_buttons("MOTOR2", 9, 2, motor_corridor2)
-        self.draw_motor_edit_buttons(16, 2)
+        self.draw_motor_edit_buttons(14, 2)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID\nReader: ", 1, 2, 9, 2, "black"
+            "RFID\nReader: ", 1, 3, 9, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
@@ -726,7 +736,7 @@ class CorridorLayout(Layout):
         )
 
         self.thresholds_label: Label = self.create_and_add_label(
-            "Corridor\nCycle: ", 1, 22, 9, 2, "black"
+            "Corridor\nCycle: ", 1, 23, 9, 2, "black"
         )
         key = "CORRIDOR_CYCLE_MODE"
         possible_values = CycleDay.values()
@@ -746,7 +756,7 @@ class CorridorLayout(Layout):
 
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
-            6,
+            4,
             22,
             16,
             2,
@@ -755,7 +765,7 @@ class CorridorLayout(Layout):
         )
         self.tare_scale: PushButton = self.create_and_add_button(
             "TARE SCALE",
-            8,
+            6,
             22,
             16,
             2,
@@ -764,7 +774,7 @@ class CorridorLayout(Layout):
         )
         self.get_weight: PushButton = self.create_and_add_button(
             "GET WEIGHT",
-            11,
+            9,
             22,
             16,
             2,
@@ -773,7 +783,7 @@ class CorridorLayout(Layout):
         )
         self.get_temperature: PushButton = self.create_and_add_button(
             "GET TEMPERATURE",
-            13,
+            11,
             22,
             16,
             2,
@@ -813,10 +823,10 @@ class CorridorLayout(Layout):
         skipped entirely rather than left blank, so motors compact upward.
         """
         entries = [
-            (None, "MOTOR1", motor_corridor1, "MOTOR1_VALUES"),
-            (None, "MOTOR2", motor_corridor2, "MOTOR2_VALUES"),
-            ("MOTOR3_CORRIDOR", "MOTOR3", motor_corridor3, "MOTOR3_VALUES"),
-            ("MOTOR4_CORRIDOR", "MOTOR4", motor_corridor4, "MOTOR4_VALUES"),
+            (None, "MOTOR1 VALUES", motor_corridor1, "MOTOR1_VALUES"),
+            (None, "MOTOR2 VALUES", motor_corridor2, "MOTOR2_VALUES"),
+            ("MOTOR3_CORRIDOR", "MOTOR3 VALUES", motor_corridor3, "MOTOR3_VALUES"),
+            ("MOTOR4_CORRIDOR", "MOTOR4 VALUES", motor_corridor4, "MOTOR4_VALUES"),
         ]
         row_offset = 0
         for active_key, name, motor, values_key in entries:
@@ -919,126 +929,158 @@ class BoxLayout(Layout):
         self.draw()
 
     def draw(self) -> None:
-        """Draws the motor, scale, LEDs and ports controls."""
+        """Draws the motor, scale, LEDs and ports controls.
 
-        if manager.use_of_box_chip:
-            box_row = 1
-            if manager.controller_type == ControllerEnum.BPOD:
-                box_col = 2
-                bpod_row = 6
-                bpod_col = 20
-            else:
-                box_col = 12
-        else:
-            bpod_row = 2
-            bpod_col = 12
+        Content is organized into up to two columns, compacted left with no
+        gap: column 1 is the box scale controls (if SCALE_BOX is active) plus
+        the motor buttons (if any box motor is active); column 2 is the
+        visible/IR light controls (if either is active) plus the LED/WATER
+        BPOD port buttons (if any port is active). If column 1 has nothing to
+        show, column 2 takes its slot instead of leaving a blank column.
+        """
+        motor_active_keys = (
+            "MOTOR1_BOX",
+            "MOTOR2_BOX",
+            "MOTOR3_BOX",
+            "MOTOR4_BOX",
+            "MOTOR5_BOX",
+            "MOTOR6_BOX",
+            "MOTOR7_BOX",
+        )
+        any_motor_active = any(settings.get(k) == Active.ON for k in motor_active_keys)
+        has_column1 = manager.use_of_box_chip and (
+            settings.get("SCALE_BOX") == Active.ON or any_motor_active
+        )
 
-        # left column: box scale controls (if active), then the motor buttons
-        if manager.use_of_box_chip:
-            left_row = box_row + 5
+        is_bpod = manager.controller_type == ControllerEnum.BPOD
+        any_port_active = is_bpod and any(
+            v == Active.ON for v in settings.get("BPOD_BEHAVIOR_PORTS")
+        )
+        any_light_active = manager.use_of_box_chip and (
+            settings.get("VISIBLE_LIGHT_BOX") == Active.ON
+            or settings.get("IR_LIGHT_BOX") == Active.ON
+        )
+        has_column2 = any_light_active or any_port_active
+
+        n_columns = int(has_column1) + int(has_column2)
+
+        # Column slots: column 1 always at the first slot; column 2 takes the
+        # second slot if column 1 is present, otherwise takes the first.
+        first_col, second_col = 2, 20
+        row = 1
+        column1_col = first_col
+        column2_col = first_col if not has_column1 else second_col
+
+        if has_column1:
+            left_row = row
             if settings.get("SCALE_BOX") == Active.ON:
                 self.calibrate_scale_box: PushButton = self.create_and_add_button(
-                    "CALIBRATE SCALE BOX",
+                    "CALIBRATE SCALE",
                     left_row,
-                    box_col,
+                    column1_col,
                     16,
                     2,
                     self.calibrate_scale_box_clicked,
                     "Calibrate the box scale using a known weight",
                 )
                 self.tare_scale_box: PushButton = self.create_and_add_button(
-                    "TARE SCALE BOX",
+                    "TARE SCALE",
                     left_row + 2,
-                    box_col,
+                    column1_col,
                     16,
                     2,
                     self.tare_scale_box_clicked,
                     "Tare the box scale to zero",
                 )
                 self.get_weight_box: PushButton = self.create_and_add_button(
-                    "GET WEIGHT BOX",
+                    "GET WEIGHT",
                     left_row + 4,
-                    box_col,
+                    column1_col,
                     16,
                     2,
                     self.get_weight_box_clicked,
                     "Get the box weight in grams",
                 )
-                left_row += 6
-            self.draw_box_motor_edit_buttons(left_row, box_col)
+                left_row += 7
+            self.draw_box_motor_edit_buttons(left_row, column1_col)
 
-        # right column: visible/IR light controls (if active), then LED/WATER
-        right_row = bpod_row
-        if manager.use_of_box_chip:
-            if settings.get("VISIBLE_LIGHT_BOX") == Active.ON:
-                self.visible_label: Label = self.create_and_add_label(
-                    "Visible\nLight: ", right_row, bpod_col, 12, 2, "black"
-                )
-                key = "VISIBLE_BOX"
-                possible_values = Cycle.values()
-                index = Cycle.get_index_from_value(manager.visible_box_cycle)
-                self.visible_button = self.create_and_add_toggle_button(
-                    key,
-                    right_row + 2,
-                    bpod_col,
-                    10,
-                    2,
-                    possible_values,
-                    index,
-                    self.toggle_visible_button,
-                    "Visible light in the box: ON, OFF, AUTO",
-                )
-                right_row += 4
+        if has_column2:
+            right_row = row
+            if any_light_active:
+                if settings.get("VISIBLE_LIGHT_BOX") == Active.ON:
+                    self.visible_label: Label = self.create_and_add_label(
+                        "Visible\nLight: ", right_row, column2_col + 1, 9, 2, "black"
+                    )
+                    key = "VISIBLE_BOX"
+                    possible_values = Cycle.values()
+                    index = Cycle.get_index_from_value(manager.visible_box_cycle)
+                    self.visible_button = self.create_and_add_toggle_button(
+                        key,
+                        right_row,
+                        column2_col + 9,
+                        7,
+                        2,
+                        possible_values,
+                        index,
+                        self.toggle_visible_button,
+                        "Visible light in the box: ON, OFF, AUTO",
+                    )
+                    right_row += 2
 
-            if settings.get("IR_LIGHT_BOX") == Active.ON:
-                self.ir_label: Label = self.create_and_add_label(
-                    "IR\nLight: ", right_row, bpod_col, 12, 2, "black"
-                )
-                key = "IR_BOX"
-                possible_values = Cycle.values()
-                index = Cycle.get_index_from_value(manager.ir_box_cycle)
-                self.ir_button = self.create_and_add_toggle_button(
-                    key,
-                    right_row + 2,
-                    bpod_col,
-                    10,
-                    2,
-                    possible_values,
-                    index,
-                    self.toggle_ir_button,
-                    "Infrared light in the box: ON, OFF, AUTO",
-                )
-                right_row += 4
+                if settings.get("IR_LIGHT_BOX") == Active.ON:
+                    self.ir_label: Label = self.create_and_add_label(
+                        "IR\nLight: ", right_row, column2_col + 1, 9, 2, "black"
+                    )
+                    key = "IR_BOX"
+                    possible_values = Cycle.values()
+                    index = Cycle.get_index_from_value(manager.ir_box_cycle)
+                    self.ir_button = self.create_and_add_toggle_button(
+                        key,
+                        right_row,
+                        column2_col + 9,
+                        7,
+                        2,
+                        possible_values,
+                        index,
+                        self.toggle_ir_button,
+                        "Infrared light in the box: ON, OFF, AUTO",
+                    )
+                    right_row += 2
 
-        if manager.controller_type == ControllerEnum.BPOD:
-            behavior_ports = settings.get("BPOD_BEHAVIOR_PORTS")
-            row_offset = 0
-            for i in range(8):
-                if behavior_ports[i] != Active.ON:
-                    continue
+                right_row += 1
 
-                button1 = self.create_and_add_button(
-                    "LED" + str(i + 1),
-                    row_offset * 2 + right_row,
-                    bpod_col,
-                    8,
-                    2,
-                    partial(self.led_clicked, i + 1),
-                    "Light the LED" + str(i),
-                )
-                self.buttons.append(button1)
+            if any_port_active:
+                behavior_ports = settings.get("BPOD_BEHAVIOR_PORTS")
+                row_offset = 0
+                for i in range(8):
+                    if behavior_ports[i] != Active.ON:
+                        continue
 
-                button2 = self.create_and_add_button(
-                    "WATER" + str(i + 1),
-                    row_offset * 2 + right_row,
-                    bpod_col + 8,
-                    8,
-                    2,
-                    partial(self.water_clicked, i + 1),
-                    "Deliver water for 0.1 seconds" + str(i),
-                )
-                self.buttons.append(button2)
-                row_offset += 1
+                    button1 = self.create_and_add_button(
+                        "LED" + str(i + 1),
+                        row_offset * 2 + right_row,
+                        column2_col,
+                        8,
+                        2,
+                        partial(self.led_clicked, i + 1),
+                        "Light the LED" + str(i),
+                    )
+                    self.buttons.append(button1)
+
+                    button2 = self.create_and_add_button(
+                        "WATER" + str(i + 1),
+                        row_offset * 2 + right_row,
+                        column2_col + 8,
+                        8,
+                        2,
+                        partial(self.water_clicked, i + 1),
+                        "Deliver water for 0.1 seconds" + str(i),
+                    )
+                    self.buttons.append(button2)
+                    row_offset += 1
+
+        if n_columns == 0:
+            log.info("BoxLayout: nothing to draw (no active box hardware)")
 
     def draw_box_motor_edit_buttons(self, row: int, column: int) -> None:
         """Draws one button per active box motor (1 through 7) to edit its
@@ -1050,13 +1092,13 @@ class BoxLayout(Layout):
         takes motor 1's position.
         """
         entries = [
-            ("MOTOR1_BOX", "MOTOR1", motor_box1, "MOTOR1_BOX_VALUES"),
-            ("MOTOR2_BOX", "MOTOR2", motor_box2, "MOTOR2_BOX_VALUES"),
-            ("MOTOR3_BOX", "MOTOR3", motor_box3, "MOTOR3_BOX_VALUES"),
-            ("MOTOR4_BOX", "MOTOR4", motor_box4, "MOTOR4_BOX_VALUES"),
-            ("MOTOR5_BOX", "MOTOR5", motor_box5, "MOTOR5_BOX_VALUES"),
-            ("MOTOR6_BOX", "MOTOR6", motor_box6, "MOTOR6_BOX_VALUES"),
-            ("MOTOR7_BOX", "MOTOR7", motor_box7, "MOTOR7_BOX_VALUES"),
+            ("MOTOR1_BOX", "MOTOR1 VALUES", motor_box1, "MOTOR1_BOX_VALUES"),
+            ("MOTOR2_BOX", "MOTOR2 VALUES", motor_box2, "MOTOR2_BOX_VALUES"),
+            ("MOTOR3_BOX", "MOTOR3 VALUES", motor_box3, "MOTOR3_BOX_VALUES"),
+            ("MOTOR4_BOX", "MOTOR4 VALUES", motor_box4, "MOTOR4_BOX_VALUES"),
+            ("MOTOR5_BOX", "MOTOR5 VALUES", motor_box5, "MOTOR5_BOX_VALUES"),
+            ("MOTOR6_BOX", "MOTOR6 VALUES", motor_box6, "MOTOR6_BOX_VALUES"),
+            ("MOTOR7_BOX", "MOTOR7 VALUES", motor_box7, "MOTOR7_BOX_VALUES"),
         ]
         row_offset = 0
         for active_key, name, motor, values_key in entries:
