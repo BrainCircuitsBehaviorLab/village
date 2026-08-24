@@ -193,16 +193,36 @@ class Settings:
             if s.key not in self.saved_settings.allKeys():
                 self.saved_settings.setValue(s.key, s.value)
 
+    # Keys that have no GUI (or any other in-app way) to edit them, so a
+    # stored value can only ever be stale/wrong -- force them back to their
+    # source-of-truth default on every startup instead of trusting storage.
+    _fixed_hidden_keys = frozenset(
+        {"DEFAULT_PROJECT_NAME", "DEFAULT_CODE_DIRECTORY", "GITHUB_REPOSITORY_EXAMPLES"}
+    )
+
+    def restore_fixed_settings(self) -> None:
+        """Reset device wiring settings and a few fixed hidden settings to
+        their factory defaults, overwriting whatever was previously stored.
+        """
+        for s in self.device_settings:
+            self.saved_settings.setValue(s.key, s.value)
+        for s in self.hidden_settings:
+            if s.key in self._fixed_hidden_keys:
+                self.saved_settings.setValue(s.key, s.value)
+
     def check_settings(self) -> None:
         """Ensure all required settings exist in storage.
 
         If it's the first launch, creates all factory settings.
         Otherwise, adds any new settings that are missing.
+        Either way, fixed settings (no GUI/other way to edit them) are
+        always reset to their factory defaults.
         """
         if self.get("FIRST_LAUNCH") is None:
             self.restore_all_settings()
         else:
             self.add_new_settings()
+        self.restore_fixed_settings()
 
     def get(self, key: str) -> Any:
         """Retrieve the value of a setting.

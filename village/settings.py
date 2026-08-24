@@ -283,28 +283,28 @@ device_settings = [
     ),
     Setting(
         "MOTOR1_CORRIDOR_INDEX",
-        4,
+        7,
         int,
         """The index of the motor 1 of the corridor. Corresponds to the first door,
 which is the one closer to the homecage.""",
     ),
     Setting(
         "MOTOR2_CORRIDOR_INDEX",
-        5,
+        6,
         int,
         """The index of the motor 2 of the corridor. Corresponds to the second door,
 which is the one closer to the operant box.""",
     ),
     Setting(
         "MOTOR3_CORRIDOR_INDEX",
-        6,
+        5,
         int,
         """The index of the motor 3 of the corridor. This motor can be used for
 additional functions, such as raising or lowering a water bottle in the home cage.""",
     ),
     Setting(
         "MOTOR4_CORRIDOR_INDEX",
-        7,
+        4,
         int,
         """The index of the motor 4 of the corridor. This motor can be used for
 additional functions, such as raising or lowering a water bottle in the home cage.""",
@@ -451,7 +451,7 @@ completed any trials.""",
     ),
 ]
 
-cam_fixed_settings = [
+cam_framerate_settings = [
     Setting(
         "CAM_CORRIDOR_INDEX",
         1,
@@ -1078,7 +1078,7 @@ settings = Settings(
     hourly_alarm_settings,
     cycle_alarm_settings,
     session_alarm_settings,
-    cam_fixed_settings,
+    cam_framerate_settings,
     corridor_settings,
     box_settings,
     extra_settings,
