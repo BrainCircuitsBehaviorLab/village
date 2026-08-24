@@ -881,12 +881,13 @@ count exceeds subject_limit, the area is considered to contain multiple subjects
         "The sharpness of the box camera.",
     ),
     Setting(
-        "THRESHOLDS_CORRIDOR",
+        "CORRIDOR_CYCLE_MODE",
         "AUTO",
         CycleDay,
-        """Which day/night values the corridor camera uses for its detection
-thresholds and exposure. AUTO = follow the actual day/night; DAY =
-always use the day values; NIGHT = always use the night values.""",
+        """Which day/night mode the corridor uses for camera detection
+thresholds/exposure and for the visible/IR lights. AUTO = follow the actual
+day/night; DAY = always use day values and lights; NIGHT = always use night
+values and lights.""",
     ),
     Setting(
         "EXPOSURE_DAY_CORRIDOR",
@@ -1063,8 +1064,6 @@ hidden_settings = [
         """Factor to transform electric signal to grams, for the box scale.""",
     ),
     Setting("RFID_READER", "ON", Active, "The RFID reader status."),
-    Setting("VISIBLE_CORRIDOR", "ON", Cycle, "The visible light of the corridor."),
-    Setting("IR_CORRIDOR", "ON", Cycle, "The infrared light of the corridor."),
     Setting("VISIBLE_BOX", "ON", Cycle, "The visible light of the box."),
     Setting("IR_BOX", "OFF", Cycle, "The infrared light of the box."),
     Setting("INFO", "INFO", Info, "The information status."),

@@ -74,7 +74,7 @@ from village.devices.chip import (
     motor_corridor2,
 )
 from village.devices.rfid import rfid
-from village.devices.scale import scale
+from village.devices.scale import scale, scale_box
 from village.devices.screen import screen
 from village.devices.sound_device import sound_device
 from village.devices.telegram_bot import telegram_bot
@@ -239,6 +239,10 @@ def system_run() -> None:
                 manager.log_weight = False
         else:
             weight = 0.0
+
+        if manager.taring_scale_box:
+            scale_box.tare()
+            manager.taring_scale_box = False
 
         if manager.state != State.DETECTION:
             tag_id, multiple = rfid.get_id()

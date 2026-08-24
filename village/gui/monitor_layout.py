@@ -38,12 +38,12 @@ from village.classes.enums import (
     Info,
     ScreenActive,
 )
+from village.classes.null_classes import NullScale
 from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.devices.camera import cam_box, cam_corridor
 from village.devices.chip import (
     Motor,
     ir_light_box,
-    ir_light_corridor,
     motor_box1,
     motor_box2,
     motor_box3,
@@ -57,9 +57,8 @@ from village.devices.chip import (
     motor_corridor4,
     parse_motor_values,
     visible_light_box,
-    visible_light_corridor,
 )
-from village.devices.scale import scale
+from village.devices.scale import Scale, scale, scale_box
 from village.devices.temp_sensor import temp_sensor
 from village.gui.layout import Label, Layout, PushButton
 from village.manager import manager
@@ -75,90 +74,101 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
-def build_motor_fields(keys: list[str]) -> list[tuple[str, int]]:
-    """Build (label, current_value) pairs for a motor-calibration dialog.
-
-    For each MOTOR*_VALUES key it yields four fields: open angle, close angle,
-    open time and close time (total ms to open/close).
-    """
-    fields: list[tuple[str, int]] = []
-    for i, key in enumerate(keys, start=1):
-        open_a, close_a, time_o, time_c = parse_motor_values(settings.get(key))
-        fields.append((f"Motor{i} open angle:", open_a))
-        fields.append((f"Motor{i} close angle:", close_a))
-        fields.append((f"Motor{i} open time (ms):", time_o))
-        fields.append((f"Motor{i} close time (ms):", time_c))
-    return fields
-
-
-def apply_motor_fields(
-    keys: list[str],
-    motors: list[Any],
-    fields: list[tuple[str, int]],
-    edits: list[QLineEdit],
+def show_motor_edit_dialog(
+    parent: Layout, name: str, motor: Any, values_key: str
 ) -> None:
-    """Save the dialog edits back to the MOTOR*_VALUES settings and the motors.
+    """Opens a dialog to edit one motor's open/close angles and times.
 
-    Bad input for a field falls back to the current value (the placeholder).
+    OPEN/CLOSE apply the fields currently typed (falling back to the current
+    value on bad input) to the motor and move it there immediately, so changes
+    can be tested before committing. SAVE persists the tested/typed values to
+    values_key and the motor; DISCARD restores the motor's original values
+    (undoing anything OPEN/CLOSE tested) and leaves the setting untouched.
+
+    Works for both Motor (ramped, supports timing) and MotorOld (instant,
+    ignores timing) since it only calls the .open()/.close() interface both
+    implement, never .move() directly (MotorOld has no .move()).
     """
-    vals: list[int] = []
-    for (_, current), edit in zip(fields, edits, strict=False):
-        try:
-            vals.append(int(edit.text()))
-        except ValueError:
-            vals.append(int(current))
-    for i, key in enumerate(keys):
-        open_a, close_a, time_o, time_c = vals[i * 4 : i * 4 + 4]
-        settings.set(key, (open_a, close_a, time_o, time_c))
-        motors[i].open_angle = open_a
-        motors[i].close_angle = close_a
-        motors[i].time_open = time_o
-        motors[i].time_close = time_c
-
-
-def show_motor_angles_dialog(
-    parent: Layout, keys: list[str], motors: list[Any]
-) -> None:
-    """Opens a grid dialog to edit motor values: one row per motor, four columns
-    (open angle, close angle, open time, close time)."""
-    fields = build_motor_fields(keys)
-    headers = ["open angle", "close angle", "open time (ms)", "close time (ms)"]
+    open_a, close_a, time_o, time_c = parse_motor_values(settings.get(values_key))
+    # MotorOld has no time_open/time_close (it moves instantly, no ramping) --
+    # read those defensively so this dialog works for it too.
+    orig = (
+        motor.open_angle,
+        motor.close_angle,
+        getattr(motor, "time_open", 0),
+        getattr(motor, "time_close", 0),
+    )
 
     dialog = QDialog()
-    dialog.setWindowTitle("Motor angles and times")
+    dialog.setWindowTitle(f"{name} angles and times")
     x = parent.column_width * 74
     y = parent.row_height * 21
-    width = parent.column_width * 55
-    height = parent.row_height * 10
+    width = parent.column_width * 40
+    height = parent.row_height * 12
     dialog.setGeometry(x, y, width, height)
 
     main_layout = QVBoxLayout()
     grid = QGridLayout()
-    for col, header in enumerate(headers):
-        grid.addWidget(QLabel(header), 0, col + 1)
+    labels = ["Open angle:", "Close angle:", "Open time (ms):", "Close time (ms):"]
+    defaults = [open_a, close_a, time_o, time_c]
     edits: list[QLineEdit] = []
-    for i in range(len(keys)):
-        grid.addWidget(QLabel(f"Motor {i + 1}"), i + 1, 0)
-        for j in range(4):
-            edit = QLineEdit()
-            edit.setPlaceholderText(str(fields[i * 4 + j][1]))
-            grid.addWidget(edit, i + 1, j + 1)
-            edits.append(edit)
+    for row, (label, default) in enumerate(zip(labels, defaults, strict=False)):
+        grid.addWidget(QLabel(label), row, 0)
+        edit = QLineEdit()
+        edit.setPlaceholderText(str(default))
+        grid.addWidget(edit, row, 1)
+        edits.append(edit)
     main_layout.addLayout(grid)
 
+    def field(i: int, current: int) -> int:
+        try:
+            return int(edits[i].text())
+        except ValueError:
+            return current
+
+    def apply_fields_to_motor() -> None:
+        motor.open_angle = field(0, open_a)
+        motor.close_angle = field(1, close_a)
+        motor.time_open = field(2, time_o)
+        motor.time_close = field(3, time_c)
+
+    move_layout = QHBoxLayout()
+    btn_open = QPushButton("OPEN")
+    btn_close = QPushButton("CLOSE")
+    move_layout.addWidget(btn_open)
+    move_layout.addWidget(btn_close)
+    main_layout.addLayout(move_layout)
+
+    def open_clicked() -> None:
+        apply_fields_to_motor()
+        motor.open()
+
+    def close_clicked() -> None:
+        apply_fields_to_motor()
+        motor.close()
+
+    btn_open.clicked.connect(open_clicked)
+    btn_close.clicked.connect(close_clicked)
+
     btns_layout = QHBoxLayout()
-    btn_ok = QPushButton("CHANGE")
-    btn_cancel = QPushButton("CANCEL")
-    btns_layout.addWidget(btn_ok)
-    btns_layout.addWidget(btn_cancel)
+    btn_save = QPushButton("SAVE")
+    btn_discard = QPushButton("DISCARD")
+    btns_layout.addWidget(btn_save)
+    btns_layout.addWidget(btn_discard)
     main_layout.addLayout(btns_layout)
     dialog.setLayout(main_layout)
 
-    btn_ok.clicked.connect(dialog.accept)
-    btn_cancel.clicked.connect(dialog.reject)
+    btn_save.clicked.connect(dialog.accept)
+    btn_discard.clicked.connect(dialog.reject)
 
     if dialog.exec_():
-        apply_motor_fields(keys, motors, fields, edits)
+        apply_fields_to_motor()
+        settings.set(
+            values_key,
+            (motor.open_angle, motor.close_angle, motor.time_open, motor.time_close),
+        )
+    else:
+        motor.open_angle, motor.close_angle, motor.time_open, motor.time_close = orig
 
 
 def show_motor_move_dialog(parent: Layout, name: str, motor: Any) -> None:
@@ -693,20 +703,20 @@ class CorridorLayout(Layout):
 
     def draw(self) -> None:
         """Draws the motor, scale and LEDs controls."""
-        self.draw_motor_buttons("MOTOR1", 6, 2, motor_corridor1)
-        self.draw_motor_buttons("MOTOR2", 11, 2, motor_corridor2)
-        self.draw_motor34_move_buttons(16, 2)
+        self.draw_motor_buttons("MOTOR1", 4, 2, motor_corridor1)
+        self.draw_motor_buttons("MOTOR2", 9, 2, motor_corridor2)
+        self.draw_motor_edit_buttons(16, 2)
 
         self.rfid_reader_label: Label = self.create_and_add_label(
-            "RFID\nReader: ", 1, 3, 9, 2, "black"
+            "RFID\nReader: ", 1, 2, 9, 2, "black"
         )
         key = "RFID_READER"
         possible_values = Active.values()
         index = Active.get_index_from_value(manager.rfid_reader)
         self.rfid_reader_button = self.create_and_add_toggle_button(
             key,
-            3,
-            2,
+            1,
+            11,
             7,
             2,
             possible_values,
@@ -716,68 +726,24 @@ class CorridorLayout(Layout):
         )
 
         self.thresholds_label: Label = self.create_and_add_label(
-            "Camera\nSettings: ", 1, 11, 9, 2, "black"
+            "Corridor\nCycle: ", 1, 22, 9, 2, "black"
         )
-        key = "THRESHOLDS_CORRIDOR"
+        key = "CORRIDOR_CYCLE_MODE"
         possible_values = CycleDay.values()
-        index = CycleDay.get_index_from_value(settings.get("THRESHOLDS_CORRIDOR"))
+        index = CycleDay.get_index_from_value(settings.get("CORRIDOR_CYCLE_MODE"))
         self.thresholds_button = self.create_and_add_toggle_button(
             key,
-            3,
-            11,
+            1,
+            31,
             7,
             2,
             possible_values,
             index,
-            self.toggle_thresholds_button,
-            "Corridor thresholds & exposure: AUTO (day/night), DAY, NIGHT",
+            self.toggle_corridor_cycle_button,
+            "Corridor cycle mode (thresholds, exposure and lights): "
+            "AUTO (day/night), DAY, NIGHT",
         )
 
-        self.visible_label: Label = self.create_and_add_label(
-            "Visible\nLight: ", 1, 20, 11, 2, "black"
-        )
-        key = "VISIBLE_CORRIDOR"
-        possible_values = Cycle.values()
-        index = Cycle.get_index_from_value(manager.visible_corridor_cycle)
-        self.visible_button = self.create_and_add_toggle_button(
-            key,
-            3,
-            22,
-            7,
-            2,
-            possible_values,
-            index,
-            self.toggle_visible_button,
-            "Visible light in the corridor: ON, OFF, AUTO",
-        )
-
-        self.ir_label: Label = self.create_and_add_label(
-            "IR\nLight: ", 1, 32, 11, 2, "black"
-        )
-        key = "IR_CORRIDOR"
-        possible_values = Cycle.values()
-        index = Cycle.get_index_from_value(manager.ir_corridor_cycle)
-        self.ir_button = self.create_and_add_toggle_button(
-            key,
-            3,
-            32,
-            7,
-            2,
-            possible_values,
-            index,
-            self.toggle_ir_button,
-            "Infrared light in the corridor: ON, OFF, AUTO",
-        )
-
-        self.change_angles: PushButton = self.create_and_add_button(
-            "SET MOTOR ANGLES",
-            21,
-            2,
-            16,
-            2,
-            self.change_angles_clicked,
-            "Modify the angle values for the motors.",
-        )
         self.calibrate_scale: PushButton = self.create_and_add_button(
             "CALIBRATE SCALE",
             6,
@@ -838,34 +804,36 @@ class CorridorLayout(Layout):
         self.buttons.append(open_door)
         self.buttons.append(close_door)
 
-    def draw_motor34_move_buttons(self, row: int, column: int) -> None:
-        """Draws a MOVE button for corridor motors 3 and 4, one per active motor.
-
-        Each button only appears if its motor is active (MOTOR3_CORRIDOR /
-        MOTOR4_CORRIDOR) and actually wired up as a real Motor -- on old-HAT
-        hardware motor_corridor3/4 are always NullMotor regardless of that
-        setting, and NullMotor has no .move()/.current_angle. An inactive
-        motor's row is skipped entirely rather than left blank, so a lone
-        active motor 4 takes motor 3's position.
+    def draw_motor_edit_buttons(self, row: int, column: int) -> None:
+        """Draws one button per corridor motor to edit its angles/times and
+        test OPEN/CLOSE. Motors 1 and 2 always show; motors 3 and 4 only show
+        if active (MOTOR3_CORRIDOR / MOTOR4_CORRIDOR) and actually wired up as
+        a real Motor -- on old-HAT hardware motor_corridor3/4 are always
+        NullMotor regardless of that setting. An inactive motor's row is
+        skipped entirely rather than left blank, so motors compact upward.
         """
         entries = [
-            ("MOTOR3_CORRIDOR", "MOTOR3", motor_corridor3),
-            ("MOTOR4_CORRIDOR", "MOTOR4", motor_corridor4),
+            (None, "MOTOR1", motor_corridor1, "MOTOR1_VALUES"),
+            (None, "MOTOR2", motor_corridor2, "MOTOR2_VALUES"),
+            ("MOTOR3_CORRIDOR", "MOTOR3", motor_corridor3, "MOTOR3_VALUES"),
+            ("MOTOR4_CORRIDOR", "MOTOR4", motor_corridor4, "MOTOR4_VALUES"),
         ]
         row_offset = 0
-        for active_key, name, motor in entries:
-            if settings.get(active_key) != Active.ON or not isinstance(motor, Motor):
+        for active_key, name, motor, values_key in entries:
+            if active_key is not None and (
+                settings.get(active_key) != Active.ON or not isinstance(motor, Motor)
+            ):
                 continue
-            move_button: PushButton = self.create_and_add_button(
-                name + " MOVE",
+            edit_button: PushButton = self.create_and_add_button(
+                name,
                 row + row_offset * 2,
                 column,
                 16,
                 2,
-                partial(show_motor_move_dialog, self, name, motor),
-                f"Move {name} to a chosen angle over a chosen duration",
+                partial(show_motor_edit_dialog, self, name, motor, values_key),
+                f"Edit {name}'s open/close angles and times, and test OPEN/CLOSE",
             )
-            self.buttons.append(move_button)
+            self.buttons.append(edit_button)
             row_offset += 1
 
     def toggle_rfid_reader_button(self, value: str, key: str) -> None:
@@ -879,49 +847,15 @@ class CorridorLayout(Layout):
         settings.set(key, value)
         self.window.layout.update_status_label_buttons()
 
-    def toggle_thresholds_button(self, value: str, key: str) -> None:
-        """Sets the corridor day/night mode for thresholds and exposure."""
+    def toggle_corridor_cycle_button(self, value: str, key: str) -> None:
+        """Sets the corridor day/night mode for thresholds, exposure and lights."""
         settings.set(key, value)
         cam_corridor.change = True
-
-    def toggle_visible_button(self, value: str, key: str) -> None:
-        manager.visible_corridor_cycle = Cycle[value]
-        settings.set(key, value)
-        cam_corridor.change = True
-        match value:
-            case "OFF":
-                visible_light_corridor.off()
-            case "ON":
-                visible_light_corridor.on()
-            case "AUTO":
-                manager.check_corridor_lights()
-
-    def toggle_ir_button(self, value: str, key: str) -> None:
-        manager.ir_corridor_cycle = Cycle[value]
-        settings.set(key, value)
-        cam_corridor.change = True
-        match value:
-            case "OFF":
-                ir_light_corridor.off()
-            case "ON":
-                ir_light_corridor.on()
-            case "AUTO":
-                manager.check_corridor_lights()
+        manager.check_corridor_lights()
 
     def tare_scale_clicked(self) -> None:
         """Initiates scale taring."""
         manager.taring_scale = True
-
-    def change_angles_clicked(self) -> None:
-        """Opens a dialog to change corridor motor 1 and 2 angles and times.
-
-        Motors 3 and 4 are moved manually via their own MOVE buttons instead.
-        """
-        show_motor_angles_dialog(
-            self,
-            ["MOTOR1_VALUES", "MOTOR2_VALUES"],
-            [motor_corridor1, motor_corridor2],
-        )
 
     def calibrate_scale_clicked(self) -> None:
         """Opens the scale calibration wizard."""
@@ -937,7 +871,7 @@ class CorridorLayout(Layout):
             )
             return
 
-        wiz = ScaleCalibrationWizard(self.window)
+        wiz = ScaleCalibrationWizard(scale, self.window)
         wiz.exec_()
 
     def cancel_calibration(self) -> None:
@@ -999,20 +933,54 @@ class BoxLayout(Layout):
             bpod_row = 2
             bpod_col = 12
 
+        # left column: box scale controls (if active), then the motor buttons
         if manager.use_of_box_chip:
-            self.draw_box_motor_move_buttons(box_row + 5, box_col)
+            left_row = box_row + 5
+            if settings.get("SCALE_BOX") == Active.ON:
+                self.calibrate_scale_box: PushButton = self.create_and_add_button(
+                    "CALIBRATE SCALE BOX",
+                    left_row,
+                    box_col,
+                    16,
+                    2,
+                    self.calibrate_scale_box_clicked,
+                    "Calibrate the box scale using a known weight",
+                )
+                self.tare_scale_box: PushButton = self.create_and_add_button(
+                    "TARE SCALE BOX",
+                    left_row + 2,
+                    box_col,
+                    16,
+                    2,
+                    self.tare_scale_box_clicked,
+                    "Tare the box scale to zero",
+                )
+                self.get_weight_box: PushButton = self.create_and_add_button(
+                    "GET WEIGHT BOX",
+                    left_row + 4,
+                    box_col,
+                    16,
+                    2,
+                    self.get_weight_box_clicked,
+                    "Get the box weight in grams",
+                )
+                left_row += 6
+            self.draw_box_motor_edit_buttons(left_row, box_col)
 
+        # right column: visible/IR light controls (if active), then LED/WATER
+        right_row = bpod_row
+        if manager.use_of_box_chip:
             if settings.get("VISIBLE_LIGHT_BOX") == Active.ON:
                 self.visible_label: Label = self.create_and_add_label(
-                    "Visible\nLight: ", box_row, 9, 12, 2, "black"
+                    "Visible\nLight: ", right_row, bpod_col, 12, 2, "black"
                 )
                 key = "VISIBLE_BOX"
                 possible_values = Cycle.values()
                 index = Cycle.get_index_from_value(manager.visible_box_cycle)
                 self.visible_button = self.create_and_add_toggle_button(
                     key,
-                    box_row + 2,
-                    9,
+                    right_row + 2,
+                    bpod_col,
                     10,
                     2,
                     possible_values,
@@ -1020,18 +988,19 @@ class BoxLayout(Layout):
                     self.toggle_visible_button,
                     "Visible light in the box: ON, OFF, AUTO",
                 )
+                right_row += 4
 
             if settings.get("IR_LIGHT_BOX") == Active.ON:
                 self.ir_label: Label = self.create_and_add_label(
-                    "IR\nLight: ", box_row, 22, 12, 2, "black"
+                    "IR\nLight: ", right_row, bpod_col, 12, 2, "black"
                 )
                 key = "IR_BOX"
                 possible_values = Cycle.values()
                 index = Cycle.get_index_from_value(manager.ir_box_cycle)
                 self.ir_button = self.create_and_add_toggle_button(
                     key,
-                    box_row + 2,
-                    22,
+                    right_row + 2,
+                    bpod_col,
                     10,
                     2,
                     possible_values,
@@ -1039,6 +1008,7 @@ class BoxLayout(Layout):
                     self.toggle_ir_button,
                     "Infrared light in the box: ON, OFF, AUTO",
                 )
+                right_row += 4
 
         if manager.controller_type == ControllerEnum.BPOD:
             behavior_ports = settings.get("BPOD_BEHAVIOR_PORTS")
@@ -1049,7 +1019,7 @@ class BoxLayout(Layout):
 
                 button1 = self.create_and_add_button(
                     "LED" + str(i + 1),
-                    row_offset * 2 + bpod_row,
+                    row_offset * 2 + right_row,
                     bpod_col,
                     8,
                     2,
@@ -1060,7 +1030,7 @@ class BoxLayout(Layout):
 
                 button2 = self.create_and_add_button(
                     "WATER" + str(i + 1),
-                    row_offset * 2 + bpod_row,
+                    row_offset * 2 + right_row,
                     bpod_col + 8,
                     8,
                     2,
@@ -1070,8 +1040,9 @@ class BoxLayout(Layout):
                 self.buttons.append(button2)
                 row_offset += 1
 
-    def draw_box_motor_move_buttons(self, row: int, column: int) -> None:
-        """Draws a MOVE button for each active box motor (1 through 7).
+    def draw_box_motor_edit_buttons(self, row: int, column: int) -> None:
+        """Draws one button per active box motor (1 through 7) to edit its
+        angles/times and test OPEN/CLOSE (same dialog as the corridor motors).
 
         Each button only appears if its motor is active (MOTOR1_BOX .. MOTOR7_BOX)
         and actually wired up as a real Motor. An inactive motor's row is
@@ -1079,28 +1050,28 @@ class BoxLayout(Layout):
         takes motor 1's position.
         """
         entries = [
-            ("MOTOR1_BOX", "MOTOR1", motor_box1),
-            ("MOTOR2_BOX", "MOTOR2", motor_box2),
-            ("MOTOR3_BOX", "MOTOR3", motor_box3),
-            ("MOTOR4_BOX", "MOTOR4", motor_box4),
-            ("MOTOR5_BOX", "MOTOR5", motor_box5),
-            ("MOTOR6_BOX", "MOTOR6", motor_box6),
-            ("MOTOR7_BOX", "MOTOR7", motor_box7),
+            ("MOTOR1_BOX", "MOTOR1", motor_box1, "MOTOR1_BOX_VALUES"),
+            ("MOTOR2_BOX", "MOTOR2", motor_box2, "MOTOR2_BOX_VALUES"),
+            ("MOTOR3_BOX", "MOTOR3", motor_box3, "MOTOR3_BOX_VALUES"),
+            ("MOTOR4_BOX", "MOTOR4", motor_box4, "MOTOR4_BOX_VALUES"),
+            ("MOTOR5_BOX", "MOTOR5", motor_box5, "MOTOR5_BOX_VALUES"),
+            ("MOTOR6_BOX", "MOTOR6", motor_box6, "MOTOR6_BOX_VALUES"),
+            ("MOTOR7_BOX", "MOTOR7", motor_box7, "MOTOR7_BOX_VALUES"),
         ]
         row_offset = 0
-        for active_key, name, motor in entries:
+        for active_key, name, motor, values_key in entries:
             if settings.get(active_key) != Active.ON or not isinstance(motor, Motor):
                 continue
-            move_button: PushButton = self.create_and_add_button(
-                name + " MOVE",
+            edit_button: PushButton = self.create_and_add_button(
+                name,
                 row + row_offset * 2,
                 column,
                 16,
                 2,
-                partial(show_motor_move_dialog, self, name, motor),
-                f"Move {name} to a chosen angle over a chosen duration",
+                partial(show_motor_edit_dialog, self, name, motor, values_key),
+                f"Edit {name}'s open/close angles and times, and test OPEN/CLOSE",
             )
-            self.buttons.append(move_button)
+            self.buttons.append(edit_button)
             row_offset += 1
 
     def toggle_visible_button(self, value: str, key: str) -> None:
@@ -1124,6 +1095,40 @@ class BoxLayout(Layout):
                 ir_light_box.on()
             case "AUTO":
                 manager.check_box_lights()
+
+    def tare_scale_box_clicked(self) -> None:
+        """Initiates box scale taring (deferred to the background loop, same
+        as the corridor scale, to avoid concurrent I2C access)."""
+        manager.taring_scale_box = True
+
+    def calibrate_scale_box_clicked(self) -> None:
+        """Opens the scale calibration wizard for the box scale."""
+        # Block calibration if the system is busy (same guard as corridor,
+        # since a subject mid-transit can also disturb a box weight reading)
+        if not manager.state.can_calibrate_scale():
+            QMessageBox.information(
+                self.window,
+                "CALIBRATION",
+                (
+                    "Calibration is not available while a subject is in the box "
+                    "or a detection is in progress."
+                ),
+            )
+            return
+
+        wiz = ScaleCalibrationWizard(scale_box, self.window)
+        wiz.exec_()
+
+    def get_weight_box_clicked(self) -> None:
+        """Gets and logs the current weight from the box scale.
+
+        Unlike the corridor's GET WEIGHT, this doesn't defer through
+        manager.getting_weights/log_weight -- those are coupled to the
+        corridor's automatic subject-tracking state machine, which the box
+        scale has no equivalent of.
+        """
+        weight = scale_box.get_weight()
+        log.info(f"box weight: {weight:.2f} g")
 
     def disable_all(self) -> None:
         """Disables all port buttons."""
@@ -1551,8 +1556,8 @@ class DetectionLayout(Layout):
     def draw(self) -> None:
         """Draws the corridor configuration options."""
         self.lbs: list[LabelButtons] = []
-        # (cycle, thresholds mode) last applied; "" cycle forces the first apply
-        self._dim_cycle: tuple[str, CycleDay] = ("", CycleDay.AUTO)
+        # is_day last applied; None forces the first apply
+        self._dim_is_day: bool | None = None
 
         if manager.use_of_corridor:
             # Ensure corridor areas carry a night threshold (index 5); older
@@ -1691,7 +1696,7 @@ class DetectionLayout(Layout):
         Box areas whose USAGE is OFF have all their controls (labels and
         buttons) hidden. For the corridor, the day/night controls that are not
         the effective ones are greyed. The effective day/night follows
-        THRESHOLDS_CORRIDOR: DAY/NIGHT force it, AUTO follows the cycle.
+        CORRIDOR_CYCLE_MODE: DAY/NIGHT force it, AUTO follows the cycle.
         """
         # box areas: hide every control of an area whose USAGE is OFF
         for lb in self.lbs:
@@ -1699,20 +1704,11 @@ class DetectionLayout(Layout):
                 usage_key = lb.name.replace("AREA", "USAGE")
                 lb.set_visible(settings.get(usage_key) != AreaActive.OFF)
 
-        # corridor day/night: re-apply when the cycle OR the thresholds mode
-        # changes (toggling THRESHOLDS_CORRIDOR must update the colours too)
-        cycle = manager.cycle_change_detector.cycle_text
-        mode = settings.get("THRESHOLDS_CORRIDOR")
-        state = (cycle, mode)
-        if state == self._dim_cycle:
+        # corridor day/night: re-apply only when the effective day/night changes
+        is_day = manager.corridor_cycle_is_day
+        if is_day == self._dim_is_day:
             return
-        self._dim_cycle = state
-        if mode == CycleDay.DAY:
-            is_day = True
-        elif mode == CycleDay.NIGHT:
-            is_day = False
-        else:
-            is_day = cycle == "DAY"
+        self._dim_is_day = is_day
         for lb in self.lbs:
             direction = lb.direction
             if direction in ("thr_night", "exposure_night"):
@@ -2144,19 +2140,25 @@ class ScaleCalibrationWizard(QWizard):
       4) Remove weight and verify near-zero reading
     """
 
-    def __init__(self, parent=None) -> None:
+    def __init__(self, scale_obj: Scale | NullScale, parent=None) -> None:
         """Initializes the ScaleCalibrationWizard.
 
         Args:
+            scale_obj (Scale | NullScale): The scale device to calibrate (the
+                corridor `scale` or the `scale_box`).
             parent (QWidget, optional): Parent widget. Defaults to None.
         """
         super().__init__(parent)
+        self.scale = scale_obj
         self.setWindowTitle("Scale Calibration")
         self.resize(560, 300)
 
         # Shared state
         self.known_weight_g: float | None = None
-        self.default_weight = float(settings.get("SCALE_WEIGHT_TO_CALIBRATE") or 0.0)
+        weight_key = getattr(
+            scale_obj, "weight_to_calibrate_key", "SCALE_WEIGHT_TO_CALIBRATE"
+        )
+        self.default_weight = float(settings.get(weight_key) or 0.0)
 
         # Pages
         self.page1 = Step1TarePage()
@@ -2179,7 +2181,7 @@ class ScaleCalibrationWizard(QWizard):
         Returns:
             float: The current weight in grams.
         """
-        return float(scale.get_weight())
+        return float(self.scale.get_weight())
 
 
 class Step1TarePage(QWizardPage):
@@ -2209,8 +2211,9 @@ class Step1TarePage(QWizardPage):
         Returns:
             bool: True if tare is successful, False otherwise.
         """
+        wiz: ScaleCalibrationWizard = self.wizard()  # type: ignore
         try:
-            scale.tare()
+            wiz.scale.tare()
             self.status.setText("Tare completed successfully.")
             return True
         except Exception:
@@ -2288,7 +2291,7 @@ class Step2KnownWeightPage(QWizardPage):
             return False
 
         try:
-            scale.calibrate(val)
+            wiz.scale.calibrate(val)
         except Exception:
             self.status.setText("Calibration failed. Please try again.")
             QMessageBox.critical(self, "Calibration", "Calibration failed.")

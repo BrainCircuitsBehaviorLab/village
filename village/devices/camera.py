@@ -291,7 +291,7 @@ class Camera:
 
         # Corridor areas carry two thresholds: index 4 = day (visible light,
         # black mouse), index 5 = night (IR only, greyish mouse).
-        day = self.name == "CORRIDOR" and manager.camera_corridor_day
+        day = self.name == "CORRIDOR" and manager.corridor_cycle_is_day
 
         for i in range(1, self.number_of_areas + 1):
             area = settings.get("AREA" + str(i) + "_" + self.name)

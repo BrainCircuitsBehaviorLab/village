@@ -518,7 +518,6 @@ class TimeUtils:
                 self.night_time = datetime.time(20, 0)
             self.is_day: bool = self._current_cycle_is_day()
             self.previous: bool = self.is_day
-            self.cycle_text: str = "DAY" if self.is_day else "NIGHT"
 
         def _current_cycle_is_day(self) -> bool:
             """Determines current cycle state.
@@ -541,7 +540,6 @@ class TimeUtils:
             self.is_day = self._current_cycle_is_day()
             if self.is_day != self.previous:
                 self.previous = self.is_day
-                self.cycle_text = "DAY" if self.is_day else "NIGHT"
                 return True
             return False
 

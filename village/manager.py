@@ -76,11 +76,8 @@ class Manager:
         rfid_reader (Active): RFID reader settings.
         info (Info): Information settings.
         actions (Actions): Actions settings.
-        visible_corridor_cycle (Cycle): Visible light cycle of the corridor.
-        ir_corridor_cycle (Cycle): Infrared light cycle of the corridor.
         visible_box_cycle (Cycle): Visible light cycle of the box.
         ir_box_cycle (Cycle): Infrared light cycle of the box.
-        cycle_text (str): Text representation of the current cycle.
         status_parts (list[str]): The 6 pieces of the status bar text (subject,
             task, RFID, cycle, project, state), each shown in its own label.
         day (bool): Indicates if it's day.
@@ -118,8 +115,6 @@ class Manager:
         self.calibrating: bool = False
         self.table: DataTable | str = DataTable.EVENTS
         self.rfid_reader: Active = settings.get("RFID_READER")
-        self.visible_corridor_cycle: Cycle = settings.get("VISIBLE_CORRIDOR")
-        self.ir_corridor_cycle: Cycle = settings.get("IR_CORRIDOR")
         self.visible_box_cycle: Cycle = settings.get("VISIBLE_BOX")
         self.ir_box_cycle: Cycle = settings.get("IR_BOX")
         self.info: Info = settings.get("INFO")
@@ -176,6 +171,7 @@ class Manager:
         self.getting_weights = False
         self.log_weight = False
         self.taring_scale = False
+        self.taring_scale_box = False
 
         self.healthchecks_url = settings.get("HEALTHCHECKS_URL")
 
@@ -272,7 +268,6 @@ class Manager:
         subject_name = self.subject.name
         task_name = self.task.name
         rfid_reader_name = self.rfid_reader.name
-        cycle_text = self.cycle_change_detector.cycle_text
         try:
             project_text = settings.get("PROJECT_DIRECTORY")
             project_text = Path(project_text).name
@@ -284,7 +279,6 @@ class Manager:
             "SUBJECT: " + subject_name,
             "TASK: " + task_name,
             "RFID: " + rfid_reader_name,
-            "CYCLE: " + cycle_text,
             "STATE: " + state_name + "\n" + "(" + state_description + ")",
         ]
 
@@ -601,8 +595,8 @@ class Manager:
         )
 
     @property
-    def camera_corridor_day(self) -> bool:
-        mode = settings.get("THRESHOLDS_CORRIDOR")
+    def corridor_cycle_is_day(self) -> bool:
+        mode = settings.get("CORRIDOR_CYCLE_MODE")
         if mode == CycleDay.DAY:
             return True
         if mode == CycleDay.NIGHT:
@@ -610,27 +604,16 @@ class Manager:
         return self.cycle_change_detector.is_day
 
     def check_corridor_lights(self) -> None:
-        """Checks the state of the corridor lights and sets them based
-        on the current cycle."""
-        cycle = self.cycle_change_detector.cycle_text
-
-        if self.visible_corridor_cycle == Cycle.ON:
+        """Sets the corridor lights based on day/night: visible light on and IR
+        off during the day, visible light off and IR on at night. Follows the
+        same CORRIDOR_CYCLE_MODE override as the camera exposure (via
+        corridor_cycle_is_day): DAY/NIGHT force it, AUTO follows the real cycle."""
+        if self.corridor_cycle_is_day:
             visible_light_corridor.on()
-        if self.visible_corridor_cycle == Cycle.OFF:
-            visible_light_corridor.off()
-        elif cycle == "DAY":
-            visible_light_corridor.on()
+            ir_light_corridor.off()
         else:
             visible_light_corridor.off()
-
-        if self.ir_corridor_cycle == Cycle.ON:
             ir_light_corridor.on()
-        elif self.ir_corridor_cycle == Cycle.OFF:
-            ir_light_corridor.off()
-        elif cycle == "NIGHT":
-            ir_light_corridor.on()
-        else:
-            ir_light_corridor.off()
 
     def check_box_lights(self) -> None:
         """Checks the state of the box lights and sets them based
