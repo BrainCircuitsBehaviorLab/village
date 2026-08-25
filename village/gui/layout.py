@@ -415,10 +415,6 @@ class Layout(QGridLayout):
             "lightgray",
         )
 
-        if not manager.use_of_corridor:
-            self.mice_button.hide()
-            self.alarm_button.hide()
-
         self.stop_button = self.create_and_add_button(
             "",
             0,
@@ -472,27 +468,35 @@ class Layout(QGridLayout):
         ):
             sub_label.setText(part)
 
-        alarms = len(log.telegram_bot.pending)
-        button_text = "ALARMS (" + str(alarms) + ")" if alarms else "NO ALARMS"
-        self.alarm_button.setText(button_text)
-        self.alarm_button.setEnabled(alarms > 0)
-        c = "orange" if alarms else "lightgray"
-        sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
-        self.alarm_button.setStyleSheet(sty)
-
-        checked = manager.mice_check_done()
-        self.mice_button.setText("MICE OK" if checked else "CHECK MICE")
-        self.mice_button.setEnabled(not checked)
-        if checked:
-            at = time_utils.date_from_string(settings.get("MICE_CHECKED_AT"))
-            tooltip = "Mice checked by " + str(settings.get("MICE_CHECKED_BY"))
-            tooltip += " at " + at.strftime("%H:%M")
+        if not manager.use_of_corridor:
+            self.alarm_button.setText("NO ALARMS")
+            self.alarm_button.setEnabled(False)
+            self.alarm_button.setStyleSheet(_off)
+            self.mice_button.setText("MICE OK")
+            self.mice_button.setEnabled(False)
+            self.mice_button.setStyleSheet(_off)
         else:
-            tooltip = "Confirm that the mice have been checked today"
-        self.mice_button.setToolTip(tooltip)
-        c = "lightgray" if checked else "orange"
-        sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
-        self.mice_button.setStyleSheet(sty)
+            alarms = len(log.telegram_bot.pending)
+            button_text = "ALARMS (" + str(alarms) + ")" if alarms else "NO ALARMS"
+            self.alarm_button.setText(button_text)
+            self.alarm_button.setEnabled(alarms > 0)
+            c = "orange" if alarms else "lightgray"
+            sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
+            self.alarm_button.setStyleSheet(sty)
+
+            checked = manager.mice_check_done()
+            self.mice_button.setText("MICE OK" if checked else "CHECK MICE")
+            self.mice_button.setEnabled(not checked)
+            if checked:
+                at = time_utils.date_from_string(settings.get("MICE_CHECKED_AT"))
+                tooltip = "Mice checked by " + str(settings.get("MICE_CHECKED_BY"))
+                tooltip += " at " + at.strftime("%H:%M")
+            else:
+                tooltip = "Confirm that the mice have been checked today"
+            self.mice_button.setToolTip(tooltip)
+            c = "lightgray" if checked else "orange"
+            sty = f"QPushButton {{background-color: {c}; font-weight: bold}}{_tt}"
+            self.mice_button.setStyleSheet(sty)
 
         state = manager.state
         if state == State.RUN_MANUAL or state.task_is_running():

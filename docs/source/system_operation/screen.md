@@ -45,10 +45,6 @@ With:
 vc4.force_hotplug=3 video=HDMI-A-1:1600x900@60D video=HDMI-A-2:1280x720@60D
 ```
 
-The `vc4.force_hotplug` flag controls which HDMI ports the system treats as connected:
-`1` = HDMI-1 only, `2` = HDMI-2 only, `3` = both. The `video=HDMI-A-*` parameters set
-the resolution for each port independently.
-
 The `vc4.force_hotplug` flag controls which HDMI ports the system treats as
 connected regardless of whether a monitor is physically plugged in:
 `1` = HDMI-1 only, `2` = HDMI-2 only, `3` = both. Setting it to `3` is what
@@ -82,6 +78,8 @@ Measured latencies: **mean = 27.4 ms, SD = 7.5 ms**.
 
 Import the module-level instance, provide a drawing function, and call
 `start_drawing()` / `stop_drawing()` to control when the stimulus appears.
+`load_draw_function()` only sets the function to call each frame — load any
+media separately with `load_image()` / `load_video()`, before or after it.
 
 **Displaying a static image:**
 
@@ -94,7 +92,8 @@ def draw():
         if screen.image:
             painter.drawPixmap(0, 0, screen.image)
 
-screen.load_draw_function(draw, image="stimulus.png")
+screen.load_image("stimulus.png")
+screen.load_draw_function(draw)
 screen.start_drawing()
 
 # ... trial runs ...
@@ -111,7 +110,8 @@ def draw():
         if frame:
             painter.drawImage(0, 0, frame)
 
-screen.load_draw_function(draw, video="movie.mp4")
+screen.load_video("movie.mp4")
+screen.load_draw_function(draw)
 screen.start_drawing()
 ```
 
@@ -145,11 +145,11 @@ Files passed to `image=` and `video=` are looked up inside `MEDIA_DIRECTORY`
 
 | Method | Arguments | Description |
 |--------|-----------|-------------|
-| `load_draw_function(draw_fn, image, video)` | `draw_fn`: callable; `image`, `video`: optional filenames | Sets the drawing function and pre-loads media. |
+| `load_draw_function(draw_fn)` | `draw_fn`: callable | Sets the function called every frame. Does not load any media — call `load_image()`/`load_video()` separately for that. |
 | `start_drawing()` | — | Starts the 60 Hz rendering loop. |
 | `stop_drawing()` | — | Stops rendering and blanks the screen. |
 | `load_image(file)` | `file`: filename | Loads an image from `MEDIA_DIRECTORY` into `screen.image`. |
-| `load_video(file)` | `file`: filename | Prepares a video for playback (started by `start_drawing()`). |
+| `load_video(file, volume_gain=0.1)` | `file`: filename; `volume_gain`: audio volume for the video's soundtrack, `0.0`–`1.0` | Prepares a video (and its audio track) for playback (started by `start_drawing()`). |
 | `get_video_frame()` | — | Returns the current video frame as a `QImage`, or `None`. |
 
 ---
