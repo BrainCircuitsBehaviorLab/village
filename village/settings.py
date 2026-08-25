@@ -33,24 +33,6 @@ default_sync_directory = str(
 main_settings = [
     Setting("SYSTEM_NAME", default_system_name, str, "The system’s unique name."),
     Setting(
-        "USE_CORRIDOR",
-        "ON",
-        Active,
-        """Enables the complete Corridor subsystem, integrating the control PCB
-(RFID reader, scale, temperature sensor, motors, and lighting) and the dedicated
-corridor camera. This setting also activates Telegram notifications for real-time
-remote monitoring. Keep ON for fully automated Training Village experiments. Disable
-only when running standalone Operant Box sessions without the corridor, such as for
-tethered ephys or optogenetics recordings.""",
-    ),
-    Setting(
-        "USE_BOX_BOARD",
-        "ON",
-        Active,
-        """Enables the Operant Box PCB. This setting allows the Raspberry Pi to control
-some box components, such as LED stimuli, visible/infrared lighting, and motors.""",
-    ),
-    Setting(
         "FAVOURITE_TASK",
         "None",
         str,
@@ -512,6 +494,17 @@ which provides a clear view of the system activity while keeping CPU usage low."
 
 corridor_settings = [
     Setting(
+        "USE_CORRIDOR",
+        "ON",
+        Active,
+        """Enables the complete Corridor subsystem, integrating the control PCB
+(RFID reader, scale, temperature sensor, motors, and lighting) and the dedicated
+corridor camera. This setting also activates Telegram notifications for real-time
+remote monitoring. Keep ON for fully automated Training Village experiments. Disable
+only when running standalone Operant Box sessions without the corridor, such as for
+tethered ephys or optogenetics recordings.""",
+    ),
+    Setting(
         "DAYTIME",
         "08:00",
         str,
@@ -586,6 +579,13 @@ threshold are discarded as they likely reflect movement artifacts
 ]
 
 box_settings = [
+    Setting(
+        "USE_BOX_BOARD",
+        "ON",
+        Active,
+        """Enables the Operant Box PCB. This setting allows the Raspberry Pi to control
+some box components, such as LED stimuli, visible/infrared lighting, and motors.""",
+    ),
     Setting(
         "MOTOR1_BOX", "ON", Active, """Whether box motor 1 is physically present."""
     ),

@@ -11,9 +11,11 @@ class TelegramCommandBase:
     Set command to the slash-command name (no slash) and implement
     handler. Args after the command arrive in context.args as strings.
     Wrap risky work in try/except so one bad command can't kill the bot.
+    Set description to a short one-line explanation shown by /help.
     """
 
     command = ""  # e.g. "do_stuff" -> /do_stuff
+    description = ""  # shown next to the command in /help
 
     async def handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Respond to the command."""

@@ -64,7 +64,9 @@ These configuration settings are saved strictly on your local Raspberry Pi stora
 
 
 ### Managing Alarms & Commands
-Once your bot is fully linked to the system, you can refer to the [Alarm system overview][ALARM] section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.
+Once your bot is fully linked to the system, you can send `/help` to the bot at any time to get a full list of the available commands along with a short description of what each one does.
+
+For more detail, refer to the [Alarm system overview](https://braincircuitsbehaviorlab.github.io/village/troubleshooting/alarm.html) section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.
 
 To verify that everything is working correctly, go to your Telegram group chat and send one of the following commands (ensuring the TV system is powered on and running). You should receive an immediate response from the bot:
 - `/cam`

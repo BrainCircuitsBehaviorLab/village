@@ -125,10 +125,10 @@ class Settings:
         self.hidden_settings = hidden_settings
         self.saved_settings = QSettings("village", "village")
 
-        # main_settings is excluded on purpose: SYSTEM_NAME, USE_CORRIDOR and
-        # USE_BOX_BOARD describe this specific machine's identity and physical
-        # hardware, not trainable defaults, so a factory reset must not touch
-        # them (same reasoning as directory_settings and device_settings below).
+        # main_settings is excluded on purpose: SYSTEM_NAME describes this
+        # specific machine's identity, not a trainable default, so a factory
+        # reset must not touch it (same reasoning as directory_settings and
+        # device_settings below).
         # device_settings (wiring addresses/indices) is fixed per-machine and not
         # editable from the GUI, so it must not be touched by a factory reset either.
         self.restorable_settings = (

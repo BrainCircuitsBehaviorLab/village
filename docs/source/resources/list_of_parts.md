@@ -55,7 +55,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 
 ---
 
-### Custom PCB Boards & Electronics
+###  Boards & Electronics
 
 *   1 x Custom Main HAT Board
 *   1 x Custom Corridor Board

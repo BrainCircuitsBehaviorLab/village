@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import json
+import subprocess
 import threading
 import time
 import traceback
@@ -26,6 +27,23 @@ from village.settings import settings
 
 # increase alarm message salience!
 ALARM_EMOJI = "⚠️⚠️⚠️"  # ⚠️💀
+
+# Built-in commands registered in TelegramBot.main(). A custom command with
+# one of these names would silently never run: python-telegram-bot checks
+# handlers in registration order and stops at the first match, and these are
+# registered before any custom command from register_custom().
+RESERVED_COMMANDS = frozenset(
+    {
+        "start",
+        "help",
+        "report",
+        "plot",
+        "cam",
+        "mice_checked",
+        "restart_anydesk",
+        "restart_vnc",
+    }
+)
 
 
 class Alarm:
@@ -90,6 +108,7 @@ class TelegramBot:
         self.error = ""
         self.pending: dict[int, Alarm] = {}
         self.alarm_id = 0
+        self.custom_commands: list = []
 
         self.thread = threading.Thread(target=self.botloop, daemon=True)
         self.thread.start()
@@ -101,9 +120,34 @@ class TelegramBot:
             update (Update): The update object.
             context (ContextTypes.DEFAULT_TYPE): The context object.
         """
-        text = "Hi! Use /report <hours> to get a report of the last hours.\n"
-        text += "Use /mice_checked to confirm that you checked the mice today."
-        await update.message.reply_text(text)
+        await update.message.reply_text("Hi! Use /help to see the available commands.")
+
+    async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Lists every available command, built-in and custom.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
+        lines = [
+            "Available commands:",
+            "/report <hours> - Report of activity for the last <hours> (default 24).",
+            "/plot - Sends a plot of the corridor events.",
+            "/cam - Sends a picture from each camera.",
+            "/mice_checked - Confirms that the mice have been checked today.",
+            "/restart_anydesk - If you connect to the Pi remotely with"
+            " AnyDesk and the connection stops working, use this to restart it.",
+            "/restart_vnc - If you connect to the Pi remotely with VNC and"
+            " the connection stops working, use this to restart it.",
+        ]
+        for c in self.custom_commands:
+            if not c.command:
+                continue
+            line = "/" + c.command
+            if c.description:
+                line += " - " + c.description
+            lines.append(line)
+        await update.message.reply_text("\n".join(lines))
 
     def alarm(self, message: str, repeat: bool = False, report: bool = False) -> None:
         """Sends an alarm message to the configured chat.
@@ -249,6 +293,50 @@ class TelegramBot:
         except Exception:
             log.error("Telegram error checking mice", exception=traceback.format_exc())
 
+    async def restart_anydesk(
+        self, update: Update, context: ContextTypes.DEFAULT_TYPE
+    ) -> None:
+        """Restarts the AnyDesk service on the Pi with /restart_anydesk.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
+        try:
+            subprocess.run(
+                ["sudo", "systemctl", "restart", "anydesk"],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            await update.message.reply_text("anydesk restarted")
+        except Exception:
+            log.error("Telegram restart_anydesk", exception=traceback.format_exc())
+            await update.message.reply_text("failed to restart anydesk")
+
+    async def restart_vnc(
+        self, update: Update, context: ContextTypes.DEFAULT_TYPE
+    ) -> None:
+        """Restarts the Raspberry Pi's built-in VNC server with /restart_vnc.
+
+        Args:
+            update (Update): The update object.
+            context (ContextTypes.DEFAULT_TYPE): The context object.
+        """
+        try:
+            subprocess.run(
+                ["sudo", "systemctl", "restart", "vncserver-x11-serviced"],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            await update.message.reply_text("vnc restarted")
+        except Exception:
+            log.error("Telegram restart_vnc", exception=traceback.format_exc())
+            await update.message.reply_text("failed to restart vnc")
+
     async def report(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         """Generates and sends a report for the specified number of hours.
 
@@ -320,24 +408,41 @@ class TelegramBot:
         """Registers custom commands collected from the project code directory.
 
         Called from main after import_all has populated the list. add_handler
-        works on the already-running application.
+        works on the already-running application. A custom command sharing its
+        name with a built-in one is rejected (logged, not registered) instead
+        of being silently shadowed by the built-in handler.
 
         Args:
             commands (list): TelegramCommandBase instances.
         """
+        accepted = []
         for c in commands:
-            if c.command:
-                self.application.add_handler(CommandHandler(c.command, c.handler))
+            if not c.command:
+                continue
+            if c.command in RESERVED_COMMANDS:
+                log.error(
+                    "Telegram custom command '/"
+                    + c.command
+                    + "' collides with a built-in command and was not registered."
+                )
+                continue
+            self.application.add_handler(CommandHandler(c.command, c.handler))
+            accepted.append(c)
+        self.custom_commands = accepted
 
     async def main(self) -> None:
         """Main asyncio loop for the bot application."""
         self.application = ApplicationBuilder().token(self.token).build()
         self.application.add_handler(CommandHandler("start", self.start))
-        self.application.add_handler(CommandHandler("help", self.start))
+        self.application.add_handler(CommandHandler("help", self.help))
         self.application.add_handler(CommandHandler("report", self.report))
         self.application.add_handler(CommandHandler("plot", self.plot))
         self.application.add_handler(CommandHandler("cam", self.cam))
         self.application.add_handler(CommandHandler("mice_checked", self.mice_checked))
+        self.application.add_handler(
+            CommandHandler("restart_anydesk", self.restart_anydesk)
+        )
+        self.application.add_handler(CommandHandler("restart_vnc", self.restart_vnc))
         self.application.add_handler(CallbackQueryHandler(self.ack))
 
         try:

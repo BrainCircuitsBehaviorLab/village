@@ -153,9 +153,7 @@ class SettingsLayout(Layout):
     def _active_sections(self) -> list[str]:
         hidden: set[str] = set()
         if not manager.use_of_corridor:
-            hidden.update({"CORRIDOR SETTINGS", "TELEGRAM SETTINGS"})
-        if not manager.use_of_box_chip:
-            hidden.update({"BOX SETTINGS"})
+            hidden.update({"TELEGRAM SETTINGS"})
         return [s for s in MENU_SECTIONS if s not in hidden]
 
     def _should_show(self, key: str) -> bool:
@@ -400,19 +398,28 @@ class SettingsLayout(Layout):
                     row += 2
 
         elif name == "CORRIDOR SETTINGS":
+            corridor_active = self._get("USE_CORRIDOR") == Active.ON
             for s in settings.corridor_settings:
+                if s.key != "USE_CORRIDOR" and not corridor_active:
+                    continue
                 if self._should_show(s.key):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
         elif name == "BOX SETTINGS":
+            box_active = self._get("USE_BOX_BOARD") == Active.ON
             for s in settings.box_settings:
+                if s.key != "USE_BOX_BOARD" and not box_active:
+                    continue
                 if self._should_show(s.key):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
         elif name == "CONTROLLER SETTINGS":
+            is_raspberry = self._get("BEHAVIOR_CONTROLLER") == ControllerEnum.RASPBERRY
             for s in settings.controller_settings:
+                if s.key == "CONTROLLER_PORT" and is_raspberry:
+                    continue
                 if self._should_show(s.key):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
