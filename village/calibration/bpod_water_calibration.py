@@ -13,7 +13,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel, QMessageBox, QPushButton, QScrollArea, QWidget
 
-from village.classes.enums import ControllerEnum, State
+from village.classes.enums import Active, ControllerEnum, State
 from village.custom_classes.calibration_base import CalibrationBase
 from village.custom_classes.task_base import BpodEvent, TaskBase
 from village.gui.layout import Label, Layout, LineEdit
@@ -178,17 +178,19 @@ class BpodWaterCalibration(CalibrationBase):
         self.calibration_initiated = False
         self.test_initiated = False
         self.update_plot = False
-        self.time_line_edits: list[LineEdit] = []
-        self.total_weight_line_edits: list[LineEdit] = []
-        self.water_delivered_labels: list[Label] = []
+        # Indexed by real port number (0-7); None for ports not active in
+        # BPOD_BEHAVIOR_PORTS, which have no widget drawn for them.
+        self.time_line_edits: list[LineEdit | None] = [None] * 8
+        self.total_weight_line_edits: list[LineEdit | None] = [None] * 8
+        self.water_delivered_labels: list[Label | None] = [None] * 8
 
-        self.water_expected_line_edits2: list[LineEdit] = []
-        self.total_weight_line_edits2: list[LineEdit] = []
-        self.water_delivered_labels2: list[Label] = []
+        self.water_expected_line_edits2: list[LineEdit | None] = [None] * 8
+        self.total_weight_line_edits2: list[LineEdit | None] = [None] * 8
+        self.water_delivered_labels2: list[Label | None] = [None] * 8
         self.error_labels2: list[Label] = []
 
-        self.ok_buttons2: list[QPushButton] = []
-        self.add_buttons2: list[QPushButton] = []
+        self.ok_buttons2: list[QPushButton | None] = [None] * 8
+        self.add_buttons2: list[QPushButton | None] = [None] * 8
 
         self.indices: list[int] = []
         self.times = [0.0 for _ in range(8)]
@@ -204,14 +206,20 @@ class BpodWaterCalibration(CalibrationBase):
         self.test_index: int = 0
         self.test_row_dicts: list[dict] = []
 
+        # Only ports active in BPOD_BEHAVIOR_PORTS get a row, compacted (no
+        # gaps for inactive ports). Real port index (0-7) is kept for all
+        # per-port state; row_pos is only used for vertical positioning.
+        port_active = settings.get("BPOD_BEHAVIOR_PORTS")
+        active_ports = [i for i in range(8) if port_active[i] == Active.ON]
+
         # ports
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             self.layout.create_and_add_label(
-                "port" + str(i + 1), 4 + 2 * i, 2, 8, 2, "black", bold=False
+                "port" + str(i + 1), 4 + 2 * row_pos, 2, 8, 2, "black", bold=False
             )
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             self.layout.create_and_add_label(
-                "port" + str(i + 1), 26 + 2 * i, 2, 8, 2, "black", bold=False
+                "port" + str(i + 1), 26 + 2 * row_pos, 2, 8, 2, "black", bold=False
             )
 
         # input
@@ -251,11 +259,11 @@ class BpodWaterCalibration(CalibrationBase):
             bold=False,
             description="Valve opening time in seconds.",
         )
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             line_edit = self.layout.create_and_add_line_edit(
-                "0", 4 + 2 * i, 7, 8, 2, self.calibration_changed
+                "0", 4 + 2 * row_pos, 7, 8, 2, self.calibration_changed
             )
-            self.time_line_edits.append(line_edit)
+            self.time_line_edits[i] = line_edit
 
         self.layout.create_and_add_label(
             "WATER EXPECTED(ul)",
@@ -267,11 +275,11 @@ class BpodWaterCalibration(CalibrationBase):
             bold=False,
             description="The expected water in microliters.",
         )
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             line_edit = self.layout.create_and_add_line_edit(
-                "0", 26 + 2 * i, 7, 8, 2, self.test_changed
+                "0", 26 + 2 * row_pos, 7, 8, 2, self.test_changed
             )
-            self.water_expected_line_edits2.append(line_edit)
+            self.water_expected_line_edits2[i] = line_edit
 
         # iterations
         self.layout.create_and_add_label(
@@ -363,12 +371,12 @@ class BpodWaterCalibration(CalibrationBase):
             bold=False,
             description="Total weight in grams.",
         )
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             line_edit = self.layout.create_and_add_line_edit(
-                "0", 4 + 2 * i, 31, 8, 2, self.calibration_weighted
+                "0", 4 + 2 * row_pos, 31, 8, 2, self.calibration_weighted
             )
             line_edit.setDisabled(True)
-            self.total_weight_line_edits.append(line_edit)
+            self.total_weight_line_edits[i] = line_edit
 
         self.layout.create_and_add_label(
             "TOTAL WEIGHT(g)",
@@ -380,12 +388,12 @@ class BpodWaterCalibration(CalibrationBase):
             bold=False,
             description="Total weight in grams.",
         )
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             line_edit = self.layout.create_and_add_line_edit(
-                "0", 26 + 2 * i, 31, 8, 2, partial(self.test_weighted, i)
+                "0", 26 + 2 * row_pos, 31, 8, 2, partial(self.test_weighted, i)
             )
             line_edit.setDisabled(True)
-            self.total_weight_line_edits2.append(line_edit)
+            self.total_weight_line_edits2[i] = line_edit
 
         # output water delivered
         self.layout.create_and_add_label(
@@ -398,12 +406,12 @@ class BpodWaterCalibration(CalibrationBase):
             bold=False,
             description="Water delivered in microliters for each of the iterations.",
         )
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             label = self.layout.create_and_add_label(
-                "0", 4 + 2 * i, 45, 18, 2, "black", bold=False
+                "0", 4 + 2 * row_pos, 45, 18, 2, "black", bold=False
             )
             label.setAlignment(Qt.AlignCenter)
-            self.water_delivered_labels.append(label)
+            self.water_delivered_labels[i] = label
 
         self.layout.create_and_add_label(
             "WATER DELIVERED(ul)",
@@ -415,12 +423,12 @@ class BpodWaterCalibration(CalibrationBase):
             bold=False,
             description="Water delivered in microliters for each of the iterations.",
         )
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             label = self.layout.create_and_add_label(
-                "0", 26 + 2 * i, 45, 18, 2, "black", bold=False
+                "0", 26 + 2 * row_pos, 45, 18, 2, "black", bold=False
             )
             label.setAlignment(Qt.AlignCenter)
-            self.water_delivered_labels2.append(label)
+            self.water_delivered_labels2[i] = label
 
         # add button
         self.add_button = self.layout.create_and_add_button(
@@ -436,10 +444,10 @@ class BpodWaterCalibration(CalibrationBase):
         self.add_button.setDisabled(True)
 
         # ok and fail buttons
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             button = self.layout.create_and_add_button(
                 "OK",
-                26 + 2 * i,
+                26 + 2 * row_pos,
                 66,
                 7,
                 2,
@@ -448,12 +456,12 @@ class BpodWaterCalibration(CalibrationBase):
                 "powderblue",
             )
             button.setDisabled(True)
-            self.ok_buttons2.append(button)
+            self.ok_buttons2[i] = button
 
-        for i in range(8):
+        for row_pos, i in enumerate(active_ports):
             button = self.layout.create_and_add_button(
                 "FAIL ->",
-                26 + 2 * i,
+                26 + 2 * row_pos,
                 73,
                 8,
                 2,
@@ -463,7 +471,7 @@ class BpodWaterCalibration(CalibrationBase):
                 "lightcoral",
             )
             button.setDisabled(True)
-            self.add_buttons2.append(button)
+            self.add_buttons2[i] = button
 
         # save / delete
         self.save_button = self.layout.create_and_add_button(
@@ -551,17 +559,18 @@ class BpodWaterCalibration(CalibrationBase):
             self.iterations_line_edit.setStyleSheet("")
 
         for i in range(8):
+            line_edit = self.time_line_edits[i]
+            if line_edit is None:
+                continue
             try:
-                time = float(self.time_line_edits[i].text())
+                time = float(line_edit.text())
                 if time > 0:
                     self.times[i] = time
-                    self.time_line_edits[i].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
+                    line_edit.setStyleSheet("QLineEdit {border: 1px solid black;}")
                 else:
-                    self.time_line_edits[i].setStyleSheet("")
+                    line_edit.setStyleSheet("")
             except Exception:
-                self.time_line_edits[i].setStyleSheet("")
+                line_edit.setStyleSheet("")
 
             if self.times[i] > 0 and self.iterations > 0:
                 self.calibrate_button.setEnabled(True)
@@ -587,17 +596,18 @@ class BpodWaterCalibration(CalibrationBase):
             self.iterations_line_edit2.setStyleSheet("")
 
         for i in range(8):
+            line_edit = self.water_expected_line_edits2[i]
+            if line_edit is None:
+                continue
             try:
-                water = float(self.water_expected_line_edits2[i].text())
+                water = float(line_edit.text())
                 if water > 0:
                     self.water_expected2[i] = water
-                    self.water_expected_line_edits2[i].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
+                    line_edit.setStyleSheet("QLineEdit {border: 1px solid black;}")
                 else:
-                    self.water_expected_line_edits2[i].setStyleSheet("")
+                    line_edit.setStyleSheet("")
             except Exception:
-                self.water_expected_line_edits2[i].setStyleSheet("")
+                line_edit.setStyleSheet("")
 
             if self.water_expected2[i] > 0 and self.iterations2 > 0:
                 self.test_button.setEnabled(True)
@@ -622,10 +632,12 @@ class BpodWaterCalibration(CalibrationBase):
         manager.state = State.RUN_MANUAL
         self.calibration_initiated = True
         for line_edit in self.time_line_edits:
-            line_edit.setDisabled(True)
+            if line_edit is not None:
+                line_edit.setDisabled(True)
         self.iterations_line_edit.setDisabled(True)
         for line_edit in self.water_expected_line_edits2:
-            line_edit.setDisabled(True)
+            if line_edit is not None:
+                line_edit.setDisabled(True)
         self.iterations_line_edit2.setDisabled(True)
         manager.launch_task_calibration()
 
@@ -651,8 +663,11 @@ class BpodWaterCalibration(CalibrationBase):
                     ok += 1
                 except Exception:
                     self.water_expected2[i] = 0
-                    self.water_expected_line_edits2[i].setText("0")
-                    self.water_expected_line_edits2[i].setStyleSheet("")
+                    # i in self.indices2, so its widget is guaranteed to exist.
+                    water_expected_edit = self.water_expected_line_edits2[i]
+                    assert water_expected_edit is not None
+                    water_expected_edit.setText("0")
+                    water_expected_edit.setStyleSheet("")
                     errors.append(i + 1)
                     self.indices2.remove(i)
 
@@ -674,10 +689,12 @@ class BpodWaterCalibration(CalibrationBase):
             manager.state = State.RUN_MANUAL
             self.test_initiated = True
             for line_edit in self.time_line_edits:
-                line_edit.setDisabled(True)
+                if line_edit is not None:
+                    line_edit.setDisabled(True)
             self.iterations_line_edit.setDisabled(True)
             for line_edit in self.water_expected_line_edits2:
-                line_edit.setDisabled(True)
+                if line_edit is not None:
+                    line_edit.setDisabled(True)
             self.iterations_line_edit2.setDisabled(True)
             manager.launch_task_calibration()
         else:
@@ -724,29 +741,31 @@ class BpodWaterCalibration(CalibrationBase):
             self.calibrate_button.setDisabled(True)
             self.test_button.setDisabled(True)
             for index in range(len(self.total_weight_line_edits)):
+                line_edit = self.total_weight_line_edits[index]
+                if line_edit is None:
+                    continue
                 if index in self.indices:
-                    self.total_weight_line_edits[index].setEnabled(True)
-                    self.total_weight_line_edits[index].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
+                    line_edit.setEnabled(True)
+                    line_edit.setStyleSheet("QLineEdit {border: 1px solid black;}")
                 else:
-                    self.total_weight_line_edits[index].setStyleSheet("")
+                    line_edit.setStyleSheet("")
 
         if manager.state == State.WAIT and self.test_initiated:
             self.test_initiated = False
             self.calibrate_button.setDisabled(True)
             self.test_button.setDisabled(True)
             for index in range(len(self.total_weight_line_edits2)):
+                line_edit = self.total_weight_line_edits2[index]
+                if line_edit is None:
+                    continue
                 if index in self.indices2:
-                    self.total_weight_line_edits2[index].setEnabled(True)
-                    self.total_weight_line_edits2[index].setStyleSheet(
-                        "QLineEdit {border: 1px solid black;}"
-                    )
+                    line_edit.setEnabled(True)
+                    line_edit.setStyleSheet("QLineEdit {border: 1px solid black;}")
                 else:
-                    self.total_weight_line_edits2[index].setStyleSheet("")
+                    line_edit.setStyleSheet("")
 
         for line_edit in self.water_delivered_labels:
-            if line_edit.text() != "0":
+            if line_edit is not None and line_edit.text() != "0":
                 self.add_button.setEnabled(True)
 
         if self.update_plot:
@@ -770,7 +789,10 @@ class BpodWaterCalibration(CalibrationBase):
         if (
             len(self.calibration_points) == 0
             and self.allow_test
-            and self.water_expected_line_edits2[0].isEnabled()
+            and any(
+                le is not None and le.isEnabled()
+                for le in self.water_expected_line_edits2
+            )
         ):
             self.allow_test = False
             self.test_denied = False
@@ -786,10 +808,12 @@ class BpodWaterCalibration(CalibrationBase):
         self.indices2 = []
         self.indices2_cleared = []
         for line_edit in self.time_line_edits:
-            line_edit.setEnabled(True)
+            if line_edit is not None:
+                line_edit.setEnabled(True)
         for line_edit in self.water_expected_line_edits2:
-            line_edit.setStyleSheet("")
-            line_edit.setEnabled(True)
+            if line_edit is not None:
+                line_edit.setStyleSheet("")
+                line_edit.setEnabled(True)
         self.iterations_line_edit.setEnabled(True)
         self.iterations_line_edit2.setEnabled(True)
         self.test_button.setDisabled(True)
@@ -806,27 +830,35 @@ class BpodWaterCalibration(CalibrationBase):
     def calibration_weighted(self, value: str = "", key: str = "") -> None:
         self.water_delivered = [0.0 for _ in range(8)]
         for line_edit in self.water_delivered_labels:
-            line_edit.setText("0")
+            if line_edit is not None:
+                line_edit.setText("0")
         try:
             for index in self.indices:
-                line_edit = self.total_weight_line_edits[index]
-                result = round((float(line_edit.text()) / self.iterations * 1000), 5)
+                # index in self.indices, so its widgets are guaranteed to exist.
+                weight_edit = self.total_weight_line_edits[index]
+                delivered_label = self.water_delivered_labels[index]
+                assert weight_edit is not None
+                assert delivered_label is not None
+                result = round((float(weight_edit.text()) / self.iterations * 1000), 5)
                 if result > 0:
                     self.water_delivered[index] = result
-                    self.water_delivered_labels[index].setText(str(result))
+                    delivered_label.setText(str(result))
         except Exception:
             pass
 
     def test_weighted(self, i: int) -> None:
         self.water_delivered2 = [0.0 for _ in range(8)]
         for line_edit in self.water_delivered_labels2:
-            line_edit.setText("0")
+            if line_edit is not None:
+                line_edit.setText("0")
 
         df = self.df.copy()
         for index in self.indices2:
-            line_edit = self.total_weight_line_edits2[index]
+            # index in self.indices2, so its widgets are guaranteed to exist.
+            weight_edit2 = self.total_weight_line_edits2[index]
+            assert weight_edit2 is not None
             try:
-                result = round((float(line_edit.text()) / self.iterations2 * 1000), 5)
+                result = round(float(weight_edit2.text()) / self.iterations2 * 1000, 5)
             except Exception:
                 result = 0
             if result > 0:
@@ -838,11 +870,15 @@ class BpodWaterCalibration(CalibrationBase):
                 )
                 error = round(error, 5)
                 self.errors2[index] = error
-                self.water_delivered_labels2[index].setText(
-                    str(result) + " (" + str(error) + "% error)"
-                )
-                self.ok_buttons2[index].setEnabled(True)
-                self.add_buttons2[index].setEnabled(True)
+                delivered_label2 = self.water_delivered_labels2[index]
+                ok_button = self.ok_buttons2[index]
+                add_button = self.add_buttons2[index]
+                assert delivered_label2 is not None
+                assert ok_button is not None
+                assert add_button is not None
+                delivered_label2.setText(str(result) + " (" + str(error) + "% error)")
+                ok_button.setEnabled(True)
+                add_button.setEnabled(True)
 
             if index == i:
                 df = df[df["port_number"] == index + 1]
@@ -879,22 +915,38 @@ class BpodWaterCalibration(CalibrationBase):
             self.calibration_points.append(row_dict)
 
         for line_edit in self.time_line_edits:
-            line_edit.setEnabled(True)
+            if line_edit is not None:
+                line_edit.setEnabled(True)
             self.iterations_line_edit.setEnabled(True)
         for line_edit in self.water_expected_line_edits2:
-            line_edit.setEnabled(True)
+            if line_edit is not None:
+                line_edit.setEnabled(True)
             self.iterations_line_edit2.setEnabled(True)
         for line_edit in self.total_weight_line_edits:
-            line_edit.setText("0")
-            line_edit.setDisabled(True)
-            line_edit.setStyleSheet("")
+            if line_edit is not None:
+                line_edit.setText("0")
+                line_edit.setDisabled(True)
+                line_edit.setStyleSheet("")
         self.add_button.setDisabled(True)
         self.plot_layout.update(self.session_df, self.test_point)
         self.info_layout.update()
 
     def ok_button2_clicked(self, index: int) -> None:
-        self.ok_buttons2[index].setDisabled(True)
-        self.add_buttons2[index].setDisabled(True)
+        # Only reachable via a button/callback wired to an active port, so
+        # every widget for this index is guaranteed to exist.
+        ok_button = self.ok_buttons2[index]
+        add_button = self.add_buttons2[index]
+        water_expected_edit = self.water_expected_line_edits2[index]
+        delivered_label2 = self.water_delivered_labels2[index]
+        weight_edit2 = self.total_weight_line_edits2[index]
+        assert ok_button is not None
+        assert add_button is not None
+        assert water_expected_edit is not None
+        assert delivered_label2 is not None
+        assert weight_edit2 is not None
+
+        ok_button.setDisabled(True)
+        add_button.setDisabled(True)
         if self.date == "":
             self.date = time_utils.now_string()
         row_dict = {
@@ -916,15 +968,15 @@ class BpodWaterCalibration(CalibrationBase):
             self.test_point = None
             self.test_index = 0
 
-        self.water_expected_line_edits2[index].blockSignals(True)
-        self.water_expected_line_edits2[index].setText("0")
-        self.water_expected_line_edits2[index].blockSignals(False)
-        self.water_delivered_labels2[index].setText("0")
-        self.total_weight_line_edits2[index].blockSignals(True)
-        self.total_weight_line_edits2[index].setText("0")
-        self.total_weight_line_edits2[index].blockSignals(False)
-        self.total_weight_line_edits2[index].setDisabled(True)
-        self.total_weight_line_edits2[index].setStyleSheet("")
+        water_expected_edit.blockSignals(True)
+        water_expected_edit.setText("0")
+        water_expected_edit.blockSignals(False)
+        delivered_label2.setText("0")
+        weight_edit2.blockSignals(True)
+        weight_edit2.setText("0")
+        weight_edit2.blockSignals(False)
+        weight_edit2.setDisabled(True)
+        weight_edit2.setStyleSheet("")
 
     def add_button2_clicked(self, index: int) -> None:
         self.ok_button2_clicked(index)
@@ -956,16 +1008,18 @@ class BpodWaterCalibration(CalibrationBase):
         elif manager.state.can_go_to_wait():
             manager.state = State.WAIT
         for line_edit in self.time_line_edits:
-            line_edit.setEnabled(True)
-            line_edit.setStyleSheet("")
-            line_edit.setText("0")
+            if line_edit is not None:
+                line_edit.setEnabled(True)
+                line_edit.setStyleSheet("")
+                line_edit.setText("0")
         self.times = [0.0 for _ in range(8)]
         self.iterations_line_edit.setEnabled(True)
         self.iterations_line_edit.setStyleSheet("")
         for line_edit in self.water_expected_line_edits2:
-            line_edit.setEnabled(True)
-            line_edit.setStyleSheet("")
-            line_edit.setText("0")
+            if line_edit is not None:
+                line_edit.setEnabled(True)
+                line_edit.setStyleSheet("")
+                line_edit.setText("0")
         self.water_expected2 = [0.0 for _ in range(8)]
         self.iterations_line_edit2.setEnabled(True)
         self.iterations_line_edit2.setStyleSheet("")

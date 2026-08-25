@@ -95,6 +95,8 @@ _CONDITIONAL_KEYS: dict[str, str] = {
     "USE_SCREEN": "SCREEN SETTINGS",
     "BEHAVIOR_CONTROLLER": "CONTROLLER SETTINGS",
     "SYNC_TYPE": "SYNC SETTINGS",
+    "USE_CORRIDOR": "CORRIDOR SETTINGS",
+    "USE_BOX_BOARD": "BOX SETTINGS",
 }
 
 # Enum settings rendered as a combo box instead of a toggle button
