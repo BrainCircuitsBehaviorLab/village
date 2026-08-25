@@ -455,15 +455,17 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="11"><span class="sd">    Set command to the slash-command name (no slash) and implement</span>
 </span><span data-line="12"><span class="sd">    handler. Args after the command arrive in context.args as strings.</span>
 </span><span data-line="13"><span class="sd">    Wrap risky work in try/except so one bad command can't kill the bot.</span>
-</span><span data-line="14"><span class="sd">    """</span>
-</span><span data-line="15">
-</span><span data-line="16">    <span class="n">command</span> <span class="o">=</span> <span class="s2">""</span>  <span class="c1"># e.g. "do_stuff" -&gt; /do_stuff</span>
-</span><span data-line="17">
+</span><span data-line="14"><span class="sd">    Set description to a short one-line explanation shown by /help.</span>
+</span><span data-line="15"><span class="sd">    """</span>
+</span><span data-line="16">
+</span><span data-line="17">    <span class="n">command</span> <span class="o">=</span> <span class="s2">""</span>  <span class="c1"># e.g. "do_stuff" -&gt; /do_stuff</span>
+</span><span data-line="18">    <span class="n">description</span> <span class="o">=</span> <span class="s2">""</span>  <span class="c1"># shown next to the command in /help</span>
+</span><span data-line="19">
 <div class="viewcode-block" id="TelegramCommandBase.handler">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.telegram_command_base.TelegramCommandBase.html#village.custom_classes.telegram_command_base.TelegramCommandBase.handler">[docs]</a>
-</span><span data-line="18">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">Update</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ContextTypes</span><span class="o">.</span><span class="n">DEFAULT_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="19"><span class="w">        </span><span class="sd">"""Respond to the command."""</span>
-</span><span data-line="20">        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</span><span data-line="20">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">Update</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ContextTypes</span><span class="o">.</span><span class="n">DEFAULT_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="21"><span class="w">        </span><span class="sd">"""Respond to the command."""</span>
+</span><span data-line="22">        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
 </span></pre></div>
@@ -490,7 +492,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=accbee19"></script>
+      <script src="../../../_static/documentation_options.js?v=2533aa74"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

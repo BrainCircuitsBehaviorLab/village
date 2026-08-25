@@ -577,10 +577,10 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="125">        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_settings</span> <span class="o">=</span> <span class="n">hidden_settings</span>
 </span><span data-line="126">        <span class="bp">self</span><span class="o">.</span><span class="n">saved_settings</span> <span class="o">=</span> <span class="n">QSettings</span><span class="p">(</span><span class="s2">"village"</span><span class="p">,</span> <span class="s2">"village"</span><span class="p">)</span>
 </span><span data-line="127">
-</span><span data-line="128">        <span class="c1"># main_settings is excluded on purpose: SYSTEM_NAME, USE_CORRIDOR and</span>
-</span><span data-line="129">        <span class="c1"># USE_BOX_BOARD describe this specific machine's identity and physical</span>
-</span><span data-line="130">        <span class="c1"># hardware, not trainable defaults, so a factory reset must not touch</span>
-</span><span data-line="131">        <span class="c1"># them (same reasoning as directory_settings and device_settings below).</span>
+</span><span data-line="128">        <span class="c1"># main_settings is excluded on purpose: SYSTEM_NAME describes this</span>
+</span><span data-line="129">        <span class="c1"># specific machine's identity, not a trainable default, so a factory</span>
+</span><span data-line="130">        <span class="c1"># reset must not touch it (same reasoning as directory_settings and</span>
+</span><span data-line="131">        <span class="c1"># device_settings below).</span>
 </span><span data-line="132">        <span class="c1"># device_settings (wiring addresses/indices) is fixed per-machine and not</span>
 </span><span data-line="133">        <span class="c1"># editable from the GUI, so it must not be touched by a factory reset either.</span>
 </span><span data-line="134">        <span class="bp">self</span><span class="o">.</span><span class="n">restorable_settings</span> <span class="o">=</span> <span class="p">(</span>
@@ -899,7 +899,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=accbee19"></script>
+      <script src="../../../_static/documentation_options.js?v=2533aa74"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

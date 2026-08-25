@@ -29,5 +29,6 @@ TelegramCommandBase
       :no-index:
    
       ~TelegramCommandBase.command
+      ~TelegramCommandBase.description
    
    
