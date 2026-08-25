@@ -28,18 +28,18 @@ The `MONITOR` screen is used to track the system’s status, displaying real-tim
 #### Primary Control Tabs
 Depending on your active configuration, several control tabs are available at the center of the screen:
 
-*   **`CORRIDOR`:** Provides manual and automated overrides for the RFID reader, lighting modules, doors, weighing scale, and temperature sensor. When the RFID system is toggled **OFF**,
+*   **`CORRIDOR`:** Provides manual and automated overrides for the RFID reader, doors, weighing scale, and temperature sensor. When the RFID system is toggled **OFF**,
     animal identification is disabled, and no subjects will be permitted to enter the operant box.
 
-    *The `VISIBLE LIGHT` and `IR LIGHT` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, visible light turns on during daytime hours and off at night, while the infrared (IR) light operates inversely. The specific daytime and nighttime schedules can be customized under `SETTINGS` -> `CORRIDOR_SETTINGS`.*
+    *Lighting and camera exposure/thresholds are driven together by the `Corridor Cycle` control, which can be set to `DAY`, `NIGHT`, or `AUTO`. `DAY` turns the visible light **ON** and the IR light **OFF**, and applies the daytime camera exposure/threshold settings. `NIGHT` does the opposite: visible light **OFF**, IR light **ON**, and the nighttime camera exposure/threshold settings. `AUTO` switches automatically between `DAY` and `NIGHT` according to the actual time of day; the daytime/nighttime schedule can be customized under `SETTINGS` -> `CORRIDOR SETTINGS`.*
 
-*   **`BOX`:** Provides dedicated controls for the lighting and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
+*   **`BOX`:** Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
     buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.
 
-    *The `VISIBLE LIGHT` and `IR LIGHT` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.*
+    *The `Visible Light` and `IR Light` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.*
 
 *   **`FUNCTIONS`:** Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
-    for writing and deploying these scripts can be found in the [Create a New Training Protocol][NEW] section.
+    for writing and deploying these scripts can be found in the [Protocol Creation][CREATE] section.
 
 *   **`VIRTUAL MOUSE`:** Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness.
     *   **Bpod Integration:** Simulate a nose-poke in any behavior port with a single click.
@@ -71,13 +71,12 @@ From this screen, tasks can be launched manually at any time.
 
 The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the [Manual Task Execution][MANUAL] section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:
 
-- `Subject`: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.
 - `maximum_number_of_trials`: The task will automatically end once this number of trials is completed.
 - `maximum_duration`: The task will automatically end when this timer is reached.
 
 In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the [Protocol Creation][CREATE] section, we explain how to create a protocol and define its variables.
 
-The `RUN TASK` button starts the task.
+Next to the `RUN TASK` button, which starts the task, the `Subject` selector opens a list of all available subjects, as well as the option "None." Selecting "None" runs the task without saving any data.
 
 ### DATA
 ![Main Training village screen](/_static/data_screen.png)
@@ -101,6 +100,25 @@ A more detailed description of these tables, including their exact database sche
 
 ---
 
+### CALIBRATION
+![Calibration Training village screen](/_static/calibration_screen.png)
+
+This screen provides a dedicated panel for each calibration tool available on the system. A left-side menu lists every calibration relevant to your current hardware configuration; selecting an entry opens its panel on the right.
+
+Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the [Custom Calibrations][CALIBRATIONS] section for details.
+
+*   **`BPOD_WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller.
+
+*   **`SOUND_CALIBRATION`:** Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when `USE_SOUNDCARD` is **ON**.
+
+*   **`CAMERA_CALIBRATION`:** Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available.
+
+*   **`CORRIDOR_THRESHOLD_CALIBRATION`:** Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result on the live corridor image. Only available when `USE_CORRIDOR` is **ON**.
+
+*   **`OPTOGRID_CALIBRATION`:** Provides a visual map of the optogenetic stimulation grid for selecting and testing individual LEDs. Always available.
+
+---
+
 ### SETTINGS
 ![Main Training village screen](/_static/settings_screen.png)
 
@@ -117,3 +135,4 @@ The most critical parameters from this list will be discussed and modified step-
 [MANUAL]: /system_operation/manual.md
 [CREATE]: /protocols/creating.md
 [DATA]: /system_operation/data.md
+[CALIBRATIONS]: /protocols/calibrations.md

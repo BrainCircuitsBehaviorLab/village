@@ -407,10 +407,13 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#sync-buttons">Sync Buttons</a></li>
-<li><a class="reference internal" href="#task-running">Task Running</a></li>
-<li><a class="reference internal" href="#manually-changing-states">Manually Changing States</a></li>
-<li><a class="reference internal" href="#exit">Exit</a></li>
+<li><a class="reference internal" href="#change-state"><code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">STATE</span></code></a></li>
+<li><a class="reference internal" href="#stop-sync"><code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">SYNC</span></code></a></li>
+<li><a class="reference internal" href="#stop-task"><code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">TASK</span></code></a></li>
+<li><a class="reference internal" href="#online-plots"><code class="docutils literal notranslate"><span class="pre">ONLINE</span> <span class="pre">PLOTS</span></code></a></li>
+<li><a class="reference internal" href="#check-mice"><code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code></a></li>
+<li><a class="reference internal" href="#alarms"><code class="docutils literal notranslate"><span class="pre">ALARMS</span></code></a></li>
+<li><a class="reference internal" href="#exit"><code class="docutils literal notranslate"><span class="pre">EXIT</span></code></a></li>
 </ul>
 </div></div>
   </aside>
@@ -486,34 +489,38 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="toolbar-controls">
 <h1>Toolbar Controls</h1>
-<p>The top bar of the GUI contains a set of buttons for performing the following actions. The available actions change dynamically depending on the current system state.</p>
-<section id="sync-buttons">
-<h2>Sync Buttons</h2>
-<p>By default, the system synchronizes data with an external device or server after each session ends. While syncing, animals cannot be detected or enter the operant box. Once synchronization is complete, the system returns to WAIT state and animals can enter again.</p>
+<p>The top bar of the GUI contains a set of buttons for performing the following actions. Depending on the current system state, you will see different buttons available.</p>
+<section id="change-state">
+<h2><code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">STATE</span></code></h2>
+<p>Opens a dialog offering only the actions valid for the current state:</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">SYNC</span></code></strong>: Stops the current synchronization. Useful during testing to avoid waiting for a sync after each test run — the sync will run automatically at the end of the next session.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">FORCE</span> <span class="pre">SYNC</span></code></strong>: Forces an immediate synchronization. Useful if the automatic sync did not run due to a connection failure, a network change, or any other issue.</p></li>
+<li><p>While the system believes a subject is inside the box but it is not (e.g. a door did not close properly and the animal escaped back to the home cage without being detected), it offers <strong>“All subjects are back home, go to WAIT state.”</strong></p></li>
+<li><p>While the system is in the WAIT state, it offers <strong>“Force data sync”</strong> (forces an immediate synchronization, useful if the automatic sync did not run due to a connection failure, a network change, or any other issue) and <strong>“Subject is inside the box”</strong> (use this when the system believes there is no subject in the box but there is one — e.g. two mice entered the operant box simultaneously and the system detected one exiting, switching to WAIT while the other stayed inside).</p></li>
 </ul>
 </section>
-<section id="task-running">
-<h2>Task Running</h2>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">ONLINE</span> <span class="pre">PLOTS</span></code></strong>: Shows live plots while a task is running. The plots displayed are configurable by the user.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">TASK</span></code></strong>: Stops a running task. In automatic mode, pressing this button disconnects the RFID reader to prevent new animals from entering, and the system waits for the current animal to exit the box. If you remove the animal manually, press GO TO WAIT STATE afterwards and re-enable the RFID reader.</p></li>
-</ul>
+<section id="stop-sync">
+<h2><code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">SYNC</span></code></h2>
+<p>By default, the system synchronizes data with an external device or server after each session ends. While syncing, animals cannot be detected or enter the operant box. <code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">SYNC</span></code> stops the current synchronization — useful during testing to avoid waiting for a sync after each test run, since it will run automatically at the end of the next session. Once synchronization is complete (or stopped), the system returns to the WAIT state and animals can enter again.</p>
 </section>
-<section id="manually-changing-states">
-<h2>Manually Changing States</h2>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">GO</span> <span class="pre">TO</span> <span class="pre">WAIT</span> <span class="pre">STATE</span></code></strong>: Use this when the system believes a subject is inside the box but it is not. This can happen if a door does not close properly and the animal escapes back to the home cage without the system detecting it.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">SUBJECT</span> <span class="pre">IN</span> <span class="pre">BOX</span></code></strong>: Use this when the system believes there is no subject in the box (WAIT state) but there is one. This can happen if two mice enter the operant box simultaneously and the system detects one exiting, switching to WAIT state while the other is still inside.</p></li>
-</ul>
+<section id="stop-task">
+<h2><code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">TASK</span></code></h2>
+<p>Stops a running task. In automatic mode, pressing this button disconnects the RFID reader to prevent new animals from entering, and the system waits for the current animal to exit the box. If you remove the animal manually, use <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">STATE</span></code> → “All subjects are back home, go to WAIT state” afterwards and re-enable the RFID reader.</p>
+</section>
+<section id="online-plots">
+<h2><code class="docutils literal notranslate"><span class="pre">ONLINE</span> <span class="pre">PLOTS</span></code></h2>
+<p>Shows live plots while a task is running. The plots displayed are configurable by the user. Only enabled while a task is actually running.</p>
+</section>
+<section id="check-mice">
+<h2><code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code></h2>
+<p>Confirms that the mice have been checked today. Turns orange until confirmed, either by clicking it or via the <code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code> Telegram command; once confirmed, it shows <code class="docutils literal notranslate"><span class="pre">MICE</span> <span class="pre">OK</span></code> and stays disabled until the next reset, which happens at midnight. If the mice have not been checked by the time set in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CHECK_MICE_TIME</span></code>, an alarm is triggered to remind you via Telegram.</p>
+</section>
+<section id="alarms">
+<h2><code class="docutils literal notranslate"><span class="pre">ALARMS</span></code></h2>
+<p>Shows the number of pending alarms and turns orange while any are pending. Clicking it acknowledges every pending alarm and stops their Telegram reminders.</p>
 </section>
 <section id="exit">
-<h2>Exit</h2>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">EXIT</span></code></strong>: Shuts down the system.</p></li>
-</ul>
+<h2><code class="docutils literal notranslate"><span class="pre">EXIT</span></code></h2>
+<p>Shuts down the system.</p>
 </section>
 </section>
 
@@ -554,7 +561,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=6c72c977"></script>
+      <script src="../_static/documentation_options.js?v=f8d3745f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

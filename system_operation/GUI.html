@@ -416,6 +416,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#subjects">SUBJECTS</a></li>
 <li><a class="reference internal" href="#tasks">TASKS</a></li>
 <li><a class="reference internal" href="#data">DATA</a></li>
+<li><a class="reference internal" href="#calibration">CALIBRATION</a></li>
 <li><a class="reference internal" href="#settings">SETTINGS</a></li>
 </ul>
 </div></div>
@@ -513,16 +514,16 @@ data-aria-dark="Switch to auto color mode">
 <h3>Primary Control Tabs</h3>
 <p>Depending on your active configuration, several control tabs are available at the center of the screen:</p>
 <ul>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>:</strong> Provides manual and automated overrides for the RFID reader, lighting modules, doors, weighing scale, and temperature sensor. When the RFID system is toggled <strong>OFF</strong>,
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>:</strong> Provides manual and automated overrides for the RFID reader, doors, weighing scale, and temperature sensor. When the RFID system is toggled <strong>OFF</strong>,
 animal identification is disabled, and no subjects will be permitted to enter the operant box.</p>
-<p><em>The <code class="docutils literal notranslate"><span class="pre">VISIBLE</span> <span class="pre">LIGHT</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">LIGHT</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, visible light turns on during daytime hours and off at night, while the infrared (IR) light operates inversely. The specific daytime and nighttime schedules can be customized under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR_SETTINGS</span></code>.</em></p>
+<p><em>Lighting and camera exposure/thresholds are driven together by the <code class="docutils literal notranslate"><span class="pre">Corridor</span> <span class="pre">Cycle</span></code> control, which can be set to <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. <code class="docutils literal notranslate"><span class="pre">DAY</span></code> turns the visible light <strong>ON</strong> and the IR light <strong>OFF</strong>, and applies the daytime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> does the opposite: visible light <strong>OFF</strong>, IR light <strong>ON</strong>, and the nighttime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> switches automatically between <code class="docutils literal notranslate"><span class="pre">DAY</span></code> and <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> according to the actual time of day; the daytime/nighttime schedule can be customized under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>.</em></p>
 </li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> Provides dedicated controls for the lighting and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
 buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.</p>
-<p><em>The <code class="docutils literal notranslate"><span class="pre">VISIBLE</span> <span class="pre">LIGHT</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">LIGHT</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.</em></p>
+<p><em>The <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.</em></p>
 </li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
-for writing and deploying these scripts can be found in the [Create a New Training Protocol][NEW] section.</p></li>
+for writing and deploying these scripts can be found in the <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">Protocol Creation</span></a> section.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness.</p>
 <ul class="simple">
 <li><p><strong>Bpod Integration:</strong> Simulate a nose-poke in any behavior port with a single click.</p></li>
@@ -555,12 +556,11 @@ In this section you can create new subjects. Check the <a class="reference inter
 <p>From this screen, tasks can be launched manually at any time.</p>
 <p>The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="manual.html"><span class="std std-doc">Manual Task Execution</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Subject</span></code>: Clicking here opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: The task will automatically end once this number of trials is completed.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>: The task will automatically end when this timer is reached.</p></li>
 </ul>
 <p>In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">Protocol Creation</span></a> section, we explain how to create a protocol and define its variables.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code> button starts the task.</p>
+<p>Next to the <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code> button, which starts the task, the <code class="docutils literal notranslate"><span class="pre">Subject</span></code> selector opens a list of all available subjects, as well as the option “None.” Selecting “None” runs the task without saving any data.</p>
 </section>
 <section id="data">
 <h2>DATA</h2>
@@ -575,6 +575,20 @@ In this section you can create new subjects. Check the <a class="reference inter
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code>:</strong> Contains parameter data regarding all currently active system calibrations.</p></li>
 </ul>
 <p>A more detailed description of these tables, including their exact database schemas and storage paths, can be found in the <a class="reference internal" href="data.html"><span class="std std-doc">Saved Data</span></a> section.</p>
+</section>
+<hr class="docutils" />
+<section id="calibration">
+<h2>CALIBRATION</h2>
+<p><img alt="Calibration Training village screen" src="../_images/calibration_screen.png" /></p>
+<p>This screen provides a dedicated panel for each calibration tool available on the system. A left-side menu lists every calibration relevant to your current hardware configuration; selecting an entry opens its panel on the right.</p>
+<p>Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the <a class="reference internal" href="../protocols/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> section for details.</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BPOD_WATER_CALIBRATION</span></code>:</strong> Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>:</strong> Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> is <strong>ON</strong>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CAMERA_CALIBRATION</span></code>:</strong> Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR_THRESHOLD_CALIBRATION</span></code>:</strong> Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result on the live corridor image. Only available when <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is <strong>ON</strong>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OPTOGRID_CALIBRATION</span></code>:</strong> Provides a visual map of the optogenetic stimulation grid for selecting and testing individual LEDs. Always available.</p></li>
+</ul>
 </section>
 <hr class="docutils" />
 <section id="settings">
@@ -622,7 +636,7 @@ In this section you can create new subjects. Check the <a class="reference inter
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=6c72c977"></script>
+      <script src="../_static/documentation_options.js?v=f8d3745f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

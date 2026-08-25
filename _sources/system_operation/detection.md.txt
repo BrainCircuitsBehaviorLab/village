@@ -54,11 +54,11 @@ count condition, described below.
 ```
 
 The system classifies the occupancy of each area based on three key parameters:
-*   **`threshold`:** The numerical value that determines whether a pixel is classified as white or black. This parameter is adjusted independently for each area. It should be tuned so that when the area is completely empty, the detected pixel count is zero, and when an animal is present, it captures the maximum possible number of pixels.
+*   **`threshold` (`thr_day` / `thr_night`):** The numerical value that determines whether a pixel is classified as white or black. This parameter is adjusted independently for each area, and for the corridor, independently for day and night: each corridor area exposes two controls, `thr_day` and `thr_night`, so lighting changes between day and night don't require re-calibrating on the fly. The one that is not currently effective is shown greyed out; which one is effective follows the `Corridor Cycle` control (`SETTINGS` -> `CORRIDOR SETTINGS` -> `DAYTIME`/`NIGHTTIME` for `AUTO` mode — see the [GUI][GUI] section). Operant box areas only have a single `threshold`, since the box has no automated day/night lighting cycle and lighting stays the same throughout the task. Whichever threshold is active, it should be tuned so that when the area is completely empty, the detected pixel count is zero, and when an animal is present, it captures the maximum possible number of pixels.
 *   **`empty_limit`:** The maximum number of detected pixels allowed before an area is flagged as occupied.
 *   **`subject_limit`:** The maximum pixel threshold for a single animal. Exceeding this limit flags the area as potentially containing multiple subjects.
 
-To calibrate the binarization `threshold`, allow an animal into the corridor and enable the `VIEW_DETECTION` overlay. This visual feedback highlights the binarized pixels in real time, letting you tune parameters accurately:
+To calibrate the binarization threshold, allow an animal into the corridor and enable the `VIEW_DETECTION` overlay. This visual feedback highlights the binarized pixels in real time, letting you tune parameters accurately; remember to calibrate `thr_day` under daytime lighting and `thr_night` under nighttime/IR lighting, since they are independent values:
 
 ![Detection](/_static/detection.png)
 
@@ -113,5 +113,22 @@ In the reference image above, the corridor and the touchscreen area are elevated
 Every time the detection algorithm processes a frame and extracts the animal's $(x, y)$ coordinates, it passes them to a customizable tracking function. While this is primarily used to fire actions when entering a designated `TRIGGER` zone, you can also write custom code that depends entirely on the continuous coordinate stream to log trajectories or trigger position-dependent stimuli.
 ```
 
+---
+
+### Camera Adjustments: Lens Position, Sharpness & Exposure
+
+Below the corridor and box detection areas, the `DETECTION SETTINGS` tab also provides a `CORRIDOR ADJUSTMENTS` panel (only shown when `USE_CORRIDOR` is **ON**) and a `BOX ADJUSTMENTS` panel, letting you tune each camera's image quality directly while watching the live preview, without having to go through `SETTINGS`:
+
+```{image} /_static/detection_settings3.png
+:width: 70%
+:align: center
+```
+
+*   **`lens_position`:** The focus position of the camera lens (0-10). Increase or decrease it while watching the preview until the image is sharp.
+*   **`sharpness`:** The in-camera sharpness/edge-enhancement level (0-16). Higher values increase contrast at edges, which can help the detection algorithm distinguish the animal from the background.
+*   **`exposure`:** Exposure mode (0-2). `0` = normal auto-exposure. `1` = long-exposure mode, letting the camera use longer exposure times for a brighter, cleaner image in low light. `2` = long exposure plus extra digital gain, for the brightest (but noisiest) result.
+
+For the corridor camera, `exposure` is split into `exposure_day` and `exposure_night`, following the same `Corridor Cycle` logic as the area thresholds: the value that is not currently effective is shown greyed out, and switching between `DAY`/`NIGHT`/`AUTO` (in `AUTO`, at the `DAYTIME`/`NIGHTTIME` boundaries) applies the corresponding stored value automatically. The box camera, which has no automated day/night cycle, has a single `exposure` control instead.
 
 [TRIGGERS]: /protocols/triggers.md
+[GUI]: /system_operation/GUI.md

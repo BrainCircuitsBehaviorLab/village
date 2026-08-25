@@ -20,15 +20,16 @@ ALSA directly, without going through PortAudio.
    the profile to **Off**. The operating system will no longer use the device, leaving it
    free for `pyalsaaudio` to access directly.
 
+5. Launch the Training Village and select your soundcard under
+   `SETTINGS` → `SOUND SETTINGS`.
+
 ```{admonition} Why the DAC must be released from the system before use
 :class: warning
 When the DAC is set as the active audio output in the desktop environment, the operating
 system holds exclusive access to the device, preventing the Training Village from using
 it. Setting the profile to **Off** releases the device and makes it available for the
 Training Village.
-
-5. Launch the Training Village and select your soundcard under
-   `SETTINGS` → `SOUND SETTINGS`.
+```
 
 ```{admonition} Note
 :class: tip
@@ -66,6 +67,8 @@ at its start, at its end, and whenever `stop` cuts playback short. This smooths 
 abrupt amplitude changes that would otherwise cause audible clicks. Setting it to `0`
 disables the ramp entirely.
 ```
+
+#### Examples
 
 ```python
 from village.devices.sound_device import sound_device

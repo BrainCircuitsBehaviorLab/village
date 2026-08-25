@@ -408,7 +408,10 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
-<li><a class="reference internal" href="#using-the-sound-device-in-tasks">Using the sound device in tasks</a></li>
+<li><a class="reference internal" href="#using-the-sound-device-in-tasks">Using the sound device in tasks</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#method-reference">Method reference</a></li>
 </ul>
 </div></div>
@@ -500,6 +503,8 @@ to <strong>Stereo Output</strong>.</p></li>
 <li><p>Once confirmed, return to <strong>Device Profiles</strong>, select <strong>RPi DAC Pro</strong> again, and set
 the profile to <strong>Off</strong>. The operating system will no longer use the device, leaving it
 free for <code class="docutils literal notranslate"><span class="pre">pyalsaaudio</span></code> to access directly.</p></li>
+<li><p>Launch the Training Village and select your soundcard under
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>.</p></li>
 </ol>
 <div class="warning admonition">
 <p class="admonition-title">Why the DAC must be released from the system before use</p>
@@ -507,16 +512,12 @@ free for <code class="docutils literal notranslate"><span class="pre">pyalsaaudi
 system holds exclusive access to the device, preventing the Training Village from using
 it. Setting the profile to <strong>Off</strong> releases the device and makes it available for the
 Training Village.</p>
-<ol class="arabic simple" start="5">
-<li><p>Launch the Training Village and select your soundcard under
-<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>.</p></li>
-</ol>
+</div>
 <div class="tip admonition">
 <p class="admonition-title">Note</p>
 <p>This configuration step only needs to be done once. The “Off” profile selection persists
 across reboots, so the DAC will remain available to the Training Village after the system
 restarts.</p>
-</div>
 </div>
 </section>
 <section id="using-the-sound-device-in-tasks">
@@ -546,6 +547,8 @@ at its start, at its end, and whenever <code class="docutils literal notranslate
 abrupt amplitude changes that would otherwise cause audible clicks. Setting it to <code class="docutils literal notranslate"><span class="pre">0</span></code>
 disables the ramp entirely.</p>
 </div>
+<section id="examples">
+<h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Option 1 — play a WAV file from the media directory</span>
@@ -585,6 +588,7 @@ scaled by <code class="docutils literal notranslate"><span class="pre">gain</spa
 <code class="docutils literal notranslate"><span class="pre">get_sound_from_wav</span></code> call and can degrade audio quality. Whenever possible, save your
 WAV files at the same sample rate as the <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code> setting so no resampling is needed.</p>
 </div>
+</section>
 </section>
 <section id="method-reference">
 <h2>Method reference</h2>
@@ -656,7 +660,7 @@ WAV files at the same sample rate as the <code class="docutils literal notransla
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=6c72c977"></script>
+      <script src="../_static/documentation_options.js?v=f8d3745f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

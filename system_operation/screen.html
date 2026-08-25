@@ -527,9 +527,6 @@ no physical monitor required)</em>.</p></li>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">vc4</span><span class="o">.</span><span class="n">force_hotplug</span><span class="o">=</span><span class="mi">3</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1600</span><span class="n">x900</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">1280</span><span class="n">x720</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span>
 </span></pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">vc4.force_hotplug</span></code> flag controls which HDMI ports the system treats as connected:
-<code class="docutils literal notranslate"><span class="pre">1</span></code> = HDMI-1 only, <code class="docutils literal notranslate"><span class="pre">2</span></code> = HDMI-2 only, <code class="docutils literal notranslate"><span class="pre">3</span></code> = both. The <code class="docutils literal notranslate"><span class="pre">video=HDMI-A-*</span></code> parameters set
-the resolution for each port independently.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">vc4.force_hotplug</span></code> flag controls which HDMI ports the system treats as
 connected regardless of whether a monitor is physically plugged in:
 <code class="docutils literal notranslate"><span class="pre">1</span></code> = HDMI-1 only, <code class="docutils literal notranslate"><span class="pre">2</span></code> = HDMI-2 only, <code class="docutils literal notranslate"><span class="pre">3</span></code> = both. Setting it to <code class="docutils literal notranslate"><span class="pre">3</span></code> is what
@@ -557,7 +554,9 @@ Measured latencies: <strong>mean = 27.4 ms, SD = 7.5 ms</strong>.</p>
 <section id="using-the-screen-in-tasks">
 <h2>Using the screen in tasks</h2>
 <p>Import the module-level instance, provide a drawing function, and call
-<code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> / <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.</p>
+<code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> / <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.
+<code class="docutils literal notranslate"><span class="pre">load_draw_function()</span></code> only sets the function to call each frame — load any
+media separately with <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> / <code class="docutils literal notranslate"><span class="pre">load_video()</span></code>, before or after it.</p>
 <p><strong>Displaying a static image:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.screen</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
@@ -567,12 +566,13 @@ Measured latencies: <strong>mean = 27.4 ms, SD = 7.5 ms</strong>.</p>
 </span><span data-line="6">        <span class="k">if</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">:</span>
 </span><span data-line="7">            <span class="n">painter</span><span class="o">.</span><span class="n">drawPixmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
 </span><span data-line="8">
-</span><span data-line="9"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="s2">"stimulus.png"</span><span class="p">)</span>
-</span><span data-line="10"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
-</span><span data-line="11">
-</span><span data-line="12"><span class="c1"># ... trial runs ...</span>
-</span><span data-line="13">
-</span><span data-line="14"><span class="n">screen</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
+</span><span data-line="9"><span class="n">screen</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"stimulus.png"</span><span class="p">)</span>
+</span><span data-line="10"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
+</span><span data-line="11"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="c1"># ... trial runs ...</span>
+</span><span data-line="14">
+</span><span data-line="15"><span class="n">screen</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
 </span></pre></div>
 </div>
 <p><strong>Displaying a video:</strong></p>
@@ -582,8 +582,9 @@ Measured latencies: <strong>mean = 27.4 ms, SD = 7.5 ms</strong>.</p>
 </span><span data-line="4">        <span class="k">if</span> <span class="n">frame</span><span class="p">:</span>
 </span><span data-line="5">            <span class="n">painter</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
 </span><span data-line="6">
-</span><span data-line="7"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">,</span> <span class="n">video</span><span class="o">=</span><span class="s2">"movie.mp4"</span><span class="p">)</span>
-</span><span data-line="8"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
+</span><span data-line="7"><span class="n">screen</span><span class="o">.</span><span class="n">load_video</span><span class="p">(</span><span class="s2">"movie.mp4"</span><span class="p">)</span>
+</span><span data-line="8"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
+</span><span data-line="9"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
 </span></pre></div>
 </div>
 <p><strong>Drawing programmatically (shapes, text, time-varying stimuli):</strong></p>
@@ -621,9 +622,9 @@ attributes are updated automatically before each call:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_draw_function(draw_fn,</span> <span class="pre">image,</span> <span class="pre">video)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">draw_fn</span></code>: callable; <code class="docutils literal notranslate"><span class="pre">image</span></code>, <code class="docutils literal notranslate"><span class="pre">video</span></code>: optional filenames</p></td>
-<td><p>Sets the drawing function and pre-loads media.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_draw_function(draw_fn)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">draw_fn</span></code>: callable</p></td>
+<td><p>Sets the function called every frame. Does not load any media — call <code class="docutils literal notranslate"><span class="pre">load_image()</span></code>/<code class="docutils literal notranslate"><span class="pre">load_video()</span></code> separately for that.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code></p></td>
 <td><p>—</p></td>
@@ -637,9 +638,9 @@ attributes are updated automatically before each call:</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename</p></td>
 <td><p>Loads an image from <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code> into <code class="docutils literal notranslate"><span class="pre">screen.image</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_video(file)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename</p></td>
-<td><p>Prepares a video for playback (started by <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>).</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_video(file,</span> <span class="pre">volume_gain=0.1)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename; <code class="docutils literal notranslate"><span class="pre">volume_gain</span></code>: audio volume for the video’s soundtrack, <code class="docutils literal notranslate"><span class="pre">0.0</span></code>–<code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td><p>Prepares a video (and its audio track) for playback (started by <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">get_video_frame()</span></code></p></td>
 <td><p>—</p></td>
@@ -791,7 +792,7 @@ will never treat it as a pointer device.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=6c72c977"></script>
+      <script src="../_static/documentation_options.js?v=f8d3745f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
