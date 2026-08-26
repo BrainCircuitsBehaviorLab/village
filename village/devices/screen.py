@@ -426,7 +426,7 @@ class Screen(QOpenGLWidget):
         rec = self.recorder
         if self._pending_onset_label is not None and rec is not None:
             try:
-                rec.register_event_if_active(
+                rec.add_raspberry_event(
                     self._pending_onset_label, time_utils.now_timestamp()
                 )
             except Exception:

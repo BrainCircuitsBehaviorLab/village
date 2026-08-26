@@ -120,7 +120,7 @@ Every time the detection algorithm processes a frame and extracts the animal's $
 Below the corridor and box detection areas, the `DETECTION SETTINGS` tab also provides a `CORRIDOR ADJUSTMENTS` panel (only shown when `USE_CORRIDOR` is **ON**) and a `BOX ADJUSTMENTS` panel, letting you tune each camera's image quality directly while watching the live preview, without having to go through `SETTINGS`:
 
 ```{image} /_static/detection_settings3.png
-:width: 70%
+:width: 60%
 :align: center
 ```
 

@@ -79,7 +79,7 @@ class Touch:
                         _last_t = t
                         if manager.state.task_is_running():
                             ts = t - (time.time() - time_utils.now_timestamp())
-                            manager.task.recorder.register_event_if_active(
+                            manager.task.recorder.add_raspberry_event(
                                 f"touch_{px}_{py}", ts
                             )
                             manager.touch_trigger.trigger(px, py, ts)

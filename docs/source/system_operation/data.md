@@ -152,24 +152,31 @@ Both cameras render diagnostic text overlays burnt directly into the video frame
   trial-structured).
 - **Bottom row:** `<duration>  frame: N  area1: N  area2: N...` — same format as above.
 
-In addition to the text overlays, when `VIEW_DETECTION` is enabled the system burns two
-additional visual layers directly into the saved video: the detection pixels highlighted
-in black, and the boundary lines delimiting each active tracking area. This option is
-configurable under `MONITOR` → `DETECTION SETTINGS`. For performance reasons, these
-overlays are computed on the same stream used for the live display and the saved
-recording.
+In addition to the text overlays, when `VIEW_DETECTION` is enabled the system draws two
+additional visual layers: the thresholded detection mask, and the boundary lines
+delimiting each active tracking area. This option is configurable under `MONITOR` →
+`DETECTION SETTINGS`, but the corridor and box cameras handle it very differently:
+
+- **Corridor:** `VIEW_DETECTION_CORRIDOR` is drawn with cv2 directly onto the frame, so
+  it is burnt into the saved video file as well as the live preview.
+- **Operant box:** `VIEW_DETECTION_BOX` is drawn with QPainter on top of the live
+  preview widget only — it is **never** encoded into the saved video, regardless of
+  whether it is enabled or disabled.
 
 ```{tip}
-We recommend keeping `VIEW_DETECTION_CORRIDOR` permanently enabled for the corridor
-camera. Corridor recordings are not critical data, but having the overlay active makes it
-easy to verify at a glance that pixel detection is working correctly across all areas.
+In practice, both can be left permanently enabled, though for different reasons:
 
-For the operant box, we recommend keeping `VIEW_DETECTION_BOX` disabled during normal
-operation so that task videos are saved clean. Because the
-operant box is typically a closed, controlled environment, illumination conditions are
-stable and threshold recalibration is rarely needed. When it is required, simply enable
-`VIEW_DETECTION_BOX`, adjust the thresholds, and disable it again.
+Keep `VIEW_DETECTION_CORRIDOR` permanently enabled. Corridor recordings are not
+critical data, and having the overlay burnt in makes it easy to verify at a glance that
+pixel detection is working correctly across all areas.
+
+`VIEW_DETECTION_BOX`, on the other hand, never touches the saved video, so there is no
+downside to leaving it permanently enabled too — it only adds a live visual aid on the
+`MONITOR` screen while you work.
 ```
+
+See the [Custom Camera Drawing][CAMERA] section for how this `draw` (disk + screen) vs.
+`draw_preview` (screen only) split also applies to overlays you add yourself.
 
 ---
 
@@ -285,3 +292,4 @@ training progression across days without requiring human intervention:
 
 
 [CREATE]: /protocols/creating.md
+[CAMERA]: /protocols/camera.md

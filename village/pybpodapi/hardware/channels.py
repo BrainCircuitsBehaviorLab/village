@@ -72,6 +72,18 @@ class Channels:
         self.output_channel_names = []
         self.events_positions = EventsPositions()
 
+    def _pad_event_names_to(self, target):
+        """Pads self.event_names with placeholders up to length `target`.
+
+        get_event_name() looks up an incoming event_idx by direct list
+        position, so bumping the `Pos` counter alone does nothing -- the
+        list itself must actually contain an entry at every index up to
+        `target`, or the next real event name appended still lands right
+        after whatever was last appended, not at `target`.
+        """
+        while len(self.event_names) < target:
+            self.event_names += ["Reserved" + str(len(self.event_names))]
+
     def setup_input_channels(self, hardware, modules):
         """
         Generate event and input channel names
@@ -82,6 +94,7 @@ class Channels:
         nBNCs = 0
         nWires = 0
         nPorts = 0
+        digital_events_started = False
 
         for i in range(len(hardware.inputs)):
             if hardware.inputs[i] == "U":
@@ -115,7 +128,26 @@ class Channels:
                 for j in range(loops_n):
                     self.event_names += ["SoftCode" + str(j + 1)]
                     Pos += 1
+            elif hardware.inputs[i] == "Z" and hardware.firmware_version >= 23:
+                # Second USB/App-type serial channel introduced in firmware v23+
+                # (grouped with 'U' and 'X' as "serial channels" in the firmware's
+                # own hardware description; its event handling in the firmware is
+                # a copy of 'X's, using a second SoftEvent counter). On currently
+                # observed hardware it claims no event codes of its own, but it
+                # does occupy one slot in the physical channel list -- skipping it
+                # here silently used to shift every input_channel_names index
+                # after it (BNC, Port...) off by one, which broke the manual
+                # override / GUI poke simulation for those channels. The version
+                # check is belt-and-suspenders: 'Z' cannot appear on v22 hardware
+                # anyway, so this branch is unreachable there regardless.
+                nUSB += 1
+                self.input_channel_names += ["USB" + str(nUSB)]
             elif hardware.inputs[i] == "P":
+                if not digital_events_started:
+                    if hardware.firmware_version >= 23:
+                        self._pad_event_names_to(hardware.max_serial_events)
+                        Pos = max(Pos, hardware.max_serial_events)
+                    digital_events_started = True
                 if nPorts == 0:
                     self.events_positions.Event_Port = Pos
                 nPorts += 1
@@ -125,6 +157,23 @@ class Channels:
                 self.event_names += [self.input_channel_names[-1] + "Out"]
                 Pos += 1
             elif hardware.inputs[i] == "B":
+                # The firmware reserves a flat hardware.max_serial_events-sized
+                # budget for all serial-type channels (U/X/Z) combined, and
+                # digital event codes (BNC/Port/Wire) always start right after
+                # that fixed budget -- regardless of how many of those slots
+                # are actually used. Pos, accumulated only from real usage
+                # above, can be short of that budget (e.g. when max_serial_events
+                # isn't evenly divisible by len(modules)+1, some slots go
+                # unused/reserved), so it must jump forward here to match --
+                # whichever of P/B/W happens to come first in hardware.inputs.
+                # Gated to firmware v23+: on v22 the division is exact (no gap),
+                # so this must never touch v22's already-correct, well-tested
+                # numbering, even if some future config made the gap reappear.
+                if not digital_events_started:
+                    if hardware.firmware_version >= 23:
+                        self._pad_event_names_to(hardware.max_serial_events)
+                        Pos = max(Pos, hardware.max_serial_events)
+                    digital_events_started = True
                 if nBNCs == 0:
                     self.events_positions.Event_BNC = Pos
                 nBNCs += 1
@@ -134,6 +183,11 @@ class Channels:
                 self.event_names += [self.input_channel_names[-1] + "Low"]
                 Pos += 1
             elif hardware.inputs[i] == "W":
+                if not digital_events_started:
+                    if hardware.firmware_version >= 23:
+                        self._pad_event_names_to(hardware.max_serial_events)
+                        Pos = max(Pos, hardware.max_serial_events)
+                    digital_events_started = True
                 if nWires == 0:
                     self.events_positions.Event_Wire = Pos
                 nWires += 1
@@ -191,6 +245,14 @@ class Channels:
                     self.events_positions.output_USB = len(self.output_channel_names)
                 nUSB += 1
                 self.output_channel_names += ["SoftCode"]
+
+            if hw_outputs[i] == "Z" and hardware.firmware_version >= 23:
+                # See the matching "Z" case in setup_input_channels: occupies one
+                # slot in the physical channel list and must be counted here too,
+                # or every output_channel_names index after it (BNC, PWM, Valve...)
+                # is off by one. Version-gated for the same reason: 'Z' cannot
+                # appear on v22 hardware, so this is unreachable there regardless.
+                self.output_channel_names += ["SoftCodeB"]
 
             if hw_outputs[i] == "V":
                 if nVALVE == 0:

@@ -33,3 +33,9 @@ class ReceiveMessageHeader:
 
     #: Module events names
     MODULE_EVENT_NAMES = ord("E")
+
+    #: Module major hardware version number (firmware v23+)
+    MODULE_HARDWARE_VERSION_MAJOR = ord("V")
+
+    #: Module minor hardware version number (firmware v23+)
+    MODULE_HARDWARE_VERSION_MINOR = ord("v")

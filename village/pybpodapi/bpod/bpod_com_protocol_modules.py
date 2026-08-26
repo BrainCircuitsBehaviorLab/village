@@ -78,6 +78,16 @@ class BpodCOMProtocolModules(BpodCOMProtocol):
                                 event_name = self._arcom.read_char_array(n_chars)
                                 events_names.append("".join(event_name))
 
+                        elif param_type in (
+                            ReceiveMessageHeader.MODULE_HARDWARE_VERSION_MAJOR,
+                            ReceiveMessageHeader.MODULE_HARDWARE_VERSION_MINOR,
+                        ):
+                            # Firmware v23+ modules may report a hardware version
+                            # byte here; not currently used, but it must still be
+                            # read off the wire or every byte after it
+                            # (including the next module's info) desyncs.
+                            self._arcom.read_uint8()
+
                         flag = self._arcom.read_uint8()
 
                 bpod_modules += BpodModules.create_module(

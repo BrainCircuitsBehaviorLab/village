@@ -579,7 +579,7 @@ class SoundDevice:
                 rec = self.recorder
                 if play_ts is not None and rec is not None:
                     try:
-                        rec.register_event_if_active("sound", play_ts)
+                        rec.add_raspberry_event("sound", play_ts)
                     except Exception:
                         pass
             self._rearm()

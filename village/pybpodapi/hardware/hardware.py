@@ -62,6 +62,8 @@ class Hardware:
     def __str__(self):
         return (
             "Hardware Configuration\n"
+            f"Firmware version: {self.firmware_version}\n"
+            f"Machine type: {self.machine_type}\n"
             f"Max states: {self.max_states}\n"
             f"Cycle period: {self.cycle_period}\n"
             f"Cycle frequency: {self.cycle_frequency}\n"

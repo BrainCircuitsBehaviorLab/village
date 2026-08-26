@@ -22,7 +22,6 @@ class TrialRecorder:
         # threads at once. Reentrant because some public methods call others.
         self._lock = threading.RLock()
         # Events are only recorded between start_trial() and get_trial_data();
-        # outside that window register_event_if_active() drops them.
         self._trial_active: bool = False
         self._csv_path = str(Path(settings.get("SESSIONS_DIRECTORY"), "session.csv"))
         self._csv_file = None
@@ -49,12 +48,7 @@ class TrialRecorder:
         self._csv_writer.writerow(self.CSV_COLUMNS)
         self._csv_file.flush()
 
-    def _to_absolute(self, controller_timestamp: float) -> float:
-        """Convert a controller timestamp to absolute raspberry time.
-        Round to 4 decimals so that data is easier to read and occupies less space.
-        """
-        return round(controller_timestamp + self._time_offset, 4)
-
+    # public methods
     def start_trial(
         self, raspberry_timestamp: float, controller_timestamp: float
     ) -> None:
@@ -111,7 +105,8 @@ class TrialRecorder:
                 absolute raspberry time.
         """
         with self._lock:
-            self._add_event(event_name, self._to_absolute(controller_timestamp))
+            if self._trial_active:
+                self._add_event(event_name, self._to_absolute(controller_timestamp))
 
     def add_raspberry_event(self, event_name: str, raspberry_timestamp: float) -> None:
         """Record an event using an already-absolute raspberry timestamp.
@@ -122,28 +117,8 @@ class TrialRecorder:
                 whether a controller is being used.
         """
         with self._lock:
-            self._add_event(event_name, round(raspberry_timestamp, 4))
-
-    def register_event_if_active(
-        self, event_name: str, raspberry_timestamp: float
-    ) -> None:
-        """Record a raspberry-timestamped event, but only during an open trial.
-
-        Safe to call from any thread. Used by device subsystems (sound worker,
-        touch reader, screen paint) that fire asynchronously -- events arriving
-        outside a trial are dropped instead of leaking into a closed one.
-        """
-        with self._lock:
             if self._trial_active:
                 self._add_event(event_name, round(raspberry_timestamp, 4))
-
-    def _add_event(self, event_name: str, abs_ts: float) -> None:
-        if event_name not in self._events:
-            self._events[event_name] = []
-        self._events[event_name].append(abs_ts)
-        self._ordered_events.append(event_name)
-        timestamp_str = f"{abs_ts:.4f}"
-        self._write_csv_row(timestamp_str, "", event_name, "")
 
     def add_value(self, name: str, value: Any) -> None:
         """Record a key-value pair for the current trial.
@@ -242,6 +217,21 @@ class TrialRecorder:
                 self._csv_file.close()
                 self._csv_file = None
                 self._csv_writer = None
+
+    # private methods below this line
+    def _to_absolute(self, controller_timestamp: float) -> float:
+        """Convert a controller timestamp to absolute raspberry time.
+        Round to 4 decimals so that data is easier to read and occupies less space.
+        """
+        return round(controller_timestamp + self._time_offset, 4)
+
+    def _add_event(self, event_name: str, abs_ts: float) -> None:
+        if event_name not in self._events:
+            self._events[event_name] = []
+        self._events[event_name].append(abs_ts)
+        self._ordered_events.append(event_name)
+        timestamp_str = f"{abs_ts:.4f}"
+        self._write_csv_row(timestamp_str, "", event_name, "")
 
     def _close_current_state(self, timestamp: float) -> None:
         """Close the currently open state with the given end timestamp."""
