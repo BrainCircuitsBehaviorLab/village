@@ -384,6 +384,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Speeding Up Bpod Communication (Custom Firmware)</a></li>
 </ul>
 </li>
 </ul>
@@ -541,7 +542,7 @@ If you are not using a controller, (i.e. the controller is the same raspberry),
 the controller_timestamp is exactly the same as the raspberry timestamp.
 To get the raspberry timestamp you can use time_utils.now_timestamp().</p>
 </dd>
-<dt>register_end_trial(self, controller_timestamp: float = 0.0)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
+<dt>register_end_trial(self, controller_timestamp: float)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
 automatically.
 For other controllers, call this at the end of each trial to register the
 end of the trial.</p>
@@ -713,8 +714,8 @@ task started.</p>
 <dd><p>Registers the start of a trial. We use 2 timestamps because we use the start
 of the trial to synchronize the clocks between the raspberry and the controller.
 If you are not using a controller, (i.e. the controller is the same raspberry),
-the controller_timestamp is exactly the same as the raspberry timestamp. To get
-the raspberry timestamp you can use time_utils.now_timestamp().</p>
+the controller_timestamp is exactly the same as the raspberry timestamp.
+To obtain the raspberry_timestamp, use time_utils.now_timestamp().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -727,18 +728,23 @@ the raspberry timestamp you can use time_utils.now_timestamp().</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">register_end_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_end_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Registers the end of a trial. If you are not using a controller, (i.e. the
-controller is the same raspberry), the controller_timestamp is exactly
-the same as the raspberry timestamp.
-:param controller_timestamp: Controller clock timestamp.
-:type controller_timestamp: float</p>
+<span class="sig-name descname"><span class="pre">register_end_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_end_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Registers the end of a trial.
+If you are not using a controller, (i.e. the controller is the same raspberry),
+pass time_utils.now_timestamp() as controller_timestamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>controller_timestamp</strong> (<em>float</em>) – Controller clock timestamp.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">register_enter_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_enter_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Registers the entry into a Bpod state.</p>
+<dd><p>Registers the entry into a state machine state.
+If you are not using a controller, (i.e. the controller is the same raspberry),
+pass time_utils.now_timestamp() as controller_timestamp.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -752,7 +758,9 @@ the same as the raspberry timestamp.
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">register_controller_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_controller_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Registers a custom event using a controller clock timestamp.</p>
+<dd><p>Registers a custom event using a controller clock timestamp.
+If you are not using a controller, (i.e. the controller is the same raspberry),
+this method does exactly the same as register_raspberry_event().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -767,9 +775,10 @@ the same as the raspberry timestamp.
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">register_raspberry_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raspberry_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_raspberry_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Registers a custom event using a raspberry timestamp.
-If you are using bpod, you may want to call this for events that are generated
-asynchronously from the bpod state machine, for example when executing direct
-functions or when using a camera to detect or trigger events.</p>
+You may want to call this for events that are generated asynchronously from the
+controller state machine, for example when executing direct functions or
+when using a camera to detect or trigger events.
+Pass time_utils.now_timestamp() as raspberry_timestamp.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -946,7 +955,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=f8d3745f"></script>
+      <script src="../_static/documentation_options.js?v=48528fa4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

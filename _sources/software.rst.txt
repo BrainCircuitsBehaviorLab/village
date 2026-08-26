@@ -11,3 +11,4 @@ SOFTWARE RESOURCES
 
     resources/software_installation.md
     resources/image.md
+    resources/bpod_firmware.md

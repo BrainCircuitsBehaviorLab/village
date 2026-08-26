@@ -384,6 +384,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Speeding Up Bpod Communication (Custom Firmware)</a></li>
 </ul>
 </li>
 </ul>
@@ -672,23 +673,29 @@ description of the most recent system event (no trial number, as the corridor is
 trial-structured).</p></li>
 <li><p><strong>Bottom row:</strong> <code class="docutils literal notranslate"><span class="pre">&lt;duration&gt;</span>&#160; <span class="pre">frame:</span> <span class="pre">N</span>&#160; <span class="pre">area1:</span> <span class="pre">N</span>&#160; <span class="pre">area2:</span> <span class="pre">N...</span></code> — same format as above.</p></li>
 </ul>
-<p>In addition to the text overlays, when <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION</span></code> is enabled the system burns two
-additional visual layers directly into the saved video: the detection pixels highlighted
-in black, and the boundary lines delimiting each active tracking area. This option is
-configurable under <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>. For performance reasons, these
-overlays are computed on the same stream used for the live display and the saved
-recording.</p>
+<p>In addition to the text overlays, when <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION</span></code> is enabled the system draws two
+additional visual layers: the thresholded detection mask, and the boundary lines
+delimiting each active tracking area. This option is configurable under <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> →
+<code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>, but the corridor and box cameras handle it very differently:</p>
+<ul class="simple">
+<li><p><strong>Corridor:</strong> <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_CORRIDOR</span></code> is drawn with cv2 directly onto the frame, so
+it is burnt into the saved video file as well as the live preview.</p></li>
+<li><p><strong>Operant box:</strong> <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_BOX</span></code> is drawn with QPainter on top of the live
+preview widget only — it is <strong>never</strong> encoded into the saved video, regardless of
+whether it is enabled or disabled.</p></li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>We recommend keeping <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_CORRIDOR</span></code> permanently enabled for the corridor
-camera. Corridor recordings are not critical data, but having the overlay active makes it
-easy to verify at a glance that pixel detection is working correctly across all areas.</p>
-<p>For the operant box, we recommend keeping <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_BOX</span></code> disabled during normal
-operation so that task videos are saved clean. Because the
-operant box is typically a closed, controlled environment, illumination conditions are
-stable and threshold recalibration is rarely needed. When it is required, simply enable
-<code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_BOX</span></code>, adjust the thresholds, and disable it again.</p>
+<p>In practice, both can be left permanently enabled, though for different reasons:</p>
+<p>Keep <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_CORRIDOR</span></code> permanently enabled. Corridor recordings are not
+critical data, and having the overlay burnt in makes it easy to verify at a glance that
+pixel detection is working correctly across all areas.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_BOX</span></code>, on the other hand, never touches the saved video, so there is no
+downside to leaving it permanently enabled too — it only adds a live visual aid on the
+<code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen while you work.</p>
 </div>
+<p>See the <a class="reference internal" href="../protocols/camera.html"><span class="std std-doc">Custom Camera Drawing</span></a> section for how this <code class="docutils literal notranslate"><span class="pre">draw</span></code> (disk + screen) vs.
+<code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> (screen only) split also applies to overlays you add yourself.</p>
 </section>
 <hr class="docutils" />
 <section id="subject-behavioral-sessions">
@@ -853,7 +860,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=f8d3745f"></script>
+      <script src="../_static/documentation_options.js?v=48528fa4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
