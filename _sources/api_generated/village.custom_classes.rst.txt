@@ -39,7 +39,7 @@
    change_cycle_base
    custom_area_base
    direct_functions_base
-   gpio_base
+   gpio_trigger_base
    online_plot_base
    session_plot_base
    subject_plot_base

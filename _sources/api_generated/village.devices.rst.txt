@@ -33,6 +33,7 @@
 
    camera
    chip
+   gpio
    led_strip
    motor_old
    optogrid

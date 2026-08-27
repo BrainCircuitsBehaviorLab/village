@@ -1,0 +1,27 @@
+GpioTriggerBase
+===============
+
+.. currentmodule:: village.custom_classes.gpio_trigger_base
+
+.. autoclass:: GpioTriggerBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~GpioTriggerBase.__init__
+      ~GpioTriggerBase.trigger_off
+      ~GpioTriggerBase.trigger_on
+   
+   
+
+   
+   
+   

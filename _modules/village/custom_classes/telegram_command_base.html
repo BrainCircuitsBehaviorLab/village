@@ -91,6 +91,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/sound.html">Sound Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../system_operation/gpio.html">GPIO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -102,8 +103,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/gpio_trigger.html">Custom GPIO Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/plots.html">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/telegram_commands.html">Custom Telegram Commands</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/calibrations.html">Custom Calibrations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/auto.html">Custom AutoNoMouse</a></li>
 </ul>
@@ -212,6 +215,10 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.gpio_trigger_base.html">gpio_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html">GpioTriggerBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
@@ -455,18 +462,21 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="10"><span class="sd">    Subclass in the project code directory so it is picked up by import_all.</span>
 </span><span data-line="11"><span class="sd">    Set command to the slash-command name (no slash) and implement</span>
 </span><span data-line="12"><span class="sd">    handler. Args after the command arrive in context.args as strings.</span>
-</span><span data-line="13"><span class="sd">    Wrap risky work in try/except so one bad command can't kill the bot.</span>
-</span><span data-line="14"><span class="sd">    Set description to a short one-line explanation shown by /help.</span>
-</span><span data-line="15"><span class="sd">    """</span>
-</span><span data-line="16">
-</span><span data-line="17">    <span class="n">command</span> <span class="o">=</span> <span class="s2">""</span>  <span class="c1"># e.g. "do_stuff" -&gt; /do_stuff</span>
-</span><span data-line="18">    <span class="n">description</span> <span class="o">=</span> <span class="s2">""</span>  <span class="c1"># shown next to the command in /help</span>
+</span><span data-line="13"><span class="sd">    TelegramBot.register_custom wraps handler in try/except, so an</span>
+</span><span data-line="14"><span class="sd">    unhandled exception can't kill the bot; add your own try/except only if</span>
+</span><span data-line="15"><span class="sd">    you want to reply with a specific error message instead of failing</span>
+</span><span data-line="16"><span class="sd">    silently. Set description to a short one-line explanation shown by</span>
+</span><span data-line="17"><span class="sd">    /help.</span>
+</span><span data-line="18"><span class="sd">    """</span>
 </span><span data-line="19">
+</span><span data-line="20">    <span class="n">command</span> <span class="o">=</span> <span class="s2">""</span>  <span class="c1"># e.g. "do_stuff" -&gt; /do_stuff</span>
+</span><span data-line="21">    <span class="n">description</span> <span class="o">=</span> <span class="s2">""</span>  <span class="c1"># shown next to the command in /help</span>
+</span><span data-line="22">
 <div class="viewcode-block" id="TelegramCommandBase.handler">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.telegram_command_base.TelegramCommandBase.html#village.custom_classes.telegram_command_base.TelegramCommandBase.handler">[docs]</a>
-</span><span data-line="20">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">Update</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ContextTypes</span><span class="o">.</span><span class="n">DEFAULT_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="21"><span class="w">        </span><span class="sd">"""Respond to the command."""</span>
-</span><span data-line="22">        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</span><span data-line="23">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">Update</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ContextTypes</span><span class="o">.</span><span class="n">DEFAULT_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="24"><span class="w">        </span><span class="sd">"""Respond to the command."""</span>
+</span><span data-line="25">        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
 </span></pre></div>
@@ -493,7 +503,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=bd9538fc"></script>
+      <script src="../../../_static/documentation_options.js?v=2f676dc5"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

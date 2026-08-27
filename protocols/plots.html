@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Plotting - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Custom Scheduled Actions" href="scheduled.html" /><link rel="prev" title="Custom Touchscreen Interaction" href="touchscreen.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Plotting - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Custom Scheduled Actions" href="scheduled.html" /><link rel="prev" title="Custom GPIO Interaction" href="gpio_trigger.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/plots.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -91,6 +91,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -102,8 +103,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">Custom GPIO Interaction</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Custom Plotting</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="telegram_commands.html">Custom Telegram Commands</a></li>
 <li class="toctree-l3"><a class="reference internal" href="calibrations.html">Custom Calibrations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="auto.html">Custom AutoNoMouse</a></li>
 </ul>
@@ -212,6 +215,10 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.html">gpio_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html">GpioTriggerBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
@@ -714,10 +721,10 @@ Columns:</p>
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="touchscreen.html">
+    <a href="gpio_trigger.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Custom Touchscreen Interaction</div></div>
+        <span>Previous</span><div class="title">Custom GPIO Interaction</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="scheduled.html">
@@ -745,7 +752,7 @@ Columns:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=bd9538fc"></script>
+      <script src="../_static/documentation_options.js?v=2f676dc5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
