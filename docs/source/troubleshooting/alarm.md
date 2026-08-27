@@ -1,12 +1,16 @@
 ## Alarm System Overview
 
 ### Interrogate the system
-You can use various commands to retrieve information from the system. Simply type these commands in a private telegram chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
+You can use various commands to retrieve information from, or act on, the system. Simply type these commands in a private telegram chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
 All commands start with the `/` symbol:
 
+- `/help`: Lists every available command, including any custom ones added for your project.
 - `/report ‘hours’`: Provides a summary of the operant box activity for the last specified hours (default = 24h).
-- `/cam`: Sends a screenshot from both cameras.
-- `/plot ‘days’`: Shows a plot of entrances and attempts over the specified days (default = 3 days).
+- `/cam`: Sends a picture from both cameras.
+- `/plot`: Shows a plot of corridor entrances and attempts.
+- `/mice_checked`: Confirms that the mice have been checked today — the same effect as clicking `CHECK MICE` in the GUI toolbar.
+- `/restart_anydesk`: Restarts the AnyDesk service if a remote connection through it stops working.
+- `/restart_vnc`: Restarts the Raspberry Pi's built-in VNC server if a remote connection through it stops working.
 
 ---
 
@@ -53,7 +57,7 @@ You can toggle these specific alarms on/off or adjust the minimum hydration base
 Immediately following the conclusion of any individual behavioral session, the system assesses the animal's engagement data before it returns to the home cage.
 
 It validates that **at least one trial was performed** and that **some amount of water was consumed** during the session. If your experimental paradigm utilizes tasks that do not involve traditional trials or do not offer water rewards, you can easily disable these immediate notifications in your settings using the variables:
-*   `NO_SESSIONS_PERFORMED`
+*   `NO_TRIALS_PERFORMED`
 *   `NO_WATER_DRUNK`
 
 
@@ -61,6 +65,8 @@ It validates that **at least one trial was performed** and that **some amount of
 
 ### Alarms
 The system is designed to cover all potential scenarios, resulting in an extensive list of alarms. While many may never appear, some occur rarely but are critical.
+
+Some of the most important alarms keep repeating in Telegram, at the frequency set in `TELEGRAM_REPEAT_MINUTES` (`SETTINGS` → `TELEGRAM SETTINGS`), until they are acknowledged — either with the "✅ Acknowledge" button on the Telegram message or with the `ALARMS` button in the GUI toolbar.
 
 When an alarm is received, it is important to always check the events log to determine which error occurred. If the error originates from the code, inspect the traceback to understand what happened.
 When it is not clear what sequence of events produced the alarm, review the video recordings to identify the root cause (e.g., lighting, thresholds, dirt, hardware issues).
@@ -161,6 +167,10 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - An error occurred while attempting to display video or visual stimuli.
   - Check the events log to inspect the traceback and determine the source of the problem.
 
+* - Touchscreen error
+  - An error occurred while reading touch events from the touchscreen.
+  - Check the events log to inspect the traceback. Verify the touchscreen's USB connection and, if the error persists, the `TOUCHSCREEN_DEVICE` setting.
+
 * - The session file is very large
   - The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.
   - Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.
@@ -174,7 +184,7 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.
 
 * - Camera not responding
-  - The camera automatically restarts after failing to deliver frames for 10 seconds. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.
+  - The camera automatically restarts if it fails to deliver frames for 10 seconds, if its recording process (ffmpeg) dies unexpectedly, or if it fails to start recording in the first place. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.
   - Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.
 
 * - Area(s) occupied more than 90% of the last hour
@@ -196,6 +206,10 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
 * - No data sync in the last 24h
   - No data has been successfully synchronized with the external server or hard drive during the last 24 hours.
   - Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.
+
+* - Nobody has checked the mice today
+  - The `CHECK_MICE_TIME` deadline (`SETTINGS` → `TELEGRAM SETTINGS`) has passed and nobody has confirmed the mice check for the day, either by clicking `CHECK MICE` in the GUI toolbar or via the `/mice_checked` Telegram command.
+  - Physically check on the mice as soon as possible, then confirm it with the `CHECK MICE` button or `/mice_checked`.
 
 * - No water was drunk
   - The subject did not drink any water during the task. This check can be enabled or disabled in the settings.

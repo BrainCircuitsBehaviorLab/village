@@ -1,10 +1,5 @@
 ## Troubleshooting Guide
 
-The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to sub-optimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.
-
-When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly to these alarms by logging in remotely to investigate exactamente cual fue la causa del error, mirando los videos del corridor y la operant box. Una puerta que no cierra bien o un fallo de iluminacion puede producir diferentes tipos de errores, WRONG RFID DETECTION, que haya 2 animales dentro de la operant box, que el sistema crea que hay un animal en la operant box pero no haya ninguno, que el sistema crea que no hay ningun animal en la operant box pero en realidad haya uno.
-
-
 The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to suboptimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.
 
 When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly by logging in remotely to investigate the root cause of the error, reviewing the corridor and operant box video recordings. For example: a door that does not close properly or a lighting failure can produce several types of errors: incorrect RFID detection, two animals simultaneously entering the operant box, the system registering an animal as present when the box is empty, or the system failing to detect an animal that is actually inside.
@@ -70,27 +65,11 @@ Thanks to this rule, no matter what microcontroller you plug into that specific 
 
 ### Peripheral Issues (Sensors, Motors, Lights, or Satellite Boards)
 
-1. **Verify Software Activation:** Open the GUI and ensure the specific satellite board you are trying to communicate with is enabled under `SETTINGS` → `MAIN SETTINGS`. Toggle `USE_CORRIDOR` or `USE_BOX_BOARD` to **`ON`** depending on your active setup.
+1. **Verify Software Activation:** Open the GUI and ensure the specific satellite board you are trying to communicate with is enabled: toggle `USE_CORRIDOR` (top of `SETTINGS` → `CORRIDOR SETTINGS`) or `USE_BOX_BOARD` (top of `SETTINGS` → `BOX SETTINGS`) to **`ON`** depending on your active setup.
 2. **Verify Satellite Connections:** Check that the failing component (servo, LED strip, RFID antenna) is securely connected to the correct ports on the Corridor Board or Box Board with the correct wiring polarity.
-3. **Check Hub-to-Satellite Cables:** Ensure the Ethernet cables linking the Corridor Board and Box Board are plugged into their respective dedicated ports on the Main HAT.
+3. **Check Hub-to-Satellite Cables:** Each satellite board is linked by two cables — an Ethernet cable carrying data, and a separate power cable (DC barrel jack on both ends) carrying 5V. Ensure both are firmly plugged into their respective dedicated ports on the Main HAT.
 4. **Check HAT Seating:** Ensure the Main HAT is fully pressed down and evenly seated onto the Raspberry Pi 5 GPIO header extension pins.
 5. **Test Power Lines:** Verify that the Main HAT is receiving a stable **5V (3A)** from the main power supply. A drop in voltage can cause I2C chips, scales, or servos to drop off the bus randomly.
-6. **Verify I2C & Register Addresses:** Ensure the software is pointing to the correct I2C addresses and chip register pins. If your hardware profile has been modified, cross-reference your configuration under `SETTINGS` → `DEVICE ADDRESSES`:
-
-| Device Parameter | Default Value / Address | Description |
-| :--- | :--- | :--- |
-| **`CHIP_CORRIDOR_ADDRESS`** | `0x55` | Main I2C chip address on the Corridor Board |
-| **`MOTOR1_CORRIDOR_INDEX`** | `4` | Pin channel for Corridor Door 1 Servo |
-| **`MOTOR2_CORRIDOR_INDEX`** | `5` | Pin channel for Corridor Door 2 Servo |
-| **`VISIBLE_LIGHT_CORRIDOR_INDEX`** | `6` | Pin channel for White LED illumination strip |
-| **`IR_LIGHT_CORRIDOR_INDEX`**| `0` | Pin channel for Infrared LED arrays |
-| **`SCALE_ADDRESS`** | `0x48` | Onboard scale/load cell amplifier address |
-| **`TEMP_SENSOR_ADDRESS`** | `0x44` | Ambient temperature sensor address |
-| **`CHIP_BOX_ADDRESS`** | `0x6a` | Main I2C chip address on the Box Board |
-| **`MOTOR1_BOX_INDEX`** | `4` | Pin channel for Box Module Servo 1 |
-| **`MOTOR2_BOX_INDEX`** | `5` | Pin channel for Box Module Servo 2 |
-| **`VISIBLE_LIGHT_BOX_INDEX`** | `6` | Pin channel for Box Visible light |
-| **`IR_LIGHT_BOX_INDEX`** | `0` | Pin channel for Box IR light |
 
 
 ---

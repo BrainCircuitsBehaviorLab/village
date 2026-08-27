@@ -384,6 +384,7 @@ class Manager:
                     + task_name
                     + " not found. Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
+                    repeat=True,
                 )
                 return False
             elif issubclass(cls, TaskBase):
@@ -416,6 +417,7 @@ class Manager:
                     + " is not a subclass of TaskBase."
                     + " Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
+                    repeat=True,
                 )
                 return False
         except Exception:
@@ -425,6 +427,7 @@ class Manager:
                 + " Opening door2 and disconnecting RFID reader.",
                 subject=self.subject.name,
                 exception=traceback.format_exc(),
+                repeat=True,
             )
             return False
 
@@ -471,6 +474,7 @@ class Manager:
                     + " Opening door2 and disconnecting RFID reader.",
                     subject=self.subject.name,
                     exception=traceback.format_exc(),
+                    repeat=True,
                 )
                 self.state = State.OPEN_DOOR2_STOP
                 log.info("Going to OPEN_DOOR2_STOP State")
@@ -882,11 +886,11 @@ class Manager:
 
             if self.detections.trigger_empty():
                 value = str(self.detections.hours)
-                log.alarm("No detections in the last " + value + " hours")
+                log.alarm("No detections in the last " + value + " hours", repeat=True)
 
             if self.sessions.trigger_empty():
                 value = str(self.sessions.hours)
-                log.alarm("No sessions in the last " + value + " hours")
+                log.alarm("No sessions in the last " + value + " hours", repeat=True)
 
         if utils.has_low_disk_space():
             log.alarm("Low disk space (less than 10GB)")

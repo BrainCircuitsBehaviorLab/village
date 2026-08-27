@@ -61,6 +61,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 *   1 x Custom Corridor Board
 *   1 x Custom Box Board
 *   2 x Standard Ethernet Cables (used to interface the Corridor and Box satellite boards to the Main HAT)
+*   2 x DC Barrel Jack Power Cables (5V, used to power the Corridor and Box satellite boards from the Main HAT)
 *   2 x 5x20 mm Fuses (250V, 5A)
 *   1 x Extra-tall GPIO Header Spacer/Extension (for vertical clearance between the Pi and the Main HAT)
 

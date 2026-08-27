@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import threading
+from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 
@@ -53,7 +54,9 @@ class _BrainMapWidget(QWidget):
     change, where selection_int is the uint64 LED Selection value.
     """
 
-    def __init__(self, on_changed, parent=None):
+    def __init__(
+        self, on_changed: Callable[[int], None], parent: QWidget | None = None
+    ) -> None:
         super().__init__(parent)
         self.selection: int = 0
         self._on_changed = on_changed

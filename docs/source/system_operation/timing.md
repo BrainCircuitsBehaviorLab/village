@@ -25,10 +25,10 @@ Do not use `time.time()` or `datetime.now()`. Always use `time_utils.now_timesta
 ```{admonition} What is a monotonic clock?
 :class: tip
 Unlike the system wall clock, a monotonic clock guarantees that time always advances steadily and never jumps forward or steps backward. Wall clocks are prone to sudden time shifts caused by:
-Network Time Protocol (NTP): Automated network syncs that correct internal clock drift.
-Daylight Saving Time (DST) & timezone changes: Seasonal or location-based hour shifts.
-Leap seconds: Occasional single-second adjustments to match Earth's astronomical rotation.
-Manual modifications: Manual date/time changes made by a user or system script.
+* Network Time Protocol (NTP): Automated network syncs that correct internal clock drift.
+* Daylight Saving Time (DST) & timezone changes: Seasonal or location-based hour shifts.
+* Leap seconds: Occasional single-second adjustments to match Earth's astronomical rotation.
+* Manual modifications: Manual date/time changes made by a user or system script.
 By avoiding these external adjustments, a monotonic clock ensures that event ordering and elapsed-time calculations remain strictly consistent throughout a session.
 Any necessary resynchronization with the wall clock only occurs between sessions during the SYNC state. For implementation details, see `village/scripts/time_utils.py`.
 ```
@@ -120,11 +120,11 @@ link introduces additional latency:
 
 ```{admonition} Latency Warning for Bpod 2.0 to 2.4 (Teensy 3.6 Hardware)
 :class: warning
+**The issue:** By default, unmodified firmware flushes outgoing USB serial data with a **5 ms** timeout. This adds **4 ms of latency to every single Bpod->Raspberry Pi communication** compared to the 1 ms performance benchmark shown above.
+
 **Affected models:** This only applies to Bpods built on a **Teensy 3.6** (state machine hardware **r2.0 to r2.4**). Older models (Bpod 0.5 – 1.0) and newer Teensy 4.x boards (Bpod 2.5 / 2+) are not affected.
 
-**The issue:** By default, unmodified firmware on these versions flushes outgoing USB serial data with a **5 ms** timeout. This adds **4 ms of latency to every single Bpod->Raspberry Pi communication** compared to the 1 ms performance benchmark shown above.
-
-**The fix:** To reduce this timeout to **1 ms**, you need to edit a Teensy 3.x USB driver file and flash the modified firmware. Follow the step-by-step guide in [Speeding Up Bpod Communication][BPOD_FW].
+**The fix:** To reduce this timeout to **1 ms**, you need to edit a Teensy 3.6 USB driver file and flash the modified firmware. Follow the step-by-step guide in [Speeding Up Bpod Communication][BPOD_FW].
 ```
 
 #### Actions
@@ -186,10 +186,10 @@ total latency = trigger latency + communication latency + action latency
 
 #### Summary Table (unmodified firmware, Bpod 2.0 to 2.4)
 
-If you haven't applied the firmware fix, every Bpod->Raspberry Pi communication
-costs an extra **~4 ms** (5 ms flush timeout instead of 1 ms). This only changes the
-`Controller` row, since that's the only one where the Bpod is the trigger reporting the
-event to the Raspberry Pi.
+If you haven't applied the firmware fix on your Bpod 2.0 to 2.4 board, every
+Bpod->Raspberry Pi communication costs an extra **~4 ms** (5 ms flush timeout instead of
+1 ms). This extra latency only applies when the trigger is the Controller (Bpod) and the
+action runs on the Raspberry Pi (LED strip, Sound, Screen).
 
 | Trigger | Port LED / water | LED strip / matrix (144 LEDs) | Sound | Screen |
 |---|---|---|---|---|

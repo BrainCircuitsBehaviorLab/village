@@ -323,6 +323,7 @@ def system_run() -> None:
                             + " is in the box."
                             + " Opening door2 and disconnecting RFID reader.",
                             subject=manager.subject.name,
+                            repeat=True,
                         )
                         manager.state = State.OPEN_DOOR2_STOP
                         log.info("Going to OPEN_DOOR2_STOP State")
@@ -334,6 +335,7 @@ def system_run() -> None:
                         "Maximum time reached and areas 3 or 4 were never empty."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
+                        repeat=True,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
@@ -366,6 +368,7 @@ def system_run() -> None:
                             + " is in the box."
                             + " Opening door2 and disconnecting RFID reader.",
                             subject=manager.subject.name,
+                            repeat=True,
                         )
                         manager.state = State.OPEN_DOOR2_STOP
                         log.info("Going to OPEN_DOOR2_STOP State")
@@ -380,6 +383,7 @@ def system_run() -> None:
                         + " should have been inside the box."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
+                        repeat=True,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
@@ -424,6 +428,7 @@ def system_run() -> None:
                             + " is in the box."
                             + " Opening door2 and disconnecting RFID reader.",
                             subject=manager.subject.name,
+                            repeat=True,
                         )
                         manager.state = State.OPEN_DOOR2_STOP
                         log.info("Going to OPEN_DOOR2_STOP State")

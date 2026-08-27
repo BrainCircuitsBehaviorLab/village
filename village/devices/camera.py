@@ -1016,7 +1016,6 @@ class Camera:
                 log.alarm(
                     f"{areas} occupied more than 90% of the last hour",
                     subject=manager.subject.name,
-                    repeat=True,
                 )
         self._hour_occupied = [0, 0, 0, 0]
         self._hour_total = 0

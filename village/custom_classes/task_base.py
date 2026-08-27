@@ -530,14 +530,24 @@ class TaskBase:
         trials: int = 0
         water: int = 0
         settings_str: str = ""
+        # Manual runs are not part of the automated corridor pipeline, so these
+        # issues are only ever logged locally -- never sent as Telegram alarms.
+        is_manual = run_mode == "Manual"
         try:
             self.close()
         except Exception:
-            log.alarm(
-                "Error closing the task: " + self.name,
-                subject=self.subject,
-                exception=traceback.format_exc(),
-            )
+            if is_manual:
+                log.error(
+                    "Error closing the task: " + self.name,
+                    subject=self.subject,
+                    exception=traceback.format_exc(),
+                )
+            else:
+                log.alarm(
+                    "Error closing the task: " + self.name,
+                    subject=self.subject,
+                    exception=traceback.format_exc(),
+                )
         self.recorder.close()
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod.stop()
@@ -551,11 +561,18 @@ class TaskBase:
                 else:
                     save = Save.ZERO
             except Exception:
-                log.alarm(
-                    "Error saving the task: " + self.name,
-                    subject=self.subject,
-                    exception=traceback.format_exc(),
-                )
+                if is_manual:
+                    log.error(
+                        "Error saving the task: " + self.name,
+                        subject=self.subject,
+                        exception=traceback.format_exc(),
+                    )
+                else:
+                    log.alarm(
+                        "Error saving the task: " + self.name,
+                        subject=self.subject,
+                        exception=traceback.format_exc(),
+                    )
                 save = Save.ERROR
             if save == Save.YES:
                 try:
@@ -566,11 +583,20 @@ class TaskBase:
                     self.training.update_training_settings()
                 except Exception:
                     save = Save.ERROR
-                    log.alarm(
-                        "Error updating the training settings for task: " + self.name,
-                        subject=self.subject,
-                        exception=traceback.format_exc(),
-                    )
+                    if is_manual:
+                        log.error(
+                            "Error updating the training settings for task: "
+                            + self.name,
+                            subject=self.subject,
+                            exception=traceback.format_exc(),
+                        )
+                    else:
+                        log.alarm(
+                            "Error updating the training settings for task: "
+                            + self.name,
+                            subject=self.subject,
+                            exception=traceback.format_exc(),
+                        )
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod.close()
         elif self.controller_type == ControllerEnum.ARDUINO:
@@ -632,15 +658,21 @@ class TaskBase:
         duration: float = 0.0
         trials: int = 0
         water: int = 0
+        # Manual runs are not part of the automated corridor pipeline, so these
+        # issues are only ever logged locally -- never sent as Telegram alarms.
+        is_manual = run_mode == "Manual"
 
         self.raw_df = pd.read_csv(self.rt_session_path, sep=";")
 
         if self.raw_df.shape[0] > 100000:
-            log.alarm(
+            message = (
                 "The session file is very large, probably due to"
-                + " overdetections in some of the ports",
-                subject=self.subject,
+                + " overdetections in some of the ports"
             )
+            if is_manual:
+                log.info(message, subject=self.subject)
+            else:
+                log.alarm(message, subject=self.subject)
 
         trials = int(self.raw_df["TRIAL"].iloc[-1])
 
@@ -663,9 +695,11 @@ class TaskBase:
                 water = 0
 
             if water == 0 and settings.get("NO_WATER_DRUNK") == Active.ON:
-                log.alarm(
-                    "No water was drunk in task: " + self.name, subject=self.subject
-                )
+                message = "No water was drunk in task: " + self.name
+                if is_manual:
+                    log.info(message, subject=self.subject)
+                else:
+                    log.alarm(message, subject=self.subject)
 
             self.session_df["run_mode"] = [run_mode] * self.session_df.shape[0]
             self.session_df.to_csv(self.session_path, header=True, index=False, sep=";")
@@ -712,10 +746,11 @@ class TaskBase:
             return duration, trials, water, True
         else:
             if settings.get("NO_TRIALS_PERFORMED") == Active.ON:
-                log.alarm(
-                    "No trials were recorded in task: " + self.name,
-                    subject=self.subject,
-                )
+                message = "No trials were recorded in task: " + self.name
+                if is_manual:
+                    log.info(message, subject=self.subject)
+                else:
+                    log.alarm(message, subject=self.subject)
             return 0.0, 0, 0, False
 
     @classmethod
