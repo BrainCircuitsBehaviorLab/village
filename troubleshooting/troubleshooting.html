@@ -383,8 +383,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Disk Image</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Speeding Up Bpod Communication (Custom Firmware)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Custom Bpod Firmware</a></li>
 </ul>
 </li>
 </ul>
@@ -492,8 +492,6 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="troubleshooting-guide">
 <h1>Troubleshooting Guide</h1>
-<p>The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to sub-optimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.</p>
-<p>When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly to these alarms by logging in remotely to investigate exactamente cual fue la causa del error, mirando los videos del corridor y la operant box. Una puerta que no cierra bien o un fallo de iluminacion puede producir diferentes tipos de errores, WRONG RFID DETECTION, que haya 2 animales dentro de la operant box, que el sistema crea que hay un animal en la operant box pero no haya ninguno, que el sistema crea que no hay ningun animal en la operant box pero en realidad haya uno.</p>
 <p>The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to suboptimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.</p>
 <p>When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly by logging in remotely to investigate the root cause of the error, reviewing the corridor and operant box video recordings. For example: a door that does not close properly or a lighting failure can produce several types of errors: incorrect RFID detection, two animals simultaneously entering the operant box, the system registering an animal as present when the box is empty, or the system failing to detect an animal that is actually inside.</p>
 <hr class="docutils" />
@@ -567,73 +565,12 @@ data-aria-dark="Switch to auto color mode">
 <section id="peripheral-issues-sensors-motors-lights-or-satellite-boards">
 <h2>Peripheral Issues (Sensors, Motors, Lights, or Satellite Boards)</h2>
 <ol class="arabic simple">
-<li><p><strong>Verify Software Activation:</strong> Open the GUI and ensure the specific satellite board you are trying to communicate with is enabled under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code>. Toggle <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> to <strong><code class="docutils literal notranslate"><span class="pre">ON</span></code></strong> depending on your active setup.</p></li>
+<li><p><strong>Verify Software Activation:</strong> Open the GUI and ensure the specific satellite board you are trying to communicate with is enabled: toggle <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> (top of <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>) or <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> (top of <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>) to <strong><code class="docutils literal notranslate"><span class="pre">ON</span></code></strong> depending on your active setup.</p></li>
 <li><p><strong>Verify Satellite Connections:</strong> Check that the failing component (servo, LED strip, RFID antenna) is securely connected to the correct ports on the Corridor Board or Box Board with the correct wiring polarity.</p></li>
-<li><p><strong>Check Hub-to-Satellite Cables:</strong> Ensure the Ethernet cables linking the Corridor Board and Box Board are plugged into their respective dedicated ports on the Main HAT.</p></li>
+<li><p><strong>Check Hub-to-Satellite Cables:</strong> Each satellite board is linked by two cables — an Ethernet cable carrying data, and a separate power cable (DC barrel jack on both ends) carrying 5V. Ensure both are firmly plugged into their respective dedicated ports on the Main HAT.</p></li>
 <li><p><strong>Check HAT Seating:</strong> Ensure the Main HAT is fully pressed down and evenly seated onto the Raspberry Pi 5 GPIO header extension pins.</p></li>
 <li><p><strong>Test Power Lines:</strong> Verify that the Main HAT is receiving a stable <strong>5V (3A)</strong> from the main power supply. A drop in voltage can cause I2C chips, scales, or servos to drop off the bus randomly.</p></li>
-<li><p><strong>Verify I2C &amp; Register Addresses:</strong> Ensure the software is pointing to the correct I2C addresses and chip register pins. If your hardware profile has been modified, cross-reference your configuration under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DEVICE</span> <span class="pre">ADDRESSES</span></code>:</p></li>
 </ol>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p>Device Parameter</p></th>
-<th class="head text-left"><p>Default Value / Address</p></th>
-<th class="head text-left"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">CHIP_CORRIDOR_ADDRESS</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x55</span></code></p></td>
-<td class="text-left"><p>Main I2C chip address on the Corridor Board</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR1_CORRIDOR_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
-<td class="text-left"><p>Pin channel for Corridor Door 1 Servo</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR2_CORRIDOR_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></td>
-<td class="text-left"><p>Pin channel for Corridor Door 2 Servo</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">VISIBLE_LIGHT_CORRIDOR_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">6</span></code></p></td>
-<td class="text-left"><p>Pin channel for White LED illumination strip</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">IR_LIGHT_CORRIDOR_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
-<td class="text-left"><p>Pin channel for Infrared LED arrays</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">SCALE_ADDRESS</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x48</span></code></p></td>
-<td class="text-left"><p>Onboard scale/load cell amplifier address</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">TEMP_SENSOR_ADDRESS</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x44</span></code></p></td>
-<td class="text-left"><p>Ambient temperature sensor address</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">CHIP_BOX_ADDRESS</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0x6a</span></code></p></td>
-<td class="text-left"><p>Main I2C chip address on the Box Board</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR1_BOX_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
-<td class="text-left"><p>Pin channel for Box Module Servo 1</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">MOTOR2_BOX_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></td>
-<td class="text-left"><p>Pin channel for Box Module Servo 2</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">VISIBLE_LIGHT_BOX_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">6</span></code></p></td>
-<td class="text-left"><p>Pin channel for Box Visible light</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">IR_LIGHT_BOX_INDEX</span></code></strong></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
-<td class="text-left"><p>Pin channel for Box IR light</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </section>
 <hr class="docutils" />
 <section id="data-synchronization-issues">
@@ -684,7 +621,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=48528fa4"></script>
+      <script src="../_static/documentation_options.js?v=bd9538fc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

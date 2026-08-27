@@ -383,8 +383,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Disk Image</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Speeding Up Bpod Communication (Custom Firmware)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Custom Bpod Firmware</a></li>
 </ul>
 </li>
 </ul>
@@ -521,13 +521,15 @@ exposed through <code class="docutils literal notranslate"><span class="pre">tim
 </div>
 <div class="tip admonition">
 <p class="admonition-title">What is a monotonic clock?</p>
-<p>Unlike the system wall clock, a monotonic clock guarantees that time always advances steadily and never jumps forward or steps backward. Wall clocks are prone to sudden time shifts caused by:
-Network Time Protocol (NTP): Automated network syncs that correct internal clock drift.
-Daylight Saving Time (DST) &amp; timezone changes: Seasonal or location-based hour shifts.
-Leap seconds: Occasional single-second adjustments to match Earth’s astronomical rotation.
-Manual modifications: Manual date/time changes made by a user or system script.
+<p>Unlike the system wall clock, a monotonic clock guarantees that time always advances steadily and never jumps forward or steps backward. Wall clocks are prone to sudden time shifts caused by:</p>
+<ul class="simple">
+<li><p>Network Time Protocol (NTP): Automated network syncs that correct internal clock drift.</p></li>
+<li><p>Daylight Saving Time (DST) &amp; timezone changes: Seasonal or location-based hour shifts.</p></li>
+<li><p>Leap seconds: Occasional single-second adjustments to match Earth’s astronomical rotation.</p></li>
+<li><p>Manual modifications: Manual date/time changes made by a user or system script.
 By avoiding these external adjustments, a monotonic clock ensures that event ordering and elapsed-time calculations remain strictly consistent throughout a session.
-Any necessary resynchronization with the wall clock only occurs between sessions during the SYNC state. For implementation details, see <code class="docutils literal notranslate"><span class="pre">village/scripts/time_utils.py</span></code>.</p>
+Any necessary resynchronization with the wall clock only occurs between sessions during the SYNC state. For implementation details, see <code class="docutils literal notranslate"><span class="pre">village/scripts/time_utils.py</span></code>.</p></li>
+</ul>
 </div>
 </section>
 <section id="hardware-synchronization">
@@ -615,9 +617,9 @@ link introduces additional latency:</p>
 </ul>
 <div class="warning admonition">
 <p class="admonition-title">Latency Warning for Bpod 2.0 to 2.4 (Teensy 3.6 Hardware)</p>
+<p><strong>The issue:</strong> By default, unmodified firmware flushes outgoing USB serial data with a <strong>5 ms</strong> timeout. This adds <strong>4 ms of latency to every single Bpod-&gt;Raspberry Pi communication</strong> compared to the 1 ms performance benchmark shown above.</p>
 <p><strong>Affected models:</strong> This only applies to Bpods built on a <strong>Teensy 3.6</strong> (state machine hardware <strong>r2.0 to r2.4</strong>). Older models (Bpod 0.5 – 1.0) and newer Teensy 4.x boards (Bpod 2.5 / 2+) are not affected.</p>
-<p><strong>The issue:</strong> By default, unmodified firmware on these versions flushes outgoing USB serial data with a <strong>5 ms</strong> timeout. This adds <strong>4 ms of latency to every single Bpod-&gt;Raspberry Pi communication</strong> compared to the 1 ms performance benchmark shown above.</p>
-<p><strong>The fix:</strong> To reduce this timeout to <strong>1 ms</strong>, you need to edit a Teensy 3.x USB driver file and flash the modified firmware. Follow the step-by-step guide in <a class="reference internal" href="../resources/bpod_firmware.html"><span class="std std-doc">Speeding Up Bpod Communication</span></a>.</p>
+<p><strong>The fix:</strong> To reduce this timeout to <strong>1 ms</strong>, you need to edit a Teensy 3.6 USB driver file and flash the modified firmware. Follow the step-by-step guide in <a class="reference internal" href="../resources/bpod_firmware.html"><span class="std std-doc">Speeding Up Bpod Communication</span></a>.</p>
 </div>
 </section>
 <section id="actions">
@@ -700,10 +702,10 @@ above:</p>
 </section>
 <section id="summary-table-unmodified-firmware-bpod-2-0-to-2-4">
 <h3>Summary Table (unmodified firmware, Bpod 2.0 to 2.4)</h3>
-<p>If you haven’t applied the firmware fix, every Bpod-&gt;Raspberry Pi communication
-costs an extra <strong>~4 ms</strong> (5 ms flush timeout instead of 1 ms). This only changes the
-<code class="docutils literal notranslate"><span class="pre">Controller</span></code> row, since that’s the only one where the Bpod is the trigger reporting the
-event to the Raspberry Pi.</p>
+<p>If you haven’t applied the firmware fix on your Bpod 2.0 to 2.4 board, every
+Bpod-&gt;Raspberry Pi communication costs an extra <strong>~4 ms</strong> (5 ms flush timeout instead of
+1 ms). This extra latency only applies when the trigger is the Controller (Bpod) and the
+action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -769,7 +771,7 @@ event to the Raspberry Pi.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=48528fa4"></script>
+      <script src="../_static/documentation_options.js?v=bd9538fc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

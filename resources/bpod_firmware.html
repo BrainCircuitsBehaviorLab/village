@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Speeding Up Bpod Communication (Custom Firmware) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="FAQ" href="../faq_index.html" /><link rel="prev" title="Disk Image" href="image.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Bpod Firmware - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="FAQ" href="../faq_index.html" /><link rel="prev" title="Raspberry Pi Disk Image" href="image.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/resources/bpod_firmware.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -23,7 +23,7 @@
     
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/resources/bpod_firmware.html"/>
-  <meta property="og:title" content="Speeding Up Bpod Communication (Custom Firmware)"/>
+  <meta property="og:title" content="Custom Bpod Firmware"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -383,8 +383,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="software_installation.html">Manual Software Installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="image.html">Disk Image</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Speeding Up Bpod Communication (Custom Firmware)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Custom Bpod Firmware</a></li>
 </ul>
 </li>
 </ul>
@@ -436,7 +436,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Speeding Up Bpod Communication (Custom Firmware)</strong>
+        <strong itemprop="name">Custom Bpod Firmware</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -484,20 +484,24 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="speeding-up-bpod-communication-custom-firmware">
-<h1>Speeding Up Bpod Communication (Custom Firmware)</h1>
-<p>By default, some Bpod (Teensy) firmware versions flush outgoing USB serial data with a
-<strong>5 ms</strong> timeout. This only applies to Bpods built on a <strong>Teensy 3.6</strong> (state machine
-hardware <strong>r2.0 to r2.4</strong>). Older models (Bpod 0.5 – 1.0) and newer Teensy 4.x boards
-(Bpod 2.5 / 2+) are not affected by this issue.</p>
+          <section id="custom-bpod-firmware">
+<h1>Custom Bpod Firmware</h1>
+<p>This guide is only needed if the default Bpod communication latency (see
+<a class="reference internal" href="../system_operation/timing.html"><span class="std std-doc">Timing, Clocks &amp; Latencies</span></a>) is not good enough for your experiment — most
+setups can safely skip it.</p>
+<p>By default, some Bpod firmware versions flush outgoing USB serial data with a <strong>5 ms</strong> timeout, introducing up to 5 ms of communication latency. This only applies to Bpod state machines built on the <strong>Teensy 3.6</strong> (hardware versions <strong>Bpod 2.0 to 2.4</strong>).</p>
+<ul class="simple">
+<li><p>Older models (Bpod 0.5–1.0): Do not use Teensy microcontrollers.</p></li>
+<li><p>Newer models (Bpod 2.5 / 2+): Use the Teensy 4.x platform and are not affected by this issue.</p></li>
+</ul>
 <p>Lowering the timeout to <strong>1 ms</strong> noticeably reduces Bpod Softcode communication latency
-(see the <a class="reference internal" href="../system_operation/timing.html"><span class="std std-doc">Timing, Clocks &amp; Latencies</span></a> section). This Raspberry Pi already has
-the fix applied — flashing the sketch below already produces a 1 ms Bpod, no extra
-edits needed. See the note at the end of this guide for where the fix actually lives.</p>
+(see the <a class="reference internal" href="../system_operation/timing.html"><span class="std std-doc">Timing, Clocks &amp; Latencies</span></a> section). On this Raspberry Pi, the
+one-line edit the fix requires has already been made to the Teensy core library (see
+the note at the end of this guide) — you still need to follow the steps below to build
+and upload the firmware so the fix actually reaches your Bpod.</p>
 <section id="open-the-firmware-sketch">
 <h2>1. Open the firmware sketch</h2>
-<p>On the Raspberry Pi, open the stock Bpod 2.0 (v23) sketch — unmodified, straight from
-Sanworks’ GitHub — using the Arduino IDE 1.8 already installed on the Pi:</p>
+<p>On the Raspberry Pi, you will find a local copy of the original Bpod 2.0 (v23) firmware (unmodified from Sanworks’ GitHub). Open it using the pre-installed Arduino IDE 1.8:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">Bpod_StateMachine_Firmware</span><span class="o">-</span><span class="mi">23</span><span class="o">/</span><span class="n">Preconfigured</span><span class="o">/</span><span class="n">v23</span><span class="o">/</span><span class="n">StateMachine</span><span class="o">-</span><span class="n">Bpod2_0</span><span class="o">/</span><span class="n">StateMachine</span><span class="o">-</span><span class="n">Bpod2_0</span><span class="o">.</span><span class="n">ino</span>
 </span></pre></div>
 </div>
@@ -510,8 +514,7 @@ Sanworks’ GitHub — using the Arduino IDE 1.8 already installed on the Pi:</p
 <ul class="simple">
 <li><p><strong>Board</strong> → Teensy 3.6</p></li>
 <li><p><strong>USB Type</strong> → Dual Serial</p></li>
-<li><p><strong>Port</strong> → the Bpod’s serial port (on Linux it looks like <code class="docutils literal notranslate"><span class="pre">/dev/ttySX</span></code>; if you’re not
-sure which one it is, unplug the Bpod and see which entry disappears)</p></li>
+<li><p><strong>Port</strong> → the Bpod’s serial port (on Linux this typically appears as /dev/ttyACM0 or /dev/ttyACM1; if you are unsure, unplug the USB cable and check which port disappears).</p></li>
 </ul>
 </section>
 <section id="upload">
@@ -525,7 +528,7 @@ Teensy core library, not the sketch:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="o">~/</span><span class="n">arduino</span><span class="o">-</span><span class="mf">1.8.19</span><span class="o">/</span><span class="n">hardware</span><span class="o">/</span><span class="n">teensy</span><span class="o">/</span><span class="n">avr</span><span class="o">/</span><span class="n">cores</span><span class="o">/</span><span class="n">teensy3</span><span class="o">/</span><span class="n">usb_serial</span><span class="o">.</span><span class="n">c</span>
 </span></pre></div>
 </div>
-<p>Stock Teensy cores ship with:</p>
+<p>Default Teensy core installations ship with:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="cp">#define TRANSMIT_FLUSH_TIMEOUT  5  </span><span class="cm">/* in milliseconds */</span>
 </span></pre></div>
 </div>
@@ -546,7 +549,7 @@ Teensy core library, not the sketch:</p>
     <a href="image.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Disk Image</div></div>
+        <span>Previous</span><div class="title">Raspberry Pi Disk Image</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="../faq_index.html">
@@ -574,7 +577,7 @@ Teensy core library, not the sketch:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=48528fa4"></script>
+      <script src="../_static/documentation_options.js?v=bd9538fc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

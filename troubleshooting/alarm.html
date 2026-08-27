@@ -383,8 +383,8 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Disk Image</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Speeding Up Bpod Communication (Custom Firmware)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Custom Bpod Firmware</a></li>
 </ul>
 </li>
 </ul>
@@ -496,12 +496,16 @@ data-aria-dark="Switch to auto color mode">
 <h1>Alarm System Overview</h1>
 <section id="interrogate-the-system">
 <h2>Interrogate the system</h2>
-<p>You can use various commands to retrieve information from the system. Simply type these commands in a private telegram chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
+<p>You can use various commands to retrieve information from, or act on, the system. Simply type these commands in a private telegram chat with the bot (only you will receive the response) or in the group channel where the bot is present (all participants will see the response).
 All commands start with the <code class="docutils literal notranslate"><span class="pre">/</span></code> symbol:</p>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/help</span></code>: Lists every available command, including any custom ones added for your project.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">/report</span> <span class="pre">‘hours’</span></code>: Provides a summary of the operant box activity for the last specified hours (default = 24h).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code>: Sends a screenshot from both cameras.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span> <span class="pre">‘days’</span></code>: Shows a plot of entrances and attempts over the specified days (default = 3 days).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code>: Sends a picture from both cameras.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/plot</span></code>: Shows a plot of corridor entrances and attempts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code>: Confirms that the mice have been checked today — the same effect as clicking <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> in the GUI toolbar.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/restart_anydesk</span></code>: Restarts the AnyDesk service if a remote connection through it stops working.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/restart_vnc</span></code>: Restarts the Raspberry Pi’s built-in VNC server if a remote connection through it stops working.</p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -547,7 +551,7 @@ All commands start with the <code class="docutils literal notranslate"><span cla
 <p>Immediately following the conclusion of any individual behavioral session, the system assesses the animal’s engagement data before it returns to the home cage.</p>
 <p>It validates that <strong>at least one trial was performed</strong> and that <strong>some amount of water was consumed</strong> during the session. If your experimental paradigm utilizes tasks that do not involve traditional trials or do not offer water rewards, you can easily disable these immediate notifications in your settings using the variables:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">NO_SESSIONS_PERFORMED</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NO_TRIALS_PERFORMED</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">NO_WATER_DRUNK</span></code></p></li>
 </ul>
 </section>
@@ -555,6 +559,7 @@ All commands start with the <code class="docutils literal notranslate"><span cla
 <section id="alarms">
 <h2>Alarms</h2>
 <p>The system is designed to cover all potential scenarios, resulting in an extensive list of alarms. While many may never appear, some occur rarely but are critical.</p>
+<p>Some of the most important alarms keep repeating in Telegram, at the frequency set in <code class="docutils literal notranslate"><span class="pre">TELEGRAM_REPEAT_MINUTES</span></code> (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code>), until they are acknowledged — either with the “✅ Acknowledge” button on the Telegram message or with the <code class="docutils literal notranslate"><span class="pre">ALARMS</span></code> button in the GUI toolbar.</p>
 <p>When an alarm is received, it is important to always check the events log to determine which error occurred. If the error originates from the code, inspect the traceback to understand what happened.
 When it is not clear what sequence of events produced the alarm, review the video recordings to identify the root cause (e.g., lighting, thresholds, dirt, hardware issues).</p>
 <p>To view the details of an error (including the traceback when available):</p>
@@ -660,41 +665,49 @@ When it is not clear what sequence of events produced the alarm, review the vide
 <td><p>An error occurred while attempting to display video or visual stimuli.</p></td>
 <td><p>Check the events log to inspect the traceback and determine the source of the problem.</p></td>
 </tr>
-<tr class="row-even"><td><p>The session file is very large</p></td>
+<tr class="row-even"><td><p>Touchscreen error</p></td>
+<td><p>An error occurred while reading touch events from the touchscreen.</p></td>
+<td><p>Check the events log to inspect the traceback. Verify the touchscreen’s USB connection and, if the error persists, the <code class="docutils literal notranslate"><span class="pre">TOUCHSCREEN_DEVICE</span></code> setting.</p></td>
+</tr>
+<tr class="row-odd"><td><p>The session file is very large</p></td>
 <td><p>The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.</p></td>
 <td><p>Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Subjects not detected in the last 24h</p></td>
+<tr class="row-even"><td><p>Subjects not detected in the last 24h</p></td>
 <td><p>The subject has not been detected by the RFID system for the last 24 hours. This check can be enabled or disabled in the settings.</p></td>
 <td><p>Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.</p></td>
 </tr>
-<tr class="row-even"><td><p>The subject has been in the box for too long</p></td>
+<tr class="row-odd"><td><p>The subject has been in the box for too long</p></td>
 <td><p>More than one hour has passed since the task ended, and the animal remains inside the operant box.</p></td>
 <td><p>Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Camera not responding</p></td>
-<td><p>The camera automatically restarts after failing to deliver frames for 10 seconds. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.</p></td>
+<tr class="row-even"><td><p>Camera not responding</p></td>
+<td><p>The camera automatically restarts if it fails to deliver frames for 10 seconds, if its recording process (ffmpeg) dies unexpectedly, or if it fails to start recording in the first place. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.</p></td>
 <td><p>Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.</p></td>
 </tr>
-<tr class="row-even"><td><p>Area(s) occupied more than 90% of the last hour</p></td>
+<tr class="row-odd"><td><p>Area(s) occupied more than 90% of the last hour</p></td>
 <td><p>One or more corridor areas were continuously occupied for more than 90% of the last hour. This may indicate an animal is sleeping in the corridor, or that a false detection is occurring due to lighting or dirt. This check can be enabled or disabled in the settings using <code class="docutils literal notranslate"><span class="pre">CORRIDOR_OCCUPATION_ALARM</span></code>.</p></td>
 <td><p>Review the corridor video for the last hour to determine whether a real animal is present or whether the detection is a false positive. If an animal is stuck, verify that door 1 and door 2 are operating correctly and that the animal can move freely. If it is a false positive, check corridor illumination, clean the floor, and adjust the detection thresholds.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Low/High temperature</p></td>
+<tr class="row-even"><td><p>Low/High temperature</p></td>
 <td><p>Temperature has risen above or fallen below the configured threshold.</p></td>
 <td><p>Verify the room temperature using an independent sensor and take the appropriate corrective measures.</p></td>
 </tr>
-<tr class="row-even"><td><p>Subjects with low water intake in the last 24h</p></td>
+<tr class="row-odd"><td><p>Subjects with low water intake in the last 24h</p></td>
 <td><p>The subject consumed less than the configured water-intake threshold during the last 24 hours.</p></td>
 <td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Subjects with no session in the last 24h</p></td>
+<tr class="row-even"><td><p>Subjects with no session in the last 24h</p></td>
 <td><p>The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be enabled or disabled in the settings.</p></td>
 <td><p>Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.</p></td>
 </tr>
-<tr class="row-even"><td><p>No data sync in the last 24h</p></td>
+<tr class="row-odd"><td><p>No data sync in the last 24h</p></td>
 <td><p>No data has been successfully synchronized with the external server or hard drive during the last 24 hours.</p></td>
 <td><p>Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.</p></td>
+</tr>
+<tr class="row-even"><td><p>Nobody has checked the mice today</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">CHECK_MICE_TIME</span></code> deadline (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code>) has passed and nobody has confirmed the mice check for the day, either by clicking <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> in the GUI toolbar or via the <code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code> Telegram command.</p></td>
+<td><p>Physically check on the mice as soon as possible, then confirm it with the <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> button or <code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p>No water was drunk</p></td>
 <td><p>The subject did not drink any water during the task. This check can be enabled or disabled in the settings.</p></td>
@@ -748,7 +761,7 @@ When it is not clear what sequence of events produced the alarm, review the vide
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=48528fa4"></script>
+      <script src="../_static/documentation_options.js?v=bd9538fc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -1,19 +1,22 @@
-## Speeding Up Bpod Communication (Custom Firmware)
+## Custom Bpod Firmware
 
-By default, some Bpod (Teensy) firmware versions flush outgoing USB serial data with a
-**5 ms** timeout. This only applies to Bpods built on a **Teensy 3.6** (state machine
-hardware **r2.0 to r2.4**). Older models (Bpod 0.5 – 1.0) and newer Teensy 4.x boards
-(Bpod 2.5 / 2+) are not affected by this issue.
+This guide is only needed if the default Bpod communication latency (see
+[Timing, Clocks & Latencies][TIMING]) is not good enough for your experiment — most
+setups can safely skip it.
+
+By default, some Bpod firmware versions flush outgoing USB serial data with a **5 ms** timeout, introducing up to 5 ms of communication latency. This only applies to Bpod state machines built on the **Teensy 3.6** (hardware versions **Bpod 2.0 to 2.4**).
+* Older models (Bpod 0.5–1.0): Do not use Teensy microcontrollers.
+* Newer models (Bpod 2.5 / 2+): Use the Teensy 4.x platform and are not affected by this issue.
 
 Lowering the timeout to **1 ms** noticeably reduces Bpod Softcode communication latency
-(see the [Timing, Clocks & Latencies][TIMING] section). This Raspberry Pi already has
-the fix applied — flashing the sketch below already produces a 1 ms Bpod, no extra
-edits needed. See the note at the end of this guide for where the fix actually lives.
+(see the [Timing, Clocks & Latencies][TIMING] section). On this Raspberry Pi, the
+one-line edit the fix requires has already been made to the Teensy core library (see
+the note at the end of this guide) — you still need to follow the steps below to build
+and upload the firmware so the fix actually reaches your Bpod.
 
 ### 1. Open the firmware sketch
 
-On the Raspberry Pi, open the stock Bpod 2.0 (v23) sketch — unmodified, straight from
-Sanworks' GitHub — using the Arduino IDE 1.8 already installed on the Pi:
+On the Raspberry Pi, you will find a local copy of the original Bpod 2.0 (v23) firmware (unmodified from Sanworks' GitHub). Open it using the pre-installed Arduino IDE 1.8:
 
 ```
 /home/pi/Bpod_StateMachine_Firmware-23/Preconfigured/v23/StateMachine-Bpod2_0/StateMachine-Bpod2_0.ino
@@ -28,8 +31,7 @@ From the **Tools** menu:
 
 - **Board** → Teensy 3.6
 - **USB Type** → Dual Serial
-- **Port** → the Bpod's serial port (on Linux it looks like `/dev/ttySX`; if you're not
-  sure which one it is, unplug the Bpod and see which entry disappears)
+- **Port** → the Bpod's serial port (on Linux this typically appears as /dev/ttyACM0 or /dev/ttyACM1; if you are unsure, unplug the USB cable and check which port disappears).
 
 ### 3. Upload
 
@@ -45,7 +47,7 @@ Teensy core library, not the sketch:
 ~/arduino-1.8.19/hardware/teensy/avr/cores/teensy3/usb_serial.c
 ```
 
-Stock Teensy cores ship with:
+Default Teensy core installations ship with:
 
 ```c
 #define TRANSMIT_FLUSH_TIMEOUT  5  /* in milliseconds */

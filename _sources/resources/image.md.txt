@@ -1,4 +1,4 @@
-## Disk Image
+## Raspberry Pi Disk Image
 
 
 Here you can download a disk image containing the operating system (Raspberry Pi OS Trixie, based on Debian 13) and the Training Village software pre-installed, including Python 3.13 and all required libraries, as well as the Raspberry Pi hardware configuration needed for the system to work properly.
