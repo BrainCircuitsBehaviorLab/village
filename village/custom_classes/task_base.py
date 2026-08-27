@@ -20,8 +20,8 @@ from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:
-    from village.custom_classes.gpio_base import GpioBase
     from village.devices.camera import Camera
+    from village.devices.gpio import Gpio
 
 
 class TaskError(Exception):
@@ -275,7 +275,7 @@ class TaskBase:
         self.date: str = time_utils.now_string()
 
         self.cam_box: Camera | NullCamera = NullCamera()
-        self.gpio: GpioBase | NullGpio = NullGpio()
+        self.gpio: Gpio | NullGpio = NullGpio()
 
         self.info: str = ""
 

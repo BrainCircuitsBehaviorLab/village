@@ -5,6 +5,7 @@ import subprocess
 import threading
 import time
 import traceback
+from collections.abc import Callable
 from pathlib import Path
 from urllib import parse, request
 
@@ -18,6 +19,7 @@ from telegram.ext import (
 )
 
 from village.classes.null_classes import NullTelegramBot
+from village.custom_classes.telegram_command_base import TelegramCommandBase
 from village.devices.camera import cam_box, cam_corridor
 from village.manager import manager
 from village.plots.corridor_plot import corridor_plot
@@ -410,7 +412,8 @@ class TelegramBot:
         Called from main after import_all has populated the list. add_handler
         works on the already-running application. A custom command sharing its
         name with a built-in one is rejected (logged, not registered) instead
-        of being silently shadowed by the built-in handler.
+        of being silently shadowed by the built-in handler. Each handler is
+        wrapped in try/except so a bad custom command can't crash the bot.
 
         Args:
             commands (list): TelegramCommandBase instances.
@@ -426,9 +429,32 @@ class TelegramBot:
                     + "' collides with a built-in command and was not registered."
                 )
                 continue
-            self.application.add_handler(CommandHandler(c.command, c.handler))
+            self.application.add_handler(
+                CommandHandler(c.command, self._wrap_custom(c))
+            )
             accepted.append(c)
         self.custom_commands = accepted
+
+    def _wrap_custom(self, command: TelegramCommandBase) -> Callable:
+        """Wraps a custom command's handler in try/except.
+
+        Args:
+            command (TelegramCommandBase): The custom command to wrap.
+
+        Returns:
+            Callable: A handler coroutine safe to register with CommandHandler.
+        """
+
+        async def wrapped(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+            try:
+                await command.handler(update, context)
+            except Exception:
+                log.error(
+                    "Telegram error in custom command '/" + command.command + "'",
+                    exception=traceback.format_exc(),
+                )
+
+        return wrapped
 
     async def main(self) -> None:
         """Main asyncio loop for the bot application."""

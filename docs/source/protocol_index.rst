@@ -14,7 +14,9 @@ PROTOCOL & TASK DESIGN
     protocols/functions.md
     protocols/camera.md
     protocols/touchscreen.md
+    protocols/gpio_trigger.md
     protocols/plots.md
     protocols/scheduled.md
+    protocols/telegram_commands.md
     protocols/calibrations.md
     protocols/auto.md

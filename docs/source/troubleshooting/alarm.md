@@ -148,16 +148,16 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Inspect the scale wiring and connectors, ensuring all cables are firmly attached. Verify that the external 5V power supply is reaching the board.
 
 * - No detections in the set interval
-  - No animal has been detected by the RFID system during the last X hours (X defined in settings).
+  - No animal has been detected by the RFID system during the last X hours (X set by `NO_DETECTION_HOURS`).
   - Ensure that animals have unobstructed access to the corridor (no blockage, door 1 open). Check RFID cabling and confirm that the external 5V power supply is reaching the board.
 
 * - No sessions in the set interval
-  - No session has been performed within the last X hours.
+  - No session has been performed within the last X hours (X set by `NO_SESSION_HOURS`).
   - Verify corridor access and correct RFID operation. Ensure the cameras are not falsely detecting pixels when the corridor is empty (check illumination and threshold configuration).
 
 * - Low disk space (less than 10GB)
-  - The disk is nearly full.
-  - Videos are kept on the Raspberry Pi’s SD card for X days (user-defined in settings) and are automatically deleted only after proper synchronization with an external server or drive. Review rsync_logs and data_removal_logs to confirm that files are being synchronized and deleted correctly. If necessary, reduce the number of days for which videos are stored.
+  - The disk is nearly full. This 10GB threshold is not configurable.
+  - Videos are kept on the Raspberry Pi’s SD card for X days (set by `DAYS_OF_VIDEO_STORAGE`) and are automatically deleted only after proper synchronization with an external server or drive. Review rsync_logs and data_removal_logs to confirm that files are being synchronized and deleted correctly. If necessary, reduce `DAYS_OF_VIDEO_STORAGE`.
 
 * - Error in sound device
   - An error occurred while attempting to play a sound.
@@ -176,7 +176,7 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.
 
 * - Subjects not detected in the last 24h
-  - The subject has not been detected by the RFID system for the last 24 hours. This check can be enabled or disabled in the settings.
+  - The subject has not been detected by the RFID system for the last 24 hours. This check can be turned `ON`/`OFF` with `NO_DETECTION_SUBJECT_24H`.
   - Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.
 
 * - The subject has been in the box for too long
@@ -192,19 +192,19 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Review the corridor video for the last hour to determine whether a real animal is present or whether the detection is a false positive. If an animal is stuck, verify that door 1 and door 2 are operating correctly and that the animal can move freely. If it is a false positive, check corridor illumination, clean the floor, and adjust the detection thresholds.
 
 * - Low/High temperature
-  - Temperature has risen above or fallen below the configured threshold.
+  - Temperature has risen above `MAXIMUM_TEMPERATURE` or fallen below `MINIMUM_TEMPERATURE`.
   - Verify the room temperature using an independent sensor and take the appropriate corrective measures.
 
 * - Subjects with low water intake in the last 24h
-  - The subject consumed less than the configured water-intake threshold during the last 24 hours.
+  - The subject consumed less than the threshold set by `MINIMUM_WATER_SUBJECT_24H` during the last 24 hours.
   - Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.
 
 * - Subjects with no session in the last 24h
-  - The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be enabled or disabled in the settings.
+  - The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be turned `ON`/`OFF` with `NO_SESSION_SUBJECT_24H`.
   - Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.
 
 * - No data sync in the last 24h
-  - No data has been successfully synchronized with the external server or hard drive during the last 24 hours.
+  - No data has been successfully synchronized with the external server or hard drive during the last 24 hours. Only checked while `SYNC_TYPE` is not `OFF`.
   - Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.
 
 * - Nobody has checked the mice today
@@ -212,11 +212,11 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Physically check on the mice as soon as possible, then confirm it with the `CHECK MICE` button or `/mice_checked`.
 
 * - No water was drunk
-  - The subject did not drink any water during the task. This check can be enabled or disabled in the settings.
+  - The subject did not drink any water during the task. This check can be turned `ON`/`OFF` with `NO_WATER_DRUNK`.
   - Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning properly.
 
 * - No trials were recorded
-  - The subject did not complete any trials. This check can be enabled or disabled in the settings.
+  - The subject did not complete any trials. This check can be turned `ON`/`OFF` with `NO_TRIALS_PERFORMED`.
   - Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.
 
 ```

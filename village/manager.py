@@ -35,7 +35,7 @@ from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.custom_area_base import CustomAreaBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
-from village.custom_classes.gpio_base import GpioBase
+from village.custom_classes.gpio_trigger_base import GpioTriggerBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
@@ -49,6 +49,7 @@ from village.devices.chip import (
     visible_light_box,
     visible_light_corridor,
 )
+from village.devices.gpio import gpio
 from village.devices.screen import screen
 from village.devices.sound_device import sound_device
 from village.devices.temp_sensor import temp_sensor
@@ -109,7 +110,8 @@ class Manager:
         self.custom_areas: list[CustomAreaBase] = []
         self.custom_telegram_commands: list[TelegramCommandBase] = []
         self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
-        self.gpio: GpioBase = GpioBase()
+        self.gpio = gpio
+        self.gpio_trigger: GpioTriggerBase = GpioTriggerBase()
         self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
             "": AutoNoMouseBase()
         }
@@ -334,7 +336,8 @@ class Manager:
             self.direct_functions.task = self.task
             self.camera_trigger.task = self.task
             self.touch_trigger.task = self.task
-            self.gpio.task = self.task
+            self.gpio_trigger.task = self.task
+            self.gpio.trigger = self.gpio_trigger
             self.task.gpio = self.gpio
             self.gpio.start()
             log.start(task=self.task.name, subject=self.subject.name)
@@ -361,7 +364,8 @@ class Manager:
         self.direct_functions.task = self.task
         self.camera_trigger.task = self.task
         self.touch_trigger.task = self.task
-        self.gpio.task = self.task
+        self.gpio_trigger.task = self.task
+        self.gpio.trigger = self.gpio_trigger
         self.task.gpio = self.gpio
         self.gpio.start()
         log.start(task=self.task.name, subject="None")
@@ -404,7 +408,8 @@ class Manager:
                 self.direct_functions.task = self.task
                 self.camera_trigger.task = self.task
                 self.touch_trigger.task = self.task
-                self.gpio.task = self.task
+                self.gpio_trigger.task = self.task
+                self.gpio.trigger = self.gpio_trigger
                 self.task.gpio = self.gpio
                 self.gpio.start()
                 log.start(task=task_name, subject=self.subject.name)

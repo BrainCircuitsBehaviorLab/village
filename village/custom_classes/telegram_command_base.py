@@ -10,8 +10,11 @@ class TelegramCommandBase:
     Subclass in the project code directory so it is picked up by import_all.
     Set command to the slash-command name (no slash) and implement
     handler. Args after the command arrive in context.args as strings.
-    Wrap risky work in try/except so one bad command can't kill the bot.
-    Set description to a short one-line explanation shown by /help.
+    TelegramBot.register_custom wraps handler in try/except, so an
+    unhandled exception can't kill the bot; add your own try/except only if
+    you want to reply with a specific error message instead of failing
+    silently. Set description to a short one-line explanation shown by
+    /help.
     """
 
     command = ""  # e.g. "do_stuff" -> /do_stuff

@@ -32,7 +32,7 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.controllers.trial_recorder import TrialRecorder
-    from village.custom_classes.gpio_base import GpioBase
+    from village.devices.gpio import Gpio
 
 
 class VideoWorker(QObject):
@@ -204,8 +204,8 @@ class Screen(QOpenGLWidget):
         self._swap_connected: bool = False
 
         # injected by manager.run_task(); NullGpio (no-op) until then. set_on/
-        # set_off drive the GPIO_OUT pin for the sync pulse (see GpioBase).
-        self.gpio: GpioBase | NullGpio = NullGpio()
+        # set_off drive the GPIO_OUT pin for the sync pulse (see devices/gpio.py).
+        self.gpio: Gpio | NullGpio = NullGpio()
 
         self._video_thread: QThread | None = None
         self._video_worker: VideoWorker | None = None

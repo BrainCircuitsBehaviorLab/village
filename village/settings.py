@@ -306,7 +306,7 @@ additional functions, such as raising or lowering a water bottle in the home cag
     Setting("SCALE_ADDRESS", "0x48", str, "The address of the scale."),
     Setting(
         "SCALE_BOX_ADDRESS",
-        "0x2A",
+        "0x49",
         str,
         """The I2C address of the box scale (only used if SCALE_BOX is ON).""",
     ),
@@ -335,14 +335,15 @@ additional functions, such as raising or lowering a water bottle in the home cag
         "GPIO_IN",
         27,
         int,
-        """BCM number of the GPIO pin used as input by GpioBase: it reads an
-external signal and fires the triggers (trigger_on / trigger_off).""",
+        """BCM number of the GPIO pin used as input by Gpio: it reads an
+external signal and fires the triggers (trigger_on / trigger_off in
+GpioTriggerBase).""",
     ),
     Setting(
         "GPIO_OUT",
         26,
         int,
-        """BCM number of the GPIO pin used as output by GpioBase: gpio.set_on() /
+        """BCM number of the GPIO pin used as output by Gpio: gpio.set_on() /
 gpio.set_off() drive it. It can be used at the same time as GPIO_IN, since they are
 different pins.""",
     ),
