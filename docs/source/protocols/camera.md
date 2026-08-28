@@ -23,8 +23,9 @@ If the system detects a class inheriting from `CameraTriggerBase` in your projec
 
 In the following example, a subclass is created that writes a text when the subject
 is detected in Area1, executes direct function number 2 when detected in Area2,
-and triggers function number 6 when detected within a circular region at the center
-of the image.
+triggers function number 6 when detected within a circular region at the center
+of the image, and triggers function number 7 when detected inside the custom
+`T_CORRIDOR` area (see [Custom Detection Area](#custom-detection-area)).
 
 ```python
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
@@ -57,6 +58,10 @@ class CameraTrigger(CameraTriggerBase):
         - cam.x_position, cam.y_position (subject position in pixels)
         - cam.width, cam.height (camera feed dimensions in pixels)
 
+        Custom areas (subclasses of CustomAreaBase, if any):
+        - cam.custom_areas — list of CustomAreaBase instances; each has
+          .name and .contains(x, y, height, width)
+
         Other:
         - cam.write_text("text") to overlay text on the camera feed
 
@@ -77,6 +82,56 @@ class CameraTrigger(CameraTriggerBase):
                     (cam.y_position - cam.height / 2) ** 2) ** 0.5
         if distance < 50:
             self.task.execute_function(6) # execute the direct function number 6
+
+        # Check if the animal is inside the custom T_CORRIDOR area
+        for area in cam.custom_areas:
+            if area.name == "T_CORRIDOR" and area.contains(
+                cam.x_position, cam.y_position, cam.height, cam.width
+            ):
+                self.task.execute_function(7) # execute the direct function number 7
+```
+
+---
+
+### Custom Detection Area
+
+The 4 built-in `cam.areas` are rectangles. If you need the BOX camera to track
+the animal through a non-rectangular region (e.g. a T-shaped corridor between
+two zones, or a circular zone), subclass `CustomAreaBase` to add one extra
+area of any shape, built from one or more polygons and/or circles.
+
+Create a file inside your project's `code` directory and define a class that
+inherits from `CustomAreaBase`. The system detects it automatically and adds
+it on top of the 4 rectangle areas — you don't need to remove or replace them.
+
+```python
+from village.custom_classes.custom_area_base import CustomAreaBase
+
+
+class TCorridor(CustomAreaBase):
+    name = "T_CORRIDOR"
+    active = True
+    threshold = 65
+
+    # One or more polygons of [x, y] pixel vertices. Concave shapes are fine,
+    # and several polygons make a disjoint area (here: a T as bar + stem).
+    polygons = [
+        [[100, 50], [300, 50], [300, 100], [100, 100]],   # bar
+        [[180, 100], [220, 100], [220, 250], [180, 250]],  # stem
+    ]
+
+    # Optional: one or more circles, each (x, y, radius). Combined with
+    # polygons in the same area — a subclass can set both at once.
+    circles = [(200, 300, 40)]
+```
+
+```{admonition} Note
+:class: note
+Custom areas only affect the **BOX** camera and only the contour-based
+position detection methods (used when tracking a single animal by color).
+They are combined with the rectangle areas: the tracked position can be
+anywhere inside a rectangle area *or* a custom area. When `VIEW_DETECTION` is
+active, each custom area is also outlined in cyan on the live preview.
 ```
 
 ---
@@ -149,6 +204,13 @@ class CameraDraw(CameraDrawBase):
 ```
 
 **Overriding `draw_preview`** — runs at preview framerate, screen only:
+
+```{admonition} Note
+:class: note
+`cam.items_to_draw` is a plain `dict` the task can populate to pass data (like
+`"reward_zone"` below) to these methods — see
+[Passing data from the task](#passing-data-from-the-task-via-items_to_draw).
+```
 
 ```python
 from PyQt5.QtCore import QRect

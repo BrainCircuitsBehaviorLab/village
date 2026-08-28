@@ -159,24 +159,24 @@ class BpodBase:
 
         self._hardware.setup(self.bpod_modules)
 
-        # print relevant info
-        print("=== Bpod connected ===")
-        print(f"Serial port: {self.serial_port}")
-        print(self._hardware)
-        # Channel/event index tables actually used by manual_override() and
-        # event decoding -- compare these against a known-good firmware
-        # version's output to spot any indexing mismatch.
-        print(self._hardware.channels)
-        if self.bpod_modules:
-            print(f"Connected modules ({len(self.bpod_modules)}):")
-            for module in self.bpod_modules:
-                print(
-                    f"  - {module.name} (firmware v{module.firmware_version}, "
-                    f"port {module.serial_port})"
-                )
-        else:
-            print("Connected modules: none")
-        print("=======================")
+        # # print relevant info
+        # print("=== Bpod connected ===")
+        # print(f"Serial port: {self.serial_port}")
+        # print(self._hardware)
+        # # Channel/event index tables actually used by manual_override() and
+        # # event decoding -- compare these against a known-good firmware
+        # # version's output to spot any indexing mismatch.
+        # print(self._hardware.channels)
+        # if self.bpod_modules:
+        #     print(f"Connected modules ({len(self.bpod_modules)}):")
+        #     for module in self.bpod_modules:
+        #         print(
+        #             f"  - {module.name} (firmware v{module.firmware_version}, "
+        #             f"port {module.serial_port})"
+        #         )
+        # else:
+        #     print("Connected modules: none")
+        # print("=======================")
 
         # initialise the server to handle commands
         if self.net_port is not None:

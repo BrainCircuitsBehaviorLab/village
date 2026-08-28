@@ -52,8 +52,8 @@ uses them — so they are safe to use as-is.
 Connector** on the Box Board: it lets a mechanical switch drive the pin
 directly, going HIGH when the switch is activated and LOW when it is
 released, without any extra wiring. See
-[Satellite Board 2: The Box Board](../overview/system.md) for the full list of
-Box Board connectors.
+[Satellite Board 2: The Box Board](../overview/system.md#satellite-board-2-the-box-board)
+for the full list of Box Board connectors.
 
 If you need the input or output pin for something else, change `GPIO_IN` /
 `GPIO_OUT` in `SETTINGS` to any other free BCM number and wire your hardware
