@@ -161,7 +161,23 @@ def import_all(manager) -> None:
                         manager.change_cycle = y
                         change_cycle_correct = True
                 elif issubclass(cls, CustomAreaBase) and cls != CustomAreaBase:
-                    manager.custom_areas.append(cls())
+                    custom_area = cls()
+                    if custom_area.area_index not in (1, 2, 3, 4):
+                        log.error(
+                            "Custom area '"
+                            + custom_area.name
+                            + "' has an invalid area_index ("
+                            + str(custom_area.area_index)
+                            + "); must be 1, 2, 3, or 4. Not registered."
+                        )
+                    elif custom_area.area_index in manager.custom_areas:
+                        log.error(
+                            "Multiple custom areas target area_index "
+                            + str(custom_area.area_index)
+                            + "; only the first one found is used."
+                        )
+                    else:
+                        manager.custom_areas[custom_area.area_index] = custom_area
                 elif (
                     issubclass(cls, TelegramCommandBase) and cls != TelegramCommandBase
                 ):

@@ -23,9 +23,8 @@ If the system detects a class inheriting from `CameraTriggerBase` in your projec
 
 In the following example, a subclass is created that writes a text when the subject
 is detected in Area1, executes direct function number 2 when detected in Area2,
-triggers function number 6 when detected within a circular region at the center
-of the image, and triggers function number 7 when detected inside the custom
-`T_CORRIDOR` area (see [Custom Detection Area](#custom-detection-area)).
+and triggers function number 6 when detected within a circular region at the center
+of the image.
 
 ```python
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
@@ -58,10 +57,6 @@ class CameraTrigger(CameraTriggerBase):
         - cam.x_position, cam.y_position (subject position in pixels)
         - cam.width, cam.height (camera feed dimensions in pixels)
 
-        Custom areas (subclasses of CustomAreaBase, if any):
-        - cam.custom_areas — list of CustomAreaBase instances; each has
-          .name and .contains(x, y, height, width)
-
         Other:
         - cam.write_text("text") to overlay text on the camera feed
 
@@ -82,42 +77,54 @@ class CameraTrigger(CameraTriggerBase):
                     (cam.y_position - cam.height / 2) ** 2) ** 0.5
         if distance < 50:
             self.task.execute_function(6) # execute the direct function number 6
+```
 
-        # Check if the animal is inside the custom T_CORRIDOR area
-        for area in cam.custom_areas:
-            if area.name == "T_CORRIDOR" and area.contains(
-                cam.x_position, cam.y_position, cam.height, cam.width
-            ):
-                self.task.execute_function(7) # execute the direct function number 7
+```{admonition} Note
+:class: note
+`cam.areaN_is_triggered` also works transparently for a BOX area whose shape
+has been replaced by a `CustomAreaBase` (see
+[Custom Detection Area](#custom-detection-area)) — it checks the actual
+polygon/circle, not just its bounding box.
 ```
 
 ---
 
 ### Custom Detection Area
 
-The 4 built-in `cam.areas` are rectangles. If you need the BOX camera to track
-the animal through a non-rectangular region (e.g. a T-shaped corridor between
-two zones, or a circular zone), subclass `CustomAreaBase` to add one extra
-area of any shape, built from one or more polygons and/or circles.
+The 4 BOX areas are rectangles by default, positioned and resized from the
+GUI. If one of them needs to track the animal through a non-rectangular
+region (e.g. an L-shaped corridor between two zones, or a circular zone),
+subclass `CustomAreaBase` to **replace that area's shape** with a union of
+polygons and/or circles defined in code.
+
+```{admonition} Note
+:class: note
+This replaces the shape of one of the 4 existing areas — it does not add a
+5th area. Its status (`ALLOWED`/`NOT_ALLOWED`/`TRIGGER`/`OFF`) and its
+threshold keep working exactly as before, still set from the GUI (`SETTINGS`
+-> box area usage/threshold). Only its position controls are hidden from the
+GUI, since the shape is no longer a plain rectangle — a "defined with code"
+label is shown in their place instead, listing the area's `polygons`/
+`circles` coordinates (there's no draggable position control for them).
+```
 
 Create a file inside your project's `code` directory and define a class that
-inherits from `CustomAreaBase`. The system detects it automatically and adds
-it on top of the 4 rectangle areas — you don't need to remove or replace them.
+inherits from `CustomAreaBase`, setting `area_index` to the area it replaces
+(1-4). The system detects it automatically.
 
 ```python
 from village.custom_classes.custom_area_base import CustomAreaBase
 
 
-class TCorridor(CustomAreaBase):
-    name = "T_CORRIDOR"
-    active = True
-    threshold = 65
+class LCorridor(CustomAreaBase):
+    name = "L_CORRIDOR"
+    area_index = 2  # replaces AREA2_BOX
 
     # One or more polygons of [x, y] pixel vertices. Concave shapes are fine,
-    # and several polygons make a disjoint area (here: a T as bar + stem).
+    # and several polygons make a disjoint area (here: an L as two rectangles).
     polygons = [
-        [[100, 50], [300, 50], [300, 100], [100, 100]],   # bar
-        [[180, 100], [220, 100], [220, 250], [180, 250]],  # stem
+        [[100, 50], [300, 50], [300, 100], [100, 100]],   # top bar
+        [[100, 100], [150, 100], [150, 250], [100, 250]],  # side
     ]
 
     # Optional: one or more circles, each (x, y, radius). Combined with
@@ -127,11 +134,9 @@ class TCorridor(CustomAreaBase):
 
 ```{admonition} Note
 :class: note
-Custom areas only affect the **BOX** camera and only the contour-based
-position detection methods (used when tracking a single animal by color).
-They are combined with the rectangle areas: the tracked position can be
-anywhere inside a rectangle area *or* a custom area. When `VIEW_DETECTION` is
-active, each custom area is also outlined in cyan on the live preview.
+Only one `CustomAreaBase` per `area_index` is used — if two subclasses target
+the same area, only the first one found is registered and an error is
+logged. An invalid `area_index` (not 1-4) is also rejected and logged.
 ```
 
 ---
@@ -258,9 +263,16 @@ Both methods receive these attributes on `cam` (updated every frame):
 **Detection areas**
 
 - `cam.number_of_areas` — number of configurable areas (always 4).
-- `cam.areas` — list of `[x1, y1, x2, y2]` pixel coordinates per area.
-- `cam.areas_active` — bool list, whether each area is enabled.
-- `cam.areas_allowed` — bool list, whether animals are allowed in each area.
+- `cam.areas` — list of `[x1, y1, x2, y2]` pixel coordinates per area. For a
+  BOX area overridden by a `CustomAreaBase`, this is the shape's bounding
+  box, not a real detection rectangle.
+- `cam.areas_active` — bool list, whether each area is enabled (not OFF).
+- `cam.areas_allowed` — bool list, `True` only for ALLOWED areas.
+- `cam.areas_not_allowed` — bool list, `True` only for NOT_ALLOWED areas.
+- `cam.areas_trigger` — bool list, `True` only for TRIGGER areas.
+- `cam.custom_areas` — `dict[int, CustomAreaBase]`, BOX area index (1-4) to
+  the `CustomAreaBase` overriding that area's shape, if any (see
+  [Custom Detection Area](#custom-detection-area)).
 
 **Detection results**
 

@@ -107,6 +107,10 @@ os.environ["QT_SCALE_FACTOR"] = "1"
 log.telegram_bot = telegram_bot
 log.cam = cam_corridor
 import_all(manager)
+# manager.custom_areas (BOX area shape overrides) is only known once
+# import_all has run, which happens after cam_box/cam_corridor are created
+# above — force a refresh so any override takes effect from the first frame.
+cam_box.change = True
 telegram_bot.register_custom(manager.custom_telegram_commands)
 manager.send_heartbeat()
 device_errors = [

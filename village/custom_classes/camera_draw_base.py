@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import cv2
 import numpy as np
-from PyQt5.QtCore import QPoint, QRect
+from PyQt5.QtCore import QPoint, QRect, Qt
 from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen, QPolygon
 
 from village.classes.enums import Color
@@ -69,8 +69,14 @@ class CameraDrawBase:
 
     - ``cam.number_of_areas`` — number of configurable areas (always 4).
     - ``cam.areas`` — list of ``[x1, y1, x2, y2]`` pixel coordinates per area.
-    - ``cam.areas_active`` — bool list, whether each area is enabled.
-    - ``cam.areas_allowed`` — bool list, whether animals are allowed in each area.
+      For a BOX area overridden by a CustomAreaBase, this is the shape's
+      bounding box, not a real detection rectangle.
+    - ``cam.areas_active`` — bool list, whether each area is enabled (not OFF).
+    - ``cam.areas_allowed`` — bool list, ``True`` only for ALLOWED areas.
+    - ``cam.areas_not_allowed`` — bool list, ``True`` only for NOT_ALLOWED areas.
+    - ``cam.areas_trigger`` — bool list, ``True`` only for TRIGGER areas.
+    - ``cam.custom_areas`` — ``dict[int, CustomAreaBase]``, BOX area index
+      (1-4) to the CustomAreaBase overriding that area's shape, if any.
 
     **Detection results**
 
@@ -133,7 +139,6 @@ class CameraDrawBase:
             scale_x = device.width() / cam.width
             scale_y = device.height() / cam.height
 
-            self.draw_custom_areas_box(cam, painter, scale_x, scale_y)
             self.draw_detection_mask_box(cam, painter, scale_x, scale_y)
             self.draw_detection_areas_box(cam, painter, scale_x, scale_y)
             self.draw_detection_position_box(cam, painter, scale_x, scale_y)
@@ -233,7 +238,7 @@ class CameraDrawBase:
                     color_areas[i],
                     self.thickness_line,
                 )
-                if not cam.areas_allowed[i]:
+                if cam.areas_not_allowed[i]:
                     cv2.line(
                         cam.frame,
                         (cam.areas[i][0], cam.areas[i][1]),
@@ -308,37 +313,49 @@ class CameraDrawBase:
         scale_x: float,
         scale_y: float,
     ) -> None:
-        """Draws area rectangles (and X for NOT_ALLOWED areas) via QPainter."""
+        """Draws each area via QPainter.
+
+        A plain area draws as a rectangle; an area overridden by a
+        CustomAreaBase (cam.custom_areas) draws its actual shape (polygons
+        and/or circles) instead. TRIGGER areas use a dashed outline; an X is
+        drawn on top for NOT_ALLOWED areas (over the shape's bounding box,
+        i.e. cam.areas[i] — see Camera.set_properties).
+        """
         painter.setBrush(QBrush())  # transparent fill
         for i in range(cam.number_of_areas):
-            if cam.areas_active[i]:
-                b, g, r = self.color_areas[i]
-                painter.setPen(QPen(QColor(r, g, b), self.thickness_line))
+            if not cam.areas_active[i]:
+                continue
+            b, g, r = self.color_areas[i]
+            pen = QPen(QColor(r, g, b), self.thickness_line)
+            if cam.areas_trigger[i]:
+                pen.setStyle(Qt.PenStyle.DashLine)
+            painter.setPen(pen)
+
+            override = cam.custom_areas.get(i + 1)
+            if override is None:
                 x1 = int(cam.areas[i][0] * scale_x)
                 y1 = int(cam.areas[i][1] * scale_y)
                 x2 = int(cam.areas[i][2] * scale_x)
                 y2 = int(cam.areas[i][3] * scale_y)
                 painter.drawRect(QRect(x1, y1, x2 - x1, y2 - y1))
-                if not cam.areas_allowed[i]:
-                    painter.drawLine(x1, y1, x2, y2)
-                    painter.drawLine(x2, y1, x1, y2)
+            else:
+                for poly in override.polygons:
+                    pts = [QPoint(int(x * scale_x), int(y * scale_y)) for x, y in poly]
+                    painter.drawPolygon(QPolygon(pts))
+                for cx, cy, radius in override.circles:
+                    center = QPoint(int(cx * scale_x), int(cy * scale_y))
+                    painter.drawEllipse(
+                        center, int(radius * scale_x), int(radius * scale_y)
+                    )
+                # bounding box, for the NOT_ALLOWED "X" below
+                x1 = int(cam.areas[i][0] * scale_x)
+                y1 = int(cam.areas[i][1] * scale_y)
+                x2 = int(cam.areas[i][2] * scale_x)
+                y2 = int(cam.areas[i][3] * scale_y)
 
-    def draw_custom_areas_box(
-        self,
-        cam: Camera,
-        painter: QPainter,
-        scale_x: float,
-        scale_y: float,
-    ) -> None:
-        """Outlines custom-area polygons via QPainter (screen only)."""
-        painter.setBrush(QBrush())
-        for area in cam.custom_areas:
-            if not area.active:
-                continue
-            painter.setPen(QPen(QColor(0, 255, 255), self.thickness_line))
-            for poly in area.polygons:
-                pts = [QPoint(int(x * scale_x), int(y * scale_y)) for x, y in poly]
-                painter.drawPolygon(QPolygon(pts))
+            if cam.areas_not_allowed[i]:
+                painter.drawLine(x1, y1, x2, y2)
+                painter.drawLine(x2, y1, x1, y2)
 
     def draw_detection_position_box(
         self,

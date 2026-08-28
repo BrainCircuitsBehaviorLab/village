@@ -1598,6 +1598,8 @@ class DetectionLayout(Layout):
     def draw(self) -> None:
         """Draws the corridor configuration options."""
         self.lbs: list[LabelButtons] = []
+        # box area index (1-4) -> its "defined with code" label
+        self.custom_area_code_labels: dict[int, Label] = {}
         # is_day last applied; None forces the first apply
         self._dim_is_day: bool | None = None
 
@@ -1736,15 +1738,32 @@ class DetectionLayout(Layout):
         """Dims the controls that are inactive.
 
         Box areas whose USAGE is OFF have all their controls (labels and
-        buttons) hidden. For the corridor, the day/night controls that are not
-        the effective ones are greyed. The effective day/night follows
-        CORRIDOR_CYCLE_MODE: DAY/NIGHT force it, AUTO follows the cycle.
+        buttons) hidden. An area overridden by a CustomAreaBase (its shape is
+        defined in code, see manager.custom_areas) hides only its position
+        controls (left/right/top/bottom) and shows a "defined with code"
+        label instead — its threshold stays editable, since that part of the
+        area is still GUI-driven. For the corridor, the day/night controls
+        that are not the effective ones are greyed. The effective day/night
+        follows CORRIDOR_CYCLE_MODE: DAY/NIGHT force it, AUTO follows the
+        cycle.
         """
-        # box areas: hide every control of an area whose USAGE is OFF
+        # box areas: hide every control of an area whose USAGE is OFF, or
+        # just the position controls of an area overridden by code
         for lb in self.lbs:
             if lb.name.startswith("AREA") and lb.name.endswith("_BOX"):
+                area_index = int(lb.name[4])
                 usage_key = lb.name.replace("AREA", "USAGE")
-                lb.set_visible(settings.get(usage_key) != AreaActive.OFF)
+                active = settings.get(usage_key) != AreaActive.OFF
+                overridden = area_index in manager.custom_areas
+                if lb.direction == "threshold":
+                    lb.set_visible(active)
+                else:
+                    lb.set_visible(active and not overridden)
+
+        for area_index, label in self.custom_area_code_labels.items():
+            usage_key = "USAGE" + str(area_index) + "_BOX"
+            active = settings.get(usage_key) != AreaActive.OFF
+            label.setVisible(active and area_index in manager.custom_areas)
 
         # corridor day/night: re-apply only when the effective day/night changes
         is_day = manager.corridor_cycle_is_day
@@ -1814,6 +1833,7 @@ class DetectionLayout(Layout):
         height_res = settings.get("CAM_BOX_RESOLUTION")[1]
         self.label2: Label = self.create_and_add_label(name, row, column, 16, 2, color)
         row += 4
+        position_row = row
         for direction in (
             "left",
             "right",
@@ -1834,6 +1854,25 @@ class DetectionLayout(Layout):
             )
             self.lbs.append(lb)
             row += 2
+
+        # Shown instead of the position controls (left/right/top/bottom)
+        # when this area is overridden by a project CustomAreaBase: its
+        # polygons/circles, so the shape stays visible even though there's
+        # no draggable position control for it.
+        area_index = int(name[4])  # "AREA2_BOX" -> 2
+        override = manager.custom_areas.get(area_index)
+        lines = ["defined with code"]
+        if override is not None:
+            for poly in override.polygons:
+                lines.append("poly: " + str(poly))
+            for circle in override.circles:
+                lines.append("circle: " + str(list(circle)))
+        code_label = self.create_and_add_label(
+            "\n".join(lines), position_row, column, 16, 8, color
+        )
+        code_label.setWordWrap(True)
+        code_label.setVisible(False)
+        self.custom_area_code_labels[area_index] = code_label
 
     def draw_camera_options(self) -> None:
         """Draws camera adjustment options."""

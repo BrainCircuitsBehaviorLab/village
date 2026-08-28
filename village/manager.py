@@ -107,7 +107,8 @@ class Manager:
         self.change_cycle: ChangeCycleBase = ChangeCycleBase()
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
-        self.custom_areas: list[CustomAreaBase] = []
+        # BOX area index (1-4) -> CustomAreaBase overriding that area's shape.
+        self.custom_areas: dict[int, CustomAreaBase] = {}
         self.custom_telegram_commands: list[TelegramCommandBase] = []
         self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
         self.gpio = gpio

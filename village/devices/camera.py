@@ -298,9 +298,11 @@ class Camera:
             self.areas.append(area[0:4])
             self.thresholds.append(area[5] if (not day and len(area) > 5) else area[4])
 
-        # areas active and allowed settings
+        # areas active and allowed settings. An area is either OFF (nothing
+        # set) or exactly one of ALLOWED / NOT_ALLOWED / TRIGGER.
         self.areas_active: list[bool] = []
         self.areas_allowed: list[bool] = []
+        self.areas_not_allowed: list[bool] = []
         self.areas_trigger: list[bool] = []
         self.area1_is_triggered = False
         self.area2_is_triggered = False
@@ -310,26 +312,26 @@ class Camera:
         if self.name == "CORRIDOR":
             self.areas_active = [True, True, True, True]
             self.areas_allowed = [True, True, True, True]
+            self.areas_not_allowed = [False, False, False, False]
             self.areas_trigger = [False, False, False, False]
         else:
             for i in range(1, self.number_of_areas + 1):
                 val = settings.get("USAGE" + str(i) + "_BOX")
-                if val == AreaActive.ALLOWED:
-                    self.areas_active.append(True)
-                    self.areas_allowed.append(True)
-                    self.areas_trigger.append(False)
-                elif val == AreaActive.TRIGGER:
-                    self.areas_active.append(True)
-                    self.areas_allowed.append(True)
-                    self.areas_trigger.append(True)
-                elif val == AreaActive.NOT_ALLOWED:
-                    self.areas_active.append(True)
-                    self.areas_allowed.append(False)
-                    self.areas_trigger.append(False)
-                else:
-                    self.areas_active.append(False)
-                    self.areas_allowed.append(False)
-                    self.areas_trigger.append(False)
+                self.areas_active.append(val != AreaActive.OFF)
+                self.areas_allowed.append(val == AreaActive.ALLOWED)
+                self.areas_not_allowed.append(val == AreaActive.NOT_ALLOWED)
+                self.areas_trigger.append(val == AreaActive.TRIGGER)
+
+                # A CustomAreaBase targeting this area replaces its rectangle
+                # with the shape's bounding box (used for drawing and the
+                # mask-overlay preview); detection uses the shape mask itself,
+                # see detect_black/white_position_contours.
+                override = manager.custom_areas.get(i)
+                if override is not None:
+                    override.height = self.height
+                    override.width = self.width
+                    x1, y1, x2, y2 = override.bbox()
+                    self.areas[i - 1] = [x1, y1, x2, y2]
 
         # detection settings
         self.zero_or_one_mouse = settings.get("DETECTION_OF_MOUSE_" + self.name)[0]
@@ -652,28 +654,29 @@ class Camera:
             else:
                 self.detect_white()
 
+    def _area_is_triggered(self, index: int) -> bool:
+        """True if the tracked position is inside area `index`.
+
+        For an area overridden by a CustomAreaBase, checks the actual shape
+        (not its bounding box, which cam.areas[index] holds for that case).
+        """
+        # custom_areas overrides only ever target BOX areas.
+        override = self.custom_areas.get(index + 1) if self.name == "BOX" else None
+        if override is not None:
+            return override.contains(self.x_position, self.y_position)
+        x1, y1, x2, y2 = self.areas[index]
+        return x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
+
     def trigger(self) -> None:
         """Checks if detection zones are triggered and notifies the manager."""
         if self.areas_trigger[0]:
-            x1, y1, x2, y2 = self.areas[0]
-            self.area1_is_triggered = (
-                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
-            )
+            self.area1_is_triggered = self._area_is_triggered(0)
         if self.areas_trigger[1]:
-            x1, y1, x2, y2 = self.areas[1]
-            self.area2_is_triggered = (
-                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
-            )
+            self.area2_is_triggered = self._area_is_triggered(1)
         if self.areas_trigger[2]:
-            x1, y1, x2, y2 = self.areas[2]
-            self.area3_is_triggered = (
-                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
-            )
+            self.area3_is_triggered = self._area_is_triggered(2)
         if self.areas_trigger[3]:
-            x1, y1, x2, y2 = self.areas[3]
-            self.area4_is_triggered = (
-                x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
-            )
+            self.area4_is_triggered = self._area_is_triggered(3)
 
         if self.task_is_running:
             manager.camera_trigger.trigger(self)
@@ -682,11 +685,7 @@ class Camera:
         """Detects black objects in defined areas using thresholding."""
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
-                roi = self.gray_frame[y1:y2, x1:x2]
-                threshold = self.thresholds[index]
-                _, thresh = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
-                self.masks[index] = thresh
-                self.counts[index] = cv2.countNonZero(thresh)
+                self._detect_area(index, x1, y1, x2, y2, cv2.THRESH_BINARY_INV)
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
@@ -695,11 +694,7 @@ class Camera:
         """Detects white objects in defined areas using thresholding."""
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
-                roi = self.gray_frame[y1:y2, x1:x2]
-                threshold = self.thresholds[index]
-                _, thresh = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY)
-                self.masks[index] = thresh
-                self.counts[index] = cv2.countNonZero(thresh)
+                self._detect_area(index, x1, y1, x2, y2, cv2.THRESH_BINARY)
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
@@ -782,44 +777,68 @@ class Camera:
             self.y_position = -1
 
     @property
-    def custom_areas(self) -> list[CustomAreaBase]:
-        """Custom detection areas (lives on manager; exposed here for the cam API)."""
+    def custom_areas(self) -> dict[int, CustomAreaBase]:
+        """BOX area index (1-4) -> CustomAreaBase overriding that area's shape.
+
+        Lives on manager; exposed here for the cam API.
+        """
         return manager.custom_areas
 
-    def _add_custom_area_mask(self, mask: np.ndarray, invert: bool) -> None:
-        if self.name != "BOX" or not self.custom_areas:
+    def _detect_area(
+        self,
+        index: int,
+        x1: int,
+        y1: int,
+        x2: int,
+        y2: int,
+        flag: int,
+        mask: np.ndarray | None = None,
+    ) -> None:
+        """Binarizes area `index`'s own ROI (== self.areas[index], which for
+        an override is the shape's bounding box, see set_properties).
+
+        For a plain rectangle area, that's the whole story. For an area
+        overridden by a CustomAreaBase (self.custom_areas), the shape's
+        cached mask is cropped to that same ROI and ANDed in — only the
+        bounding box is ever thresholded/masked, never the full frame.
+
+        If `mask` is given (position tracking is on, see
+        detect_black/white_position_contours), this area's detection is also
+        merged into it, at its (x1, y1) offset — equivalent to merging a
+        full-frame version, since outside the ROI it's 0 either way.
+        """
+        roi = self.gray_frame[y1:y2, x1:x2]
+        if roi.size == 0:
+            self.masks[index] = -1
+            self.counts[index] = -1
             return
-        h, w = self.gray_frame.shape[:2]
-        flag = cv2.THRESH_BINARY_INV if invert else cv2.THRESH_BINARY
-        for area in self.custom_areas:
-            if not area.active:
-                continue
-            _, frame_bin = cv2.threshold(self.gray_frame, area.threshold, 255, flag)
-            inside = cv2.bitwise_and(frame_bin, frame_bin, mask=area.mask(h, w))
-            np.maximum(mask, inside, out=mask)
+
+        _, roi_bin = cv2.threshold(roi, self.thresholds[index], 255, flag)
+        roi_bin = np.asarray(roi_bin, dtype=np.uint8)
+
+        # custom_areas overrides only ever target BOX areas; detect_black/
+        # detect_white also run for CORRIDOR, which must never match here.
+        override = self.custom_areas.get(index + 1) if self.name == "BOX" else None
+        if override is not None:
+            shape_roi = override.mask()[y1:y2, x1:x2]
+            roi_bin = cv2.bitwise_and(roi_bin, roi_bin, mask=shape_roi)
+
+        if mask is not None:
+            sub = mask[y1:y2, x1:x2]
+            np.maximum(sub, roi_bin, out=sub)
+
+        self.masks[index] = roi_bin
+        self.counts[index] = cv2.countNonZero(roi_bin)
 
     def detect_black_position_contours(self) -> None:
         """Detects position of black mouse using contours."""
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
-                roi = self.gray_frame[y1:y2, x1:x2]
-                if roi.size == 0:
-                    self.masks[index] = -1
-                    self.counts[index] = -1
-                    continue
-                threshold = self.thresholds[index]
-                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
-                roi_bin = np.asarray(roi_bin, dtype=np.uint8)
-                sub = mask[y1:y2, x1:x2]
-                np.maximum(sub, roi_bin, out=sub)
-                self.masks[index] = roi_bin
-                self.counts[index] = cv2.countNonZero(roi_bin)
+                self._detect_area(index, x1, y1, x2, y2, cv2.THRESH_BINARY_INV, mask)
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
-
-        self._add_custom_area_mask(mask, invert=True)
 
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -856,18 +875,10 @@ class Camera:
         mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
         for index, (x1, y1, x2, y2) in enumerate(self.areas):
             if self.areas_active[index]:
-                roi = self.gray_frame[y1:y2, x1:x2]
-                threshold = self.thresholds[index]
-                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY)
-                sub = mask[y1:y2, x1:x2]
-                np.maximum(sub, roi_bin, out=sub)
-                self.masks[index] = roi_bin
-                self.counts[index] = cv2.countNonZero(roi_bin)
+                self._detect_area(index, x1, y1, x2, y2, cv2.THRESH_BINARY, mask)
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
-
-        self._add_custom_area_mask(mask, invert=False)
 
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -969,18 +980,17 @@ class Camera:
     def areas_box_ok(self) -> None:
         """Checks box areas for allowed/prohibited detections and logs
         alarms if needed."""
-        pixels_allowed = 0
-        pixels_not_allowed = 0
-
         pixels_allowed = sum(
             count
-            for count, allow in zip(self.counts, self.areas_allowed, strict=False)
-            if allow
+            for count, allowed in zip(self.counts, self.areas_allowed, strict=False)
+            if allowed
         )
         pixels_not_allowed = sum(
             count
-            for count, allow in zip(self.counts, self.areas_allowed, strict=False)
-            if not allow
+            for count, not_allowed in zip(
+                self.counts, self.areas_not_allowed, strict=False
+            )
+            if not_allowed
         )
 
         if pixels_allowed > self.one_or_two_mice:
