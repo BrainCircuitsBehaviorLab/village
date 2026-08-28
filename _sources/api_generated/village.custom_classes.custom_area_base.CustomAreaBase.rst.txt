@@ -17,6 +17,7 @@ CustomAreaBase
       :no-index:
    
       ~CustomAreaBase.__init__
+      ~CustomAreaBase.bbox
       ~CustomAreaBase.build_mask
       ~CustomAreaBase.contains
       ~CustomAreaBase.mask
@@ -30,9 +31,9 @@ CustomAreaBase
    .. autosummary::
       :no-index:
    
-      ~CustomAreaBase.active
+      ~CustomAreaBase.area_index
+      ~CustomAreaBase.circles
       ~CustomAreaBase.name
       ~CustomAreaBase.polygons
-      ~CustomAreaBase.threshold
    
    

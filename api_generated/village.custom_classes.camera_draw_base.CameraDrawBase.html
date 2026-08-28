@@ -542,9 +542,15 @@ circles, custom shapes, or stimulus boundaries.</p></li>
 <p><strong>Detection areas</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.number_of_areas</span></code> — number of configurable areas (always 4).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas</span></code> — list of <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code> pixel coordinates per area.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_active</span></code> — bool list, whether each area is enabled.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_allowed</span></code> — bool list, whether animals are allowed in each area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas</span></code> — list of <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code> pixel coordinates per area.
+For a BOX area overridden by a CustomAreaBase, this is the shape’s
+bounding box, not a real detection rectangle.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_active</span></code> — bool list, whether each area is enabled (not OFF).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_allowed</span></code> — bool list, <code class="docutils literal notranslate"><span class="pre">True</span></code> only for ALLOWED areas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_not_allowed</span></code> — bool list, <code class="docutils literal notranslate"><span class="pre">True</span></code> only for NOT_ALLOWED areas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_trigger</span></code> — bool list, <code class="docutils literal notranslate"><span class="pre">True</span></code> only for TRIGGER areas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.custom_areas</span></code> — <code class="docutils literal notranslate"><span class="pre">dict[int,</span> <span class="pre">CustomAreaBase]</span></code>, BOX area index
+(1-4) to the CustomAreaBase overriding that area’s shape, if any.</p></li>
 </ul>
 <p><strong>Detection results</strong></p>
 <ul class="simple">
@@ -630,13 +636,12 @@ White detection → bright overlay where the animal is.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">draw_detection_areas_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_detection_areas_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Draws area rectangles (and X for NOT_ALLOWED areas) via QPainter.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">draw_custom_areas_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_draw_base.html#CameraDrawBase.draw_custom_areas_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Outlines custom-area polygons via QPainter (screen only).</p>
+<dd><p>Draws each area via QPainter.</p>
+<p>A plain area draws as a rectangle; an area overridden by a
+CustomAreaBase (cam.custom_areas) draws its actual shape (polygons
+and/or circles) instead. TRIGGER areas use a dashed outline; an X is
+drawn on top for NOT_ALLOWED areas (over the shape’s bounding box,
+i.e. cam.areas[i] — see Camera.set_properties).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -686,7 +691,7 @@ White detection → bright overlay where the animal is.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2f676dc5"></script>
+      <script src="../_static/documentation_options.js?v=5f9da71f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

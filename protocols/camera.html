@@ -416,6 +416,7 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#camera-triggers">Camera Triggers</a></li>
+<li><a class="reference internal" href="#custom-detection-area">Custom Detection Area</a></li>
 <li><a class="reference internal" href="#custom-camera-drawing">Custom Camera Drawing</a><ul>
 <li><a class="reference internal" href="#annotating-the-frame-from-a-task">Annotating the frame from a task</a></li>
 <li><a class="reference internal" href="#drawing-with-cameradrawbase">Drawing with CameraDrawBase</a></li>
@@ -570,6 +571,60 @@ of the image.</p>
 </span><span data-line="50">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="c1"># execute the direct function number 6</span>
 </span></pre></div>
 </div>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">cam.areaN_is_triggered</span></code> also works transparently for a BOX area whose shape
+has been replaced by a <code class="docutils literal notranslate"><span class="pre">CustomAreaBase</span></code> (see
+<a class="reference internal" href="#custom-detection-area"><span class="std std-ref">Custom Detection Area</span></a>) — it checks the actual
+polygon/circle, not just its bounding box.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="custom-detection-area">
+<h2>Custom Detection Area</h2>
+<p>The 4 BOX areas are rectangles by default, positioned and resized from the
+GUI. If one of them needs to track the animal through a non-rectangular
+region (e.g. an L-shaped corridor between two zones, or a circular zone),
+subclass <code class="docutils literal notranslate"><span class="pre">CustomAreaBase</span></code> to <strong>replace that area’s shape</strong> with a union of
+polygons and/or circles defined in code.</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>This replaces the shape of one of the 4 existing areas — it does not add a
+5th area. Its status (<code class="docutils literal notranslate"><span class="pre">ALLOWED</span></code>/<code class="docutils literal notranslate"><span class="pre">NOT_ALLOWED</span></code>/<code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code>) and its
+threshold keep working exactly as before, still set from the GUI (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>
+-&gt; box area usage/threshold). Only its position controls are hidden from the
+GUI, since the shape is no longer a plain rectangle — a “defined with code”
+label is shown in their place instead, listing the area’s <code class="docutils literal notranslate"><span class="pre">polygons</span></code>/
+<code class="docutils literal notranslate"><span class="pre">circles</span></code> coordinates (there’s no draggable position control for them).</p>
+</div>
+<p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory and define a class that
+inherits from <code class="docutils literal notranslate"><span class="pre">CustomAreaBase</span></code>, setting <code class="docutils literal notranslate"><span class="pre">area_index</span></code> to the area it replaces
+(1-4). The system detects it automatically.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.custom_area_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomAreaBase</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">LCorridor</span><span class="p">(</span><span class="n">CustomAreaBase</span><span class="p">):</span>
+</span><span data-line="5">    <span class="n">name</span> <span class="o">=</span> <span class="s2">"L_CORRIDOR"</span>
+</span><span data-line="6">    <span class="n">area_index</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># replaces AREA2_BOX</span>
+</span><span data-line="7">
+</span><span data-line="8">    <span class="c1"># One or more polygons of [x, y] pixel vertices. Concave shapes are fine,</span>
+</span><span data-line="9">    <span class="c1"># and several polygons make a disjoint area (here: an L as two rectangles).</span>
+</span><span data-line="10">    <span class="n">polygons</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="11">        <span class="p">[[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]],</span>   <span class="c1"># top bar</span>
+</span><span data-line="12">        <span class="p">[[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">250</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">250</span><span class="p">]],</span>  <span class="c1"># side</span>
+</span><span data-line="13">    <span class="p">]</span>
+</span><span data-line="14">
+</span><span data-line="15">    <span class="c1"># Optional: one or more circles, each (x, y, radius). Combined with</span>
+</span><span data-line="16">    <span class="c1"># polygons in the same area — a subclass can set both at once.</span>
+</span><span data-line="17">    <span class="n">circles</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]</span>
+</span></pre></div>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>Only one <code class="docutils literal notranslate"><span class="pre">CustomAreaBase</span></code> per <code class="docutils literal notranslate"><span class="pre">area_index</span></code> is used — if two subclasses target
+the same area, only the first one found is registered and an error is
+logged. An invalid <code class="docutils literal notranslate"><span class="pre">area_index</span></code> (not 1-4) is also rejected and logged.</p>
+</div>
 </section>
 <hr class="docutils" />
 <section id="custom-camera-drawing">
@@ -646,6 +701,12 @@ it automatically and uses it instead of the base class.</p>
 </span></pre></div>
 </div>
 <p><strong>Overriding <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code></strong> — runs at preview framerate, screen only:</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> is a plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> the task can populate to pass data (like
+<code class="docutils literal notranslate"><span class="pre">&quot;reward_zone&quot;</span></code> below) to these methods — see
+Passing data from the task.</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QRect</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QBrush</span><span class="p">,</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QPainter</span>
 </span><span data-line="3">
@@ -690,9 +751,16 @@ it automatically and uses it instead of the base class.</p>
 <p><strong>Detection areas</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.number_of_areas</span></code> — number of configurable areas (always 4).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas</span></code> — list of <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code> pixel coordinates per area.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_active</span></code> — bool list, whether each area is enabled.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_allowed</span></code> — bool list, whether animals are allowed in each area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas</span></code> — list of <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code> pixel coordinates per area. For a
+BOX area overridden by a <code class="docutils literal notranslate"><span class="pre">CustomAreaBase</span></code>, this is the shape’s bounding
+box, not a real detection rectangle.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_active</span></code> — bool list, whether each area is enabled (not OFF).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_allowed</span></code> — bool list, <code class="docutils literal notranslate"><span class="pre">True</span></code> only for ALLOWED areas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_not_allowed</span></code> — bool list, <code class="docutils literal notranslate"><span class="pre">True</span></code> only for NOT_ALLOWED areas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areas_trigger</span></code> — bool list, <code class="docutils literal notranslate"><span class="pre">True</span></code> only for TRIGGER areas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.custom_areas</span></code> — <code class="docutils literal notranslate"><span class="pre">dict[int,</span> <span class="pre">CustomAreaBase]</span></code>, BOX area index (1-4) to
+the <code class="docutils literal notranslate"><span class="pre">CustomAreaBase</span></code> overriding that area’s shape, if any (see
+<a class="reference internal" href="#custom-detection-area"><span class="std std-ref">Custom Detection Area</span></a>).</p></li>
 </ul>
 <p><strong>Detection results</strong></p>
 <ul class="simple">
@@ -758,7 +826,7 @@ coupling the task directly to this class:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2f676dc5"></script>
+      <script src="../_static/documentation_options.js?v=5f9da71f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

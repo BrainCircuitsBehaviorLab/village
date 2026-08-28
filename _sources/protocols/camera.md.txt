@@ -79,6 +79,66 @@ class CameraTrigger(CameraTriggerBase):
             self.task.execute_function(6) # execute the direct function number 6
 ```
 
+```{admonition} Note
+:class: note
+`cam.areaN_is_triggered` also works transparently for a BOX area whose shape
+has been replaced by a `CustomAreaBase` (see
+[Custom Detection Area](#custom-detection-area)) — it checks the actual
+polygon/circle, not just its bounding box.
+```
+
+---
+
+### Custom Detection Area
+
+The 4 BOX areas are rectangles by default, positioned and resized from the
+GUI. If one of them needs to track the animal through a non-rectangular
+region (e.g. an L-shaped corridor between two zones, or a circular zone),
+subclass `CustomAreaBase` to **replace that area's shape** with a union of
+polygons and/or circles defined in code.
+
+```{admonition} Note
+:class: note
+This replaces the shape of one of the 4 existing areas — it does not add a
+5th area. Its status (`ALLOWED`/`NOT_ALLOWED`/`TRIGGER`/`OFF`) and its
+threshold keep working exactly as before, still set from the GUI (`SETTINGS`
+-> box area usage/threshold). Only its position controls are hidden from the
+GUI, since the shape is no longer a plain rectangle — a "defined with code"
+label is shown in their place instead, listing the area's `polygons`/
+`circles` coordinates (there's no draggable position control for them).
+```
+
+Create a file inside your project's `code` directory and define a class that
+inherits from `CustomAreaBase`, setting `area_index` to the area it replaces
+(1-4). The system detects it automatically.
+
+```python
+from village.custom_classes.custom_area_base import CustomAreaBase
+
+
+class LCorridor(CustomAreaBase):
+    name = "L_CORRIDOR"
+    area_index = 2  # replaces AREA2_BOX
+
+    # One or more polygons of [x, y] pixel vertices. Concave shapes are fine,
+    # and several polygons make a disjoint area (here: an L as two rectangles).
+    polygons = [
+        [[100, 50], [300, 50], [300, 100], [100, 100]],   # top bar
+        [[100, 100], [150, 100], [150, 250], [100, 250]],  # side
+    ]
+
+    # Optional: one or more circles, each (x, y, radius). Combined with
+    # polygons in the same area — a subclass can set both at once.
+    circles = [(200, 300, 40)]
+```
+
+```{admonition} Note
+:class: note
+Only one `CustomAreaBase` per `area_index` is used — if two subclasses target
+the same area, only the first one found is registered and an error is
+logged. An invalid `area_index` (not 1-4) is also rejected and logged.
+```
+
 ---
 
 ### Custom Camera Drawing
@@ -150,6 +210,13 @@ class CameraDraw(CameraDrawBase):
 
 **Overriding `draw_preview`** — runs at preview framerate, screen only:
 
+```{admonition} Note
+:class: note
+`cam.items_to_draw` is a plain `dict` the task can populate to pass data (like
+`"reward_zone"` below) to these methods — see
+[Passing data from the task](#passing-data-from-the-task-via-items_to_draw).
+```
+
 ```python
 from PyQt5.QtCore import QRect
 from PyQt5.QtGui import QBrush, QColor, QPainter
@@ -196,9 +263,16 @@ Both methods receive these attributes on `cam` (updated every frame):
 **Detection areas**
 
 - `cam.number_of_areas` — number of configurable areas (always 4).
-- `cam.areas` — list of `[x1, y1, x2, y2]` pixel coordinates per area.
-- `cam.areas_active` — bool list, whether each area is enabled.
-- `cam.areas_allowed` — bool list, whether animals are allowed in each area.
+- `cam.areas` — list of `[x1, y1, x2, y2]` pixel coordinates per area. For a
+  BOX area overridden by a `CustomAreaBase`, this is the shape's bounding
+  box, not a real detection rectangle.
+- `cam.areas_active` — bool list, whether each area is enabled (not OFF).
+- `cam.areas_allowed` — bool list, `True` only for ALLOWED areas.
+- `cam.areas_not_allowed` — bool list, `True` only for NOT_ALLOWED areas.
+- `cam.areas_trigger` — bool list, `True` only for TRIGGER areas.
+- `cam.custom_areas` — `dict[int, CustomAreaBase]`, BOX area index (1-4) to
+  the `CustomAreaBase` overriding that area's shape, if any (see
+  [Custom Detection Area](#custom-detection-area)).
 
 **Detection results**
 

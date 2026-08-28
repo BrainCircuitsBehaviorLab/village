@@ -496,11 +496,14 @@ data-aria-dark="Switch to auto color mode">
 <dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">CustomAreaBase</span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Base class for an arbitrary-shaped detection area (e.g. a T shape).
-The 4 built-in cam.areas are rectangles. Subclass this to add
-one extra area of any shape to the BOX camera.
-I use it so the animal is detected and the centroid follow it anywhere
-inside the shape, not only inside the rectangles. Maybe not super useful.
+<p>Overrides the shape of one of the 4 BOX camera detection areas.</p>
+<p>The 4 BOX areas (AREA1_BOX..AREA4_BOX) are rectangles by default, edited
+from the GUI. Subclass this to replace the <em>shape</em> of one of them with a
+union of polygons and/or circles defined in code (e.g. an L-shaped
+region), while its status (ALLOWED/NOT_ALLOWED/TRIGGER/OFF) and its
+threshold keep working exactly as before and stay editable from the GUI
+— only the position controls for that area are hidden, since the shape
+is no longer a plain rectangle.
 Subclass in the project code directory so it is picked up by import_all.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -516,12 +519,7 @@ Subclass in the project code directory so it is picked up by import_all.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">active</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">threshold</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">65</span></span></dt>
+<span class="sig-name descname"><span class="pre">area_index</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -529,23 +527,36 @@ Subclass in the project code directory so it is picked up by import_all.</p>
 <span class="sig-name descname"><span class="pre">polygons</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">circles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">build_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.build_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Rasterize self.polygons to a uint8 (h, w) mask, 255 inside else 0.</p>
-<p>cv2.fillPoly handles concave shapes. Override only for a shape that
-isn’t polygonal (e.g. build it with numpy slicing or cv2.circle).</p>
+<dd><p>Rasterize self.polygons and self.circles to a uint8 (h, w) mask,
+255 inside else 0.</p>
+<p>cv2.fillPoly/cv2.circle handle concave shapes and circles
+respectively. Override only for a shape that is neither (e.g. build
+it with numpy slicing).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Cache mask for the given frame size.</p>
+<span class="sig-name descname"><span class="pre">mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cached mask, sized self.height x self.width.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cached (x1, y1, x2, y2) bounding box of the shape.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>True if pixel (x, y) is inside the area.</p>
 </dd></dl>
 
@@ -590,7 +601,7 @@ isn’t polygonal (e.g. build it with numpy slicing or cv2.circle).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2f676dc5"></script>
+      <script src="../_static/documentation_options.js?v=5f9da71f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
