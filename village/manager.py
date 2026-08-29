@@ -687,7 +687,7 @@ class Manager:
         text, non_det_subs, non_ses_subs, low_water_subs, sync = self.create_report(24)
         if self.use_of_corridor:
             self.check_corridor_lights()
-            log.alarm(text, report=True, repeat=True)
+            log.alarm(text, report=True)
             if (
                 len(non_det_subs) > 0
                 and settings.get("NO_DETECTION_SUBJECT_24H") == Active.ON
