@@ -85,6 +85,27 @@ class Alarm:
             text += " (last " + time_utils.now().strftime("%H:%M") + ")"
         return text
 
+    def to_dict(self) -> dict:
+        """Serializes the alarm, see TelegramBot._save_pending."""
+        return {
+            "message": self.message,
+            "start": self.start.isoformat(),
+            "repeats": self.repeats,
+            "next_due": self.next_due.isoformat(),
+            "message_id": self.message_id,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Alarm":
+        """Restores an alarm previously serialized with to_dict()."""
+        alarm = cls.__new__(cls)
+        alarm.message = data["message"]
+        alarm.start = datetime.datetime.fromisoformat(data["start"])
+        alarm.repeats = data["repeats"]
+        alarm.next_due = datetime.datetime.fromisoformat(data["next_due"])
+        alarm.message_id = data["message_id"]
+        return alarm
+
 
 class TelegramBot:
     """A Telegram Bot for controlling and monitoring the village system.
@@ -111,6 +132,7 @@ class TelegramBot:
         self.pending: dict[int, Alarm] = {}
         self.alarm_id = 0
         self.custom_commands: list = []
+        self._load_pending()
 
         self.thread = threading.Thread(target=self.botloop, daemon=True)
         self.thread.start()
@@ -168,17 +190,25 @@ class TelegramBot:
             self.send(("" if report else ALARM_EMOJI) + message, None)
             return
 
-        # keep only one pending with same first line (because is same alarm).
+        # keep only one pending with same first line (because is same alarm):
+        # mark any existing one as expired (no more Acknowledge button, so a
+        # stale click can't ever match a later, unrelated alarm reusing the
+        # same id) before dropping it from pending.
         first_line = message.split("\n")[0]
-        self.pending = {
-            k: v
-            for k, v in self.pending.items()
-            if v.message.split("\n")[0] != first_line
-        }
+        new_pending = {}
+        for k, v in self.pending.items():
+            if v.message.split("\n")[0] == first_line:
+                self._edit_message(
+                    v.message_id, v.text() + "\n\n⌛ expired", remove_markup=True
+                )
+            else:
+                new_pending[k] = v
+        self.pending = new_pending
         self.alarm_id += 1
         alarm = Alarm(message, self.repeat_minutes())
         self.pending[self.alarm_id] = alarm
         alarm.message_id = self.send(alarm.text(), self.alarm_id)
+        self._save_pending()
 
     def acknowledge(self, first_line: str, by: str) -> None:
         """Clears pending alarms matching a first line, leaving others intact.
@@ -203,6 +233,7 @@ class TelegramBot:
             for k, v in self.pending.items()
             if v.message.split("\n")[0] != first_line
         }
+        self._save_pending()
 
     def acknowledge_all(self, by: str) -> None:
         """Acknowledges every pending alarm, attributing it to `by`.
@@ -218,23 +249,65 @@ class TelegramBot:
                 alarm.message_id, alarm.text() + "\n\n✅ acknowledged by " + by
             )
         self.pending.clear()
+        self._save_pending()
 
-    def _edit_message(self, message_id: int, text: str) -> None:
+    def _edit_message(
+        self, message_id: int, text: str, remove_markup: bool = False
+    ) -> None:
         """Edits a previously sent telegram message, best-effort.
 
         Args:
             message_id (int): Id of the message to edit, 0 if none was sent.
             text (str): The new message content.
+            remove_markup (bool): True to also strip its inline keyboard
+                (e.g. the Acknowledge button), so it can't be clicked anymore.
         """
         if message_id == 0:
             return
         try:
             url = f"https://api.telegram.org/bot{self.token}/editMessageText"
             values = {"chat_id": self.chat, "message_id": message_id, "text": text}
+            if remove_markup:
+                values["reply_markup"] = json.dumps({"inline_keyboard": []})
             data = parse.urlencode(values)
-            request.urlopen(url, data.encode("utf-8"), timeout=10)
+            with request.urlopen(url, data.encode("utf-8"), timeout=10) as answer:
+                if not json.load(answer).get("ok", False):
+                    log.error("Telegram error editing message " + str(message_id))
         except Exception:
-            pass  # already gone or edited/deleted in telegram meanwhile
+            log.error(
+                "Telegram error editing message " + str(message_id),
+                exception=traceback.format_exc(),
+            )
+
+    def _save_pending(self) -> None:
+        """Persists self.pending to SETTINGS, so a repeatable alarm survives
+        a restart, a crash, or a hang instead of silently vanishing.
+
+        Called after every change to self.pending.
+        """
+        data = {str(k): v.to_dict() for k, v in self.pending.items()}
+        settings.set("TELEGRAM_PENDING_ALARMS", json.dumps(data))
+        settings.sync()
+
+    def _load_pending(self) -> None:
+        """Restores self.pending (and self.alarm_id) from what a previous
+        run last saved with _save_pending(), if anything. Called once, from
+        __init__.
+        """
+        raw = settings.get("TELEGRAM_PENDING_ALARMS")
+        if not raw:
+            return
+        try:
+            data = json.loads(raw)
+            for key, entry in data.items():
+                alarm_id = int(key)
+                self.pending[alarm_id] = Alarm.from_dict(entry)
+                self.alarm_id = max(self.alarm_id, alarm_id)
+        except Exception:
+            log.error(
+                "Telegram error restoring pending alarms",
+                exception=traceback.format_exc(),
+            )
 
     def repeat_minutes(self) -> int:
         """Minutes between reminders"""
@@ -287,6 +360,7 @@ class TelegramBot:
         try:
             await query.answer()
             self.pending.pop(int(query.data.split(":")[1]), None)
+            self._save_pending()
             await query.edit_message_text(
                 query.message.text + "\n\n✅ acknowledged by " + query.from_user.name
             )
@@ -323,6 +397,7 @@ class TelegramBot:
             except Exception:
                 pass  # already gone or too old
         alarm.message_id = self.send(alarm.text(), ack_id)  # send update
+        self._save_pending()
 
     async def mice_checked(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE

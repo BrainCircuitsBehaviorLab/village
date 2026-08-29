@@ -1010,6 +1010,14 @@ hidden_settings = [
     Setting("MICE_CHECKED_AT", "", str, "When the mice were last checked."),
     Setting("MICE_CHECKED_BY", "", str, "Who checked the mice last."),
     Setting(
+        "TELEGRAM_PENDING_ALARMS",
+        "",
+        str,
+        """JSON-serialized repeatable alarms still waiting for acknowledgment
+(see TelegramBot._save_pending/_load_pending), so they survive a restart,
+crash, or hang instead of silently vanishing.""",
+    ),
+    Setting(
         "GITHUB_REPOSITORIES_DOWNLOADED",
         "OFF",
         Active,
