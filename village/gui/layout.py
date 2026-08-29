@@ -297,7 +297,7 @@ class Layout(QGridLayout):
         top_background.setStyleSheet("background-color: #e0e0e0;")
         self.addWidget(top_background, 0, 0, 5, 200)
 
-        # 4 columns x 2 rows (row-major): (empty)/TASK/RFID/STATE on top,
+        # 4 columns x 2 rows (row-major): SYSTEM_NAME/TASK/RFID/STATE on top,
         # PROJECT/SUBJECT/CYCLE/state description below. Each column is sized
         # to fit its own text (not a fixed 1/4-width slot). The first column
         # sits at the left edge, the last at the right edge, and the 3 gaps

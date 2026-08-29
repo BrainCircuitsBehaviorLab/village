@@ -35,6 +35,7 @@ class CustomAreaBase:
         self._cached_shape: tuple[int, int] | None = None
         self._cached_mask: np.ndarray | None = None
         self._cached_bbox: tuple[int, int, int, int] | None = None
+        self._cached_contours: list[list[tuple[int, int]]] | None = None
 
     def build_mask(self, height: int, width: int) -> np.ndarray:
         """Rasterize self.polygons and self.circles to a uint8 (h, w) mask,
@@ -51,13 +52,15 @@ class CustomAreaBase:
         return mask
 
     def _ensure_cached(self) -> None:
-        """Rebuilds the mask and its bounding box when the frame size changes."""
+        """Rebuilds the mask, bounding box and outer contours when the frame
+        size changes."""
         shape = (self.height, self.width)
         if self._cached_shape != shape:
             m = self.build_mask(self.height, self.width)
             self._cached_mask = np.asarray(m, dtype=np.uint8)
             x, y, w, h = cv2.boundingRect(self._cached_mask)
             self._cached_bbox = (x, y, x + w, y + h)
+            self._cached_contours = None  # rebuilt lazily by contours()
             self._cached_shape = shape
 
     def mask(self) -> np.ndarray:
@@ -71,6 +74,26 @@ class CustomAreaBase:
         self._ensure_cached()
         assert self._cached_bbox is not None
         return self._cached_bbox
+
+    def contours(self) -> list[list[tuple[int, int]]]:
+        """Cached outer silhouette of the shape, as one point list per
+        disjoint (non-touching) blob.
+
+        Traces the rasterized mask instead of self.polygons/self.circles
+        directly, so overlapping or touching pieces merge into a single
+        outline with no interior seams — used to draw the area without the
+        crossing lines a piece-by-piece outline would show.
+        """
+        self._ensure_cached()
+        if self._cached_contours is None:
+            assert self._cached_mask is not None
+            found, _ = cv2.findContours(
+                self._cached_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+            )
+            self._cached_contours = [
+                [(int(p[0][0]), int(p[0][1])) for p in c] for c in found
+            ]
+        return self._cached_contours
 
     def contains(self, x: int, y: int) -> bool:
         """True if pixel (x, y) is inside the area."""

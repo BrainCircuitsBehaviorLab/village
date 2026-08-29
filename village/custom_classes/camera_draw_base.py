@@ -316,10 +316,12 @@ class CameraDrawBase:
         """Draws each area via QPainter.
 
         A plain area draws as a rectangle; an area overridden by a
-        CustomAreaBase (cam.custom_areas) draws its actual shape (polygons
-        and/or circles) instead. TRIGGER areas use a dashed outline; an X is
-        drawn on top for NOT_ALLOWED areas (over the shape's bounding box,
-        i.e. cam.areas[i] — see Camera.set_properties).
+        CustomAreaBase (cam.custom_areas) draws its outer silhouette instead
+        (CustomAreaBase.contours(), traced from the rasterized mask so
+        overlapping/touching polygons and circles show as one outline, not
+        their individual crossing edges). TRIGGER areas use a dashed
+        outline; an X is drawn on top for NOT_ALLOWED areas (over the
+        shape's bounding box, i.e. cam.areas[i] — see Camera.set_properties).
         """
         painter.setBrush(QBrush())  # transparent fill
         for i in range(cam.number_of_areas):
@@ -332,26 +334,18 @@ class CameraDrawBase:
             painter.setPen(pen)
 
             override = cam.custom_areas.get(i + 1)
+            x1 = int(cam.areas[i][0] * scale_x)
+            y1 = int(cam.areas[i][1] * scale_y)
+            x2 = int(cam.areas[i][2] * scale_x)
+            y2 = int(cam.areas[i][3] * scale_y)
             if override is None:
-                x1 = int(cam.areas[i][0] * scale_x)
-                y1 = int(cam.areas[i][1] * scale_y)
-                x2 = int(cam.areas[i][2] * scale_x)
-                y2 = int(cam.areas[i][3] * scale_y)
                 painter.drawRect(QRect(x1, y1, x2 - x1, y2 - y1))
             else:
-                for poly in override.polygons:
-                    pts = [QPoint(int(x * scale_x), int(y * scale_y)) for x, y in poly]
+                for contour in override.contours():
+                    pts = [
+                        QPoint(int(x * scale_x), int(y * scale_y)) for x, y in contour
+                    ]
                     painter.drawPolygon(QPolygon(pts))
-                for cx, cy, radius in override.circles:
-                    center = QPoint(int(cx * scale_x), int(cy * scale_y))
-                    painter.drawEllipse(
-                        center, int(radius * scale_x), int(radius * scale_y)
-                    )
-                # bounding box, for the NOT_ALLOWED "X" below
-                x1 = int(cam.areas[i][0] * scale_x)
-                y1 = int(cam.areas[i][1] * scale_y)
-                x2 = int(cam.areas[i][2] * scale_x)
-                y2 = int(cam.areas[i][3] * scale_y)
 
             if cam.areas_not_allowed[i]:
                 painter.drawLine(x1, y1, x2, y2)

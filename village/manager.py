@@ -82,8 +82,8 @@ class Manager:
         ir_box_cycle (Cycle): Infrared light cycle of the box.
         status_parts (list[str]): The 8 pieces of the status bar text, each
             shown in its own label, laid out as a 4x2 grid (row-major): top
-            row is (empty)/task/RFID/state, bottom row is project/subject/
-            cycle/state description.
+            row is system name/task/RFID/state, bottom row is project/
+            subject/cycle/state description.
         day (bool): Indicates if it's day.
         changing_settings (bool): Indicates if settings are being changed.
         tasks (dict[str, type]): Dictionary of tasks.
@@ -267,8 +267,9 @@ class Manager:
             return True
 
     def update_text(self) -> None:
-        """Updates the status text with current system state, subject, task,
-        cycle and project name info."""
+        """Updates the status text with the system name and the current
+        state, subject, task, cycle and project name info."""
+        system_name = settings.get("SYSTEM_NAME")
         state_name = self.state.name
         state_description = self.state.description
         subject_name = self.subject.name
@@ -288,9 +289,9 @@ class Manager:
             project_text = ""
 
         # Laid out as a 4-column x 2-row grid (row-major): top row is
-        # (empty)/TASK/RFID/STATE, bottom row is PROJECT/SUBJECT/CYCLE/description.
+        # SYSTEM_NAME/TASK/RFID/STATE, bottom row is PROJECT/SUBJECT/CYCLE/description.
         self.status_parts = [
-            "",
+            "SYSTEM_NAME: " + system_name,
             "TASK: " + task_name,
             "RFID: " + rfid_reader_name,
             "STATE: " + state_name,
