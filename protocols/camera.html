@@ -500,8 +500,8 @@ data-aria-dark="Switch to auto color mode">
 <h1>Custom Camera Interaction</h1>
 <section id="camera-triggers">
 <h2>Camera Triggers</h2>
-<p>Every time a frame is captured from the box camera, if <code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING</span></code> is enabled
-and a task is running,
+<p>Every time a frame is captured from the box camera, if <code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code> is
+enabled and a task is running,
 the (x, y) position of the animal inside the operant box is computed and the <code class="docutils literal notranslate"><span class="pre">trigger</span></code>
 method of <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code> is called.</p>
 <p>The default implementation checks each of the four configurable areas (the rectangles
@@ -514,7 +514,8 @@ inside it, the text “Area X triggered” is overlaid on the camera feed.</p>
 <p>You can override this behavior by creating a custom class in your project. Create a
 file named <code class="docutils literal notranslate"><span class="pre">camera_trigger</span></code> inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory and define a class
 named <code class="docutils literal notranslate"><span class="pre">CameraTrigger</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code>.
-If the system detects a class inheriting from <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code> in your project, it will use your custom class instead of the default base class.</p>
+If the system detects a class inheriting from <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code> in your project,
+it will use your custom class instead of the default base class.</p>
 <p>In the following example, a subclass is created that writes a text when the subject
 is detected in Area1, executes direct function number 2 when detected in Area2,
 and triggers function number 6 when detected within a circular region at the center
@@ -599,7 +600,8 @@ label is shown in their place instead, listing the area’s <code class="docutil
 </div>
 <p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory and define a class that
 inherits from <code class="docutils literal notranslate"><span class="pre">CustomAreaBase</span></code>, setting <code class="docutils literal notranslate"><span class="pre">area_index</span></code> to the area it replaces
-(1-4). The system detects it automatically.</p>
+(1-4). The system detects it automatically. Create the area by adding polygons
+and/or circles — any number of each (zero or more), in any combination.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.custom_area_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomAreaBase</span>
 </span><span data-line="2">
 </span><span data-line="3">
@@ -607,14 +609,14 @@ inherits from <code class="docutils literal notranslate"><span class="pre">Custo
 </span><span data-line="5">    <span class="n">name</span> <span class="o">=</span> <span class="s2">"L_CORRIDOR"</span>
 </span><span data-line="6">    <span class="n">area_index</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># replaces AREA2_BOX</span>
 </span><span data-line="7">
-</span><span data-line="8">    <span class="c1"># One or more polygons of [x, y] pixel vertices. Concave shapes are fine,</span>
+</span><span data-line="8">    <span class="c1"># Polygons of [x, y] pixel vertices. Concave shapes are fine,</span>
 </span><span data-line="9">    <span class="c1"># and several polygons make a disjoint area (here: an L as two rectangles).</span>
 </span><span data-line="10">    <span class="n">polygons</span> <span class="o">=</span> <span class="p">[</span>
 </span><span data-line="11">        <span class="p">[[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]],</span>   <span class="c1"># top bar</span>
 </span><span data-line="12">        <span class="p">[[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">250</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">250</span><span class="p">]],</span>  <span class="c1"># side</span>
 </span><span data-line="13">    <span class="p">]</span>
 </span><span data-line="14">
-</span><span data-line="15">    <span class="c1"># Optional: one or more circles, each (x, y, radius). Combined with</span>
+</span><span data-line="15">    <span class="c1"># Circles, each (x, y, radius). Combined with</span>
 </span><span data-line="16">    <span class="c1"># polygons in the same area — a subclass can set both at once.</span>
 </span><span data-line="17">    <span class="n">circles</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">40</span><span class="p">)]</span>
 </span></pre></div>
@@ -826,7 +828,7 @@ coupling the task directly to this class:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=5f9da71f"></script>
+      <script src="../_static/documentation_options.js?v=d360b91e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

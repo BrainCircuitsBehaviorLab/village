@@ -556,6 +556,17 @@ it with numpy slicing).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">contours</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.contours"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cached outer silhouette of the shape, as one point list per
+disjoint (non-touching) blob.</p>
+<p>Traces the rasterized mask instead of self.polygons/self.circles
+directly, so overlapping or touching pieces merge into a single
+outline with no interior seams — used to draw the area without the
+crossing lines a piece-by-piece outline would show.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/custom_area_base.html#CustomAreaBase.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>True if pixel (x, y) is inside the area.</p>
 </dd></dl>
@@ -601,7 +612,7 @@ it with numpy slicing).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=5f9da71f"></script>
+      <script src="../_static/documentation_options.js?v=d360b91e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

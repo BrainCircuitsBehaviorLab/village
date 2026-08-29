@@ -2,8 +2,8 @@
 
 ### Camera Triggers
 
-Every time a frame is captured from the box camera, if `CAM_BOX_TRACKING` is enabled
-and a task is running,
+Every time a frame is captured from the box camera, if `CAM_BOX_TRACKING_POSITION` is
+enabled and a task is running,
 the (x, y) position of the animal inside the operant box is computed and the `trigger`
 method of `CameraTriggerBase` is called.
 
@@ -19,7 +19,8 @@ Active areas can be set to ALLOWED, NOT_ALLOWED, or TRIGGER.
 You can override this behavior by creating a custom class in your project. Create a
 file named `camera_trigger` inside your project's `code` directory and define a class
 named `CameraTrigger` that inherits from `CameraTriggerBase`.
-If the system detects a class inheriting from `CameraTriggerBase` in your project, it will use your custom class instead of the default base class.
+If the system detects a class inheriting from `CameraTriggerBase` in your project,
+it will use your custom class instead of the default base class.
 
 In the following example, a subclass is created that writes a text when the subject
 is detected in Area1, executes direct function number 2 when detected in Area2,
@@ -110,7 +111,8 @@ label is shown in their place instead, listing the area's `polygons`/
 
 Create a file inside your project's `code` directory and define a class that
 inherits from `CustomAreaBase`, setting `area_index` to the area it replaces
-(1-4). The system detects it automatically.
+(1-4). The system detects it automatically. Create the area by adding polygons
+and/or circles — any number of each (zero or more), in any combination.
 
 ```python
 from village.custom_classes.custom_area_base import CustomAreaBase
@@ -120,14 +122,14 @@ class LCorridor(CustomAreaBase):
     name = "L_CORRIDOR"
     area_index = 2  # replaces AREA2_BOX
 
-    # One or more polygons of [x, y] pixel vertices. Concave shapes are fine,
+    # Polygons of [x, y] pixel vertices. Concave shapes are fine,
     # and several polygons make a disjoint area (here: an L as two rectangles).
     polygons = [
         [[100, 50], [300, 50], [300, 100], [100, 100]],   # top bar
         [[100, 100], [150, 100], [150, 250], [100, 250]],  # side
     ]
 
-    # Optional: one or more circles, each (x, y, radius). Combined with
+    # Circles, each (x, y, radius). Combined with
     # polygons in the same area — a subclass can set both at once.
     circles = [(200, 300, 40)]
 ```

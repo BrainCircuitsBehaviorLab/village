@@ -20,6 +20,7 @@ CustomAreaBase
       ~CustomAreaBase.bbox
       ~CustomAreaBase.build_mask
       ~CustomAreaBase.contains
+      ~CustomAreaBase.contours
       ~CustomAreaBase.mask
    
    
