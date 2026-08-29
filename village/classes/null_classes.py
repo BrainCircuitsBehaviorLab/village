@@ -95,11 +95,20 @@ class NullTelegramBot:
         """
         return
 
-    def acknowledge(self, first_line: str) -> None:
+    def acknowledge(self, first_line: str, by: str) -> None:
         """Clears pending alarms matching a first line, leaving others intact.
 
         Args:
             first_line (str): The first line of the alarm message(s) to clear.
+            by (str): Name to attribute the acknowledgment to.
+        """
+        return
+
+    def acknowledge_all(self, by: str) -> None:
+        """Acknowledges every pending alarm, attributing it to `by`.
+
+        Args:
+            by (str): Name to attribute the acknowledgment to.
         """
         return
 

@@ -1,5 +1,4 @@
 import queue
-import statistics
 import threading
 import time
 import traceback
@@ -35,12 +34,6 @@ from village.scripts.time_utils import time_utils
 from village.settings import Color, settings
 
 BLACK_FRAME_MAX = 5
-
-# Set to False to disable the pre_process() timing printout below (or just
-# delete this whole block + the profiling bits in pre_process/__init__ once
-# you're done comparing scenarios).
-PROFILE_PRE_PROCESS = True
-PROFILE_BATCH_SIZE = 300  # frames per printed report
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 
@@ -250,7 +243,6 @@ class Camera:
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
         self.items_to_draw: dict[str, Any] = {}
-        self.frame_durations: list[float] = []  # ms; see PROFILE_PRE_PROCESS
 
         if self.change:
             self.set_properties()
@@ -601,8 +593,6 @@ class Camera:
         Args:
             request (Any): The camera request containing the frame buffer.
         """
-        profile = PROFILE_PRE_PROCESS and self.name == "BOX"
-        profile_start = time.perf_counter() if profile else 0.0
         if self.change:
             self.set_properties()
             self.change = False
@@ -635,18 +625,6 @@ class Camera:
                     for i in range(4):
                         if self.counts[i] > self.zero_or_one_mouse:
                             self._hour_occupied[i] += 1
-
-        if profile:
-            self.frame_durations.append((time.perf_counter() - profile_start) * 1000)
-            if len(self.frame_durations) >= PROFILE_BATCH_SIZE:
-                n = len(self.frame_durations)
-                mean_duration = statistics.mean(self.frame_durations)
-                sd_duration = statistics.stdev(self.frame_durations) if n > 1 else 0.0
-                print(
-                    f"{self.name} pre_process: n={n} "
-                    f"mean={mean_duration:.2f}ms sd={sd_duration:.2f}ms"
-                )
-                self.frame_durations.clear()
 
     def get_gray_frame(self) -> None:
         """Converts the current frame to grayscale."""

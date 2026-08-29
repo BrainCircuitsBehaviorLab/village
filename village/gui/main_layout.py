@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMessageBox
 
 from village.gui.layout import Layout
 from village.manager import manager
+from village.scripts.log import log
 
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
@@ -46,6 +47,36 @@ class MainLayout(Layout):
                 "DEBUG",
                 text,
             )
+
+        # TEST buttons: fire a repeating alarm on demand, to exercise
+        # acknowledge / check-mice behavior without waiting for a real
+        # condition to trigger one. Remove once done testing.
+        self.create_and_add_button(
+            "TEST ALARM 1",
+            45,
+            6,
+            20,
+            2,
+            self.test_alarm_1,
+            "Sends a repeating test alarm (first line: 'Test alarm 1').",
+        )
+        self.create_and_add_button(
+            "TEST ALARM 2",
+            45,
+            27,
+            20,
+            2,
+            self.test_alarm_2,
+            "Sends a repeating test alarm (first line: 'Test alarm 2').",
+        )
+
+    def test_alarm_1(self) -> None:
+        """Fires a repeating test alarm. See draw()."""
+        log.alarm("Test alarm 1", repeat=True)
+
+    def test_alarm_2(self) -> None:
+        """Fires a repeating test alarm. See draw()."""
+        log.alarm("Test alarm 2", repeat=True)
 
     def update_gui(self) -> None:
         """Updates the status line and buttons."""

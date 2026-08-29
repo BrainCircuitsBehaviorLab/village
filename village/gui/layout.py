@@ -540,12 +540,12 @@ class Layout(QGridLayout):
     def mice_button_clicked(self) -> None:
         """Confirms that the mice have been checked, until the reset time."""
         manager.mice_checked("GUI")
-        log.telegram_bot.acknowledge("Nobody has checked the mice today")
+        log.telegram_bot.acknowledge("Nobody has checked the mice today", "GUI")
         self.update_status_label_buttons()
 
     def alarm_button_clicked(self) -> None:
         """Acknowledges all active alarms, stopping the telegram reminders."""
-        log.telegram_bot.pending.clear()
+        log.telegram_bot.acknowledge_all("GUI")
         self.update_status_label_buttons()
 
     def exit_button_clicked(self) -> None:

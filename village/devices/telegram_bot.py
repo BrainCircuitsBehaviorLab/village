@@ -180,17 +180,61 @@ class TelegramBot:
         self.pending[self.alarm_id] = alarm
         alarm.message_id = self.send(alarm.text(), self.alarm_id)
 
-    def acknowledge(self, first_line: str) -> None:
+    def acknowledge(self, first_line: str, by: str) -> None:
         """Clears pending alarms matching a first line, leaving others intact.
+
+        Edits each matching alarm's telegram message the same way the
+        in-chat Acknowledge button does (ack()), so it's clear there who
+        cleared it.
 
         Args:
             first_line (str): The first line of the alarm message(s) to clear.
+            by (str): Name to attribute the acknowledgment to, e.g. "GUI".
         """
+        matching = [
+            v for v in self.pending.values() if v.message.split("\n")[0] == first_line
+        ]
+        for alarm in matching:
+            self._edit_message(
+                alarm.message_id, alarm.text() + "\n\n✅ acknowledged by " + by
+            )
         self.pending = {
             k: v
             for k, v in self.pending.items()
             if v.message.split("\n")[0] != first_line
         }
+
+    def acknowledge_all(self, by: str) -> None:
+        """Acknowledges every pending alarm, attributing it to `by`.
+
+        Edits each alarm's telegram message the same way the in-chat
+        Acknowledge button does (ack()), so it's clear there who cleared it.
+
+        Args:
+            by (str): Name to attribute the acknowledgment to, e.g. "GUI".
+        """
+        for alarm in self.pending.values():
+            self._edit_message(
+                alarm.message_id, alarm.text() + "\n\n✅ acknowledged by " + by
+            )
+        self.pending.clear()
+
+    def _edit_message(self, message_id: int, text: str) -> None:
+        """Edits a previously sent telegram message, best-effort.
+
+        Args:
+            message_id (int): Id of the message to edit, 0 if none was sent.
+            text (str): The new message content.
+        """
+        if message_id == 0:
+            return
+        try:
+            url = f"https://api.telegram.org/bot{self.token}/editMessageText"
+            values = {"chat_id": self.chat, "message_id": message_id, "text": text}
+            data = parse.urlencode(values)
+            request.urlopen(url, data.encode("utf-8"), timeout=10)
+        except Exception:
+            pass  # already gone or edited/deleted in telegram meanwhile
 
     def repeat_minutes(self) -> int:
         """Minutes between reminders"""

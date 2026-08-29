@@ -129,8 +129,7 @@ class LCorridor(CustomAreaBase):
         [[100, 100], [150, 100], [150, 250], [100, 250]],  # side
     ]
 
-    # Circles, each (x, y, radius). Combined with
-    # polygons in the same area — a subclass can set both at once.
+    # Circles, each (x, y, radius). Combined with polygons in the same area.
     circles = [(200, 300, 40)]
 ```
 
