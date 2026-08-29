@@ -18,6 +18,7 @@ NullTelegramBot
    
       ~NullTelegramBot.__init__
       ~NullTelegramBot.acknowledge
+      ~NullTelegramBot.acknowledge_all
       ~NullTelegramBot.alarm
       ~NullTelegramBot.register_custom
    

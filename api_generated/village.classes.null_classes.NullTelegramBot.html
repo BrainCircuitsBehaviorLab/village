@@ -530,11 +530,25 @@ acknowledged. Defaults to False.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">acknowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullTelegramBot.acknowledge"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">acknowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullTelegramBot.acknowledge"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Clears pending alarms matching a first line, leaving others intact.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>first_line</strong> (<em>str</em>) – The first line of the alarm message(s) to clear.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>first_line</strong> (<em>str</em>) – The first line of the alarm message(s) to clear.</p></li>
+<li><p><strong>by</strong> (<em>str</em>) – Name to attribute the acknowledgment to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">acknowledge_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/classes/null_classes.html#NullTelegramBot.acknowledge_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Acknowledges every pending alarm, attributing it to <cite>by</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>by</strong> (<em>str</em>) – Name to attribute the acknowledgment to.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -591,7 +605,7 @@ acknowledged. Defaults to False.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=d360b91e"></script>
+      <script src="../_static/documentation_options.js?v=95e1a00b"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
