@@ -88,3 +88,6 @@ venv/
 
 # claude
 .claude/
+
+# remove
+village/code/*

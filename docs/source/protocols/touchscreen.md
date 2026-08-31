@@ -86,8 +86,8 @@ class TouchTrigger(TouchTriggerBase):
         task = self.task
 
         # Compute distance from touch to the current target
-        dx = x - getattr(task, "target_x", 0)
-        dy = y - getattr(task, "target_y", 0)
+        dx = x - task.target_x
+        dy = y - task.target_y
         distance = (dx**2 + dy**2) ** 0.5
         tolerance = getattr(task, "tolerance_px", 80)
 

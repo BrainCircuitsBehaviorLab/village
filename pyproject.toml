@@ -97,6 +97,7 @@ ignore = [
   "tests/test_integration/",
   "docs/",
   "docs/source/",
+  "village/code/*.py",
 ]
 
 [tool.ruff]

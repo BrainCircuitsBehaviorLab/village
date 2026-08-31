@@ -111,10 +111,11 @@ autodoc_mock_imports = [
     "",
     "picamera2",
     "libcamera",
+    "gpiozero",
     "PCA9685_smbus2",
     "pi5neo",
     "evdev",
-    "pyalsaaudio",
+    "alsaaudio",
     "pyarrow",
     "pyarrow.parquet",
     "ahrs",
@@ -207,6 +208,10 @@ extensions = [
     "myst_parser",
     "nbsphinx",
 ]
+
+# No .ipynb files in this project — skip nbsphinx's default require.js from
+# cdnjs (https://cdnjs.cloudflare.com/...), injected on every page otherwise.
+nbsphinx_requirejs_path = ""
 
 # Configure the myst parser to enable cool markdown features
 # See https://sphinx-design.readthedocs.io

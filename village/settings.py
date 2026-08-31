@@ -1029,7 +1029,6 @@ crash, or hang instead of silently vanishing.""",
     Setting(
         "GITHUB_REPOSITORY_EXAMPLES",
         [
-            "https://github.com/BrainCircuitsBehaviorLab/follow-the-light-project.git",
             "https://github.com/BrainCircuitsBehaviorLab/demo-village-project.git",
         ],
         list[str],

@@ -40,7 +40,8 @@ restarts.
 
 ### Using the sound device in tasks
 
-Audio files are read from the project's **media directory**:
+Sounds can be numpy arrays or audio files (WAV files). Audio files
+are read from the project's **media directory**:
 `/village_projects/<project_name>/media`. This path is configured in
 `SETTINGS` → `DIRECTORY SETTINGS` as `MEDIA_DIRECTORY`. Place WAV files there and
 reference them by filename only (no path needed).
@@ -97,7 +98,7 @@ gain = self.calibrations.sound_calibration.get_sound_gain(
 t = np.linspace(0, duration, int(samplerate * duration), endpoint=False)
 tone = (gain * np.sin(2 * np.pi * frequency * t)).astype(np.float32)
 
-sound_device.load(tone, tone)   # identical left and right channels → mono
+sound_device.load(tone, tone)   # identical left and right channels
 sound_device.play()
 ```
 

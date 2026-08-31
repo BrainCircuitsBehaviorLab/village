@@ -123,16 +123,6 @@ After creation, a subject's settings can be modified in three ways: manually fro
 within a running task; or automatically by `update_training_settings()` at the end of
 each session.
 
-```{admonition} Warning
-:class: warning
-`update_training_settings()` always starts from the settings the subject had at the
-moment the session ended — including any values that were changed manually before or
-during the session. Only the variables explicitly reassigned inside
-`update_training_settings()` will be overwritten; all others will retain whatever value
-they had when the session finished. Keep this in mind if you change a setting manually
-and do not want it to persist: make sure `update_training_settings()` resets it
-explicitly.
-```
 
 ```python
     def default_training_settings(self) -> None:
@@ -183,18 +173,41 @@ full session history as a DataFrame and updates whichever settings should change
 on performance. The updated values are stored back into `subjects.csv` and used in the
 subject's next session.
 
+```{admonition} Warning
+:class: warning
+`update_training_settings()` always starts from the settings the subject had at the
+moment the session ended — including any values that were changed manually before or
+during the session. Only the variables explicitly reassigned inside
+`update_training_settings()` will be overwritten; all others will retain whatever value
+they had when the session finished. Keep this in mind if you change a setting manually
+and do not want it to persist: make sure `update_training_settings()` resets it
+explicitly.
+```
+
 Available attributes:
 - `self.subject` — name of the current subject
 - `self.last_task` — name of the task that just finished
 - `self.df` — DataFrame with all historical session data for this subject
 
+
+
 ```python
     def update_training_settings(self) -> None:
+
+        """This example auto-advances the subject once it shows consistent performance:
+
+            - After "Habituation": once there are at least 3 sessions and the last
+            one had 100+ trials, it moves the subject to "FollowTheLight" and lowers
+            the reward to 0.07 ml.
+
+            - After "FollowTheLight": once there are at least 2 sessions, and both the
+            last two hit ≥85% correct and ≥100 trials, it advances the subject to
+            stage = 2 (still the same task) and lowers the reward further to 0.05 ml."""
 
         if self.last_task == "Habituation":
             df_habituation = self.df[self.df["task"] == "Habituation"]
 
-            if len(df_habituation) >= 2:
+            if len(df_habituation) >= 3:
                 trials_last_session = df_habituation.iloc[-1]["trial"].iloc[-1]
 
                 if trials_last_session >= 100:

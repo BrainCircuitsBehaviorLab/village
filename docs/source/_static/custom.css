@@ -103,31 +103,14 @@ ul.purple-bullets li::marker {
 }
 
 /* ── Sidebar navigation ────────────────────────────────── */
-/* Hide inactive top-level sections */
+/* Hide inactive top-level sections (Documentation/API/Resources/FAQ) —
+   switching between those is done from the top nav bar instead. */
 .globaltoc .toctree-l1:not(.current) {
     display: none !important;
 }
 
-/* Always expand all 3 levels within the active section */
-.globaltoc .toctree-l1.current > ul,
-.globaltoc .toctree-l2 > ul {
-    display: block !important;
-    visibility: visible !important;
-    height: auto !important;
-    overflow: visible !important;
-}
-
-/* Hide expand/collapse toggle buttons */
-.globaltoc button,
-.globaltoc .toggle,
-.globaltoc .toctree-l1 > a::after,
-.globaltoc .toctree-l1 > a::before,
-.globaltoc .toctree-l2 > a::after,
-.globaltoc .toctree-l2 > a::before {
-    display: none !important;
-}
-
-/* Level 1 (Documentation, API Reference, etc.): label, not clickable */
+/* Level 1 (Documentation, API Reference, etc.): label, not clickable —
+   navigated from the top nav bar, not the sidebar. */
 .globaltoc .toctree-l1 > a {
     pointer-events: none;
     cursor: default;
@@ -136,10 +119,11 @@ ul.purple-bullets li::marker {
     color: var(--tv-purple) !important;
 }
 
-/* Level 2 (Initial Setup, System Operation, etc.): label, not clickable */
+/* Level 2 (Initial Setup, System Operation, etc.): a real link to that
+   section's landing page (which redirects to its first page), same as
+   level 3. Expand/collapse state (only the active section open) is
+   shibuya's own default behavior — not overridden here. */
 .globaltoc .toctree-l2 > a {
-    pointer-events: none;
-    cursor: default;
     font-weight: 600;
     font-size: 0.82rem;
     text-decoration: none !important;
@@ -156,6 +140,20 @@ ul.purple-bullets li::marker {
 /* Reduce vertical spacing between nav items */
 .globaltoc li {
     margin: 0.15rem 0 !important;
+}
+
+/* Extra breathing room between sections (SYSTEM OVERVIEW, SYSTEM OPERATION,
+   ...) — each is a toctree-l2 <li>, siblings under the same active toctree-l1
+   section. Doesn't affect spacing between pages within a section (toctree-l3,
+   already fine). */
+.globaltoc .toctree-l2 + .toctree-l2 {
+    margin-top: 1rem !important;
+}
+
+/* Same breathing room between the top-level title (DOCUMENTATION, API, ...)
+   and the first section right below it. */
+.globaltoc .toctree-l1 > ul {
+    margin-top: 1rem !important;
 }
 
 /* ── Sidebar width ─────────────────────────────────────── */
