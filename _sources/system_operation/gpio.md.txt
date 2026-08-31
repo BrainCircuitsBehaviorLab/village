@@ -55,10 +55,6 @@ released, without any extra wiring. See
 [Satellite Board 2: The Box Board](../overview/system.md#satellite-board-2-the-box-board)
 for the full list of Box Board connectors.
 
-If you need the input or output pin for something else, change `GPIO_IN` /
-`GPIO_OUT` in `SETTINGS` to any other free BCM number and wire your hardware
-to that pin instead.
-
 ### Using the output pin
 
 The output pin (`GPIO_OUT`) is available at all times via `gpio.set_on()` and

@@ -3,8 +3,8 @@ PROTOCOL & TASK DESIGN
 
 .. raw:: html
 
-   <script>window.location.replace("protocols/using.html");</script>
-   <noscript><meta http-equiv="refresh" content="0; url=protocols/using.html"></noscript>
+   <script>window.location.replace("protocols/creating.html");</script>
+   <noscript><meta http-equiv="refresh" content="0; url=protocols/creating.html"></noscript>
 
 .. toctree::
     :maxdepth: 1
@@ -16,7 +16,3 @@ PROTOCOL & TASK DESIGN
     protocols/touchscreen.md
     protocols/gpio_trigger.md
     protocols/plots.md
-    protocols/scheduled.md
-    protocols/telegram_commands.md
-    protocols/calibrations.md
-    protocols/auto.md

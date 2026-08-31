@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a78a1efa" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -85,7 +85,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="toolbar.html">Toolbar Controls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sound.html">Sound Integration</a></li>
@@ -97,6 +97,14 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
@@ -105,13 +113,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">Custom GPIO Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/scheduled.html">Custom Scheduled Actions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/telegram_commands.html">Custom Telegram Commands</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/calibrations.html">Custom Calibrations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/auto.html">Custom AutoNoMouse</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; ALARMS</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
@@ -266,6 +277,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.gpio.html">gpio</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.gpio.Gpio.html">Gpio</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
 </ul>
@@ -286,6 +301,18 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.match_sound_device_setting.html">match_sound_device_setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
@@ -421,7 +448,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#using-the-screen-in-tasks">Using the screen in tasks</a></li>
 <li><a class="reference internal" href="#method-reference">Method reference</a></li>
 <li><a class="reference internal" href="#configuring-the-touchscreen-settings">Configuring the touchscreen settings</a><ul>
-<li><a class="reference internal" href="#finding-the-device-name-and-digitizer-resolution">Finding the device name and digitizer resolution</a></li>
+<li><a class="reference internal" href="#finding-the-device-name-and-resolution">Finding the device name and resolution</a></li>
 </ul>
 </li>
 </ul>
@@ -556,15 +583,21 @@ latency.</p>
 next frame is preloaded in the buffer while the current one is displayed, the latency
 from issuing a display command to the frame appearing on screen spans approximately
 one full frame plus the remaining portion of the current frame — equivalent to roughly
-1.5 × frame duration plus 2–3 ms of controller-to-Raspberry Pi communication.
-Measured latencies: <strong>mean = 27.4 ms, SD = 7.5 ms</strong>.</p>
+1.5 × frame duration plus 1-2 ms of controller-to-Raspberry Pi communication.
+Measured latencies: <strong>mean = 26.1 ms, SD = 7.5 ms</strong>.</p>
 </section>
 <section id="using-the-screen-in-tasks">
 <h2>Using the screen in tasks</h2>
-<p>Import the module-level instance, provide a drawing function, and call
-<code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> / <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.
-<code class="docutils literal notranslate"><span class="pre">load_draw_function()</span></code> only sets the function to call each frame — load any
-media separately with <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> / <code class="docutils literal notranslate"><span class="pre">load_video()</span></code>, before or after it.</p>
+<p>Import the module-level instance, provide a drawing function y una imangen o video
+si la drawing function los necesita: <code class="docutils literal notranslate"><span class="pre">load_draw_function()</span></code> only sets the function
+to call each frame — load any media separately with <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> / <code class="docutils literal notranslate"><span class="pre">load_video()</span></code>,
+before or after it.</p>
+<p><code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> / <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.</p>
+<p>Import the module-level instance and provide a drawing function along with any required
+image or video. Note that <code class="docutils literal notranslate"><span class="pre">load_draw_function()</span></code> only sets the callback executed on
+each frame; media assets must be loaded separately using <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">load_video()</span></code> (either before or after setting the function).</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.</p>
 <p><strong>Displaying a static image:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.screen</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
@@ -634,14 +667,6 @@ attributes are updated automatically before each call:</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">draw_fn</span></code>: callable</p></td>
 <td><p>Sets the function called every frame. Does not load any media — call <code class="docutils literal notranslate"><span class="pre">load_image()</span></code>/<code class="docutils literal notranslate"><span class="pre">load_video()</span></code> separately for that.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code></p></td>
-<td><p>—</p></td>
-<td><p>Starts the 60 Hz rendering loop.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code></p></td>
-<td><p>—</p></td>
-<td><p>Stops rendering and blanks the screen.</p></td>
-</tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">load_image(file)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename</p></td>
 <td><p>Loads an image from <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code> into <code class="docutils literal notranslate"><span class="pre">screen.image</span></code>.</p></td>
@@ -649,6 +674,14 @@ attributes are updated automatically before each call:</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_video(file,</span> <span class="pre">volume_gain=0.1)</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename; <code class="docutils literal notranslate"><span class="pre">volume_gain</span></code>: audio volume for the video’s soundtrack, <code class="docutils literal notranslate"><span class="pre">0.0</span></code>–<code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
 <td><p>Prepares a video (and its audio track) for playback (started by <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Starts the 60 Hz rendering loop.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Stops rendering and blanks the screen.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">get_video_frame()</span></code></p></td>
 <td><p>—</p></td>
@@ -693,10 +726,8 @@ attributes are updated automatically before each call:</p>
 it is independent of and usually different from the display pixel resolution.
 The system uses both values to convert raw touch coordinates into screen pixel positions.</p>
 </div>
-<p>The device is looked up <strong>by name</strong> at startup, so the <code class="docutils literal notranslate"><span class="pre">/dev/input/eventX</span></code> path (which
-can change after a reboot or USB reconnect) does not need to be configured.</p>
-<section id="finding-the-device-name-and-digitizer-resolution">
-<h3>Finding the device name and digitizer resolution</h3>
+<section id="finding-the-device-name-and-resolution">
+<h3>Finding the device name and resolution</h3>
 <p><strong>Step 1 — List all input devices:</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">bus</span><span class="o">/</span><span class="nb">input</span><span class="o">/</span><span class="n">devices</span>
 </span></pre></div>
@@ -736,7 +767,7 @@ events). The value you need is the <code class="docutils literal notranslate"><s
 <p>When Training Village is running, Python grabs the touchscreen device exclusively
 via <code class="docutils literal notranslate"><span class="pre">evdev</span></code> (<code class="docutils literal notranslate"><span class="pre">device.grab()</span></code>), so touch events never reach the graphical layer of
 the OS — the animals cannot accidentally interact with the desktop. However, when
-Training Village is not running the device is released and libinput (the input
+Training Village is not running the device is released and <code class="docutils literal notranslate"><span class="pre">libinput</span></code> (the input
 layer used by the desktop compositor) picks it up again.</p>
 <p>To prevent this permanently — regardless of whether Training Village is running —
 create a udev rule that tells libinput to always ignore the device. Replace
@@ -800,11 +831,10 @@ will never treat it as a pointer device.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=d2131c74"></script>
+      <script src="../_static/documentation_options.js?v=d80d44ea"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
-      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script src="../_static/lightbox.js?v=bcb7134f"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>

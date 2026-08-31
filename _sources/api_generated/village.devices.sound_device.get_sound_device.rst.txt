@@ -1,0 +1,6 @@
+get\_sound\_device
+==================
+
+.. currentmodule:: village.devices.sound_device
+
+.. autofunction:: get_sound_device

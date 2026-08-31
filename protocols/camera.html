@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a78a1efa" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -85,7 +85,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
@@ -97,6 +97,14 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
+</ul>
+</li>
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="task.html">Task Development Guide</a></li>
@@ -105,13 +113,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">Custom GPIO Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plots.html">Custom Plotting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduled.html">Custom Scheduled Actions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="telegram_commands.html">Custom Telegram Commands</a></li>
-<li class="toctree-l3"><a class="reference internal" href="calibrations.html">Custom Calibrations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="auto.html">Custom AutoNoMouse</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; TROUBLESHOOTING</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; ALARMS</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
@@ -266,6 +277,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.gpio.html">gpio</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.gpio.Gpio.html">Gpio</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
 </ul>
@@ -286,6 +301,18 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.match_sound_device_setting.html">match_sound_device_setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
@@ -420,7 +447,6 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#custom-camera-drawing">Custom Camera Drawing</a><ul>
 <li><a class="reference internal" href="#annotating-the-frame-from-a-task">Annotating the frame from a task</a></li>
 <li><a class="reference internal" href="#drawing-with-cameradrawbase">Drawing with CameraDrawBase</a></li>
-<li><a class="reference internal" href="#passing-data-from-the-task-via-items-to-draw">Passing data from the task via <code class="docutils literal notranslate"><span class="pre">items_to_draw</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -702,12 +728,6 @@ it automatically and uses it instead of the base class.</p>
 </span></pre></div>
 </div>
 <p><strong>Overriding <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code></strong> — runs at preview framerate, screen only:</p>
-<div class="note admonition">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> is a plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> the task can populate to pass data (like
-<code class="docutils literal notranslate"><span class="pre">&quot;reward_zone&quot;</span></code> below) to these methods — see
-Passing data from the task.</p>
-</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QRect</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QBrush</span><span class="p">,</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QPainter</span>
 </span><span data-line="3">
@@ -726,7 +746,20 @@ Passing data from the task.</p>
 </span><span data-line="16">            <span class="n">painter</span><span class="o">.</span><span class="n">drawRect</span><span class="p">(</span><span class="n">QRect</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">sx</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">sy</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">sx</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">sy</span><span class="p">)))</span>
 </span></pre></div>
 </div>
-<p>Both methods receive these attributes on <code class="docutils literal notranslate"><span class="pre">cam</span></code> (updated every frame):</p>
+<div class="note admonition">
+<p class="admonition-title">Passing data from the task</p>
+<p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> is a plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> the task can populate at any point to pass
+coordinates, labels, or any other data (like <code class="docutils literal notranslate"><span class="pre">&quot;reward_zone&quot;</span></code> below).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Inside the task, at any point:</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">cam_box</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="n">cam_box</span><span class="o">.</span><span class="n">items_to_draw</span><span class="p">[</span><span class="s2">"reward_zone"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>   <span class="c1"># x, y, w, h</span>
+</span><span data-line="5"><span class="n">cam_box</span><span class="o">.</span><span class="n">items_to_draw</span><span class="p">[</span><span class="s2">"reward_zone"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>                  <span class="c1"># remove</span>
+</span></pre></div>
+</div>
+</div>
+<p>Both methods <code class="docutils literal notranslate"><span class="pre">draw</span></code> and <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> receive these attributes on <code class="docutils literal notranslate"><span class="pre">cam</span></code>
+(updated every frame):</p>
 <p><strong>Identity &amp; state</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.name</span></code> — <code class="docutils literal notranslate"><span class="pre">'BOX'</span></code> or <code class="docutils literal notranslate"><span class="pre">'CORRIDOR'</span></code>.</p></li>
@@ -747,7 +780,7 @@ Passing data from the task.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.filename</span></code> — base name of the current video file (empty if not recording).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.trial</span></code> — current trial number (0 if no task running or CORRIDOR camera).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.annotation</span></code> — current <code class="docutils literal notranslate"><span class="pre">write_text()</span></code> string; persists until changed.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> — plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> for passing arbitrary data from the task (see below).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> — plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> for passing arbitrary data from the task (see above).</p></li>
 </ul>
 <p><strong>Detection areas</strong></p>
 <ul class="simple">
@@ -773,19 +806,6 @@ the <code class="docutils literal notranslate"><span class="pre">CustomAreaBase<
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">self.task</span></code> — the current task instance.</p></li>
 </ul>
-</section>
-<section id="passing-data-from-the-task-via-items-to-draw">
-<h3>Passing data from the task via <code class="docutils literal notranslate"><span class="pre">items_to_draw</span></code></h3>
-<p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> is a plain dictionary. The task can populate it at any point
-to pass coordinates, labels, or any other data to the drawing methods without
-coupling the task directly to this class:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Inside the task, at any point:</span>
-</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">cam_box</span>
-</span><span data-line="3">
-</span><span data-line="4"><span class="n">cam_box</span><span class="o">.</span><span class="n">items_to_draw</span><span class="p">[</span><span class="s2">"reward_zone"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>   <span class="c1"># x, y, w, h</span>
-</span><span data-line="5"><span class="n">cam_box</span><span class="o">.</span><span class="n">items_to_draw</span><span class="p">[</span><span class="s2">"reward_zone"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>                  <span class="c1"># remove</span>
-</span></pre></div>
-</div>
 </section>
 </section>
 </section>
@@ -827,11 +847,10 @@ coupling the task directly to this class:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=d2131c74"></script>
+      <script src="../_static/documentation_options.js?v=d80d44ea"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
-      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script src="../_static/lightbox.js?v=bcb7134f"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>

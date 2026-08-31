@@ -107,15 +107,15 @@ This screen provides a dedicated panel for each calibration tool available on th
 
 Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the [Custom Calibrations][CALIBRATIONS] section for details.
 
-*   **`BPOD_WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller.
+*   **`BPOD_WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller. See [Bpod Water Calibration](/calibrations/bpod_water.md).
 
-*   **`SOUND_CALIBRATION`:** Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when `USE_SOUNDCARD` is **ON**.
+*   **`SOUND_CALIBRATION`:** Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when `USE_SOUNDCARD` is **ON**. See [Sound Calibration](/calibrations/sound.md).
 
-*   **`CAMERA_CALIBRATION`:** Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available.
+*   **`CAMERA_CALIBRATION`:** Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available. See [Camera Calibration](/calibrations/camera.md).
 
-*   **`CORRIDOR_THRESHOLD_CALIBRATION`:** Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result on the live corridor image. Only available when `USE_CORRIDOR` is **ON**.
+*   **`CORRIDOR_THRESHOLD_CALIBRATION`:** Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result against a recorded corridor video. Only available when `USE_CORRIDOR` is **ON**. See [Corridor Threshold Calibration](/calibrations/thresholds.md).
 
-*   **`OPTOGRID_CALIBRATION`:** Provides a visual map of the optogenetic stimulation grid for selecting and testing individual LEDs. Always available.
+*   **`OPTOGRID_CALIBRATION`:** Provides a visual map of the OptoGrid device for composing an LED selection and inspecting it over Bluetooth. Always available. See [OptoGrid Calibration](/calibrations/optogrid.md).
 
 ---
 
@@ -135,4 +135,4 @@ The most critical parameters from this list will be discussed and modified step-
 [MANUAL]: /system_operation/manual.md
 [CREATE]: /protocols/creating.md
 [DATA]: /system_operation/data.md
-[CALIBRATIONS]: /protocols/calibrations.md
+[CALIBRATIONS]: /advanced_customization/calibrations.md

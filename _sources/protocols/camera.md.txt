@@ -211,12 +211,6 @@ class CameraDraw(CameraDrawBase):
 
 **Overriding `draw_preview`** — runs at preview framerate, screen only:
 
-```{admonition} Note
-:class: note
-`cam.items_to_draw` is a plain `dict` the task can populate to pass data (like
-`"reward_zone"` below) to these methods — see
-[Passing data from the task](#passing-data-from-the-task-via-items_to_draw).
-```
 
 ```python
 from PyQt5.QtCore import QRect
@@ -237,7 +231,24 @@ from PyQt5.QtGui import QBrush, QColor, QPainter
             painter.drawRect(QRect(int(x*sx), int(y*sy), int(w*sx), int(h*sy)))
 ```
 
-Both methods receive these attributes on `cam` (updated every frame):
+
+````{admonition} Passing data from the task
+:class: note
+`cam.items_to_draw` is a plain `dict` the task can populate at any point to pass
+coordinates, labels, or any other data (like `"reward_zone"` below).
+
+```python
+# Inside the task, at any point:
+from village.devices.camera import cam_box
+
+cam_box.items_to_draw["reward_zone"] = (200, 150, 80, 80)   # x, y, w, h
+cam_box.items_to_draw["reward_zone"] = None                  # remove
+```
+````
+
+
+Both methods `draw` and `draw_preview` receive these attributes on `cam`
+(updated every frame):
 
 **Identity & state**
 
@@ -259,7 +270,7 @@ Both methods receive these attributes on `cam` (updated every frame):
 - `cam.filename` — base name of the current video file (empty if not recording).
 - `cam.trial` — current trial number (0 if no task running or CORRIDOR camera).
 - `cam.annotation` — current `write_text()` string; persists until changed.
-- `cam.items_to_draw` — plain `dict` for passing arbitrary data from the task (see below).
+- `cam.items_to_draw` — plain `dict` for passing arbitrary data from the task (see above).
 
 **Detection areas**
 
@@ -284,18 +295,3 @@ Both methods receive these attributes on `cam` (updated every frame):
 **Task access**
 
 - `self.task` — the current task instance.
-
-
-#### Passing data from the task via `items_to_draw`
-
-`cam.items_to_draw` is a plain dictionary. The task can populate it at any point
-to pass coordinates, labels, or any other data to the drawing methods without
-coupling the task directly to this class:
-
-```python
-# Inside the task, at any point:
-from village.devices.camera import cam_box
-
-cam_box.items_to_draw["reward_zone"] = (200, 150, 80, 80)   # x, y, w, h
-cam_box.items_to_draw["reward_zone"] = None                  # remove
-```

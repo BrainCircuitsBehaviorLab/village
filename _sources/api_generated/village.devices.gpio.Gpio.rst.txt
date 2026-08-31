@@ -1,0 +1,29 @@
+Gpio
+====
+
+.. currentmodule:: village.devices.gpio
+
+.. autoclass:: Gpio
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~Gpio.__init__
+      ~Gpio.set_off
+      ~Gpio.set_on
+      ~Gpio.start
+      ~Gpio.stop
+   
+   
+
+   
+   
+   

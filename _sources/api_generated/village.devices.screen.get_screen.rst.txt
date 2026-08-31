@@ -1,0 +1,6 @@
+get\_screen
+===========
+
+.. currentmodule:: village.devices.screen
+
+.. autofunction:: get_screen

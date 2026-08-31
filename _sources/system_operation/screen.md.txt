@@ -71,15 +71,24 @@ The system operates at a **60 Hz refresh rate** (one frame every 16.6 ms). Becau
 next frame is preloaded in the buffer while the current one is displayed, the latency
 from issuing a display command to the frame appearing on screen spans approximately
 one full frame plus the remaining portion of the current frame — equivalent to roughly
-1.5 × frame duration plus 2–3 ms of controller-to-Raspberry Pi communication.
-Measured latencies: **mean = 27.4 ms, SD = 7.5 ms**.
+1.5 × frame duration plus 1-2 ms of controller-to-Raspberry Pi communication.
+Measured latencies: **mean = 26.1 ms, SD = 7.5 ms**.
 
 ### Using the screen in tasks
 
-Import the module-level instance, provide a drawing function, and call
+Import the module-level instance, provide a drawing function y una imangen o video
+si la drawing function los necesita: `load_draw_function()` only sets the function
+to call each frame — load any media separately with `load_image()` / `load_video()`,
+before or after it.
+
 `start_drawing()` / `stop_drawing()` to control when the stimulus appears.
-`load_draw_function()` only sets the function to call each frame — load any
-media separately with `load_image()` / `load_video()`, before or after it.
+
+Import the module-level instance and provide a drawing function along with any required
+image or video. Note that `load_draw_function()` only sets the callback executed on
+each frame; media assets must be loaded separately using `load_image()` or
+`load_video()` (either before or after setting the function).
+
+Use `start_drawing()` and `stop_drawing()` to control when the stimulus appears.
 
 **Displaying a static image:**
 
@@ -146,10 +155,10 @@ Files passed to `image=` and `video=` are looked up inside `MEDIA_DIRECTORY`
 | Method | Arguments | Description |
 |--------|-----------|-------------|
 | `load_draw_function(draw_fn)` | `draw_fn`: callable | Sets the function called every frame. Does not load any media — call `load_image()`/`load_video()` separately for that. |
-| `start_drawing()` | — | Starts the 60 Hz rendering loop. |
-| `stop_drawing()` | — | Stops rendering and blanks the screen. |
 | `load_image(file)` | `file`: filename | Loads an image from `MEDIA_DIRECTORY` into `screen.image`. |
 | `load_video(file, volume_gain=0.1)` | `file`: filename; `volume_gain`: audio volume for the video's soundtrack, `0.0`–`1.0` | Prepares a video (and its audio track) for playback (started by `start_drawing()`). |
+| `start_drawing()` | — | Starts the 60 Hz rendering loop. |
+| `stop_drawing()` | — | Stops rendering and blanks the screen. |
 | `get_video_frame()` | — | Returns the current video frame as a `QImage`, or `None`. |
 
 ---
@@ -173,11 +182,8 @@ it is independent of and usually different from the display pixel resolution.
 The system uses both values to convert raw touch coordinates into screen pixel positions.
 ```
 
-The device is looked up **by name** at startup, so the `/dev/input/eventX` path (which
-can change after a reboot or USB reconnect) does not need to be configured.
 
-
-#### Finding the device name and digitizer resolution
+#### Finding the device name and resolution
 
 **Step 1 — List all input devices:**
 
@@ -231,7 +237,7 @@ If `evtest` is not installed: `sudo apt install evtest`
 When Training Village is running, Python grabs the touchscreen device exclusively
 via `evdev` (`device.grab()`), so touch events never reach the graphical layer of
 the OS — the animals cannot accidentally interact with the desktop. However, when
-Training Village is not running the device is released and libinput (the input
+Training Village is not running the device is released and `libinput` (the input
 layer used by the desktop compositor) picks it up again.
 
 To prevent this permanently — regardless of whether Training Village is running —

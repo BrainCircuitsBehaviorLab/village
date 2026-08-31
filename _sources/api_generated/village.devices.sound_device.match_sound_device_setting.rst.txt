@@ -1,0 +1,6 @@
+match\_sound\_device\_setting
+=============================
+
+.. currentmodule:: village.devices.sound_device
+
+.. autofunction:: match_sound_device_setting
