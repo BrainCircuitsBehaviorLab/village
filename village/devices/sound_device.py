@@ -436,8 +436,10 @@ class SoundDevice:
         not block when idle.
 
         Args:
-            left (Any): Left channel data (array-like, float in [-1, 1]).
-            right (Any): Right channel data (array-like, float in [-1, 1]).
+            left (Any): Left channel data (array-like, float in [-1, 1]
+                or None for silence).
+            right (Any): Right channel data (array-like, float in [-1, 1]
+                or None for silence).
 
         Raises:
             ValueError: If inputs are invalid or lengths differ.

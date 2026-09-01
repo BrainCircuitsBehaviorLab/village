@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 
-class CustomAreaBase:
+class CameraAreaBase:
     """Overrides the shape of one of the 4 BOX camera detection areas.
 
     The 4 BOX areas (AREA1_BOX..AREA4_BOX) are rectangles by default, edited

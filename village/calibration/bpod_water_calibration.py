@@ -266,7 +266,7 @@ class BpodWaterCalibration(CalibrationBase):
             self.time_line_edits[i] = line_edit
 
         self.layout.create_and_add_label(
-            "WATER EXPECTED(ul)",
+            "WATER EXPECTED\nPER ITERATION(ul)",
             24,
             5,
             20,
@@ -397,7 +397,7 @@ class BpodWaterCalibration(CalibrationBase):
 
         # output water delivered
         self.layout.create_and_add_label(
-            "WATER DELIVERED(ul)",
+            "WATER DELIVERED\nPER ITERATION(ul)",
             2,
             46,
             20,
@@ -414,7 +414,7 @@ class BpodWaterCalibration(CalibrationBase):
             self.water_delivered_labels[i] = label
 
         self.layout.create_and_add_label(
-            "WATER DELIVERED(ul)",
+            "WATER DELIVERED\nPER ITERATION(ul)",
             24,
             46,
             20,

@@ -26,7 +26,7 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QWidget
 
 from village.classes.null_classes import NullCamera
-from village.custom_classes.custom_area_base import CustomAreaBase
+from village.custom_classes.camera_area_base import CameraAreaBase
 from village.manager import manager
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
@@ -777,7 +777,7 @@ class Camera:
             self.y_position = -1
 
     @property
-    def custom_areas(self) -> dict[int, CustomAreaBase]:
+    def custom_areas(self) -> dict[int, CameraAreaBase]:
         """BOX area index (1-4) -> CustomAreaBase overriding that area's shape.
 
         Lives on manager; exposed here for the cam API.

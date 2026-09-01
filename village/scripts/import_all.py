@@ -18,10 +18,10 @@ from village.calibration.sound_calibration import SoundCalibration
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.custom_classes.calibration_base import CalibrationBase
+from village.custom_classes.camera_area_base import CameraAreaBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
-from village.custom_classes.custom_area_base import CustomAreaBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.gpio_trigger_base import GpioTriggerBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
@@ -160,7 +160,7 @@ def import_all(manager) -> None:
                         y = cls()
                         manager.change_cycle = y
                         change_cycle_correct = True
-                elif issubclass(cls, CustomAreaBase) and cls != CustomAreaBase:
+                elif issubclass(cls, CameraAreaBase) and cls != CameraAreaBase:
                     custom_area = cls()
                     if custom_area.area_index not in (1, 2, 3, 4):
                         log.error(

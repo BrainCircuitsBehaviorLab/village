@@ -30,10 +30,10 @@ from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
+from village.custom_classes.camera_area_base import CameraAreaBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
 from village.custom_classes.change_cycle_base import ChangeCycleBase
-from village.custom_classes.custom_area_base import CustomAreaBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.gpio_trigger_base import GpioTriggerBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
@@ -108,7 +108,7 @@ class Manager:
         self.camera_trigger: CameraTriggerBase = CameraTriggerBase()
         self.camera_draw: CameraDrawBase = CameraDrawBase()
         # BOX area index (1-4) -> CustomAreaBase overriding that area's shape.
-        self.custom_areas: dict[int, CustomAreaBase] = {}
+        self.custom_areas: dict[int, CameraAreaBase] = {}
         self.custom_telegram_commands: list[TelegramCommandBase] = []
         self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
         self.gpio = gpio
