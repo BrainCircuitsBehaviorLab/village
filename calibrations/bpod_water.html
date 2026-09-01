@@ -208,6 +208,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.html">camera_area_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html">CameraAreaBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -218,10 +222,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.change_cycle_base.ChangeCycleBase.html">ChangeCycleBase</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.custom_area_base.html">custom_area_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html">CustomAreaBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
@@ -520,9 +520,9 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="bpod-water-calibration">
 <h1>Bpod Water Calibration</h1>
-<p>Calibrates the relationship between how long a valve is open and how much water it
-actually delivers, per behavior port — so tasks can request a volume in microliters
-instead of a raw opening time.</p>
+<p>Calibrates the relationship between how long a valve (or a pump) is open and how much
+water it actually delivers, per behavior port — so tasks can request a volume in
+microliters instead of a raw opening time.</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
 <p>Only available when the Bpod is the configured behavior controller
@@ -530,18 +530,41 @@ instead of a raw opening time.</p>
 </div>
 <section id="calibrating">
 <h2>Calibrating</h2>
-<p>For each active port (<code class="docutils literal notranslate"><span class="pre">BPOD_BEHAVIOR_PORTS</span></code>), enter a valve opening time and a number
-of iterations, run it, then weigh the total water collected and enter it back — the
-panel computes microliters delivered per opening and plots it. Repeat with a few
-different opening times per port (at least two points are required) to build a
-time → volume curve.</p>
+<p>You can calibrate one port at a time or several at once. For each active port
+(<code class="docutils literal notranslate"><span class="pre">BPOD_BEHAVIOR_PORTS</span></code>) you want to calibrate, enter a valve opening time and a shared
+number of iterations, then click <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span></code> — the selected valves each open that many
+times for that long. Weigh the total water collected per port and enter it back; the
+panel converts the weight to microliters delivered per iteration (assuming a water
+density of 1 g/ml) and shows it next to each port. Click <code class="docutils literal notranslate"><span class="pre">ADD</span></code> to save the point — it’s
+added to the calibration curve, plotted immediately, and listed under
+<code class="docutils literal notranslate"><span class="pre">CALIBRATION</span> <span class="pre">POINTS</span></code>, where each point can be removed individually with its
+<code class="docutils literal notranslate"><span class="pre">-</span></code> button if it turns out to be an outlier. Repeat with a few different opening times
+per port (at least two points are required) to build a time → volume curve.</p>
+<p>Once you’re happy with the curve, click <code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">CALIBRATION</span></code> to persist it. Any port left
+with fewer than two points is dropped from the save, with a warning listing which ones.
+Saved calibrations are never overwritten — every save gets a new <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>
+and the full history is kept, but tasks and the <code class="docutils literal notranslate"><span class="pre">TESTING</span></code> panel always use the most
+recent one per port. <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">CALIBRATION</span></code> discards the points collected so far (after
+confirmation) without saving them.</p>
+<div class="note admonition">
+<p class="admonition-title">Tip</p>
+<p>If you’re not sure what time to start with, begin with a short opening time (a few
+ms). You can always delete points later that turn out to be far outside the range of
+interest for your tasks.</p>
+</div>
 </section>
 <section id="testing">
 <h2>Testing</h2>
-<p>Enter a target volume in microliters and a number of iterations to open the valve for
-the time the calibration predicts, then weigh the result the same way. If the measured
-error is too large, use that test point as a new calibration point instead of
-discarding it — no need to redo the whole calibration from scratch.</p>
+<p>Check whether the latest saved calibration for a port is still accurate. Enter a
+target volume in microliters and a number of iterations; the panel looks up the
+opening time the calibration curve predicts for that volume and, on <code class="docutils literal notranslate"><span class="pre">TEST</span></code>, opens the
+valve that many times for that long. Weigh the result the same way as during
+calibration — the panel shows the measured volume per iteration and the resulting
+error compared to the target, and plots the test point against the existing curve.</p>
+<ul class="simple">
+<li><p>If the error is acceptable, click <code class="docutils literal notranslate"><span class="pre">OK</span></code>. The measurement is recorded for reference.</p></li>
+<li><p>If the error is too large, click <code class="docutils literal notranslate"><span class="pre">FAIL</span></code> instead. The measurement is used as the first point of a brand-new calibration for that port, so you can immediately continue adding points to it (as in Calibrating above) and save a corrected curve.</p></li>
+</ul>
 </section>
 <section id="using-it-in-tasks">
 <h2>Using it in tasks</h2>
@@ -549,9 +572,11 @@ discarding it — no need to redo the whole calibration from scratch.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">time_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">bpod_water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">volume_ul</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">get_valve_time</span></code> interpolates the opening time for a target volume from the most
-recent calibration of that port, and raises if the port hasn’t been calibrated or the
-volume falls outside the calibrated range.</p>
+<p>Given a (1-indexed) port number and a target volume in microliters, this interpolates
+the valve opening time from that port’s most recent saved calibration curve. If the
+port hasn’t been calibrated yet, or <code class="docutils literal notranslate"><span class="pre">volume_ul</span></code> falls outside the calibrated range, it
+raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> explaining the problem so it’s easy to tell whether the port
+needs calibrating or the requested volume needs adjusting.</p>
 <p>Data is stored in <code class="docutils literal notranslate"><span class="pre">bpod_water_calibration.csv</span></code> (columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">port_number</span></code>,
 <code class="docutils literal notranslate"><span class="pre">time(s)</span></code>, <code class="docutils literal notranslate"><span class="pre">water_delivered(ul)</span></code>, <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>, <code class="docutils literal notranslate"><span class="pre">water_expected(ul)</span></code>,
 <code class="docutils literal notranslate"><span class="pre">error(%)</span></code>).</p>
@@ -597,7 +622,7 @@ volume falls outside the calibrated range.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=030f05f2"></script>
+      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

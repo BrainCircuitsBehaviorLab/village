@@ -1,7 +1,7 @@
-custom\_area\_base
+camera\_area\_base
 ==================
 
-.. automodule:: village.custom_classes.custom_area_base
+.. automodule:: village.custom_classes.camera_area_base
    :no-members:
    :no-undoc-members:
    :no-inherited-members:
@@ -22,7 +22,7 @@ custom\_area\_base
       :toctree:
       :template: custom_class_template.rst
    
-      CustomAreaBase
+      CameraAreaBase
    
    
 

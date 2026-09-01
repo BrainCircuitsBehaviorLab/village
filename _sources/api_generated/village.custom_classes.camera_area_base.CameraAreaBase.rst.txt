@@ -1,0 +1,40 @@
+CameraAreaBase
+==============
+
+.. currentmodule:: village.custom_classes.camera_area_base
+
+.. autoclass:: CameraAreaBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~CameraAreaBase.__init__
+      ~CameraAreaBase.bbox
+      ~CameraAreaBase.build_mask
+      ~CameraAreaBase.contains
+      ~CameraAreaBase.contours
+      ~CameraAreaBase.mask
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~CameraAreaBase.area_index
+      ~CameraAreaBase.circles
+      ~CameraAreaBase.name
+      ~CameraAreaBase.polygons
+   
+   

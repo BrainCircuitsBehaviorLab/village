@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../../../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>village.custom_classes.custom_area_base - Training village</title><link rel="shortcut icon" href="../../../_static/favicon.svg"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/custom_classes/custom_area_base.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>village.custom_classes.camera_area_base - Training village</title><link rel="shortcut icon" href="../../../_static/favicon.svg"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/custom_classes/camera_area_base.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=e1a1ceaf" />
@@ -22,8 +22,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/custom_classes/custom_area_base.html"/>
-  <meta property="og:title" content="village.custom_classes.custom_area_base"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/_modules/village/custom_classes/camera_area_base.html"/>
+  <meta property="og:title" content="village.custom_classes.camera_area_base"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -208,6 +208,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_area_base.html">camera_area_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html">CameraAreaBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -218,10 +222,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.change_cycle_base.ChangeCycleBase.html">ChangeCycleBase</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.custom_area_base.html">custom_area_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html">CustomAreaBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
@@ -461,7 +461,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">village.custom_classes.custom_area_base</strong>
+        <strong itemprop="name">village.custom_classes.camera_area_base</strong>
         <meta itemprop="position" content="3" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -474,16 +474,16 @@ data-aria-dark="Switch to auto color mode">
 </div><div class="flex flex-col break-words justify-between">
       <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
   <article class="yue" role="main">
-          <h1>Source code for village.custom_classes.custom_area_base</h1><div class="highlight"><pre>
+          <h1>Source code for village.custom_classes.camera_area_base</h1><div class="highlight"><pre>
 <span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 </span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </span><span data-line="5">
 </span><span data-line="6">
-<div class="viewcode-block" id="CustomAreaBase">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html#village.custom_classes.custom_area_base.CustomAreaBase">[docs]</a>
-</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">CustomAreaBase</span><span class="p">:</span>
+<div class="viewcode-block" id="CameraAreaBase">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html#village.custom_classes.camera_area_base.CameraAreaBase">[docs]</a>
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">CameraAreaBase</span><span class="p">:</span>
 </span><span data-line="8"><span class="w">    </span><span class="sd">"""Overrides the shape of one of the 4 BOX camera detection areas.</span>
 </span><span data-line="9">
 </span><span data-line="10"><span class="sd">    The 4 BOX areas (AREA1_BOX..AREA4_BOX) are rectangles by default, edited</span>
@@ -506,8 +506,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="27">    <span class="c1"># polygons in the same mask, so a subclass can set both.</span>
 </span><span data-line="28">    <span class="n">circles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 </span><span data-line="29">
-<div class="viewcode-block" id="CustomAreaBase.__init__">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html#village.custom_classes.custom_area_base.CustomAreaBase.__init__">[docs]</a>
+<div class="viewcode-block" id="CameraAreaBase.__init__">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html#village.custom_classes.camera_area_base.CameraAreaBase.__init__">[docs]</a>
 </span><span data-line="30">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="31">        <span class="c1"># Set by Camera.set_properties() to the BOX camera's frame size,</span>
 </span><span data-line="32">        <span class="c1"># before mask()/bbox()/contains() are used.</span>
@@ -519,8 +519,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_contours</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 </span><span data-line="39">
-<div class="viewcode-block" id="CustomAreaBase.build_mask">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html#village.custom_classes.custom_area_base.CustomAreaBase.build_mask">[docs]</a>
+<div class="viewcode-block" id="CameraAreaBase.build_mask">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html#village.custom_classes.camera_area_base.CameraAreaBase.build_mask">[docs]</a>
 </span><span data-line="40">    <span class="k">def</span><span class="w"> </span><span class="nf">build_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 </span><span data-line="41"><span class="w">        </span><span class="sd">"""Rasterize self.polygons and self.circles to a uint8 (h, w) mask,</span>
 </span><span data-line="42"><span class="sd">        255 inside else 0.</span>
@@ -548,8 +548,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="63">            <span class="bp">self</span><span class="o">.</span><span class="n">_cached_contours</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># rebuilt lazily by contours()</span>
 </span><span data-line="64">            <span class="bp">self</span><span class="o">.</span><span class="n">_cached_shape</span> <span class="o">=</span> <span class="n">shape</span>
 </span><span data-line="65">
-<div class="viewcode-block" id="CustomAreaBase.mask">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html#village.custom_classes.custom_area_base.CustomAreaBase.mask">[docs]</a>
+<div class="viewcode-block" id="CameraAreaBase.mask">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html#village.custom_classes.camera_area_base.CameraAreaBase.mask">[docs]</a>
 </span><span data-line="66">    <span class="k">def</span><span class="w"> </span><span class="nf">mask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 </span><span data-line="67"><span class="w">        </span><span class="sd">"""Cached mask, sized self.height x self.width."""</span>
 </span><span data-line="68">        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_cached</span><span class="p">()</span>
@@ -557,8 +557,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="70">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_mask</span></div>
 
 </span><span data-line="71">
-<div class="viewcode-block" id="CustomAreaBase.bbox">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html#village.custom_classes.custom_area_base.CustomAreaBase.bbox">[docs]</a>
+<div class="viewcode-block" id="CameraAreaBase.bbox">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html#village.custom_classes.camera_area_base.CameraAreaBase.bbox">[docs]</a>
 </span><span data-line="72">    <span class="k">def</span><span class="w"> </span><span class="nf">bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 </span><span data-line="73"><span class="w">        </span><span class="sd">"""Cached (x1, y1, x2, y2) bounding box of the shape."""</span>
 </span><span data-line="74">        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_cached</span><span class="p">()</span>
@@ -566,8 +566,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="76">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_bbox</span></div>
 
 </span><span data-line="77">
-<div class="viewcode-block" id="CustomAreaBase.contours">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html#village.custom_classes.custom_area_base.CustomAreaBase.contours">[docs]</a>
+<div class="viewcode-block" id="CameraAreaBase.contours">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html#village.custom_classes.camera_area_base.CameraAreaBase.contours">[docs]</a>
 </span><span data-line="78">    <span class="k">def</span><span class="w"> </span><span class="nf">contours</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
 </span><span data-line="79"><span class="w">        </span><span class="sd">"""Cached outer silhouette of the shape, as one point list per</span>
 </span><span data-line="80"><span class="sd">        disjoint (non-touching) blob.</span>
@@ -589,8 +589,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="96">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_contours</span></div>
 
 </span><span data-line="97">
-<div class="viewcode-block" id="CustomAreaBase.contains">
-<a class="viewcode-back" href="../../../api_generated/village.custom_classes.custom_area_base.CustomAreaBase.html#village.custom_classes.custom_area_base.CustomAreaBase.contains">[docs]</a>
+<div class="viewcode-block" id="CameraAreaBase.contains">
+<a class="viewcode-back" href="../../../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html#village.custom_classes.camera_area_base.CameraAreaBase.contains">[docs]</a>
 </span><span data-line="98">    <span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span data-line="99"><span class="w">        </span><span class="sd">"""True if pixel (x, y) is inside the area."""</span>
 </span><span data-line="100">        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">):</span>
@@ -622,7 +622,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=030f05f2"></script>
+      <script src="../../../_static/documentation_options.js?v=1b6a4614"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

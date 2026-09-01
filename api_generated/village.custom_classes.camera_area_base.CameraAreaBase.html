@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>custom_area_base - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="CustomAreaBase" href="village.custom_classes.custom_area_base.CustomAreaBase.html" /><link rel="prev" title="ChangeCycleBase" href="village.custom_classes.change_cycle_base.ChangeCycleBase.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.custom_area_base.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CameraAreaBase - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="camera_draw_base" href="village.custom_classes.camera_draw_base.html" /><link rel="prev" title="camera_area_base" href="village.custom_classes.camera_area_base.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -22,8 +22,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.custom_area_base.html"/>
-  <meta property="og:title" content="custom_area_base"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html"/>
+  <meta property="og:title" content="CameraAreaBase"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -208,6 +208,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
 </ul>
 </li>
+<li class="toctree-l3 current"><a class="reference internal" href="village.custom_classes.camera_area_base.html">camera_area_base</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CameraAreaBase</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
 </ul>
@@ -218,10 +222,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.change_cycle_base.html">change_cycle_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.change_cycle_base.ChangeCycleBase.html">ChangeCycleBase</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">custom_area_base</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.custom_area_base.CustomAreaBase.html">CustomAreaBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
@@ -465,8 +465,12 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">custom_area_base</strong>
+        <a itemprop="item" href="village.custom_classes.camera_area_base.html"><span itemprop="name">camera_area_base</span></a>
+        <span>/</span>
         <meta itemprop="position" content="4" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">CameraAreaBase</strong>
+        <meta itemprop="position" content="5" />
       </li></ol>
     <div class="xl:hidden ml-1">
       <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
@@ -482,7 +486,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.custom_area_base.rst.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.camera_area_base.CameraAreaBase.rst.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -496,35 +500,106 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.custom_area_base.rst.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.camera_area_base.CameraAreaBase.rst.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.custom_area_base.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
-            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.custom_area_base.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.camera_area_base.CameraAreaBase.rst.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:code-slash"></iconify-icon>
+            <span>View Source</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.camera_area_base.CameraAreaBase.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.custom_area_base.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/api_generated/village.custom_classes.camera_area_base.CameraAreaBase.rst.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="custom-area-base">
-<h1>custom_area_base</h1>
-<p class="rubric">Classes</p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomAreaBase</span></code>()</p></td>
-<td><p>Overrides the shape of one of the 4 BOX camera detection areas.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+          <section id="cameraareabase">
+<h1>CameraAreaBase</h1>
+<dl class="py class">
+<dt class="sig sig-object py">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">CameraAreaBase</span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Overrides the shape of one of the 4 BOX camera detection areas.</p>
+<p>The 4 BOX areas (AREA1_BOX..AREA4_BOX) are rectangles by default, edited
+from the GUI. Subclass this to replace the <em>shape</em> of one of them with a
+union of polygons and/or circles defined in code (e.g. an L-shaped
+region), while its status (ALLOWED/NOT_ALLOWED/TRIGGER/OFF) and its
+threshold keep working exactly as before and stay editable from the GUI
+— only the position controls for that area are hidden, since the shape
+is no longer a plain rectangle.
+Subclass in the project code directory so it is picked up by import_all.</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<p class="rubric">Attributes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CUSTOM'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">area_index</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">polygons</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">circles</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">build_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.build_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Rasterize self.polygons and self.circles to a uint8 (h, w) mask,
+255 inside else 0.</p>
+<p>cv2.fillPoly/cv2.circle handle concave shapes and circles
+respectively. Override only for a shape that is neither (e.g. build
+it with numpy slicing).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cached mask, sized self.height x self.width.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cached (x1, y1, x2, y2) bounding box of the shape.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">contours</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.contours"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Cached outer silhouette of the shape, as one point list per
+disjoint (non-touching) blob.</p>
+<p>Traces the rasterized mask instead of self.polygons/self.circles
+directly, so overlapping or touching pieces merge into a single
+outline with no interior seams — used to draw the area without the
+crossing lines a piece-by-piece outline would show.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>True if pixel (x, y) is inside the area.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -533,16 +608,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="village.custom_classes.change_cycle_base.ChangeCycleBase.html">
+    <a href="village.custom_classes.camera_area_base.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">ChangeCycleBase</div></div>
+        <span>Previous</span><div class="title">camera_area_base</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="village.custom_classes.custom_area_base.CustomAreaBase.html">
+    <a href="village.custom_classes.camera_draw_base.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">CustomAreaBase</div>
+        <div class="title">camera_draw_base</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -564,7 +639,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=030f05f2"></script>
+      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
