@@ -551,14 +551,15 @@ class SoundDevice:
             if self._play_event.is_set():
                 self._play_event.clear()
                 sound = self._sound
-                play_ts: float | None = None
                 try:
                     if len(sound):
-                        # Captured right before the write, so it reflects the real
-                        # onset AFTER any scheduling delay (the CPU-busy latency
-                        # lives between play() and here). Recorded below, AFTER the
-                        # write, so the CSV flush never delays the audio itself.
                         play_ts = time_utils.now_timestamp()
+                        rec = self.recorder
+                        if rec is not None:
+                            try:
+                                rec.add_raspberry_event("sound", play_ts)
+                            except Exception:
+                                pass
                         self._write_sound(sound)
                 except alsaaudio.ALSAAudioError:
                     pass  # stop()/watchdog dropped it mid-write
@@ -576,12 +577,6 @@ class SoundDevice:
                     self._playing = False
                     self._stopping = False  # the stop (if any) is now complete
                     self._play_deadline = 0.0
-                rec = self.recorder
-                if play_ts is not None and rec is not None:
-                    try:
-                        rec.add_raspberry_event("sound", play_ts)
-                    except Exception:
-                        pass
             self._rearm()
 
     def play(self) -> None:
