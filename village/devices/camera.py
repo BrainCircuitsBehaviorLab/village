@@ -1,4 +1,5 @@
 import queue
+import subprocess
 import threading
 import time
 import traceback
@@ -243,6 +244,11 @@ class Camera:
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
         self.items_to_draw: dict[str, Any] = {}
+        # video segments for the current session (BOX only): the watchdog
+        # restart appends a new segment path here instead of starting a
+        # brand new session file; they get merged back into segments[0] by
+        # _concat_video_segments() when the session really ends.
+        self._video_segments: list[str] = []
 
         if self.change:
             self.set_properties()
@@ -382,7 +388,9 @@ class Camera:
         self.window.cleanup()
         self.cam.start_preview(Preview.NULL)
 
-    def start_recording(self, path_video: str = "", path_csv: str = "") -> None:
+    def start_recording(
+        self, path_video: str = "", path_csv: str = "", is_restart: bool = False
+    ) -> None:
         """Starts recording video and data.
 
         Args:
@@ -390,14 +398,31 @@ class Camera:
                 based on settings.
             path_csv (str): Custom CSV path. Defaults to automatic naming
                 based on settings.
+            is_restart (bool): True when called by the watchdog after a
+                "no frames"/ffmpeg-died restart mid-session. Instead of
+                starting a brand new session file, records into a new
+                "<original>_<n>.mp4" segment while keeping the same CSV
+                path as before -- see restart_camera() and
+                _concat_video_segments(), which merges the segments back
+                into one file when the session really ends.
         """
         self.filename = Path(path_video).stem
-        time_start = time_utils.now_string_for_filename()
-        self.camera_timestamp_start = 0.0
         if path_video != "":
             self.path_video = path_video
             self.path_csv = path_csv
+            self.camera_timestamp_start = 0.0
+            self._video_segments = [self.path_video]
+        elif is_restart and self._video_segments:
+            base = Path(self._video_segments[0])
+            segment_number = len(self._video_segments) + 1
+            self.path_video = str(
+                base.with_name(f"{base.stem}_{segment_number}{base.suffix}")
+            )
+            # self.path_csv stays the same across restarts -- single CSV
+            self._video_segments.append(self.path_video)
         else:
+            time_start = time_utils.now_string_for_filename()
+            self.camera_timestamp_start = 0.0
             self.path_video = str(
                 Path(settings.get("VIDEOS_DIRECTORY"))
                 / (self.name + "_" + time_start + ".mp4")
@@ -406,6 +431,7 @@ class Camera:
                 Path(settings.get("VIDEOS_DIRECTORY"))
                 / (self.name + "_" + time_start + ".csv")
             )
+            self._video_segments = [self.path_video]
         self.output = FfmpegOutput(self.path_video)
         self.is_recording = True
         self.camera_timestamp = time_utils.now_timestamp()
@@ -433,12 +459,80 @@ class Camera:
                 pass
 
     def stop_recording(self) -> None:
-        """Stops recording and saves CSV data."""
+        """Stops recording, saves CSV data, and merges BOX video segments
+        (if the watchdog restarted recording mid-session) into one file."""
         if self.is_recording:
             self.is_recording = False
             self.cam.stop_encoder()
-            self.save_csv()
+        # Called unconditionally (not just when is_recording was True) so
+        # that data isn't lost if the last watchdog restart attempt failed
+        # and left is_recording False at session end; save_csv() already
+        # no-ops safely if recording was never actually started.
+        self.save_csv()
+        if self.name == "BOX" and len(self._video_segments) > 1:
+            segments = list(self._video_segments)
+            threading.Thread(
+                target=self._concat_video_segments,
+                args=(segments,),
+                daemon=True,
+            ).start()
         self.reset_values()
+
+    def _concat_video_segments(self, segments: list[str]) -> None:
+        """Merges BOX video segments produced by watchdog restarts back into
+        segments[0] via ffmpeg stream-copy (fast, no re-encode -- just
+        repackages the compressed frames), then deletes the extra segment
+        files. Runs in a background thread so a slow merge never blocks the
+        GUI at session end.
+        """
+        final_path = segments[0]
+        list_file = final_path + ".concat.txt"
+        tmp_output = final_path + ".merged.mp4"
+        try:
+            with Path(list_file).open("w") as f:
+                for seg in segments:
+                    f.write(f"file '{seg}'\n")
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-f",
+                    "concat",
+                    "-safe",
+                    "0",
+                    "-i",
+                    list_file,
+                    "-c",
+                    "copy",
+                    tmp_output,
+                ],
+                check=True,
+                capture_output=True,
+            )
+            Path(tmp_output).replace(final_path)
+            for seg in segments[1:]:
+                Path(seg).unlink(missing_ok=True)
+            print(
+                f"Camera {self.name}: merged {len(segments)} video "
+                f"segments into {final_path}"
+            )
+        except Exception as e:
+            print(f"Error: Camera {self.name}: failed to merge video segments: {e}")
+            try:
+                error_queue.put_nowait(
+                    (
+                        "cam",
+                        "Camera "
+                        + self.name
+                        + ": failed to merge video segments after restart.",
+                        traceback.format_exc(),
+                    )
+                )
+            except queue.Full:
+                pass
+        finally:
+            Path(list_file).unlink(missing_ok=True)
+            Path(tmp_output).unlink(missing_ok=True)
 
     def reset_values(self) -> None:
         """Resets all tracking and recording variables to defaults."""
@@ -452,6 +546,7 @@ class Camera:
         self.annotations = []
         self.frame_number = 0
         self.camera_timestamp_start = 0.0
+        self._video_segments = []
         self.error = ""
         self.filename = ""
         self.x_position = -1
@@ -586,6 +681,10 @@ class Camera:
         self.watchdog_timer.start()
         if started and self.name == "CORRIDOR":
             self.start_recording()
+        elif started and self.name == "BOX" and self._video_segments:
+            # was recording before the failure -- resume into a new segment
+            # instead of leaving the session without any more video/csv data
+            self.start_recording(is_restart=True)
 
     def pre_process(self, request: Any) -> None:
         """Callback for frame processing. Handles detection, drawing, and recording.
