@@ -15,7 +15,7 @@ Design notes
 * Each IMU notification carries all 9 sensor values (accel, gyro, mag) in one
   packet, so reading them costs nothing extra. What you configure with the
   on/off flags is which COLUMNS get written to disk, not what is read.
-* IMU logging flags (independent, "enfoque C"):
+* IMU logging flags (independent):
     - save_accel_gyro    : write acc_x/y/z, gyro_x/y/z
     - save_orientation   : write roll/pitch/yaw (requires save_accel_gyro);
                            uses the magnetometer when available, falls back to
@@ -640,7 +640,27 @@ class OptoGrid:
         # (re)build EKF in case orientation flag changed since connect
         self._init_ekf()
 
-        # enable IMU on the device
+        # Enable IMU on the device -- force a real off->on transition rather
+        # than just writing "True", which is not reliably idempotent.
+        #
+        # The firmware (main.c's on_write handler) only (re)starts sampling
+        # when it sees the internal imu_streaming flag go from false to true:
+        #   if (imu_enable && !imu_streaming) { ...start... }
+        #   else { imu_streaming = false; ...stop... }
+        # If a previous session left imu_streaming=True on the device (e.g.
+        # the disable write in _stop_imu() failed silently, or the app never
+        # got to call it), writing "True" again lands in the else branch and
+        # actually STOPS sampling instead of starting it. Reading the
+        # characteristic back first doesn't help either: the firmware never
+        # syncs the characteristic's readable value to imu_streaming after a
+        # write, so a read can report "True" even while sampling is already
+        # stopped. Writing False first is deterministic regardless of the
+        # device's prior state -- that branch always sets
+        # imu_streaming=false without even checking imu_enable.
+        await self._client.write_gatt_char(
+            IMU_ENABLE_UUID, _encode(IMU_ENABLE_UUID, "False")
+        )
+        await asyncio.sleep(0.05)
         await self._client.write_gatt_char(
             IMU_ENABLE_UUID, _encode(IMU_ENABLE_UUID, "True")
         )
@@ -727,15 +747,17 @@ class OptoGrid:
         return True
 
     def _handle_sync(self, value: int) -> None:
-        """Mark a sync value on the most recent buffered sample, or queue it for
-        the next incoming sample (exactly the original's logic)."""
-        if self._imu_buffer:
-            sync_idx = self._imu_columns.index("sync")
-            self._imu_buffer[-1][sync_idx] = value
-            print(f"Sync {value} written to current IMU sample")
-        else:
-            self._pending_sync.append(value)
-            print(f"Sync {value} queued for next IMU sample")
+        """Queue a sync value for the next incoming IMU sample.
+
+        Always the next sample, never the last one already received: that
+        keeps the tagged sample's real-world time consistently at or after
+        the call (bounded by one sample period), instead of usually before
+        (whenever a sample was already buffered) and occasionally after
+        (only in the brief window right after a periodic flush empties the
+        buffer) -- a mixed, mostly-accidental bias that made the marker
+        harder to interpret."""
+        self._pending_sync.append(value)
+        print(f"Sync {value} queued for next IMU sample")
 
     def _flush_imu(self) -> None:
         if not self._imu_buffer or not self._parquet_writer:

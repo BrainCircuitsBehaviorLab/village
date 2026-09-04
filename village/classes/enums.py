@@ -72,8 +72,7 @@ class Color(SuperEnum):
 
 class ControllerEnum(SuperEnum):
     BPOD = "BPOD"
-    ARDUINO = "ARDUINO"
-    RASPBERRY = "RASPBERRY"
+    OTHER = "OTHER"
 
 
 class ScreenActive(SuperEnum):

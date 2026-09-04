@@ -418,10 +418,7 @@ class SettingsLayout(Layout):
                     row += 2
 
         elif name == "CONTROLLER SETTINGS":
-            is_raspberry = self._get("BEHAVIOR_CONTROLLER") == ControllerEnum.RASPBERRY
             for s in settings.controller_settings:
-                if s.key == "CONTROLLER_PORT" and is_raspberry:
-                    continue
                 if self._should_show(s.key):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2

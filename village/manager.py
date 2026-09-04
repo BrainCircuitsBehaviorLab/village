@@ -26,7 +26,6 @@ from village.classes.enums import (
 )
 from village.classes.null_classes import NullCamera, NullTouch
 from village.classes.subject import Subject
-from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
@@ -72,7 +71,6 @@ class Manager:
         task (TaskBase): Instance of TaskBase class.
         training (Training): Instance of Training class.
         bpod (BpodController): Instance of BpodController class.
-        arduino (ArduinoController): Instance of ArduinoController class.
         state (State): Current state of the system.
         table (DataTable): Data table type.
         rfid_reader (Active): RFID reader settings.
@@ -158,9 +156,6 @@ class Manager:
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod = bpod
             self.bpod.check_connection()
-        elif self.controller_type == ControllerEnum.ARDUINO:
-            self.arduino = arduino
-            self.arduino.check_connection()
         self.detections = time_utils.TimestampTracker(
             hours=int(settings.get("NO_DETECTION_HOURS") or 6)
         )
@@ -450,10 +445,6 @@ class Manager:
                 self.task.bpod = self.bpod
                 self.task.bpod.connect(self.task.execute_function)
                 self.task.recorder = self.bpod.recorder
-            elif self.controller_type == ControllerEnum.ARDUINO:
-                self.task.arduino = self.arduino
-                self.task.arduino.connect()
-                self.task.recorder = self.arduino.recorder
             sound_device.recorder = self.task.recorder
             screen.recorder = self.task.recorder
             screen.gpio = self.gpio

@@ -9,7 +9,6 @@ import pandas as pd
 from village.classes.calibrations import Calibrations
 from village.classes.enums import Active, ControllerEnum, Save
 from village.classes.null_classes import NullCamera, NullGpio
-from village.controllers.arduino_controller import arduino
 from village.controllers.bpod_controller import bpod
 from village.controllers.trial_recorder import TrialRecorder
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
@@ -151,6 +150,18 @@ class TaskBase:
     self.name: str
         Name of the task.
 
+    self.info : str
+        Human-readable description of the task, set once (usually in
+        ``__init__``). Shown to the user when selecting the task in the GUI.
+
+        Example::
+
+            self.info = \"\"\"
+            My Task
+            -------
+            Describe what the task does and how it progresses here.
+            \"\"\"
+
     self.subject : str
         Name of the subject running the session.
 
@@ -160,9 +171,6 @@ class TaskBase:
     self.bpod : BpodController
         Bpod interface (state machine construction, sending, etc.).
         Primarily used inside ``create_trial``.
-
-    self.arduino : ArduinoController
-        Arduino interface for tasks that use an Arduino instead of Bpod.
 
     self.settings : Settings
         Object that holds all the session parameters defined in the training
@@ -181,8 +189,18 @@ class TaskBase:
     self.cam_box : Camera | NullCamera
         Camera attached to the operant box (NullCamera if not configured).
 
+    self.gpio : Gpio | NullGpio
+        Output pin control (``set_on()`` / ``set_off()``). See the Custom GPIO
+        Interaction docs for the input-pin trigger hook.
+
     self.current_trial : int
         The current trial number starting from 1
+
+    self.date : str
+        Date string of the current session, set once when the session starts.
+
+    self.run_mode : str
+        ``"Manual"`` or ``"Auto"``.
 
     self.trial_data : dict
         Dictionary populated automatically at the end of each trial.
@@ -261,9 +279,8 @@ class TaskBase:
     """
 
     def __init__(self) -> None:
-        self.controller_type = ControllerEnum.RASPBERRY
+        self.controller_type = ControllerEnum.OTHER
         self.bpod = bpod
-        self.arduino = arduino
         self.recorder: TrialRecorder = TrialRecorder()
         self.functions: list[Callable] = []
 
@@ -599,8 +616,6 @@ class TaskBase:
                         )
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod.close()
-        elif self.controller_type == ControllerEnum.ARDUINO:
-            self.arduino.close()
         return save, duration, trials, water, settings_str
 
     def save_json(self, run_mode: str) -> str:

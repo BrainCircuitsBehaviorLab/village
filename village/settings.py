@@ -680,21 +680,26 @@ preventing unnecessary processing.""",
 controller_settings = [
     Setting(
         "BEHAVIOR_CONTROLLER",
-        "RASPBERRY",
+        "OTHER",
         ControllerEnum,
         """The controller used to run the operant box. The options are:
-BPOD: The Bpod controller. ARDUINO: A custom controller that can be
-Arduino based. RASPBERRY: No need for an external controller.""",
+BPOD: The Bpod controller -- state machine construction, automatic event/state
+logging, softcodes, etc. are all built in. OTHER: Any other microcontroller
+(Arduino, Teensy, ...) that you talk to yourself from within the task -- opening
+its serial port, sending/reading messages, and registering timestamps by hand --
+or no microcontroller at all if you control everything directly from the
+Raspberry Pi.""",
     ),
     Setting(
         "CONTROLLER_PORT",
         "/dev/controller",
         str,
         """The USB serial port path of the controller device (e.g., Bpod,
-Arduino-compatible board). By default, this is set to '/dev/controller'. The system
-features a pre-configured udev rule that automatically generates this consistent
-symbolic link, so no manual configuration is required. Simply ensure the controller is
-plugged into the designated USB port as specified in the hardware guide.
+Arduino-compatible board) if you are using one. By default, any USB device plugged
+in the bottom USB 3.0 port (the blue port closest to the Ethernet jack) is
+automatically assigned to '/dev/controller' thanks to a pre-configured udev rule
+that generates this consistent symbolic link, so no manual configuration is
+required.
 """,
     ),
 ]

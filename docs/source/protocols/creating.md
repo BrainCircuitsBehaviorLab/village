@@ -118,6 +118,17 @@ This method defines all training variables and their initial values. It is calle
 when a new subject is created. The variables defined here are accessible from within
 any task via `self.settings.<variable_name>`.
 
+For example, you might have a variable like `delay` or `stim_size`. As training
+progresses, these can be adjusted to fine-tune the difficulty of the task.
+
+```{admonition} Warning
+:class: warning
+Every variable you want to use in your tasks must be defined here. This way, each
+subject ends up with its own list of settings tied to its training. Every subject
+starts out with these default values, and its settings change as training
+progresses.
+```
+
 After creation, a subject's settings can be modified in three ways: manually from the
 `SUBJECTS` tab or from the `TASKS` tab when launching a task manually; in real time from
 within a running task; or automatically by `update_training_settings()` at the end of
