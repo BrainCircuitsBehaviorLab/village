@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/task_methods.html">Task Methods &amp; Attributes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
@@ -531,7 +532,7 @@ data-aria-dark="Switch to auto color mode">
 </div>
 </li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>:</strong> Likewise gated by <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> at the top of the section, which enables the Operant Box PCB. Once ON, declare which box hardware is physically present: <code class="docutils literal notranslate"><span class="pre">MOTOR1_BOX</span></code> through <code class="docutils literal notranslate"><span class="pre">MOTOR7_BOX</span></code>, <code class="docutils literal notranslate"><span class="pre">VISIBLE_LIGHT_BOX</span></code>, <code class="docutils literal notranslate"><span class="pre">IR_LIGHT_BOX</span></code>, <code class="docutils literal notranslate"><span class="pre">LED_STRIP_BOX</span></code>, and <code class="docutils literal notranslate"><span class="pre">SCALE_BOX</span></code>. Only the components you mark <strong>ON</strong> here get initialized and show up as controls on the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen’s <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tab.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">CONTROLLER</span> <span class="pre">SETTINGS</span></code>:</strong> Select your primary behavioral control hardware architecture (<code class="docutils literal notranslate"><span class="pre">BPOD</span></code>, <code class="docutils literal notranslate"><span class="pre">ARDUINO</span></code>, or <code class="docutils literal notranslate"><span class="pre">RASPBERRY</span></code>). <code class="docutils literal notranslate"><span class="pre">CONTROLLER_PORT</span></code> only appears for <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>/<code class="docutils literal notranslate"><span class="pre">ARDUINO</span></code>, since <code class="docutils literal notranslate"><span class="pre">RASPBERRY</span></code> needs no external controller.</p>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CONTROLLER</span> <span class="pre">SETTINGS</span></code>:</strong> Select your primary behavioral control hardware architecture: <code class="docutils literal notranslate"><span class="pre">BPOD</span></code> (state machine construction, event/state logging and softcodes are all built in), or <code class="docutils literal notranslate"><span class="pre">OTHER</span></code> (any other microcontroller you talk to yourself from within the task, or no microcontroller at all if you control everything from the Raspberry Pi). <code class="docutils literal notranslate"><span class="pre">CONTROLLER_PORT</span></code> is only actually used when <code class="docutils literal notranslate"><span class="pre">BPOD</span></code> is selected, or when an <code class="docutils literal notranslate"><span class="pre">OTHER</span></code> task talks to an external microcontroller over serial.</p>
 <div class="tip admonition">
 <p class="admonition-title">Note</p>
 <p>The system automatically creates a symlink named <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> pointing directly to any device connected to the bottom USB port adjacent to the Raspberry Pi’s native RJ45 Ethernet jack.</p>
@@ -589,7 +590,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
+      <script src="../_static/documentation_options.js?v=46080a62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Development Guide - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Direct, Audio &amp; Video Functions" href="functions.html" /><link rel="prev" title="Protocol Creation" href="creating.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Development Guide - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Task Methods &amp; Attributes" href="task_methods.html" /><link rel="prev" title="Protocol Creation" href="creating.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="creating.html">Protocol Creation</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="task_methods.html">Task Methods &amp; Attributes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
@@ -447,6 +448,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#the-after-trial-method">The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> Method</a></li>
 <li><a class="reference internal" href="#the-close-method">The <code class="docutils literal notranslate"><span class="pre">close()</span></code> Method</a></li>
 <li><a class="reference internal" href="#the-followthelight-task">The FollowTheLight Task</a></li>
+<li><a class="reference internal" href="#more-bpod-primitives">More Bpod primitives</a></li>
 </ul>
 </div></div>
   </aside>
@@ -545,7 +547,7 @@ task is the following:</p>
 </span><span data-line="16">
 </span><span data-line="17">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span data-line="18"><span class="w">        </span><span class="sd">"""</span>
-</span><span data-line="19"><span class="sd">        Initialize the training protocol. The text in the self.info variable</span>
+</span><span data-line="19"><span class="sd">        The text in the self.info variable</span>
 </span><span data-line="20"><span class="sd">        will be shown when the task is selected in the GUI to be run manually.</span>
 </span><span data-line="21"><span class="sd">        """</span>
 </span><span data-line="22">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -883,6 +885,26 @@ were created in the settings training_protocol.</p>
 </span></pre></div>
 </div>
 </section>
+<hr class="docutils" />
+<section id="more-bpod-primitives">
+<h2>More Bpod primitives</h2>
+<p>For a runnable walkthrough of the Bpod building blocks, see two reference
+tasks in this project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (neither is a real behavioral
+protocol):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bpod_example_outputs_and_events.py</span></code> — LEDs, a valve, poke in/out,
+softcodes in both directions, and TTL pulses in both directions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bpod_example_global_timer.py</span></code> — a global timer: a deadline that ticks in
+the background across every state, independently of each state’s own
+timer, until it ends or is cancelled.</p></li>
+</ul>
+<p>Two more primitives exist beyond what those examples cover — global counters
+(<code class="docutils literal notranslate"><span class="pre">self.bpod.set_global_counter(counter_number,</span> <span class="pre">target_event,</span> <span class="pre">threshold)</span></code>,
+counts occurrences of an event and fires once a threshold is reached) and
+conditions (<code class="docutils literal notranslate"><span class="pre">self.bpod.set_condition(condition_number,</span> <span class="pre">condition_channel,</span> <span class="pre">channel_value)</span></code>, checks a channel’s current level at the moment of a
+transition rather than reacting to an edge). For both, see the official Bpod
+documentation: <a class="reference external" href="https://sanworks.github.io/Bpod_Wiki/">sanworks.github.io/Bpod_Wiki</a>.</p>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -897,10 +919,10 @@ were created in the settings training_protocol.</p>
         <span>Previous</span><div class="title">Protocol Creation</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="functions.html">
+    <a href="task_methods.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Direct, Audio &amp; Video Functions</div>
+        <div class="title">Task Methods &amp; Attributes</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -922,7 +944,7 @@ were created in the settings training_protocol.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
+      <script src="../_static/documentation_options.js?v=46080a62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

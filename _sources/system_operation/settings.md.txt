@@ -16,7 +16,7 @@ Some initial settings must be configured before the system can be used.  Navigat
 
 *   **`BOX SETTINGS`:** Likewise gated by `USE_BOX_BOARD` at the top of the section, which enables the Operant Box PCB. Once ON, declare which box hardware is physically present: `MOTOR1_BOX` through `MOTOR7_BOX`, `VISIBLE_LIGHT_BOX`, `IR_LIGHT_BOX`, `LED_STRIP_BOX`, and `SCALE_BOX`. Only the components you mark **ON** here get initialized and show up as controls on the `MONITOR` screen's `BOX` tab.
 
-*   **`CONTROLLER SETTINGS`:** Select your primary behavioral control hardware architecture (`BPOD`, `ARDUINO`, or `RASPBERRY`). `CONTROLLER_PORT` only appears for `BPOD`/`ARDUINO`, since `RASPBERRY` needs no external controller.
+*   **`CONTROLLER SETTINGS`:** Select your primary behavioral control hardware architecture: `BPOD` (state machine construction, event/state logging and softcodes are all built in), or `OTHER` (any other microcontroller you talk to yourself from within the task, or no microcontroller at all if you control everything from the Raspberry Pi). `CONTROLLER_PORT` is only actually used when `BPOD` is selected, or when an `OTHER` task talks to an external microcontroller over serial.
     ```{admonition} Note
     :class: tip
     The system automatically creates a symlink named `/dev/controller` pointing directly to any device connected to the bottom USB port adjacent to the Raspberry Pi's native RJ45 Ethernet jack.

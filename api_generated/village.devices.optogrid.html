@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/task_methods.html">Task Methods &amp; Attributes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
@@ -535,7 +536,7 @@ public API is synchronous so it can be called from PyQt slots.</p></li>
 packet, so reading them costs nothing extra. What you configure with the
 on/off flags is which COLUMNS get written to disk, not what is read.</p></li>
 <li><dl class="simple">
-<dt>IMU logging flags (independent, “enfoque C”):</dt><dd><ul class="simple">
+<dt>IMU logging flags (independent):</dt><dd><ul class="simple">
 <li><p>save_accel_gyro    : write acc_x/y/z, gyro_x/y/z</p></li>
 <li><dl class="simple">
 <dt>save_orientation<span class="classifier">write roll/pitch/yaw (requires save_accel_gyro);</span></dt><dd><p>uses the magnetometer when available, falls back to
@@ -621,7 +622,7 @@ accel+gyro only when not (yaw will drift)</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
+      <script src="../_static/documentation_options.js?v=46080a62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

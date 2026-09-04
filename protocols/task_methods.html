@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sound Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Camera Calibration" href="camera.html" /><link rel="prev" title="Bpod Water Calibration" href="bpod_water.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/calibrations/sound.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Methods &amp; Attributes - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Direct, Audio &amp; Video Functions" href="functions.html" /><link rel="prev" title="Task Development Guide" href="task.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task_methods.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -22,8 +22,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/calibrations/sound.html"/>
-  <meta property="og:title" content="Sound Calibration"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task_methods.html"/>
+  <meta property="og:title" content="Task Methods &amp; Attributes"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -97,23 +97,23 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="bpod_water.html">Bpod Water Calibration</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Sound Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="camera.html">Camera Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thresholds.html">Corridor Threshold Calibration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="optogrid.html">OptoGrid Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/task_methods.html">Task Methods &amp; Attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">Custom GPIO Interaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="creating.html">Protocol Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="task.html">Task Development Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Task Methods &amp; Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">Custom GPIO Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plots.html">Custom Plotting</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
@@ -443,9 +443,21 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#calibrating">Calibrating</a></li>
-<li><a class="reference internal" href="#testing">Testing</a></li>
-<li><a class="reference internal" href="#using-it-in-tasks">Using it in tasks</a></li>
+<li><a class="reference internal" href="#methods-you-must-override">Methods you must override</a></li>
+<li><a class="reference internal" href="#methods-you-can-call">Methods you can call</a><ul>
+<li><a class="reference internal" href="#registering-controller-events">Registering controller events</a></li>
+<li><a class="reference internal" href="#registering-a-raspberry-side-event">Registering a Raspberry-side event</a></li>
+<li><a class="reference internal" href="#registering-a-value">Registering a value</a></li>
+<li><a class="reference internal" href="#executing-a-direct-function">Executing a direct function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#attributes-you-can-read">Attributes you can read</a><ul>
+<li><a class="reference internal" href="#self-info"><code class="docutils literal notranslate"><span class="pre">self.info</span></code></a></li>
+<li><a class="reference internal" href="#self-calibrations"><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></a></li>
+<li><a class="reference internal" href="#self-should-stop-read-only-property"><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</a></li>
+<li><a class="reference internal" href="#self-trial-data-dict"><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</a></li>
+</ul>
+</li>
 </ul>
 </div></div>
   </aside>
@@ -467,11 +479,11 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../calibrations_index.html"><span itemprop="name">CALIBRATIONS</span></a>
+        <a itemprop="item" href="../protocol_index.html"><span itemprop="name">PROTOCOL &amp; TASK DESIGN</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Sound Calibration</strong>
+        <strong itemprop="name">Task Methods &amp; Attributes</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -488,7 +500,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/calibrations/sound.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -502,90 +514,299 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/calibrations/sound.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/calibrations/sound.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/calibrations/sound.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/calibrations/sound.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="sound-calibration">
-<h1>Sound Calibration</h1>
-<p>Calibrates speaker output so a requested sound level in dB corresponds to an actual,
-measured volume — per speaker (left/right) and per sound, so tasks can request a
-sound in dB instead of a raw gain value.</p>
-<div class="note admonition">
-<p class="admonition-title">Note</p>
-<p>Only available when <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> is <strong>ON</strong>.</p>
+          <section id="task-methods-attributes">
+<h1>Task Methods &amp; Attributes</h1>
+<p>Full reference for <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code> — every method you can override or call, and every
+attribute you can read, from inside your own task. For a walkthrough of building a
+task from scratch, see the <a class="reference internal" href="task.html"><span class="std std-doc">Task Development Guide</span></a>.</p>
+<hr class="docutils" />
+<section id="methods-you-must-override">
+<h2>Methods you must override</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Called</p></th>
+<th class="head"><p>Use it to</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">start(self)</span></code></p></td>
+<td><p>Once, before the trial loop begins.</p></td>
+<td><p>Configure hardware, pre-compute stimuli, open files, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">create_trial(self)</span></code></p></td>
+<td><p>Once at the start of every trial.</p></td>
+<td><p>Build and run the trial.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">after_trial(self)</span></code></p></td>
+<td><p>Immediately after each trial finishes.</p></td>
+<td><p>Score performance, update adaptive parameters, call <code class="docutils literal notranslate"><span class="pre">register_value</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close(self)</span></code></p></td>
+<td><p>Once after the trial loop ends (session finished, forced stop, or error).</p></td>
+<td><p>Close files, stop hardware, release resources.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="note admonition">
-<p class="admonition-title">Note</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">SOUND</span></code> dropdown lists the functions in <code class="docutils literal notranslate"><span class="pre">sound_calibration_functions</span></code>, defined in
-your project’s <code class="docutils literal notranslate"><span class="pre">code/sound_functions.py</span></code>. Each function takes <code class="docutils literal notranslate"><span class="pre">gain</span></code> and <code class="docutils literal notranslate"><span class="pre">duration</span></code>
-and returns a mono NumPy waveform array; see the demo-village-project for examples.</p>
+<p class="admonition-title">create_trial with Bpod</p>
+<p>Each call starts with an empty state machine. Add states with <code class="docutils literal notranslate"><span class="pre">self.bpod.add_state</span></code>
+— when the method returns, the state machine is sent and run automatically, and
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called once it finishes. Without Bpod, you’re responsible for
+creating and running the trial logic yourself.</p>
 </div>
-<section id="calibrating">
-<h2>Calibrating</h2>
-<p>Pick a sound and a speaker, enter a gain (0-1) and a duration in seconds, then click
-<code class="docutils literal notranslate"><span class="pre">CALIBRATE</span></code> — the sound is played once through that speaker. Measure the resulting
-volume with a sound level meter and enter it in dB, then click <code class="docutils literal notranslate"><span class="pre">ADD</span></code> to save the
-point — it’s added to the calibration curve, plotted immediately, and listed under
-<code class="docutils literal notranslate"><span class="pre">CALIBRATION</span> <span class="pre">POINTS</span></code>, where each point can be removed individually with its <code class="docutils literal notranslate"><span class="pre">-</span></code>
-button if it turns out to be an outlier. Repeat with a few different gain values per
-speaker/sound pair (at least two points are required) to build a gain → dB curve. If
-the sound device fails to play the sound, an error dialog is shown and the inputs are
-reset instead of prompting for a measurement.</p>
-<p>Once you’re happy with the curve, click <code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">CALIBRATION</span></code> to persist it. Any
-speaker/sound pair left with fewer than two points is dropped from the save, with a
-warning listing which ones. Saved calibrations are never overwritten — every save gets
-a new <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code> and the full history is kept, but tasks and the testing
-panel always use the most recent one per speaker/sound pair. <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">CALIBRATION</span></code>
-discards the points collected so far (after confirmation) without saving them.</p>
+<div class="warning admonition">
+<p class="admonition-title">after_trial must register “water”</p>
+<p>Always call <code class="docutils literal notranslate"><span class="pre">self.register_value(&quot;water&quot;,</span> <span class="pre">...)</span></code> with the amount of water consumed
+during the trial. The system sums it across the session to get total water
+consumption — if that total falls below a configurable threshold, an alarm is
+triggered (adjustable in the Settings tab of the GUI).</p>
+</div>
 </section>
-<section id="testing">
-<h2>Testing</h2>
-<p>Check whether the latest saved calibration for a speaker/sound pair is still accurate.
-Pick the sound and speaker, enter a target dB and a duration, then click <code class="docutils literal notranslate"><span class="pre">TEST</span></code> — the
-panel looks up the gain the calibration curve predicts for that dB. If the pair hasn’t
-been calibrated yet, or the target dB falls outside the calibrated range, you get a
-warning immediately and nothing is played. Otherwise the sound is played at that gain;
-measure the actual dB the same way as during calibration and enter it back — the panel
-shows the resulting error and plots the test point against the existing curve.</p>
+<hr class="docutils" />
+<section id="methods-you-can-call">
+<h2>Methods you can call</h2>
+<p>Do not override these — call them from inside your task’s own methods.</p>
+<section id="registering-controller-events">
+<h3>Registering controller events</h3>
+<p>If you’re using Bpod, all four of these are called automatically — you never need
+to call them yourself. With <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>, call them with
+the right timestamps to populate <code class="docutils literal notranslate"><span class="pre">trial_data</span></code> (see below).</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Args</p></th>
+<th class="head"><p>When to call it (<code class="docutils literal notranslate"><span class="pre">OTHER</span></code>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp:</span> <span class="pre">float,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>At the beginning of each trial.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>At the end of each trial.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">state_name:</span> <span class="pre">str,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>Whenever you enter a state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">str,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>To register any other controller event.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <ul class="simple">
-<li><p>If the error is acceptable, click <code class="docutils literal notranslate"><span class="pre">OK</span></code>. The measurement is recorded for reference
-(it does not affect <code class="docutils literal notranslate"><span class="pre">get_sound_gain</span></code>, since it’s stored with <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>
--1) and the panel is cleared for another test.</p></li>
-<li><p>If the error is too large, click <code class="docutils literal notranslate"><span class="pre">FAIL</span></code> instead. The measurement is recorded the
-same way, but it’s also used as the first point of a brand-new calibration for that
-speaker/sound pair, so you can immediately continue adding points to it (as in
-Calibrating above) and save a corrected curve.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>: the Raspberry Pi’s own clock — get it with <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code>: read from the microcontroller’s own clock (e.g. an Arduino’s <code class="docutils literal notranslate"><span class="pre">millis()</span></code>, converted to seconds), if you’re talking to one and it reports its own timing.</p></li>
+<li><p>If you’re not syncing against an external clock (no microcontroller, or one that doesn’t report its own timing), <code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code> is exactly the same as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p></li>
 </ul>
+<p><code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> uses the two timestamps together to compute a clock offset
+(<code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span> <span class="pre">-</span> <span class="pre">controller_timestamp</span></code>), used to convert every later
+<code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code> back to Raspberry Pi absolute time.</p>
 </section>
-<section id="using-it-in-tasks">
-<h2>Using it in tasks</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span><span class="n">speaker</span><span class="p">,</span> <span class="n">dB</span><span class="p">,</span> <span class="n">sound_name</span><span class="p">)</span>
+<section id="registering-a-raspberry-side-event">
+<h3>Registering a Raspberry-side event</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_raspberry_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raspberry_timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></pre></div>
 </div>
-<p>Given a speaker (<code class="docutils literal notranslate"><span class="pre">0</span></code> = left, <code class="docutils literal notranslate"><span class="pre">1</span></code> = right), a target dB, and the sound’s function name,
-this interpolates the gain from that speaker/sound pair’s most recent saved
-calibration curve. <code class="docutils literal notranslate"><span class="pre">dB=0</span></code> always returns a gain of <code class="docutils literal notranslate"><span class="pre">0.0</span></code> without needing a
-calibration. Otherwise, if the pair hasn’t been calibrated yet, or <code class="docutils literal notranslate"><span class="pre">dB</span></code> falls outside
-the calibrated range, it raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> explaining the problem so it’s easy to
-tell whether the sound needs calibrating or the requested dB needs adjusting.</p>
-<p>Data is stored in <code class="docutils literal notranslate"><span class="pre">sound_calibration.csv</span></code> (columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">speaker</span></code>, <code class="docutils literal notranslate"><span class="pre">sound_name</span></code>,
-<code class="docutils literal notranslate"><span class="pre">gain</span></code>, <code class="docutils literal notranslate"><span class="pre">dB_obtained</span></code>, <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>, <code class="docutils literal notranslate"><span class="pre">dB_expected</span></code>, <code class="docutils literal notranslate"><span class="pre">error(%)</span></code>).</p>
+<p>For events generated by the Raspberry Pi itself, asynchronously from the controller
+— e.g. executing a direct function, or a camera/touchscreen detection. Pass
+<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p>
+</section>
+<section id="registering-a-value">
+<h3>Registering a value</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>Saves a custom value to the current trial row in the CSV — call it inside
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="2"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_time"</span><span class="p">,</span> <span class="mf">0.432</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="executing-a-direct-function">
+<h3>Executing a direct function</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">execute_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>Runs the direct function registered at index <code class="docutils literal notranslate"><span class="pre">i</span></code> (1-99). See
+<a class="reference internal" href="functions.html"><span class="std std-doc">Direct, Audio &amp; Video Functions</span></a> for how those get registered and
+the other ways they can be triggered.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># executes the function registered at index 1</span>
+</span></pre></div>
+</div>
+</section>
+</section>
 <hr class="docutils" />
-<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>.</p>
+<section id="attributes-you-can-read">
+<h2>Attributes you can read</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the task (the class name).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.subject</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the subject running the session.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.system_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the system, as defined in the Settings tab.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.bpod</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BpodController</span></code></p></td>
+<td><p>Bpod interface — state machine construction, sending, etc. Mainly used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.arduino</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ArduinoController</span></code></p></td>
+<td><p>Arduino interface, for tasks using an Arduino instead of Bpod.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Settings</span></code></p></td>
+<td><p>Session parameters defined in the training protocol. Read and write its attributes to implement adaptive training.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.cam_box</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera</span> <span class="pre">|</span> <span class="pre">NullCamera</span></code></p></td>
+<td><p>Camera attached to the operant box (<code class="docutils literal notranslate"><span class="pre">NullCamera</span></code> if not configured).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.gpio</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Gpio</span> <span class="pre">|</span> <span class="pre">NullGpio</span></code></p></td>
+<td><p>Output pin control (<code class="docutils literal notranslate"><span class="pre">set_on()</span></code> / <code class="docutils literal notranslate"><span class="pre">set_off()</span></code>). See <a class="reference internal" href="gpio_trigger.html"><span class="std std-doc">Custom GPIO Interaction</span></a> for the input-pin trigger hook.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.current_trial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>The current trial number, starting from 1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.date</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Date string of the current session, set once when it starts.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.run_mode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.force_stop</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> from your own task logic (e.g. in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>) to make the task stop.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.stop_button_pressed</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> once something external (e.g. the STOP TASK button) has asked the task to stop. Read-only — react to it, don’t set it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.chrono</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Chrono</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.chrono.get_seconds()</span></code> gives the time in seconds since the task started.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="self-info">
+<h3><code class="docutils literal notranslate"><span class="pre">self.info</span></code></h3>
+<p>Human-readable description of the task, set once (usually in <code class="docutils literal notranslate"><span class="pre">__init__</span></code>). Shown to
+the user when selecting the task in the GUI.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
+</span><span data-line="2"><span class="s2">My Task</span>
+</span><span data-line="3"><span class="s2">-------</span>
+</span><span data-line="4"><span class="s2">Describe what the task does and how it progresses here.</span>
+</span><span data-line="5"><span class="s2">"""</span>
+</span></pre></div>
+</div>
+</section>
+<section id="self-calibrations">
+<h3><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></h3>
+<p>Holds the task’s calibrations — call its methods to convert between hardware
+values and real-world units (see <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"white_noise"</span>
+</span><span data-line="3"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="self-should-stop-read-only-property">
+<h3><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</h3>
+<p><code class="docutils literal notranslate"><span class="pre">True</span></code> once <em>any</em> stopping condition is met: the trial/time limit (Manual mode
+only — Auto mode runs until the subject leaves the corridor, not for a fixed
+number of trials), <code class="docutils literal notranslate"><span class="pre">force_stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">stop_button_pressed</span></code>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Needed for a task with its own waiting loop</p>
+<p>Trial/time limits and <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> are only checked <em>between</em> trials, by the
+task’s own run loop — they can’t interrupt a <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> that’s blocked inside
+its own waiting loop. If your task doesn’t use Bpod and waits on its own
+condition inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>, poll <code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> so the loop actually
+exits when asked to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
+</span><span data-line="3">        <span class="o">...</span>  <span class="c1"># wait for your own condition</span>
+</span></pre></div>
+</div>
+</div>
+</section>
+<section id="self-trial-data-dict">
+<h3><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</h3>
+<p>Populated automatically at the end of each trial — available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<p><strong>Keys always present:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;date&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;trial&quot;</span></code> (int), <code class="docutils literal notranslate"><span class="pre">&quot;subject&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;system_name&quot;</span></code> (str)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_END&quot;</span></code> (float): absolute timestamps (UNIX epoch seconds)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ordered_list_of_events&quot;</span></code> (list[str]): event names in the order they occurred (e.g. <code class="docutils literal notranslate"><span class="pre">[&quot;Port1In&quot;,</span> <span class="pre">&quot;Port1Out&quot;,</span> <span class="pre">&quot;Port1In&quot;]</span></code>)</p></li>
+</ul>
+<p><strong>Keys added per state visited</strong> (Bpod or manual):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code> (list[float]): timestamps of every
+entry/exit for that state — a list because the same state can be visited more
+than once per trial.</p></li>
+</ul>
+<p><strong>Keys added per event type:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;EventName&gt;&quot;</span></code> (list[float]): timestamps of every occurrence of that event
+(e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>).</p></li>
+</ul>
+<p>When using Bpod, all state and event keys are filled in automatically. Without
+Bpod, call <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> and <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> /
+<code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code> yourself to populate them.</p>
+<p><strong>Keys added by you:</strong> any name passed to <code class="docutils literal notranslate"><span class="pre">register_value</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="3">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span data-line="4">    <span class="n">t_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">"STATE_stimulus_START"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="5">    <span class="n">t_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">"STATE_stimulus_END"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="6">    <span class="n">response_time</span> <span class="o">=</span> <span class="n">t_end</span> <span class="o">-</span> <span class="n">t_start</span>
+</span></pre></div>
+</div>
+</section>
 </section>
 </section>
 
@@ -595,16 +816,16 @@ tell whether the sound needs calibrating or the requested dB needs adjusting.</p
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="bpod_water.html">
+    <a href="task.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Bpod Water Calibration</div></div>
+        <span>Previous</span><div class="title">Task Development Guide</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="camera.html">
+    <a href="functions.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Camera Calibration</div>
+        <div class="title">Direct, Audio &amp; Video Functions</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>

@@ -31,7 +31,6 @@ ControllerEnum
       :no-index:
    
       ~ControllerEnum.BPOD
-      ~ControllerEnum.ARDUINO
-      ~ControllerEnum.RASPBERRY
+      ~ControllerEnum.OTHER
    
    

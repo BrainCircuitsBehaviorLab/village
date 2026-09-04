@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Direct, Audio &amp; Video Functions - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Custom Camera Interaction" href="camera.html" /><link rel="prev" title="Task Development Guide" href="task.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Direct, Audio &amp; Video Functions - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Custom Camera Interaction" href="camera.html" /><link rel="prev" title="Task Methods &amp; Attributes" href="task_methods.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/functions.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="task_methods.html">Task Methods &amp; Attributes</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
@@ -441,7 +442,17 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#direct-functions">Direct Functions</a><ul>
+<li><a class="reference internal" href="#ways-to-trigger-a-direct-function">Ways to trigger a direct function</a></li>
+<li><a class="reference internal" href="#bpod-softcodes">Bpod softcodes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#audio-functions">Audio Functions</a></li>
+<li><a class="reference internal" href="#video-functions">Video Functions</a></li>
+<li><a class="reference internal" href="#adding-your-own-functions">Adding your own functions</a></li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -515,6 +526,177 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="direct-audio-video-functions">
 <h1>Direct, Audio &amp; Video Functions</h1>
+<p>Your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory can hold three files that work together:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code></strong> — numbered, self-contained actions (play a sound, draw a
+stimulus, toggle a camera annotation, …) that can be triggered from several
+different places: a GUI button, a camera/GPIO/touchscreen trigger, a Bpod
+softcode, or a direct call from your task’s own code.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">video_functions.py</span></code></strong> — small libraries of
+generator functions that direct functions (or tasks) call to actually produce a
+sound or a visual stimulus, built on top of the <code class="docutils literal notranslate"><span class="pre">sound_device</span></code> and <code class="docutils literal notranslate"><span class="pre">screen</span></code> APIs
+described in <a class="reference internal" href="../system_operation/sound.html"><span class="std std-doc">Sound Integration</span></a> and
+<a class="reference internal" href="../system_operation/screen.html"><span class="std std-doc">Screen Integration</span></a>.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="direct-functions">
+<h2>Direct Functions</h2>
+<p>Create a file named <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code> inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory
+and define a class named <code class="docutils literal notranslate"><span class="pre">DirectFunctions</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">DirectFunctionsBase</span></code>.
+Each method must be named <code class="docutils literal notranslate"><span class="pre">functionN</span></code> (<code class="docutils literal notranslate"><span class="pre">N</span></code> from 1 to 98) and take no arguments other
+than <code class="docutils literal notranslate"><span class="pre">self</span></code>. Its first line, as a docstring, is a short label — it’s what shows up
+on the corresponding button in the GUI, so keep it brief.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.direct_functions_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectFunctionsBase</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">cam_box</span>
+</span><span data-line="3">
+</span><span data-line="4">
+</span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">DirectFunctions</span><span class="p">(</span><span class="n">DirectFunctionsBase</span><span class="p">):</span>
+</span><span data-line="6">
+</span><span data-line="7">    <span class="k">def</span><span class="w"> </span><span class="nf">function1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="8"><span class="w">        </span><span class="sd">"""Camera MSG ON"""</span>
+</span><span data-line="9">        <span class="c1"># self.task gives access to the currently running task, so you can read</span>
+</span><span data-line="10">        <span class="c1"># anything it defines (settings, calibrations, custom attributes, ...)</span>
+</span><span data-line="11">        <span class="n">cam_box</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="s2">"ON"</span>
+</span><span data-line="12">
+</span><span data-line="13">    <span class="k">def</span><span class="w"> </span><span class="nf">function2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="14"><span class="w">        </span><span class="sd">"""Clear Camera MSG"""</span>
+</span><span data-line="15">        <span class="n">cam_box</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="s2">""</span>
+</span></pre></div>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>The system detects the class automatically — no registration needed. See this
+project’s own <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code> for a fuller set of examples covering sound
+playback and on-screen stimuli.</p>
+</div>
+<section id="ways-to-trigger-a-direct-function">
+<h3>Ways to trigger a direct function</h3>
+<ul class="simple">
+<li><p><strong>GUI</strong> — the <code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code> tab shows one button per registered function, labeled
+with its docstring. Clicking it calls that function right away.</p></li>
+<li><p><strong>Camera trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside
+<code class="docutils literal notranslate"><span class="pre">CameraTriggerBase.trigger</span></code>. See <a class="reference internal" href="camera.html#camera-triggers"><span class="std std-ref">Camera Triggers</span></a>.</p></li>
+<li><p><strong>GPIO trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> /
+<code class="docutils literal notranslate"><span class="pre">trigger_off</span></code>. See <a class="reference internal" href="gpio_trigger.html"><span class="std std-doc">Custom GPIO Interaction</span></a>.</p></li>
+<li><p><strong>Touchscreen trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside
+<code class="docutils literal notranslate"><span class="pre">TouchTriggerBase.trigger</span></code>. See <a class="reference internal" href="touchscreen.html"><span class="std std-doc">Touchscreen</span></a>.</p></li>
+<li><p><strong>Bpod softcodes</strong> — if <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> is <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>, functions 1-98 can be
+triggered automatically from inside the state machine (see below).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OTHER</span></code> controller (a microcontroller you talk to yourself, or none at all)</strong>
+— there is no state-machine layer to trigger functions for you, so call
+<code class="docutils literal notranslate"><span class="pre">self.execute_function(N)</span></code> directly from your task’s own code (<code class="docutils literal notranslate"><span class="pre">create_trial</span></code>,
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code>, or anywhere else), whenever you want it to run.</p></li>
+</ul>
+</section>
+<section id="bpod-softcodes">
+<h3>Bpod softcodes</h3>
+<p>A softcode is a short message the Bpod state machine sends back to the Raspberry
+Pi <strong>while a trial is running</strong>, without waiting for the trial to end. You trigger
+one by including <code class="docutils literal notranslate"><span class="pre">BpodOutput.SoftCodeN</span></code> in a state’s <code class="docutils literal notranslate"><span class="pre">output_actions</span></code>, alongside
+any other output (opening a valve, turning on an LED, …). <code class="docutils literal notranslate"><span class="pre">N</span></code> goes from 1 to 98,
+matching direct functions 1-to-1. The moment the state machine executes that
+output, Village receives the message and automatically calls
+<code class="docutils literal notranslate"><span class="pre">execute_function(N)</span></code> — this is how a Bpod task can trigger a direct function mid
+-trial, from inside the state machine, instead of only between trials.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">state_name</span><span class="o">=</span><span class="s2">"reward"</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">state_timer</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">},</span>
+</span><span data-line="5">    <span class="c1"># opens Valve1 AND triggers function6, at the same time</span>
+</span><span data-line="6">    <span class="n">output_actions</span><span class="o">=</span><span class="p">[(</span><span class="s2">"Valve1"</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">BpodOutput</span><span class="o">.</span><span class="n">SoftCode6</span><span class="p">],</span>
+</span><span data-line="7"><span class="p">)</span>
+</span></pre></div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">This is not the only softcode channel</p>
+<p>The example above is Bpod → Raspberry Pi. There is also a channel the other way
+around — the task can send a softcode from the Raspberry Pi to Bpod
+(<code class="docutils literal notranslate"><span class="pre">self.task.bpod.send_softcode_to_bpod(N)</span></code>), for the <em>state machine</em> to branch on
+via <code class="docutils literal notranslate"><span class="pre">state_change_conditions={&quot;SoftCodeN&quot;:</span> <span class="pre">&quot;next_state&quot;}</span></code>. That’s a different
+mechanism (a Bpod input condition, not a direct-function trigger) — see
+the “Example” section of <a class="reference internal" href="touchscreen.html"><span class="std std-doc">Touchscreen</span></a>.</p>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="audio-functions">
+<h2>Audio Functions</h2>
+<p><code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code> holds two kinds of functions:</p>
+<ol class="arabic simple">
+<li><p><strong>Generic generators</strong> (e.g. <code class="docutils literal notranslate"><span class="pre">tone_generator</span></code>, <code class="docutils literal notranslate"><span class="pre">whitenoise_generator</span></code>) that take
+whatever arguments they need and return a numpy waveform array. Call them from
+anywhere — a direct function, a task, a trigger — and pass the result to
+<code class="docutils literal notranslate"><span class="pre">sound_device.load()</span></code>.</p></li>
+<li><p><strong>Calibration-sound wrappers</strong> — thin wrappers around a generic generator that
+fix every argument except <code class="docutils literal notranslate"><span class="pre">duration</span></code> and <code class="docutils literal notranslate"><span class="pre">gain</span></code>, since that’s the signature the
+Sound Calibration panel always calls them with. They are listed in
+<code class="docutils literal notranslate"><span class="pre">sound_calibration_functions</span></code>, which fills the <code class="docutils literal notranslate"><span class="pre">SOUND</span></code> dropdown in the
+<a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">Sound Calibration</span></a> panel.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">frequency</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span data-line="2">    <span class="o">...</span>  <span class="c1"># returns a numpy array</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">tone_600</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+</span><span data-line="5">    <span class="k">return</span> <span class="n">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="n">sound_calibration_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">tone_600</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</span></pre></div>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">Keep names in sync</p>
+<p>A wrapper’s <code class="docutils literal notranslate"><span class="pre">__name__</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;tone_600&quot;</span></code> above) is stored as the sound’s identity in
+the calibration data, and is what you pass as <code class="docutils literal notranslate"><span class="pre">sound_name=</span></code> to
+<code class="docutils literal notranslate"><span class="pre">get_sound_gain(...)</span></code> everywhere else in the project. Rename a wrapper here and
+every call site referencing its old name has to be updated too, or the
+calibration lookup silently stops matching and raises a “not calibrated” error.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="video-functions">
+<h2>Video Functions</h2>
+<p><code class="docutils literal notranslate"><span class="pre">video_functions.py</span></code> holds <code class="docutils literal notranslate"><span class="pre">draw_X_generator(...)</span></code> factories: each one takes the
+stimulus parameters and returns a <code class="docutils literal notranslate"><span class="pre">draw()</span></code> closure, meant to be passed to
+<code class="docutils literal notranslate"><span class="pre">screen.load_draw_function(draw_fn=...)</span></code> (see
+<a class="reference internal" href="../system_operation/screen.html"><span class="std std-doc">Screen Integration</span></a>). Qt then calls that <code class="docutils literal notranslate"><span class="pre">draw()</span></code>
+on every frame while <code class="docutils literal notranslate"><span class="pre">screen.start_drawing()</span></code> is active.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QRect</span><span class="p">,</span> <span class="n">Qt</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">draw_circle_generator</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">diameter</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+</span><span data-line="5">    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
+</span><span data-line="6">        <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="7">            <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="n">painter</span><span class="o">.</span><span class="n">viewport</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">background_color</span><span class="p">)</span>
+</span><span data-line="8">            <span class="k">if</span> <span class="n">screen</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">&lt;</span> <span class="n">duration</span><span class="p">:</span>
+</span><span data-line="9">                <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoPen</span><span class="p">)</span>
+</span><span data-line="10">                <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+</span><span data-line="11">                <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">QRect</span><span class="p">(</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">diameter</span><span class="p">,</span> <span class="n">diameter</span><span class="p">))</span>
+</span><span data-line="12">    <span class="k">return</span> <span class="n">draw</span>
+</span></pre></div>
+</div>
+<p>Two things every <code class="docutils literal notranslate"><span class="pre">draw()</span></code> needs to do itself, since nothing does them
+automatically:</p>
+<ul class="simple">
+<li><p>Fill the background first (<code class="docutils literal notranslate"><span class="pre">screen.background_color</span></code>) — Qt doesn’t clear the
+widget between paints, so skipping this leaves the previous frame’s stimulus
+on screen underneath the new one.</p></li>
+<li><p>Check <code class="docutils literal notranslate"><span class="pre">screen.elapsed_time</span> <span class="pre">&lt;</span> <span class="pre">duration</span></code> before painting anything — once the
+duration is over, <code class="docutils literal notranslate"><span class="pre">draw()</span></code> just stops drawing the stimulus (falling back to
+the plain background) until a new draw function is loaded.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="adding-your-own-functions">
+<h2>Adding your own functions</h2>
+<p><code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code> and <code class="docutils literal notranslate"><span class="pre">video_functions.py</span></code> are plain modules, not subclasses —
+unlike <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code> (or <code class="docutils literal notranslate"><span class="pre">camera_trigger.py</span></code>, <code class="docutils literal notranslate"><span class="pre">gpio_trigger.py</span></code>, …),
+there is only ever one of them per project, so there’s nothing to discover or
+swap automatically. Add a new generator alongside the existing ones and import it
+directly wherever you need it, the same way <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code> already does:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">sound_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">tone_generator</span><span class="p">,</span> <span class="n">whitenoise_generator</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">video_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_circle_generator</span><span class="p">,</span> <span class="n">draw_rectangle_generator</span>
+</span></pre></div>
+</div>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -523,10 +705,10 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="task.html">
+    <a href="task_methods.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Task Development Guide</div></div>
+        <span>Previous</span><div class="title">Task Methods &amp; Attributes</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="camera.html">
@@ -554,7 +736,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
+      <script src="../_static/documentation_options.js?v=46080a62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="task_methods.html">Task Methods &amp; Attributes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
@@ -636,6 +637,15 @@ your <code class="docutils literal notranslate"><span class="pre">code/</span></
 <p>This method defines all training variables and their initial values. It is called once
 when a new subject is created. The variables defined here are accessible from within
 any task via <code class="docutils literal notranslate"><span class="pre">self.settings.&lt;variable_name&gt;</span></code>.</p>
+<p>For example, you might have a variable like <code class="docutils literal notranslate"><span class="pre">delay</span></code> or <code class="docutils literal notranslate"><span class="pre">stim_size</span></code>. As training
+progresses, these can be adjusted to fine-tune the difficulty of the task.</p>
+<div class="warning admonition">
+<p class="admonition-title">Warning</p>
+<p>Every variable you want to use in your tasks must be defined here. This way, each
+subject ends up with its own list of settings tied to its training. Every subject
+starts out with these default values, and its settings change as training
+progresses.</p>
+</div>
 <p>After creation, a subject’s settings can be modified in three ways: manually from the
 <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> tab or from the <code class="docutils literal notranslate"><span class="pre">TASKS</span></code> tab when launching a task manually; in real time from
 within a running task; or automatically by <code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code> at the end of
@@ -840,7 +850,7 @@ task manually from the GUI.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
+      <script src="../_static/documentation_options.js?v=46080a62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

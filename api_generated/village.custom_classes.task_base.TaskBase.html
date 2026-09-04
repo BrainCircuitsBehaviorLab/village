@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/task_methods.html">Task Methods &amp; Attributes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
@@ -616,14 +617,23 @@ ATTRIBUTES YOU CAN READ INSIDE YOUR TASK
 <dl>
 <dt>self.name: str</dt><dd><p>Name of the task.</p>
 </dd>
+<dt>self.info<span class="classifier">str</span></dt><dd><p>Human-readable description of the task, set once (usually in
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code>). Shown to the user when selecting the task in the GUI.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
+</span><span data-line="2"><span class="s2">My Task</span>
+</span><span data-line="3"><span class="s2">-------</span>
+</span><span data-line="4"><span class="s2">Describe what the task does and how it progresses here.</span>
+</span><span data-line="5"><span class="s2">"""</span>
+</span></pre></div>
+</div>
+</dd>
 <dt>self.subject<span class="classifier">str</span></dt><dd><p>Name of the subject running the session.</p>
 </dd>
 <dt>self.system_name<span class="classifier">str</span></dt><dd><p>Name of the system as defined in the settings tab of the GUI.</p>
 </dd>
 <dt>self.bpod<span class="classifier">BpodController</span></dt><dd><p>Bpod interface (state machine construction, sending, etc.).
 Primarily used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p>
-</dd>
-<dt>self.arduino<span class="classifier">ArduinoController</span></dt><dd><p>Arduino interface for tasks that use an Arduino instead of Bpod.</p>
 </dd>
 <dt>self.settings<span class="classifier">Settings</span></dt><dd><p>Object that holds all the session parameters defined in the training
 protocol. Read and write its attributes to implement adaptive training.</p>
@@ -639,7 +649,14 @@ between hardware values and real-world units.</p>
 </dd>
 <dt>self.cam_box<span class="classifier">Camera | NullCamera</span></dt><dd><p>Camera attached to the operant box (NullCamera if not configured).</p>
 </dd>
+<dt>self.gpio<span class="classifier">Gpio | NullGpio</span></dt><dd><p>Output pin control (<code class="docutils literal notranslate"><span class="pre">set_on()</span></code> / <code class="docutils literal notranslate"><span class="pre">set_off()</span></code>). See the Custom GPIO
+Interaction docs for the input-pin trigger hook.</p>
+</dd>
 <dt>self.current_trial<span class="classifier">int</span></dt><dd><p>The current trial number starting from 1</p>
+</dd>
+<dt>self.date<span class="classifier">str</span></dt><dd><p>Date string of the current session, set once when the session starts.</p>
+</dd>
+<dt>self.run_mode<span class="classifier">str</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>.</p>
 </dd>
 <dt>self.trial_data<span class="classifier">dict</span></dt><dd><p>Dictionary populated automatically at the end of each trial.
 Available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
@@ -989,7 +1006,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1b6a4614"></script>
+      <script src="../_static/documentation_options.js?v=46080a62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

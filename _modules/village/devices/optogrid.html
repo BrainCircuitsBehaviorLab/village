@@ -108,6 +108,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l2"><a class="reference internal" href="../../../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/creating.html">Protocol Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protocols/task_methods.html">Task Methods &amp; Attributes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
@@ -492,7 +493,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="15"><span class="sd">* Each IMU notification carries all 9 sensor values (accel, gyro, mag) in one</span>
 </span><span data-line="16"><span class="sd">  packet, so reading them costs nothing extra. What you configure with the</span>
 </span><span data-line="17"><span class="sd">  on/off flags is which COLUMNS get written to disk, not what is read.</span>
-</span><span data-line="18"><span class="sd">* IMU logging flags (independent, "enfoque C"):</span>
+</span><span data-line="18"><span class="sd">* IMU logging flags (independent):</span>
 </span><span data-line="19"><span class="sd">    - save_accel_gyro    : write acc_x/y/z, gyro_x/y/z</span>
 </span><span data-line="20"><span class="sd">    - save_orientation   : write roll/pitch/yaw (requires save_accel_gyro);</span>
 </span><span data-line="21"><span class="sd">                           uses the magnetometer when available, falls back to</span>
@@ -1167,320 +1168,342 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="640">        <span class="c1"># (re)build EKF in case orientation flag changed since connect</span>
 </span><span data-line="641">        <span class="bp">self</span><span class="o">.</span><span class="n">_init_ekf</span><span class="p">()</span>
 </span><span data-line="642">
-</span><span data-line="643">        <span class="c1"># enable IMU on the device</span>
-</span><span data-line="644">        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_gatt_char</span><span class="p">(</span>
-</span><span data-line="645">            <span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="n">_encode</span><span class="p">(</span><span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="s2">"True"</span><span class="p">)</span>
-</span><span data-line="646">        <span class="p">)</span>
-</span><span data-line="647">        <span class="c1"># subscribe to IMU notifications</span>
-</span><span data-line="648">        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">start_notify</span><span class="p">(</span><span class="n">IMU_DATA_UUID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_imu_data</span><span class="p">)</span>
-</span><span data-line="649">
-</span><span data-line="650">        <span class="n">fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">_IMU.parquet"</span><span class="p">)</span>
-</span><span data-line="651">
-</span><span data-line="652">        <span class="c1"># build schema from the configured columns</span>
-</span><span data-line="653">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">columns</span><span class="p">()</span>
-</span><span data-line="654">        <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="655">            <span class="s2">"sample"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="656">            <span class="s2">"sync"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="657">            <span class="s2">"acc_x"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="658">            <span class="s2">"acc_y"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="659">            <span class="s2">"acc_z"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="660">            <span class="s2">"gyro_x"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="661">            <span class="s2">"gyro_y"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="662">            <span class="s2">"gyro_z"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="663">            <span class="s2">"mag_x"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="664">            <span class="s2">"mag_y"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="665">            <span class="s2">"mag_z"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
-</span><span data-line="666">            <span class="s2">"roll"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">(),</span>
-</span><span data-line="667">            <span class="s2">"pitch"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">(),</span>
-</span><span data-line="668">            <span class="s2">"yaw"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">(),</span>
-</span><span data-line="669">        <span class="p">}</span>
-</span><span data-line="670">        <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([(</span><span class="n">c</span><span class="p">,</span> <span class="n">type_map</span><span class="p">[</span><span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="p">])</span>
-</span><span data-line="671">        <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetWriter</span><span class="p">(</span>
-</span><span data-line="672">            <span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_schema</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"snappy"</span>
-</span><span data-line="673">        <span class="p">)</span>
-</span><span data-line="674">        <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_file</span> <span class="o">=</span> <span class="n">fname</span>
-</span><span data-line="675">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="676">        <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="677">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="678">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"IMU logging started: </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2"> | columns: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="679">        <span class="k">return</span> <span class="n">fname</span>
-</span><span data-line="680">
-</span><span data-line="681">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_on_imu_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="682">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="683">            <span class="n">imu_vals</span> <span class="o">=</span> <span class="n">_decode_imu</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># [sample, acc xyz, gyro xyz, mag xyz]</span>
-</span><span data-line="684">
-</span><span data-line="685">            <span class="c1"># take a queued sync if present, else 0</span>
-</span><span data-line="686">            <span class="n">sync_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span> <span class="k">else</span> <span class="mi">0</span>
-</span><span data-line="687">
-</span><span data-line="688">            <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="689">                <span class="s2">"sample"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-</span><span data-line="690">                <span class="s2">"sync"</span><span class="p">:</span> <span class="n">sync_value</span><span class="p">,</span>
-</span><span data-line="691">            <span class="p">}</span>
-</span><span data-line="692">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">save_accel_gyro</span><span class="p">:</span>
-</span><span data-line="693">                <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-</span><span data-line="694">                    <span class="p">{</span>
-</span><span data-line="695">                        <span class="s2">"acc_x"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-</span><span data-line="696">                        <span class="s2">"acc_y"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-</span><span data-line="697">                        <span class="s2">"acc_z"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-</span><span data-line="698">                        <span class="s2">"gyro_x"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-</span><span data-line="699">                        <span class="s2">"gyro_y"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-</span><span data-line="700">                        <span class="s2">"gyro_z"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-</span><span data-line="701">                    <span class="p">}</span>
-</span><span data-line="702">                <span class="p">)</span>
-</span><span data-line="703">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">save_magnetometer</span><span class="p">:</span>
-</span><span data-line="704">                <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-</span><span data-line="705">                    <span class="p">{</span><span class="s2">"mag_x"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"mag_y"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="s2">"mag_z"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">9</span><span class="p">]}</span>
-</span><span data-line="706">                <span class="p">)</span>
-</span><span data-line="707">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">save_orientation</span><span class="p">:</span>
-</span><span data-line="708">                <span class="n">roll</span><span class="p">,</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">yaw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_orientation</span><span class="p">(</span><span class="n">imu_vals</span><span class="p">)</span>
-</span><span data-line="709">                <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"roll"</span><span class="p">:</span> <span class="n">roll</span><span class="p">,</span> <span class="s2">"pitch"</span><span class="p">:</span> <span class="n">pitch</span><span class="p">,</span> <span class="s2">"yaw"</span><span class="p">:</span> <span class="n">yaw</span><span class="p">})</span>
-</span><span data-line="710">
-</span><span data-line="711">            <span class="c1"># store as a tuple in column order</span>
-</span><span data-line="712">            <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="p">])</span>
-</span><span data-line="713">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
-</span><span data-line="714">                <span class="bp">self</span><span class="o">.</span><span class="n">_flush_imu</span><span class="p">()</span>
-</span><span data-line="715">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="716">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error in IMU data handler: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="717">
+</span><span data-line="643">        <span class="c1"># Enable IMU on the device -- force a real off-&gt;on transition rather</span>
+</span><span data-line="644">        <span class="c1"># than just writing "True", which is not reliably idempotent.</span>
+</span><span data-line="645">        <span class="c1">#</span>
+</span><span data-line="646">        <span class="c1"># The firmware (main.c's on_write handler) only (re)starts sampling</span>
+</span><span data-line="647">        <span class="c1"># when it sees the internal imu_streaming flag go from false to true:</span>
+</span><span data-line="648">        <span class="c1">#   if (imu_enable &amp;&amp; !imu_streaming) { ...start... }</span>
+</span><span data-line="649">        <span class="c1">#   else { imu_streaming = false; ...stop... }</span>
+</span><span data-line="650">        <span class="c1"># If a previous session left imu_streaming=True on the device (e.g.</span>
+</span><span data-line="651">        <span class="c1"># the disable write in _stop_imu() failed silently, or the app never</span>
+</span><span data-line="652">        <span class="c1"># got to call it), writing "True" again lands in the else branch and</span>
+</span><span data-line="653">        <span class="c1"># actually STOPS sampling instead of starting it. Reading the</span>
+</span><span data-line="654">        <span class="c1"># characteristic back first doesn't help either: the firmware never</span>
+</span><span data-line="655">        <span class="c1"># syncs the characteristic's readable value to imu_streaming after a</span>
+</span><span data-line="656">        <span class="c1"># write, so a read can report "True" even while sampling is already</span>
+</span><span data-line="657">        <span class="c1"># stopped. Writing False first is deterministic regardless of the</span>
+</span><span data-line="658">        <span class="c1"># device's prior state -- that branch always sets</span>
+</span><span data-line="659">        <span class="c1"># imu_streaming=false without even checking imu_enable.</span>
+</span><span data-line="660">        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_gatt_char</span><span class="p">(</span>
+</span><span data-line="661">            <span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="n">_encode</span><span class="p">(</span><span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="s2">"False"</span><span class="p">)</span>
+</span><span data-line="662">        <span class="p">)</span>
+</span><span data-line="663">        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+</span><span data-line="664">        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_gatt_char</span><span class="p">(</span>
+</span><span data-line="665">            <span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="n">_encode</span><span class="p">(</span><span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="s2">"True"</span><span class="p">)</span>
+</span><span data-line="666">        <span class="p">)</span>
+</span><span data-line="667">        <span class="c1"># subscribe to IMU notifications</span>
+</span><span data-line="668">        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">start_notify</span><span class="p">(</span><span class="n">IMU_DATA_UUID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_imu_data</span><span class="p">)</span>
+</span><span data-line="669">
+</span><span data-line="670">        <span class="n">fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions_directory</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">_IMU.parquet"</span><span class="p">)</span>
+</span><span data-line="671">
+</span><span data-line="672">        <span class="c1"># build schema from the configured columns</span>
+</span><span data-line="673">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">columns</span><span class="p">()</span>
+</span><span data-line="674">        <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="675">            <span class="s2">"sample"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="676">            <span class="s2">"sync"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="677">            <span class="s2">"acc_x"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="678">            <span class="s2">"acc_y"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="679">            <span class="s2">"acc_z"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="680">            <span class="s2">"gyro_x"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="681">            <span class="s2">"gyro_y"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="682">            <span class="s2">"gyro_z"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="683">            <span class="s2">"mag_x"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="684">            <span class="s2">"mag_y"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="685">            <span class="s2">"mag_z"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">(),</span>
+</span><span data-line="686">            <span class="s2">"roll"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">(),</span>
+</span><span data-line="687">            <span class="s2">"pitch"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">(),</span>
+</span><span data-line="688">            <span class="s2">"yaw"</span><span class="p">:</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">(),</span>
+</span><span data-line="689">        <span class="p">}</span>
+</span><span data-line="690">        <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([(</span><span class="n">c</span><span class="p">,</span> <span class="n">type_map</span><span class="p">[</span><span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="p">])</span>
+</span><span data-line="691">        <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetWriter</span><span class="p">(</span>
+</span><span data-line="692">            <span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_schema</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"snappy"</span>
+</span><span data-line="693">        <span class="p">)</span>
+</span><span data-line="694">        <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_file</span> <span class="o">=</span> <span class="n">fname</span>
+</span><span data-line="695">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="696">        <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="697">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="698">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"IMU logging started: </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2"> | columns: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="699">        <span class="k">return</span> <span class="n">fname</span>
+</span><span data-line="700">
+</span><span data-line="701">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_on_imu_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="702">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="703">            <span class="n">imu_vals</span> <span class="o">=</span> <span class="n">_decode_imu</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># [sample, acc xyz, gyro xyz, mag xyz]</span>
+</span><span data-line="704">
+</span><span data-line="705">            <span class="c1"># take a queued sync if present, else 0</span>
+</span><span data-line="706">            <span class="n">sync_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span> <span class="k">else</span> <span class="mi">0</span>
+</span><span data-line="707">
+</span><span data-line="708">            <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="709">                <span class="s2">"sample"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+</span><span data-line="710">                <span class="s2">"sync"</span><span class="p">:</span> <span class="n">sync_value</span><span class="p">,</span>
+</span><span data-line="711">            <span class="p">}</span>
+</span><span data-line="712">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">save_accel_gyro</span><span class="p">:</span>
+</span><span data-line="713">                <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+</span><span data-line="714">                    <span class="p">{</span>
+</span><span data-line="715">                        <span class="s2">"acc_x"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+</span><span data-line="716">                        <span class="s2">"acc_y"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+</span><span data-line="717">                        <span class="s2">"acc_z"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+</span><span data-line="718">                        <span class="s2">"gyro_x"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+</span><span data-line="719">                        <span class="s2">"gyro_y"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+</span><span data-line="720">                        <span class="s2">"gyro_z"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+</span><span data-line="721">                    <span class="p">}</span>
+</span><span data-line="722">                <span class="p">)</span>
+</span><span data-line="723">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">save_magnetometer</span><span class="p">:</span>
+</span><span data-line="724">                <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+</span><span data-line="725">                    <span class="p">{</span><span class="s2">"mag_x"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="s2">"mag_y"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="s2">"mag_z"</span><span class="p">:</span> <span class="n">imu_vals</span><span class="p">[</span><span class="mi">9</span><span class="p">]}</span>
+</span><span data-line="726">                <span class="p">)</span>
+</span><span data-line="727">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">imu_config</span><span class="o">.</span><span class="n">save_orientation</span><span class="p">:</span>
+</span><span data-line="728">                <span class="n">roll</span><span class="p">,</span> <span class="n">pitch</span><span class="p">,</span> <span class="n">yaw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_orientation</span><span class="p">(</span><span class="n">imu_vals</span><span class="p">)</span>
+</span><span data-line="729">                <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"roll"</span><span class="p">:</span> <span class="n">roll</span><span class="p">,</span> <span class="s2">"pitch"</span><span class="p">:</span> <span class="n">pitch</span><span class="p">,</span> <span class="s2">"yaw"</span><span class="p">:</span> <span class="n">yaw</span><span class="p">})</span>
+</span><span data-line="730">
+</span><span data-line="731">            <span class="c1"># store as a tuple in column order</span>
+</span><span data-line="732">            <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="p">])</span>
+</span><span data-line="733">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+</span><span data-line="734">                <span class="bp">self</span><span class="o">.</span><span class="n">_flush_imu</span><span class="p">()</span>
+</span><span data-line="735">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="736">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error in IMU data handler: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="737">
 <div class="viewcode-block" id="OptoGrid.sync">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.sync">[docs]</a>
-</span><span data-line="718">    <span class="k">def</span><span class="w"> </span><span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="719"><span class="w">        </span><span class="sd">"""Manually mark a sync value in the IMU stream, independent of trigger().</span>
-</span><span data-line="720">
-</span><span data-line="721"><span class="sd">        Useful to mark task events (e.g. trial onset) in the IMU log. If IMU</span>
-</span><span data-line="722"><span class="sd">        logging is not active, returns False without doing anything."""</span>
-</span><span data-line="723">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span><span class="p">:</span>
-</span><span data-line="724">            <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: sync ignored — IMU logging not active"</span><span class="p">)</span>
-</span><span data-line="725">            <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="726">        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_sync</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="727">        <span class="k">return</span> <span class="kc">True</span></div>
+</span><span data-line="738">    <span class="k">def</span><span class="w"> </span><span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="739"><span class="w">        </span><span class="sd">"""Manually mark a sync value in the IMU stream, independent of trigger().</span>
+</span><span data-line="740">
+</span><span data-line="741"><span class="sd">        Useful to mark task events (e.g. trial onset) in the IMU log. If IMU</span>
+</span><span data-line="742"><span class="sd">        logging is not active, returns False without doing anything."""</span>
+</span><span data-line="743">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span><span class="p">:</span>
+</span><span data-line="744">            <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: sync ignored — IMU logging not active"</span><span class="p">)</span>
+</span><span data-line="745">            <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="746">        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_sync</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="747">        <span class="k">return</span> <span class="kc">True</span></div>
 
-</span><span data-line="728">
-</span><span data-line="729">    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="730"><span class="w">        </span><span class="sd">"""Mark a sync value on the most recent buffered sample, or queue it for</span>
-</span><span data-line="731"><span class="sd">        the next incoming sample (exactly the original's logic)."""</span>
-</span><span data-line="732">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="p">:</span>
-</span><span data-line="733">            <span class="n">sync_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">"sync"</span><span class="p">)</span>
-</span><span data-line="734">            <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">sync_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-</span><span data-line="735">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sync </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> written to current IMU sample"</span><span class="p">)</span>
-</span><span data-line="736">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="737">            <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="738">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sync </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> queued for next IMU sample"</span><span class="p">)</span>
-</span><span data-line="739">
-</span><span data-line="740">    <span class="k">def</span><span class="w"> </span><span class="nf">_flush_imu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="741">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="p">:</span>
-</span><span data-line="742">            <span class="k">return</span>
-</span><span data-line="743">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="744">            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="p">)</span>
-</span><span data-line="745">            <span class="n">table</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span>
-</span><span data-line="746">                <span class="n">df</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_parquet_schema</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span>
-</span><span data-line="747">            <span class="p">)</span>
-</span><span data-line="748">            <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
-</span><span data-line="749">            <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="750">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="751">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error flushing IMU buffer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="752">
-</span><span data-line="753">    <span class="k">def</span><span class="w"> </span><span class="nf">_close_parquet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="754">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="p">:</span>
-</span><span data-line="755">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="756">                <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span data-line="757">            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="758">                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error closing parquet writer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="759">            <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="760">
+</span><span data-line="748">
+</span><span data-line="749">    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="750"><span class="w">        </span><span class="sd">"""Queue a sync value for the next incoming IMU sample.</span>
+</span><span data-line="751">
+</span><span data-line="752"><span class="sd">        Always the next sample, never the last one already received: that</span>
+</span><span data-line="753"><span class="sd">        keeps the tagged sample's real-world time consistently at or after</span>
+</span><span data-line="754"><span class="sd">        the call (bounded by one sample period), instead of usually before</span>
+</span><span data-line="755"><span class="sd">        (whenever a sample was already buffered) and occasionally after</span>
+</span><span data-line="756"><span class="sd">        (only in the brief window right after a periodic flush empties the</span>
+</span><span data-line="757"><span class="sd">        buffer) -- a mixed, mostly-accidental bias that made the marker</span>
+</span><span data-line="758"><span class="sd">        harder to interpret."""</span>
+</span><span data-line="759">        <span class="bp">self</span><span class="o">.</span><span class="n">_pending_sync</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="760">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sync </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> queued for next IMU sample"</span><span class="p">)</span>
+</span><span data-line="761">
+</span><span data-line="762">    <span class="k">def</span><span class="w"> </span><span class="nf">_flush_imu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="763">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="p">:</span>
+</span><span data-line="764">            <span class="k">return</span>
+</span><span data-line="765">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="766">            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_imu_columns</span><span class="p">)</span>
+</span><span data-line="767">            <span class="n">table</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span>
+</span><span data-line="768">                <span class="n">df</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_parquet_schema</span><span class="p">,</span> <span class="n">preserve_index</span><span class="o">=</span><span class="kc">False</span>
+</span><span data-line="769">            <span class="p">)</span>
+</span><span data-line="770">            <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+</span><span data-line="771">            <span class="bp">self</span><span class="o">.</span><span class="n">_imu_buffer</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="772">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="773">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error flushing IMU buffer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="774">
+</span><span data-line="775">    <span class="k">def</span><span class="w"> </span><span class="nf">_close_parquet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="776">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="p">:</span>
+</span><span data-line="777">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="778">                <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="779">            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="780">                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error closing parquet writer: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="781">            <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_writer</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="782">
 <div class="viewcode-block" id="OptoGrid.stop_imu_logging">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.stop_imu_logging">[docs]</a>
-</span><span data-line="761">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_imu_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="762"><span class="w">        </span><span class="sd">"""Disable the IMU on the device and close the Parquet file. Returns the</span>
-</span><span data-line="763"><span class="sd">        file path that was written."""</span>
-</span><span data-line="764">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span><span class="p">:</span>
-</span><span data-line="765">            <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: No active IMU logging to stop"</span><span class="p">)</span>
-</span><span data-line="766">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="767">        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_file</span>
-</span><span data-line="768">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="769">            <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop_imu</span><span class="p">())</span>
-</span><span data-line="770">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="771">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error stopping IMU logging: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="772">        <span class="k">return</span> <span class="n">path</span></div>
+</span><span data-line="783">    <span class="k">def</span><span class="w"> </span><span class="nf">stop_imu_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="784"><span class="w">        </span><span class="sd">"""Disable the IMU on the device and close the Parquet file. Returns the</span>
+</span><span data-line="785"><span class="sd">        file path that was written."""</span>
+</span><span data-line="786">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span><span class="p">:</span>
+</span><span data-line="787">            <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: No active IMU logging to stop"</span><span class="p">)</span>
+</span><span data-line="788">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="789">        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parquet_file</span>
+</span><span data-line="790">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="791">            <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop_imu</span><span class="p">())</span>
+</span><span data-line="792">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="793">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error stopping IMU logging: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="794">        <span class="k">return</span> <span class="n">path</span></div>
 
-</span><span data-line="773">
-</span><span data-line="774">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_stop_imu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="775">        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-</span><span data-line="776">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="777">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">stop_notify</span><span class="p">(</span><span class="n">IMU_DATA_UUID</span><span class="p">)</span>
-</span><span data-line="778">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="779">            <span class="k">pass</span>
-</span><span data-line="780">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="781">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_gatt_char</span><span class="p">(</span>
-</span><span data-line="782">                <span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="n">_encode</span><span class="p">(</span><span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="s2">"False"</span><span class="p">)</span>
-</span><span data-line="783">            <span class="p">)</span>
-</span><span data-line="784">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="785">            <span class="k">pass</span>
-</span><span data-line="786">        <span class="bp">self</span><span class="o">.</span><span class="n">_flush_imu</span><span class="p">()</span>
-</span><span data-line="787">        <span class="bp">self</span><span class="o">.</span><span class="n">_close_parquet</span><span class="p">()</span>
-</span><span data-line="788">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="789">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"IMU logging stopped: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_parquet_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="790">
-</span><span data-line="791">    <span class="nd">@property</span>
-</span><span data-line="792">    <span class="k">def</span><span class="w"> </span><span class="nf">imu_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="793">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span>
-</span><span data-line="794">
-</span><span data-line="795">    <span class="c1"># ---- small reads ----------------------------------------------------- #</span>
-</span><span data-line="796">
+</span><span data-line="795">
+</span><span data-line="796">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_stop_imu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="797">        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span><span data-line="798">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="799">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">stop_notify</span><span class="p">(</span><span class="n">IMU_DATA_UUID</span><span class="p">)</span>
+</span><span data-line="800">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="801">            <span class="k">pass</span>
+</span><span data-line="802">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="803">            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_gatt_char</span><span class="p">(</span>
+</span><span data-line="804">                <span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="n">_encode</span><span class="p">(</span><span class="n">IMU_ENABLE_UUID</span><span class="p">,</span> <span class="s2">"False"</span><span class="p">)</span>
+</span><span data-line="805">            <span class="p">)</span>
+</span><span data-line="806">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="807">            <span class="k">pass</span>
+</span><span data-line="808">        <span class="bp">self</span><span class="o">.</span><span class="n">_flush_imu</span><span class="p">()</span>
+</span><span data-line="809">        <span class="bp">self</span><span class="o">.</span><span class="n">_close_parquet</span><span class="p">()</span>
+</span><span data-line="810">        <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="811">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"IMU logging stopped: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_parquet_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="812">
+</span><span data-line="813">    <span class="nd">@property</span>
+</span><span data-line="814">    <span class="k">def</span><span class="w"> </span><span class="nf">imu_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="815">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imu_active</span>
+</span><span data-line="816">
+</span><span data-line="817">    <span class="c1"># ---- small reads ----------------------------------------------------- #</span>
+</span><span data-line="818">
 <div class="viewcode-block" id="OptoGrid.toggle_status_led">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.toggle_status_led">[docs]</a>
-</span><span data-line="797">    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_status_led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="798">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_bool</span><span class="p">(</span><span class="n">STATUS_LED_UUID</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="s2">"status LED"</span><span class="p">)</span></div>
+</span><span data-line="819">    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_status_led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="820">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_bool</span><span class="p">(</span><span class="n">STATUS_LED_UUID</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="s2">"status LED"</span><span class="p">)</span></div>
 
-</span><span data-line="799">
+</span><span data-line="821">
 <div class="viewcode-block" id="OptoGrid.toggle_sham_led">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.toggle_sham_led">[docs]</a>
-</span><span data-line="800">    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_sham_led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="801">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_bool</span><span class="p">(</span><span class="n">SHAM_LED_UUID</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="s2">"sham LED"</span><span class="p">)</span></div>
+</span><span data-line="822">    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_sham_led</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="823">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_bool</span><span class="p">(</span><span class="n">SHAM_LED_UUID</span><span class="p">,</span> <span class="n">on</span><span class="p">,</span> <span class="s2">"sham LED"</span><span class="p">)</span></div>
 
-</span><span data-line="802">
-</span><span data-line="803">    <span class="k">def</span><span class="w"> </span><span class="nf">_write_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="804">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
-</span><span data-line="805">            <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="806">        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-</span><span data-line="807">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="808">            <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span>
-</span><span data-line="809">                <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_gatt_char</span><span class="p">(</span>
-</span><span data-line="810">                    <span class="n">uuid</span><span class="p">,</span> <span class="n">_encode</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="s2">"True"</span> <span class="k">if</span> <span class="n">on</span> <span class="k">else</span> <span class="s2">"False"</span><span class="p">)</span>
-</span><span data-line="811">                <span class="p">)</span>
-</span><span data-line="812">            <span class="p">)</span>
-</span><span data-line="813">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'on'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'off'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="814">            <span class="k">return</span> <span class="kc">True</span>
-</span><span data-line="815">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="816">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Failed to set </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="817">            <span class="k">return</span> <span class="kc">False</span>
-</span><span data-line="818">
+</span><span data-line="824">
+</span><span data-line="825">    <span class="k">def</span><span class="w"> </span><span class="nf">_write_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">on</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="826">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+</span><span data-line="827">            <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="828">        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span><span data-line="829">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="830">            <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span>
+</span><span data-line="831">                <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">write_gatt_char</span><span class="p">(</span>
+</span><span data-line="832">                    <span class="n">uuid</span><span class="p">,</span> <span class="n">_encode</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="s2">"True"</span> <span class="k">if</span> <span class="n">on</span> <span class="k">else</span> <span class="s2">"False"</span><span class="p">)</span>
+</span><span data-line="833">                <span class="p">)</span>
+</span><span data-line="834">            <span class="p">)</span>
+</span><span data-line="835">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'on'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'off'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="836">            <span class="k">return</span> <span class="kc">True</span>
+</span><span data-line="837">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="838">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Failed to set </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="839">            <span class="k">return</span> <span class="kc">False</span>
+</span><span data-line="840">
 <div class="viewcode-block" id="OptoGrid.read_battery_mv">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.read_battery_mv">[docs]</a>
-</span><span data-line="819">    <span class="k">def</span><span class="w"> </span><span class="nf">read_battery_mv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="820">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
-</span><span data-line="821">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="822">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="823">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">BATTERY_UUID</span><span class="p">)))</span>
-</span><span data-line="824">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="825">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Battery read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="826">            <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="841">    <span class="k">def</span><span class="w"> </span><span class="nf">read_battery_mv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="842">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+</span><span data-line="843">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="844">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="845">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">BATTERY_UUID</span><span class="p">)))</span>
+</span><span data-line="846">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="847">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Battery read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="848">            <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="827">
+</span><span data-line="849">
 <div class="viewcode-block" id="OptoGrid.read_last_stim_ms">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.read_last_stim_ms">[docs]</a>
-</span><span data-line="828">    <span class="k">def</span><span class="w"> </span><span class="nf">read_last_stim_ms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="829">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
-</span><span data-line="830">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="831">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="832">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">LAST_STIM_UUID</span><span class="p">)))</span>
-</span><span data-line="833">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="834">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Last-stim read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="835">            <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="850">    <span class="k">def</span><span class="w"> </span><span class="nf">read_last_stim_ms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="851">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+</span><span data-line="852">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="853">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="854">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">LAST_STIM_UUID</span><span class="p">)))</span>
+</span><span data-line="855">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="856">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Last-stim read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="857">            <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="836">
+</span><span data-line="858">
 <div class="viewcode-block" id="OptoGrid.read_uled_check">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.read_uled_check">[docs]</a>
-</span><span data-line="837">    <span class="k">def</span><span class="w"> </span><span class="nf">read_uled_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="838">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
-</span><span data-line="839">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="840">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="841">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">ULED_CHECK_UUID</span><span class="p">)))</span>
-</span><span data-line="842">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="843">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: uLED check read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="844">            <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="859">    <span class="k">def</span><span class="w"> </span><span class="nf">read_uled_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="860">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+</span><span data-line="861">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="862">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="863">            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">ULED_CHECK_UUID</span><span class="p">)))</span>
+</span><span data-line="864">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="865">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: uLED check read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="866">            <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="845">
+</span><span data-line="867">
 <div class="viewcode-block" id="OptoGrid.read_device_id">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.read_device_id">[docs]</a>
-</span><span data-line="846">    <span class="k">def</span><span class="w"> </span><span class="nf">read_device_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="847">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
-</span><span data-line="848">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="849">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="850">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">DEVICE_ID_UUID</span><span class="p">))</span>
-</span><span data-line="851">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span data-line="852">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Device-id read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="853">            <span class="k">return</span> <span class="kc">None</span></div>
+</span><span data-line="868">    <span class="k">def</span><span class="w"> </span><span class="nf">read_device_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="869">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+</span><span data-line="870">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="871">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="872">            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">DEVICE_ID_UUID</span><span class="p">))</span>
+</span><span data-line="873">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span data-line="874">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Device-id read failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="875">            <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span data-line="854">
+</span><span data-line="876">
 <div class="viewcode-block" id="OptoGrid.read_params">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.OptoGrid.html#village.devices.optogrid.OptoGrid.read_params">[docs]</a>
-</span><span data-line="855">    <span class="k">def</span><span class="w"> </span><span class="nf">read_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="856"><span class="w">        </span><span class="sd">"""Read all opto parameters and device info from the connected device."""</span>
-</span><span data-line="857">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
-</span><span data-line="858">            <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="859">        <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span data-line="860">        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">OPTO_CHAR_MAP</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="861">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="862">                <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">uuid</span><span class="p">))</span>
-</span><span data-line="863">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="864">                <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"—"</span>
-</span><span data-line="865">        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"device_id"</span><span class="p">,</span> <span class="n">DEVICE_ID_UUID</span><span class="p">),</span> <span class="p">(</span><span class="s2">"firmware"</span><span class="p">,</span> <span class="n">FIRMWARE_UUID</span><span class="p">)):</span>
-</span><span data-line="866">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="867">                <span class="n">result</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">uuid</span><span class="p">))</span>
-</span><span data-line="868">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="869">                <span class="n">result</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"—"</span>
-</span><span data-line="870">        <span class="k">return</span> <span class="n">result</span></div>
+</span><span data-line="877">    <span class="k">def</span><span class="w"> </span><span class="nf">read_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="878"><span class="w">        </span><span class="sd">"""Read all opto parameters and device info from the connected device."""</span>
+</span><span data-line="879">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span><span class="p">:</span>
+</span><span data-line="880">            <span class="k">return</span> <span class="kc">None</span>
+</span><span data-line="881">        <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="882">        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">OPTO_CHAR_MAP</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span data-line="883">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="884">                <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">uuid</span><span class="p">))</span>
+</span><span data-line="885">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="886">                <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"—"</span>
+</span><span data-line="887">        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"device_id"</span><span class="p">,</span> <span class="n">DEVICE_ID_UUID</span><span class="p">),</span> <span class="p">(</span><span class="s2">"firmware"</span><span class="p">,</span> <span class="n">FIRMWARE_UUID</span><span class="p">)):</span>
+</span><span data-line="888">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="889">                <span class="n">result</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">uuid</span><span class="p">))</span>
+</span><span data-line="890">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="891">                <span class="n">result</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"—"</span>
+</span><span data-line="892">        <span class="k">return</span> <span class="n">result</span></div>
 
-</span><span data-line="871">
-</span><span data-line="872">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="873">        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-</span><span data-line="874">        <span class="n">val</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">read_gatt_char</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
-</span><span data-line="875">        <span class="k">return</span> <span class="n">_decode</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-</span><span data-line="876">
-</span><span data-line="877">    <span class="c1"># ---- context manager ------------------------------------------------- #</span>
-</span><span data-line="878">
-</span><span data-line="879">    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OptoGrid</span><span class="p">:</span>
-</span><span data-line="880">        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span data-line="881">        <span class="k">return</span> <span class="bp">self</span>
-</span><span data-line="882">
-</span><span data-line="883">    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="884">        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+</span><span data-line="893">
+</span><span data-line="894">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="895">        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span><span data-line="896">        <span class="n">val</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">read_gatt_char</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span>
+</span><span data-line="897">        <span class="k">return</span> <span class="n">_decode</span><span class="p">(</span><span class="n">uuid</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+</span><span data-line="898">
+</span><span data-line="899">    <span class="c1"># ---- context manager ------------------------------------------------- #</span>
+</span><span data-line="900">
+</span><span data-line="901">    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OptoGrid</span><span class="p">:</span>
+</span><span data-line="902">        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span data-line="903">        <span class="k">return</span> <span class="bp">self</span>
+</span><span data-line="904">
+</span><span data-line="905">    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">exc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="906">        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
 
-</span><span data-line="885">
-</span><span data-line="886">
-</span><span data-line="887"><span class="c1"># --------------------------------------------------------------------------- #</span>
-</span><span data-line="888"><span class="c1"># Module-level helpers</span>
-</span><span data-line="889"><span class="c1"># --------------------------------------------------------------------------- #</span>
-</span><span data-line="890">
-</span><span data-line="891">
+</span><span data-line="907">
+</span><span data-line="908">
+</span><span data-line="909"><span class="c1"># --------------------------------------------------------------------------- #</span>
+</span><span data-line="910"><span class="c1"># Module-level helpers</span>
+</span><span data-line="911"><span class="c1"># --------------------------------------------------------------------------- #</span>
+</span><span data-line="912">
+</span><span data-line="913">
 <div class="viewcode-block" id="og_connect">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.og_connect.html#village.devices.optogrid.og_connect">[docs]</a>
-</span><span data-line="892"><span class="k">def</span><span class="w"> </span><span class="nf">og_connect</span><span class="p">(</span>
-</span><span data-line="893">    <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span data-line="894">    <span class="n">sessions_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span data-line="895">    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span data-line="896">    <span class="n">imu_logging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span data-line="897"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">OptoSetting</span><span class="p">,</span> <span class="n">OptoGrid</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-</span><span data-line="898"><span class="w">    </span><span class="sd">"""Create and connect an OptoGrid. Returns (OptoSetting(), og, connected).</span>
-</span><span data-line="899"><span class="sd">    Designed to be called from a background thread so it doesn't block the main loop."""</span>
-</span><span data-line="900">    <span class="n">og</span> <span class="o">=</span> <span class="n">OptoGrid</span><span class="p">(</span>
-</span><span data-line="901">        <span class="n">device_name</span><span class="o">=</span><span class="n">device_name</span><span class="p">,</span>
-</span><span data-line="902">        <span class="n">sessions_directory</span><span class="o">=</span><span class="n">sessions_directory</span><span class="p">,</span>
-</span><span data-line="903">        <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
-</span><span data-line="904">    <span class="p">)</span>
-</span><span data-line="905">    <span class="n">success</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-</span><span data-line="906">    <span class="k">if</span> <span class="n">success</span> <span class="ow">and</span> <span class="n">imu_logging</span><span class="p">:</span>
-</span><span data-line="907">        <span class="n">og</span><span class="o">.</span><span class="n">start_imu_logging</span><span class="p">()</span>
-</span><span data-line="908">    <span class="k">return</span> <span class="n">OptoSetting</span><span class="p">(),</span> <span class="n">og</span><span class="p">,</span> <span class="n">success</span></div>
+</span><span data-line="914"><span class="k">def</span><span class="w"> </span><span class="nf">og_connect</span><span class="p">(</span>
+</span><span data-line="915">    <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="916">    <span class="n">sessions_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="917">    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="918">    <span class="n">imu_logging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span data-line="919"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">OptoSetting</span><span class="p">,</span> <span class="n">OptoGrid</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+</span><span data-line="920"><span class="w">    </span><span class="sd">"""Create and connect an OptoGrid. Returns (OptoSetting(), og, connected).</span>
+</span><span data-line="921"><span class="sd">    Designed to be called from a background thread so it doesn't block the main loop."""</span>
+</span><span data-line="922">    <span class="n">og</span> <span class="o">=</span> <span class="n">OptoGrid</span><span class="p">(</span>
+</span><span data-line="923">        <span class="n">device_name</span><span class="o">=</span><span class="n">device_name</span><span class="p">,</span>
+</span><span data-line="924">        <span class="n">sessions_directory</span><span class="o">=</span><span class="n">sessions_directory</span><span class="p">,</span>
+</span><span data-line="925">        <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+</span><span data-line="926">    <span class="p">)</span>
+</span><span data-line="927">    <span class="n">success</span> <span class="o">=</span> <span class="n">og</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</span><span data-line="928">    <span class="k">if</span> <span class="n">success</span> <span class="ow">and</span> <span class="n">imu_logging</span><span class="p">:</span>
+</span><span data-line="929">        <span class="n">og</span><span class="o">.</span><span class="n">start_imu_logging</span><span class="p">()</span>
+</span><span data-line="930">    <span class="k">return</span> <span class="n">OptoSetting</span><span class="p">(),</span> <span class="n">og</span><span class="p">,</span> <span class="n">success</span></div>
 
-</span><span data-line="909">
-</span><span data-line="910">
-</span><span data-line="911"><span class="c1"># --------------------------------------------------------------------------- #</span>
-</span><span data-line="912"><span class="c1"># Parquet -&gt; CSV export</span>
-</span><span data-line="913"><span class="c1"># --------------------------------------------------------------------------- #</span>
-</span><span data-line="914">
-</span><span data-line="915">
+</span><span data-line="931">
+</span><span data-line="932">
+</span><span data-line="933"><span class="c1"># --------------------------------------------------------------------------- #</span>
+</span><span data-line="934"><span class="c1"># Parquet -&gt; CSV export</span>
+</span><span data-line="935"><span class="c1"># --------------------------------------------------------------------------- #</span>
+</span><span data-line="936">
+</span><span data-line="937">
 <div class="viewcode-block" id="export_csv">
 <a class="viewcode-back" href="../../../api_generated/village.devices.optogrid.export_csv.html#village.devices.optogrid.export_csv">[docs]</a>
-</span><span data-line="916"><span class="k">def</span><span class="w"> </span><span class="nf">export_csv</span><span class="p">(</span><span class="n">parquet_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="917"><span class="w">    </span><span class="sd">"""Convert a Parquet IMU log to CSV. If csv_path is omitted, uses the same</span>
-</span><span data-line="918"><span class="sd">    name with a .csv extension. Returns the CSV path."""</span>
-</span><span data-line="919">    <span class="k">if</span> <span class="n">csv_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="920">        <span class="n">csv_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">parquet_path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">".csv"</span><span class="p">))</span>
-</span><span data-line="921">    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">parquet_path</span><span class="p">)</span>
-</span><span data-line="922">    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span data-line="923">    <span class="k">return</span> <span class="n">csv_path</span></div>
+</span><span data-line="938"><span class="k">def</span><span class="w"> </span><span class="nf">export_csv</span><span class="p">(</span><span class="n">parquet_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="939"><span class="w">    </span><span class="sd">"""Convert a Parquet IMU log to CSV. If csv_path is omitted, uses the same</span>
+</span><span data-line="940"><span class="sd">    name with a .csv extension. Returns the CSV path."""</span>
+</span><span data-line="941">    <span class="k">if</span> <span class="n">csv_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="942">        <span class="n">csv_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">parquet_path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">".csv"</span><span class="p">))</span>
+</span><span data-line="943">    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">parquet_path</span><span class="p">)</span>
+</span><span data-line="944">    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="945">    <span class="k">return</span> <span class="n">csv_path</span></div>
 
 </span></pre></div>
         </article><button class="back-to-top" type="button">
@@ -1506,7 +1529,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=1b6a4614"></script>
+      <script src="../../../_static/documentation_options.js?v=46080a62"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

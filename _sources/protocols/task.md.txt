@@ -28,7 +28,7 @@ class Habituation(TaskBase):
 
     def __init__(self):
         """
-        Initialize the training protocol. The text in the self.info variable
+        The text in the self.info variable
         will be shown when the task is selected in the GUI to be run manually.
         """
         super().__init__()
@@ -366,3 +366,25 @@ class FollowTheLight(Task):
                 return event
         return "NaN"
 ```
+
+---
+
+### More Bpod primitives
+
+For a runnable walkthrough of the Bpod building blocks, see two reference
+tasks in this project's `code` directory (neither is a real behavioral
+protocol):
+
+- `bpod_example_outputs_and_events.py` — LEDs, a valve, poke in/out,
+  softcodes in both directions, and TTL pulses in both directions.
+- `bpod_example_global_timer.py` — a global timer: a deadline that ticks in
+  the background across every state, independently of each state's own
+  timer, until it ends or is cancelled.
+
+Two more primitives exist beyond what those examples cover — global counters
+(`self.bpod.set_global_counter(counter_number, target_event, threshold)`,
+counts occurrences of an event and fires once a threshold is reached) and
+conditions (`self.bpod.set_condition(condition_number, condition_channel,
+channel_value)`, checks a channel's current level at the moment of a
+transition rather than reacting to an edge). For both, see the official Bpod
+documentation: [sanworks.github.io/Bpod_Wiki](https://sanworks.github.io/Bpod_Wiki/).

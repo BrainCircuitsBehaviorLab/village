@@ -11,6 +11,7 @@ PROTOCOL & TASK DESIGN
 
     protocols/creating.md
     protocols/task.md
+    protocols/task_methods.md
     protocols/functions.md
     protocols/camera.md
     protocols/touchscreen.md
