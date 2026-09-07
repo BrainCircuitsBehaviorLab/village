@@ -151,6 +151,7 @@ class Manager:
         self.create_collections()
         log.event = self.events
         log.temp = self.temperatures
+        log.active_history = self.active_history
         log.start("VILLAGE")
         self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
         self.use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
@@ -206,6 +207,7 @@ class Manager:
         self.subjects = data.subjects
         self.temperatures = data.temperatures
         self.deleted_sessions = data.deleted_sessions
+        self.active_history = data.active_history
 
     def get_subject_from_tag(self, tag: str) -> bool:
         """Retrieves a subject based on their RFID tag.

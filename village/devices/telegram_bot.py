@@ -514,7 +514,13 @@ class TelegramBot:
         try:
             path = Path(settings.get("SYSTEM_DIRECTORY")) / "PLOT.jpg"
             subjects = manager.subjects.df["name"].tolist()
-            fig = corridor_plot(manager.events.df, subjects, 4, 2)
+            fig = corridor_plot(
+                manager.events.df,
+                subjects,
+                4,
+                2,
+                active_history_df=manager.active_history.df,
+            )
             fig.savefig(path, format="jpg", dpi=300)
             plt.close(fig)
             await asyncio.sleep(1)

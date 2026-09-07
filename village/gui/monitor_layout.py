@@ -2198,6 +2198,7 @@ class CorridorPlotLayout(Layout):
                 self.plot_width,
                 self.plot_height,
                 active_states=active_states,
+                active_history_df=manager.active_history.df,
             )
             pixmap = create_pixmap(figure)
         except Exception:

@@ -20,6 +20,7 @@ class Log:
     Attributes:
         event (EventBase): Handler for generic events.
         temp (EventBase): Handler for temperature events.
+        active_history (EventBase): Handler for subject active-schedule changes.
         cam (CameraBase): Handler for camera overlay text.
         telegram_bot (TelegramBotBase): Handler for Telegram notifications.
     """
@@ -27,6 +28,7 @@ class Log:
     def __init__(self) -> None:
         self.event: Collection | NullCollection = NullCollection()
         self.temp: Collection | NullCollection = NullCollection()
+        self.active_history: Collection | NullCollection = NullCollection()
         self.cam: Camera | NullCamera = NullCamera()
         self.telegram_bot: TelegramBot | NullTelegramBot = NullTelegramBot()
 
@@ -54,6 +56,25 @@ class Log:
         """
         date = time_utils.now_string()
         self.temp.add_entry([date, temperature, humidity])
+
+    def active_changed(self, subject: str, value: str) -> None:
+        """Logs a change to a subject's active schedule (ON/OFF/weekly hours).
+
+        Recorded so past activity plots (see corridor_plot) can reconstruct
+        what the subject's schedule actually was at any past hour, instead of
+        applying today's value retroactively to the whole history. Written to
+        active_history.csv rather than events.csv on purpose: events.csv is
+        high volume and gets trimmed (see Collection.check_split_csv), which
+        would eventually drop a subject's one-and-only schedule change and
+        silently lose its history.
+
+        Args:
+            subject (str): The subject whose active schedule changed.
+            value (str): The new active value (see convert_active/is_active_at).
+        """
+        date = time_utils.now_string()
+        self.active_history.add_entry([date, subject, value])
+        print(date + "  ACTIVE  " + subject + "  " + value)
 
     def start(self, task: str, subject: str = "system") -> None:
         """Logs the start of a task.

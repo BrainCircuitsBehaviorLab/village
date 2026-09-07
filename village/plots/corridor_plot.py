@@ -12,6 +12,42 @@ from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
+def _is_subject_active_during_hour(
+    changes: list[tuple[pd.Timestamp, str]],
+    hour_start: pd.Timestamp,
+    hour_end: pd.Timestamp,
+    fallback_value: str,
+) -> bool:
+    """True if the subject's schedule was active at any point during
+    [hour_start, hour_end) -- checked against every distinct schedule value
+    that held during that hour: the one already in effect at hour_start, plus
+    any changes that happened partway through it. An hour only counts as
+    inactive if every one of those values says so for the whole hour.
+
+    Args:
+        changes: (timestamp, active_value) pairs for this subject, sorted by
+            timestamp ascending (see log.active_changed).
+        hour_start: Start of the hour being checked (inclusive).
+        hour_end: End of the hour being checked (exclusive).
+        fallback_value: Used only if `changes` is empty (no history at all
+            for this subject) -- today's live active value.
+    """
+    candidates = [value for ts, value in changes if hour_start <= ts < hour_end]
+
+    before = [value for ts, value in changes if ts <= hour_start]
+    if before:
+        candidates.append(before[-1])
+    elif changes:
+        # No change recorded before this hour, but we do have later ones --
+        # best guess is that the earliest known value already applied.
+        candidates.append(changes[0][1])
+    else:
+        # No history at all for this subject -- fall back to today's value.
+        candidates.append(fallback_value)
+
+    return any(utils.is_active_at(value, hour_start) for value in candidates)
+
+
 def corridor_plot(
     df: pd.DataFrame,
     subjects: list[str],
@@ -20,6 +56,7 @@ def corridor_plot(
     ndays: int = 3,
     from_date: str | None | datetime = None,
     active_states: dict[str, str] | None = None,
+    active_history_df: pd.DataFrame | None = None,
 ) -> Figure:
     """Generates a corridor activity plot for multiple subjects.
 
@@ -29,7 +66,7 @@ def corridor_plot(
     diagonal hatching; sessions and detections are drawn on top of everything.
 
     Args:
-        df (pd.DataFrame): DataFrame containing activity data.
+        df (pd.DataFrame): DataFrame containing activity data (events.csv).
         subjects (list[str]): List of subject names to include in the plot.
         width (float): Width of the figure in inches.
         height (float): Height of the figure in inches.
@@ -37,9 +74,17 @@ def corridor_plot(
         from_date (Union[str, None, datetime], optional): Start date for the plot.
             If None, uses the current time. Defaults to None.
         active_states (Union[dict[str, str], None], optional): Maps subject name
-            to its active value ("ON"/"OFF"/schedule string), used to draw the
-            red inactive-hours hatching. Missing subjects default to "ON".
-            Defaults to None.
+            to its current active value ("ON"/"OFF"/schedule string) -- used
+            as a fallback for the hours before any known active_history_df
+            entry for that subject, and for subjects missing from it
+            entirely. Missing subjects default to "ON". Defaults to None.
+        active_history_df (pd.DataFrame | None, optional): Columns "date",
+            "subject", "active" (see log.active_changed / data.active_history)
+            -- one row per past change to a subject's active schedule, used to
+            reconstruct what it actually was at each past hour instead of
+            applying active_states retroactively to the whole plotted range.
+            Defaults to None (falls back to active_states everywhere, like
+            before this parameter existed).
 
     Returns:
         Figure: The generated matplotlib figure.
@@ -79,6 +124,21 @@ def corridor_plot(
 
     df["date"] = pd.to_datetime(df["date"])
 
+    # Per-subject history of active-schedule changes (see log.active_changed
+    # / data.active_history), used below to reconstruct what each subject's
+    # schedule actually was at any past hour. Not filtered to the plotted
+    # window -- a change from before start_first is still what was in effect
+    # at its start.
+    active_changes: dict[str, list[tuple[pd.Timestamp, str]]] = {}
+    if active_history_df is not None and not active_history_df.empty:
+        changes_df = active_history_df.copy()
+        changes_df["date"] = pd.to_datetime(changes_df["date"])
+        changes_df = changes_df.sort_values("date")
+        for subject_name, group in changes_df.groupby("subject"):
+            active_changes[str(subject_name)] = list(
+                zip(group["date"], group["active"], strict=False)
+            )
+
     df = df[df["date"] >= start_first]
 
     fig, ax = plt.subplots(figsize=(width, height))
@@ -113,15 +173,19 @@ def corridor_plot(
     )
     edge_nums = mdates.date2num(hour_edges)
     for subject in subjects:
-        active_value = active_states.get(subject, "ON") if active_states else "ON"
-        if not isinstance(active_value, str):
-            active_value = "ON"
+        fallback_value = active_states.get(subject, "ON") if active_states else "ON"
+        if not isinstance(fallback_value, str):
+            fallback_value = "ON"
+        changes = active_changes.get(subject, [])
         y0 = y_positions[subject] - 0.5
         # merge consecutive inactive hours into runs, then hatch each run
         inactive_ranges = []
         run_start = None
         for i in range(len(hour_edges) - 1):
-            inactive = not utils.is_active_at(active_value, hour_edges[i])
+            active = _is_subject_active_during_hour(
+                changes, hour_edges[i], hour_edges[i + 1], fallback_value
+            )
+            inactive = not active
             if inactive and run_start is None:
                 run_start = i
             elif not inactive and run_start is not None:
@@ -198,6 +262,12 @@ def corridor_plot(
     ax.set_xlim(start_first, end)
     ax.set_ylim(-0.5, len(subjects) - 0.5)
 
+    # vertical line marking the current moment, if it falls within the
+    # plotted range (it won't for a plot of a past date range).
+    now = time_utils.now()
+    if start_first <= now <= end:
+        ax.axvline(now, color="black", linewidth=1.5, zorder=6)
+
     # get the unique days in the plot
     unique_days = pd.date_range(start=start_first, end=end, freq="D")
     # make them at midnight
@@ -243,6 +313,7 @@ def corridor_plot(
         ),
         Line2D([0], [0], color="blue", linewidth=6, label="session"),
         Patch(facecolor="none", hatch="////", label="inactive"),
+        Line2D([0], [0], color="black", linewidth=1.5, label="now"),
     ]
     ax.legend(
         handles=legend_handles,

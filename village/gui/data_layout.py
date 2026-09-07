@@ -613,6 +613,15 @@ class Table(QAbstractTableModel):
 
         self.df.iat[index.row(), index.column()] = value
         self.dataChanged.emit(index, index, [Qt.DisplayRole])
+
+        if manager.table == DataTable.SUBJECTS and column_name == "active":
+            try:
+                name_col = self.df.columns.get_loc("name")
+                subject_name = str(self.df.iat[index.row(), name_col])
+                log.active_changed(subject_name, str(value))
+            except Exception:
+                pass
+
         return True
 
     def flags(self, index: QModelIndex) -> Qt.ItemFlags:
