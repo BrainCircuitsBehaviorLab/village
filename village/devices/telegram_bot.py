@@ -335,7 +335,7 @@ class TelegramBot:
                         "inline_keyboard": [
                             [
                                 {
-                                    "text": "✅ Acknowledge",
+                                    "text": "👉 Acknowledge",
                                     "callback_data": f"ack:{ack_id}",
                                 }
                             ]

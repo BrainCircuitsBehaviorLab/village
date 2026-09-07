@@ -85,13 +85,15 @@ class NullTelegramBot:
     error: str = ""
     pending: dict[int, str] = {}
 
-    def alarm(self, message: str, repeat: bool = False) -> None:
+    def alarm(self, message: str, repeat: bool = False, report: bool = False) -> None:
         """Sends an alarm message.
 
         Args:
             message (str): The alarm message.
             repeat (bool, optional): If True, the alarm is resent in telegram until
                 acknowledged. Defaults to False.
+            report (bool, optional): If True, this is a daily report, sent
+                without the alarm emoji. Defaults to False.
         """
         return
 

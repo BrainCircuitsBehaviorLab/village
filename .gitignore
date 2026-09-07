@@ -90,5 +90,4 @@ venv/
 .claude/
 
 # remove
-village/code/*
-village/pablo/*
+_code/*
