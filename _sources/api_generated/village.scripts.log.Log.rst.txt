@@ -17,6 +17,7 @@ Log
       :no-index:
    
       ~Log.__init__
+      ~Log.active_changed
       ~Log.alarm
       ~Log.clean_text
       ~Log.end

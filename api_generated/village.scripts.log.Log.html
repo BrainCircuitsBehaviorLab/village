@@ -328,10 +328,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.gui.html">gui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="village.plots.html">plots</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="village.plots.corridor_plot.html">corridor_plot</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="village.plots.corridor_plot.corridor_plot.html">corridor_plot</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="village.plots.temperatures_plot.html">temperatures_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
 </ul>
@@ -552,6 +548,17 @@ data-aria-dark="Switch to auto color mode">
 
 <dl class="py attribute">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">active_history</span></span></dt>
+<dd><p>Handler for subject active-schedule changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>EventBase</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">cam</span></span></dt>
 <dd><p>Handler for camera overlay text.</p>
 <dl class="field-list simple">
@@ -601,6 +608,27 @@ data-aria-dark="Switch to auto color mode">
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>temperature</strong> (<em>float</em>) – The temperature value.</p></li>
 <li><p><strong>humidity</strong> (<em>float</em>) – The humidity value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">active_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/scripts/log.html#Log.active_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Logs a change to a subject’s active schedule (ON/OFF/weekly hours).</p>
+<p>Recorded so past activity plots (see corridor_plot) can reconstruct
+what the subject’s schedule actually was at any past hour, instead of
+applying today’s value retroactively to the whole history. Written to
+active_history.csv rather than events.csv on purpose: events.csv is
+high volume and gets trimmed (see Collection.check_split_csv), which
+would eventually drop a subject’s one-and-only schedule change and
+silently lose its history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – The subject whose active schedule changed.</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The new active value (see convert_active/is_active_at).</p></li>
 </ul>
 </dd>
 </dl>
@@ -728,7 +756,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cc4509a5"></script>
+      <script src="../_static/documentation_options.js?v=f12390b2"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
