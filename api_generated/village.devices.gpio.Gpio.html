@@ -98,7 +98,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -531,8 +534,7 @@ GPIO_IN and GPIO_OUT settings, in DEVICE ADDRESSES):</p>
 <li><p>Input (GPIO_IN, default 27): while a task is running the pin is watched
 and self.trigger.trigger_on() is called when it goes from OFF (low) to
 ON (high), and self.trigger.trigger_off() when it goes from ON to OFF.
-The watching runs only while a task is active (the manager starts it
-when the task starts and stops it when it ends). See GpioTriggerBase to
+The watching runs only while a task is active. See GpioTriggerBase to
 customize what happens on trigger_on/trigger_off.</p></li>
 <li><p>Output (GPIO_OUT, default 26): set_on() drives the pin HIGH and set_off()
 drives it LOW. Call them from anywhere (a task, a trigger, direct
@@ -610,7 +612,7 @@ functions, the screen sync…); they work regardless of the input.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

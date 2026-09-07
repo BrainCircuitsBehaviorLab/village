@@ -1,4 +1,4 @@
-## Bpod Water Calibration
+## Water Calibration
 
 Calibrates the relationship between how long a valve (or a pump) is open and how much
 water it actually delivers, per behavior port — so tasks can request a volume in
@@ -6,8 +6,13 @@ microliters instead of a raw opening time.
 
 ```{admonition} Note
 :class: note
-Only available when the Bpod is the configured behavior controller
-(`BEHAVIOR_CONTROLLER` → `BPOD`).
+With Bpod as the configured behavior controller (`BEHAVIOR_CONTROLLER` → `BPOD`), the
+CALIBRATE/TEST sequence runs through a built-in Bpod state machine automatically. For
+any other controller, the project's code directory must define a class inheriting from
+`WaterCalibrationTaskBase` (`village.custom_classes.water_calibration_task_base`)
+implementing the same sequence on that controller's own hardware -- if a project
+provides one, it's used instead of the Bpod default even when the controller is Bpod.
+Without either, clicking CALIBRATE or TEST shows a message explaining what's missing.
 ```
 
 ### Calibrating
@@ -55,7 +60,7 @@ error compared to the target, and plots the test point against the existing curv
 Every method on the panel is reachable from any task via `self.calibrations`:
 
 ```python
-time_s = self.calibrations.bpod_water_calibration.get_valve_time(port, volume_ul)
+time_s = self.calibrations.water_calibration.get_valve_time(port, volume_ul)
 ```
 
 Given a (1-indexed) port number and a target volume in microliters, this interpolates
@@ -64,7 +69,7 @@ port hasn't been calibrated yet, or `volume_ul` falls outside the calibrated ran
 raises a `ValueError` explaining the problem so it's easy to tell whether the port
 needs calibrating or the requested volume needs adjusting.
 
-Data is stored in `bpod_water_calibration.csv` (columns: `date`, `port_number`,
+Data is stored in `water_calibration.csv` (columns: `date`, `port_number`,
 `time(s)`, `water_delivered(ul)`, `calibration_number`, `water_expected(ul)`,
 `error(%)`).
 

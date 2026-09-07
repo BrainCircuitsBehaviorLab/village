@@ -13,7 +13,7 @@ Create a Python file inside your `project/code` folder with a class that inherit
 Three built-in calibration examples are included in the Village codebase under `village/calibration/`:
 
 - `sound_calibration.py`
-- `bpod_water_calibration.py`
+- `water_calibration.py`
 - `camera_calibration.py`
 
 These are a good starting point for understanding how calibration classes work.

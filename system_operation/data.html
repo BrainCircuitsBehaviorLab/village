@@ -98,7 +98,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -587,7 +590,7 @@ hardware logs.</p></li>
 </span><span data-line="5">├── events.csv
 </span><span data-line="6">├── subjects.csv
 </span><span data-line="7">├── sessions_summary.csv
-</span><span data-line="8">├── bpod_water_calibration.csv
+</span><span data-line="8">├── water_calibration.csv
 </span><span data-line="9">├── sound_calibration.csv
 </span><span data-line="10">├── temperatures.csv
 </span><span data-line="11">└── deleted_sessions.csv
@@ -624,7 +627,7 @@ the task definition (see <a class="reference internal" href="../protocols/creati
 Columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">humidity</span></code>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">calibration_files.csv</span></code></strong>: Registry of saved calibration files. Different calibration
 types can be created and customized (e.g. <code class="docutils literal notranslate"><span class="pre">sound_calibration</span></code>, <code class="docutils literal notranslate"><span class="pre">camera_calibration</span></code>,
-<code class="docutils literal notranslate"><span class="pre">bpod_water_calibration</span></code>), and their stored values can be retrieved and used within
+<code class="docutils literal notranslate"><span class="pre">water_calibration</span></code>), and their stored values can be retrieved and used within
 tasks.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">deleted_sessions.csv</span></code></strong>: List of manually deleted sessions.</p>
 <div class="warning admonition">
@@ -895,7 +898,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -98,7 +98,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../calibrations_index.html">CALIBRATIONS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -501,93 +504,92 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="21"><span class="sd">    - Input (GPIO_IN, default 27): while a task is running the pin is watched</span>
 </span><span data-line="22"><span class="sd">      and self.trigger.trigger_on() is called when it goes from OFF (low) to</span>
 </span><span data-line="23"><span class="sd">      ON (high), and self.trigger.trigger_off() when it goes from ON to OFF.</span>
-</span><span data-line="24"><span class="sd">      The watching runs only while a task is active (the manager starts it</span>
-</span><span data-line="25"><span class="sd">      when the task starts and stops it when it ends). See GpioTriggerBase to</span>
-</span><span data-line="26"><span class="sd">      customize what happens on trigger_on/trigger_off.</span>
-</span><span data-line="27">
-</span><span data-line="28"><span class="sd">    - Output (GPIO_OUT, default 26): set_on() drives the pin HIGH and set_off()</span>
-</span><span data-line="29"><span class="sd">      drives it LOW. Call them from anywhere (a task, a trigger, direct</span>
-</span><span data-line="30"><span class="sd">      functions, the screen sync...); they work regardless of the input.</span>
-</span><span data-line="31"><span class="sd">    """</span>
-</span><span data-line="32">
+</span><span data-line="24"><span class="sd">      The watching runs only while a task is active. See GpioTriggerBase to</span>
+</span><span data-line="25"><span class="sd">      customize what happens on trigger_on/trigger_off.</span>
+</span><span data-line="26">
+</span><span data-line="27"><span class="sd">    - Output (GPIO_OUT, default 26): set_on() drives the pin HIGH and set_off()</span>
+</span><span data-line="28"><span class="sd">      drives it LOW. Call them from anywhere (a task, a trigger, direct</span>
+</span><span data-line="29"><span class="sd">      functions, the screen sync...); they work regardless of the input.</span>
+</span><span data-line="30"><span class="sd">    """</span>
+</span><span data-line="31">
 <div class="viewcode-block" id="Gpio.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.devices.gpio.Gpio.html#village.devices.gpio.Gpio.__init__">[docs]</a>
-</span><span data-line="33">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="34"><span class="w">        </span><span class="sd">"""Initializes the Gpio instance (does not open the GPIO yet)."""</span>
-</span><span data-line="35">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Gpio"</span>
-</span><span data-line="36">        <span class="bp">self</span><span class="o">.</span><span class="n">pin_in</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GPIO_IN"</span><span class="p">))</span>  <span class="c1"># BCM number, input</span>
-</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">pin_out</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GPIO_OUT"</span><span class="p">))</span>  <span class="c1"># BCM number, output</span>
-</span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">""</span>
-</span><span data-line="39">        <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span><span class="p">:</span> <span class="n">GpioTriggerBase</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="41">        <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span></div>
+</span><span data-line="32">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="33"><span class="w">        </span><span class="sd">"""Initializes the Gpio instance (does not open the GPIO yet)."""</span>
+</span><span data-line="34">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Gpio"</span>
+</span><span data-line="35">        <span class="bp">self</span><span class="o">.</span><span class="n">pin_in</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GPIO_IN"</span><span class="p">))</span>  <span class="c1"># BCM number, input</span>
+</span><span data-line="36">        <span class="bp">self</span><span class="o">.</span><span class="n">pin_out</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"GPIO_OUT"</span><span class="p">))</span>  <span class="c1"># BCM number, output</span>
+</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">""</span>
+</span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span><span class="p">:</span> <span class="n">GpioTriggerBase</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="39">        <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="40">        <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-</span><span data-line="42">
+</span><span data-line="41">
 <div class="viewcode-block" id="Gpio.start">
 <a class="viewcode-back" href="../../../api_generated/village.devices.gpio.Gpio.html#village.devices.gpio.Gpio.start">[docs]</a>
-</span><span data-line="43">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="44"><span class="w">        </span><span class="sd">"""Starts watching the input pin for level changes."""</span>
-</span><span data-line="45">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="46">            <span class="k">return</span>
-</span><span data-line="47">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="48">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="o">=</span> <span class="n">DigitalInputDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_in</span><span class="p">)</span>
-</span><span data-line="49">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">when_activated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_on</span>  <span class="c1"># OFF -&gt; ON</span>
-</span><span data-line="50">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">when_deactivated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_off</span>  <span class="c1"># ON -&gt; OFF</span>
-</span><span data-line="51">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="52">            <span class="n">msg</span> <span class="o">=</span> <span class="s2">"Could not open GPIO pin "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_in</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" as input"</span>
-</span><span data-line="53">            <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="n">msg</span><span class="p">)</span></div>
+</span><span data-line="42">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="43"><span class="w">        </span><span class="sd">"""Starts watching the input pin for level changes."""</span>
+</span><span data-line="44">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="45">            <span class="k">return</span>
+</span><span data-line="46">        <span class="k">try</span><span class="p">:</span>
+</span><span data-line="47">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="o">=</span> <span class="n">DigitalInputDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_in</span><span class="p">)</span>
+</span><span data-line="48">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">when_activated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_on</span>  <span class="c1"># OFF -&gt; ON</span>
+</span><span data-line="49">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">when_deactivated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_off</span>  <span class="c1"># ON -&gt; OFF</span>
+</span><span data-line="50">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="51">            <span class="n">msg</span> <span class="o">=</span> <span class="s2">"Could not open GPIO pin "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_in</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" as input"</span>
+</span><span data-line="52">            <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="n">msg</span><span class="p">)</span></div>
 
-</span><span data-line="54">
+</span><span data-line="53">
 <div class="viewcode-block" id="Gpio.stop">
 <a class="viewcode-back" href="../../../api_generated/village.devices.gpio.Gpio.html#village.devices.gpio.Gpio.stop">[docs]</a>
-</span><span data-line="55">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="56"><span class="w">        </span><span class="sd">"""Stops watching the input pin and releases it."""</span>
-</span><span data-line="57">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="58">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="59">                <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</span><span data-line="60">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="61">                <span class="k">pass</span>
-</span><span data-line="62">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="o">=</span> <span class="kc">None</span></div>
+</span><span data-line="54">    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="55"><span class="w">        </span><span class="sd">"""Stops watching the input pin and releases it."""</span>
+</span><span data-line="56">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="57">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="58">                <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="59">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="60">                <span class="k">pass</span>
+</span><span data-line="61">            <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-</span><span data-line="63">
+</span><span data-line="62">
 <div class="viewcode-block" id="Gpio.set_on">
 <a class="viewcode-back" href="../../../api_generated/village.devices.gpio.Gpio.html#village.devices.gpio.Gpio.set_on">[docs]</a>
-</span><span data-line="64">    <span class="k">def</span><span class="w"> </span><span class="nf">set_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="65"><span class="w">        </span><span class="sd">"""Drives the output pin HIGH."""</span>
-</span><span data-line="66">        <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+</span><span data-line="63">    <span class="k">def</span><span class="w"> </span><span class="nf">set_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="64"><span class="w">        </span><span class="sd">"""Drives the output pin HIGH."""</span>
+</span><span data-line="65">        <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
 
-</span><span data-line="67">
+</span><span data-line="66">
 <div class="viewcode-block" id="Gpio.set_off">
 <a class="viewcode-back" href="../../../api_generated/village.devices.gpio.Gpio.html#village.devices.gpio.Gpio.set_off">[docs]</a>
-</span><span data-line="68">    <span class="k">def</span><span class="w"> </span><span class="nf">set_off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="69"><span class="w">        </span><span class="sd">"""Drives the output pin LOW."""</span>
-</span><span data-line="70">        <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+</span><span data-line="67">    <span class="k">def</span><span class="w"> </span><span class="nf">set_off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="68"><span class="w">        </span><span class="sd">"""Drives the output pin LOW."""</span>
+</span><span data-line="69">        <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
-</span><span data-line="71">
-</span><span data-line="72">    <span class="k">def</span><span class="w"> </span><span class="nf">_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">high</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="73">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="74">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="75">                <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="o">=</span> <span class="n">DigitalOutputDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_out</span><span class="p">)</span>
-</span><span data-line="76">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="77">                <span class="n">msg</span> <span class="o">=</span> <span class="s2">"Could not open GPIO pin "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_out</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" as output"</span>
-</span><span data-line="78">                <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="n">msg</span><span class="p">)</span>
-</span><span data-line="79">                <span class="k">return</span>
-</span><span data-line="80">        <span class="k">if</span> <span class="n">high</span><span class="p">:</span>
-</span><span data-line="81">            <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
-</span><span data-line="82">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="83">            <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
-</span><span data-line="84">
-</span><span data-line="85">    <span class="k">def</span><span class="w"> </span><span class="nf">_trigger_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="86">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="87">            <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">trigger_on</span><span class="p">()</span>
-</span><span data-line="88">
-</span><span data-line="89">    <span class="k">def</span><span class="w"> </span><span class="nf">_trigger_off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="90">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="91">            <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">trigger_off</span><span class="p">()</span></div>
+</span><span data-line="70">
+</span><span data-line="71">    <span class="k">def</span><span class="w"> </span><span class="nf">_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">high</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="72">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="73">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="74">                <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="o">=</span> <span class="n">DigitalOutputDevice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_out</span><span class="p">)</span>
+</span><span data-line="75">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="76">                <span class="n">msg</span> <span class="o">=</span> <span class="s2">"Could not open GPIO pin "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pin_out</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" as output"</span>
+</span><span data-line="77">                <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="n">msg</span><span class="p">)</span>
+</span><span data-line="78">                <span class="k">return</span>
+</span><span data-line="79">        <span class="k">if</span> <span class="n">high</span><span class="p">:</span>
+</span><span data-line="80">            <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="o">.</span><span class="n">on</span><span class="p">()</span>
+</span><span data-line="81">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="82">            <span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="o">.</span><span class="n">off</span><span class="p">()</span>
+</span><span data-line="83">
+</span><span data-line="84">    <span class="k">def</span><span class="w"> </span><span class="nf">_trigger_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="85">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="86">            <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">trigger_on</span><span class="p">()</span>
+</span><span data-line="87">
+</span><span data-line="88">    <span class="k">def</span><span class="w"> </span><span class="nf">_trigger_off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="89">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="90">            <span class="bp">self</span><span class="o">.</span><span class="n">trigger</span><span class="o">.</span><span class="n">trigger_off</span><span class="p">()</span></div>
 
+</span><span data-line="91">
 </span><span data-line="92">
-</span><span data-line="93">
-</span><span data-line="94"><span class="n">gpio</span> <span class="o">=</span> <span class="n">Gpio</span><span class="p">()</span>
+</span><span data-line="93"><span class="n">gpio</span> <span class="o">=</span> <span class="n">Gpio</span><span class="p">()</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -612,7 +614,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../../../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

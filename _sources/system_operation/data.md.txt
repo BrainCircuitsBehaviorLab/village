@@ -56,7 +56,7 @@ systemName/
 ├── events.csv
 ├── subjects.csv
 ├── sessions_summary.csv
-├── bpod_water_calibration.csv
+├── water_calibration.csv
 ├── sound_calibration.csv
 ├── temperatures.csv
 └── deleted_sessions.csv
@@ -93,7 +93,7 @@ systemName/
 
 - **`calibration_files.csv`**: Registry of saved calibration files. Different calibration
   types can be created and customized (e.g. `sound_calibration`, `camera_calibration`,
-  `bpod_water_calibration`), and their stored values can be retrieved and used within
+  `water_calibration`), and their stored values can be retrieved and used within
   tasks.
 
 - **`deleted_sessions.csv`**: List of manually deleted sessions.

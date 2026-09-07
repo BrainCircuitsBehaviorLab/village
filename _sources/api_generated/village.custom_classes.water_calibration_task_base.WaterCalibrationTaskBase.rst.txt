@@ -1,0 +1,51 @@
+WaterCalibrationTaskBase
+========================
+
+.. currentmodule:: village.custom_classes.water_calibration_task_base
+
+.. autoclass:: WaterCalibrationTaskBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~WaterCalibrationTaskBase.__init__
+      ~WaterCalibrationTaskBase.after_trial
+      ~WaterCalibrationTaskBase.close
+      ~WaterCalibrationTaskBase.concatenate_trial_data
+      ~WaterCalibrationTaskBase.create_paths
+      ~WaterCalibrationTaskBase.create_trial
+      ~WaterCalibrationTaskBase.disconnect_and_save
+      ~WaterCalibrationTaskBase.do_trial
+      ~WaterCalibrationTaskBase.execute_function
+      ~WaterCalibrationTaskBase.get_name
+      ~WaterCalibrationTaskBase.register_controller_event
+      ~WaterCalibrationTaskBase.register_end_trial
+      ~WaterCalibrationTaskBase.register_enter_state
+      ~WaterCalibrationTaskBase.register_raspberry_event
+      ~WaterCalibrationTaskBase.register_start_trial
+      ~WaterCalibrationTaskBase.register_value
+      ~WaterCalibrationTaskBase.run
+      ~WaterCalibrationTaskBase.save_csv
+      ~WaterCalibrationTaskBase.save_json
+      ~WaterCalibrationTaskBase.start
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~WaterCalibrationTaskBase.should_stop
+   
+   

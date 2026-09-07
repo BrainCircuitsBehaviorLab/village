@@ -98,7 +98,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -619,7 +622,7 @@ In this section you can create new subjects. Check the <a class="reference inter
 <p>This screen provides a dedicated panel for each calibration tool available on the system. A left-side menu lists every calibration relevant to your current hardware configuration; selecting an entry opens its panel on the right.</p>
 <p>Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> section for details.</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">BPOD_WATER_CALIBRATION</span></code>:</strong> Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller. See <a class="reference internal" href="../calibrations/bpod_water.html"><span class="std std-doc">Bpod Water Calibration</span></a>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>:</strong> Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller. See <a class="reference internal" href="#/calibrations/water.md"><span class="xref myst">Water Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>:</strong> Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> is <strong>ON</strong>. See <a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">Sound Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CAMERA_CALIBRATION</span></code>:</strong> Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available. See <a class="reference internal" href="../calibrations/camera.html"><span class="std std-doc">Camera Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR_THRESHOLD_CALIBRATION</span></code>:</strong> Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result against a recorded corridor video. Only available when <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is <strong>ON</strong>. See <a class="reference internal" href="../calibrations/thresholds.html"><span class="std std-doc">Corridor Threshold Calibration</span></a>.</p></li>
@@ -672,7 +675,7 @@ In this section you can create new subjects. Check the <a class="reference inter
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

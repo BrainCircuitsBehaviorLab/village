@@ -98,7 +98,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../calibrations_index.html">CALIBRATIONS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -486,33 +489,32 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="6">
 </span><span data-line="7"><span class="sd">    Override trigger_on and trigger_off to react to the GPIO input pin</span>
 </span><span data-line="8"><span class="sd">    (GPIO_IN, in DEVICE ADDRESSES) going from OFF (low) to ON (high) and back.</span>
-</span><span data-line="9"><span class="sd">    The watching runs only while a task is active (the manager starts it when</span>
-</span><span data-line="10"><span class="sd">    the task starts and stops it when it ends).</span>
-</span><span data-line="11">
-</span><span data-line="12"><span class="sd">    You have access to self.task, so any variable or function of the running</span>
-</span><span data-line="13"><span class="sd">    task can be used.</span>
-</span><span data-line="14"><span class="sd">    """</span>
-</span><span data-line="15">
+</span><span data-line="9"><span class="sd">    The watching runs only while a task is active.</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="sd">    You have access to self.task, so any variable or function of the running</span>
+</span><span data-line="12"><span class="sd">    task can be used.</span>
+</span><span data-line="13"><span class="sd">    """</span>
+</span><span data-line="14">
 <div class="viewcode-block" id="GpioTriggerBase.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html#village.custom_classes.gpio_trigger_base.GpioTriggerBase.__init__">[docs]</a>
-</span><span data-line="16">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="17"><span class="w">        </span><span class="sd">"""Initializes the GpioTriggerBase instance."""</span>
-</span><span data-line="18">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Gpio Trigger"</span>
-</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">TaskBase</span><span class="p">()</span></div>
+</span><span data-line="15">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="16"><span class="w">        </span><span class="sd">"""Initializes the GpioTriggerBase instance."""</span>
+</span><span data-line="17">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Gpio Trigger"</span>
+</span><span data-line="18">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">TaskBase</span><span class="p">()</span></div>
 
-</span><span data-line="20">
+</span><span data-line="19">
 <div class="viewcode-block" id="GpioTriggerBase.trigger_on">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html#village.custom_classes.gpio_trigger_base.GpioTriggerBase.trigger_on">[docs]</a>
-</span><span data-line="21">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="22"><span class="w">        </span><span class="sd">"""Called when the input pin goes from OFF to ON. Override me."""</span>
-</span><span data-line="23">        <span class="k">pass</span></div>
+</span><span data-line="20">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="21"><span class="w">        </span><span class="sd">"""Called when the input pin goes from OFF to ON. Override me."""</span>
+</span><span data-line="22">        <span class="k">pass</span></div>
 
-</span><span data-line="24">
+</span><span data-line="23">
 <div class="viewcode-block" id="GpioTriggerBase.trigger_off">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html#village.custom_classes.gpio_trigger_base.GpioTriggerBase.trigger_off">[docs]</a>
-</span><span data-line="25">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="26"><span class="w">        </span><span class="sd">"""Called when the input pin goes from ON to OFF. Override me."""</span>
-</span><span data-line="27">        <span class="k">pass</span></div>
+</span><span data-line="24">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger_off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="25"><span class="w">        </span><span class="sd">"""Called when the input pin goes from ON to OFF. Override me."""</span>
+</span><span data-line="26">        <span class="k">pass</span></div>
 </div>
 
 </span></pre></div>
@@ -539,7 +541,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../../../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

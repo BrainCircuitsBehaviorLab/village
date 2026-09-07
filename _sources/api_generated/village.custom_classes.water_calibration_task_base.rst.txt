@@ -1,0 +1,34 @@
+water\_calibration\_task\_base
+==============================
+
+.. automodule:: village.custom_classes.water_calibration_task_base
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      WaterCalibrationTaskBase
+   
+   
+
+   
+   
+   
+
+
+

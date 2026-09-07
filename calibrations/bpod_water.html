@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Bpod Water Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Sound Calibration" href="sound.html" /><link rel="prev" title="CALIBRATIONS" href="../calibrations_index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Water Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/calibrations/bpod_water.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -23,7 +23,7 @@
     
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/calibrations/bpod_water.html"/>
-  <meta property="og:title" content="Bpod Water Calibration"/>
+  <meta property="og:title" content="Water Calibration"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -63,8 +63,8 @@ data-aria-dark="Switch to auto color mode">
   <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
     <div class="sy-lside-inner md:sticky">
       <div class="sy-scrollbar p-6">
-        <div class="globaltoc" data-expand-depth="0"><ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
+        <div class="globaltoc" data-expand-depth="0"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
@@ -97,8 +97,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Bpod Water Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -463,16 +466,8 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="1" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../documentation_index.html"><span itemprop="name">DOCUMENTATION</span></a>
-        <span>/</span>
+        <strong itemprop="name">Water Calibration</strong>
         <meta itemprop="position" content="2" />
-      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../calibrations_index.html"><span itemprop="name">CALIBRATIONS</span></a>
-        <span>/</span>
-        <meta itemprop="position" content="3" />
-      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Bpod Water Calibration</strong>
-        <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
       <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
@@ -519,15 +514,20 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="bpod-water-calibration">
-<h1>Bpod Water Calibration</h1>
+          <section id="water-calibration">
+<h1>Water Calibration</h1>
 <p>Calibrates the relationship between how long a valve (or a pump) is open and how much
 water it actually delivers, per behavior port — so tasks can request a volume in
 microliters instead of a raw opening time.</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
-<p>Only available when the Bpod is the configured behavior controller
-(<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> → <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>).</p>
+<p>With Bpod as the configured behavior controller (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> → <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>), the
+CALIBRATE/TEST sequence runs through a built-in Bpod state machine automatically. For
+any other controller, the project’s code directory must define a class inheriting from
+<code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> (<code class="docutils literal notranslate"><span class="pre">village.custom_classes.water_calibration_task_base</span></code>)
+implementing the same sequence on that controller’s own hardware – if a project
+provides one, it’s used instead of the Bpod default even when the controller is Bpod.
+Without either, clicking CALIBRATE or TEST shows a message explaining what’s missing.</p>
 </div>
 <section id="calibrating">
 <h2>Calibrating</h2>
@@ -570,7 +570,7 @@ error compared to the target, and plots the test point against the existing curv
 <section id="using-it-in-tasks">
 <h2>Using it in tasks</h2>
 <p>Every method on the panel is reachable from any task via <code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">time_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">bpod_water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">volume_ul</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">time_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">volume_ul</span><span class="p">)</span>
 </span></pre></div>
 </div>
 <p>Given a (1-indexed) port number and a target volume in microliters, this interpolates
@@ -578,7 +578,7 @@ the valve opening time from that port’s most recent saved calibration curve. I
 port hasn’t been calibrated yet, or <code class="docutils literal notranslate"><span class="pre">volume_ul</span></code> falls outside the calibrated range, it
 raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> explaining the problem so it’s easy to tell whether the port
 needs calibrating or the requested volume needs adjusting.</p>
-<p>Data is stored in <code class="docutils literal notranslate"><span class="pre">bpod_water_calibration.csv</span></code> (columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">port_number</span></code>,
+<p>Data is stored in <code class="docutils literal notranslate"><span class="pre">water_calibration.csv</span></code> (columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">port_number</span></code>,
 <code class="docutils literal notranslate"><span class="pre">time(s)</span></code>, <code class="docutils literal notranslate"><span class="pre">water_delivered(ul)</span></code>, <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>, <code class="docutils literal notranslate"><span class="pre">water_expected(ul)</span></code>,
 <code class="docutils literal notranslate"><span class="pre">error(%)</span></code>).</p>
 <hr class="docutils" />
@@ -591,21 +591,7 @@ needs calibrating or the requested volume needs adjusting.</p>
     <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
   </svg>
   <span>Back to top</span>
-</button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../calibrations_index.html">
-      <i class="i-lucide chevron-left"></i>
-      <div class="page-info">
-        <span>Previous</span><div class="title">CALIBRATIONS</div></div>
-    </a>
-  </div><div class="navigation-next">
-    <a href="sound.html">
-      <div class="page-info">
-        <span>Next</span>
-        <div class="title">Sound Calibration</div>
-      </div>
-      <i class="i-lucide chevron-right"></i>
-    </a>
-  </div></div></div>
+</button><div class="navigation flex print:hidden"></div></div>
     </div>
   </main>
 </div>
@@ -623,7 +609,7 @@ needs calibrating or the requested volume needs adjusting.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

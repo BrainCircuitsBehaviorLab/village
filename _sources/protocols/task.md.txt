@@ -1,370 +1,342 @@
 ## Task Development Guide
 
+To create a task, create a Python file inside your project's `code` directory, and
+within it, a class named after the task, inheriting from the generic `TaskBase`
+class. Naming conventions follow Python standards: CamelCase for class names,
+lower_case for filenames and function/variable names. Let's look at an example.
 
-To create a task, create a Python file, and within it, a class with the task’s name,
-inheriting functionality from the generic `TaskBase` class. This process is straightforward.
-Let’s look at an example:
+### A minimal task
 
-Let's explore the file `habituation.py` inside your code folder. The structure of the
-task is the following:
-
+`village/code/bpod_1_habituation.py` is the simplest real task in this project — the
+mouse is just left alone in the box, pokes are logged, no reward is given:
 
 ```python
-from village.classes.task_base import Event, Output, TaskBase
-from village.manager import manager
+from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
 
 
-class Habituation(TaskBase):
-    """
-    This class defines the task.
-
-    Required methods to implement:
-    - __init__: Initialize the task
-    - start: Called when the task starts.
-    - create_trial: Called once per trial to create the state machine.
-    - after_trial: Called once after each trial to register the values in the .csv file.
-    - close: Called when the task is finished.
-    """
-
+class Bpod1Habituation(TaskBase):
     def __init__(self):
-        """
-        The text in the self.info variable
-        will be shown when the task is selected in the GUI to be run manually.
-        """
         super().__init__()
 
         self.info = """
-
-        Habituation Task
-        -------------------
-
-        This task is a simple visual task where the mouse has
-        to poke in illuminated ports.
-        The center port illuminates when a trial starts.
-        After the center port is poked,
-        both side ports are illuminated and give reward.
+        Habituation Task (Bpod)
+        ----------------------------------------------------------
+        This task is an automatic mouse habituation to the box.
+        Nothing will happen during the task, the mouse will be left alone in the box
+        for the duration of the task.
+        Port pokes will be registered but no reward will be delivered.
         """
 ```
 
-The task is named Habituation. It is initialized with __init__, and we acquire all the properties of the generic Task class using super().__init__(). The naming conventions follow Python standards: CamelCase for class names and lower_case for filenames and function names.
-Certain methods must be implemented in your class. These methods are:
+The task is named `Bpod1Habituation`. It's initialized with `__init__`, and we
+acquire all the properties of the generic `TaskBase` class using `super().__init__()`.
+`self.info` is shown to the user when the task is selected in the GUI to run
+manually.
 
-### The `start()` Method
+Four methods must be implemented in your class: `start`, `create_trial`,
+`after_trial`, and `close`.
+
+### The `start()` method
+
+Called once, when the task starts. Use it to compute anything the whole session
+needs — valve opening times, loaded sounds, opened serial connections, etc.
 
 ```python
     def start(self):
-        """
-        This function is called when the task starts.
-        It is used to calculate values needed for the task.
-        The following variables are accessible by default:
-        - self.bpod: (Bpod object)
-        - self.name: (str) the name of the task
-                (it is the name of the class, in this case Habituation)
-        - self.subject: (str) the name of the subject performing the task
-        - self.current_trial: (int) the current trial number starting from 1
-        - self.system_name: (str) the name of the system as defined in the
-                                tab settings of the GUI
-        - self.settings: (Settings object) the settings defined in training_protocol.py
-        - self.trial_data: (dict) information about the current trial
-        - self.force_stop: (bool) if made true the task will stop
+        """In this simple task we don't need to do anything in the start method."""
 
-        Al the variables created in training_protocol.py are accessible.
-        - self.settings.reward_amount_ml: reward volume
-        - self.settings.stage: current training stage
-        - self.settings.light_intensity_high: high light intensity
-        - self.settings.light_intensity_low: low light intensity
-        - self.settings.trial_types: possible trial types
-        - self.settings.punishment_time: punishment duration
-        - self.settings.iti_time: inter-trial interval
-        """
+        pass
+```
 
-        # First we calculate the time that the valves (or pumps) need to open to deliver
-        # the reward amount
-        # Make sure to calibrate the valves before using this function, otherwise
-        # it will return an Exception
-        self.left_valve_opening_time = manager.water_calibration.get_valve_time(
-            port=1, volume=self.settings.reward_amount_ml
+The most commonly used attributes available by default inside any task method
+(see the `TaskBase` class docstring for the full list) are:
+
+- `self.bpod` — the Bpod interface, used inside `create_trial` to build the state
+  machine.
+- `self.settings` — the session's parameters, as defined in `training_protocol.py`
+  (e.g. `self.settings.reward_volume`).
+- `self.calibrations` — convert hardware values to real-world units, e.g.
+  `self.calibrations.water_calibration.get_valve_time(port, volume)` or
+  `self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)`.
+- `self.cam_box`, `self.gpio`, `self.custom_areas` — the box camera, GPIO output
+  control, and any custom-shaped detection areas the project defines.
+- `self.name`, `self.subject`, `self.current_trial`, `self.system_name`, `self.date`.
+- `self.trial_data` — populated automatically after each trial, available inside
+  `after_trial` (see below).
+
+A task that delivers water almost always needs a valve opening time first —
+calibrate the ports from the Water Calibration panel before using this, or it
+raises an exception:
+
+```python
+    def start(self):
+        self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
+            port=1, volume=self.settings.reward_volume
         )
-        self.right_valve_opening_time = manager.water_calibration.get_valve_time(
-            port=3, volume=self.settings.reward_amount_ml
+        self.valve_r_time = self.calibrations.water_calibration.get_valve_time(
+            port=3, volume=self.settings.reward_volume
         )
 ```
 
-### The `create_trial()` Method
+### The `create_trial()` method
+
+Called once per trial. It builds the Bpod state machine for that trial (the
+machine is only sent to Bpod and actually run once `create_trial` returns).
 
 ```python
     def create_trial(self):
         """
-        This function is called once per trial, first it modifies variables and then
-        sends the state machine to the bpod that will run the trial.
+        This task is very simple, the state machine has only one state
+        called "ready_to_explore". We give it a 60-second timer and a
+        timer-up condition (once the timer elapses) that takes us to "exit".
+        Also, every time there's a poke in any port, we switch to the "exit" state.
         """
 
-        # 'ready_to_initiate': state that turns on the central port light and
-        # waits for a poke in the central port (Port2)
         self.bpod.add_state(
-            state_name="ready_to_initiate",
-            state_timer=0,
-            state_change_conditions={Event.Port2In: "stimulus_state"},
-            output_actions=[(Output.PWM2, self.settings.light_intensity_high)],
-        )
-
-        # 'stimulus_state': state that turns on the side ports and
-        # waits for a poke in one of the side ports (Port1 or Port3)
-        self.bpod.add_state(
-            state_name="stimulus_state",
-            state_timer=0,
+            state_name="ready_to_explore",
+            state_timer=60,
             state_change_conditions={
-                Event.Port1In: "reward_state_left",
-                Event.Port3In: "reward_state_right",
+                BpodEvent.Tup: "exit",
+                BpodEvent.Port1In: "exit",
+                BpodEvent.Port2In: "exit",
+                BpodEvent.Port3In: "exit",
             },
-            output_actions=[
-                (Output.PWM1, self.settings.light_intensity_high),
-                (Output.PWM3, self.settings.light_intensity_high),
-            ],
-        )
-
-        # 'reward_state_left' and 'reward_state_right': states that deliver the reward
-        self.bpod.add_state(
-            state_name="reward_state_left",
-            state_timer=self.left_valve_opening_time,
-            state_change_conditions={Event.Tup: "exit"},
-            output_actions=[Output.Valve1],
-        )
-
-        self.bpod.add_state(
-            state_name="reward_state_right",
-            state_timer=self.right_valve_opening_time,
-            state_change_conditions={Event.Tup: "exit"},
-            output_actions=[Output.Valve3],
+            output_actions=[],
         )
 ```
-### The `after_trial()` Method
+
+`BpodEvent` and `BpodOutput` (imported from `village.custom_classes.task_base`
+alongside `TaskBase`) enumerate every Bpod input event and output action. See
+[More Bpod primitives](#more-bpod-primitives) below for a full walkthrough of
+`add_state`, LEDs, valves, softcodes and TTL.
+
+### The `after_trial()` method
+
+Called once after each trial ends, to register whatever values you want saved
+to the session's data file. `self.trial_data` is populated automatically by
+then — `self.trial_data.get("Port1In", [])` is the list of timestamps at which
+port 1 was poked during the trial (empty if it never was), and
+`self.trial_data.get("STATE_<name>_START", [])` / `"..._END"` likewise for every
+Bpod state visited.
 
 ```python
     def after_trial(self):
         """
-        Here you can register all the values you need to save for each trial.
-        It is essential to always include a variable named water, which stores the
-        amount of water consumed during each trial.
-        The system will calculate the total water consumption in each session
-        by summing this variable.
-        If the total water consumption falls below a certain threshold,
-        an alarm will be triggered.
-        This threshold can be adjusted in the Settings tab of the GUI.
+        Here we look at the trial_data dictionary that bpod records automatically
+        to find out which events we got.
         """
 
-        self.register_value("water", self.settings.reward_amount_ml)
+        outcome = "miss"
+
+        # for each portIn, we have a list of times at which pokes were registered,
+        # so we check that there's an entry for that port and that it isn't empty,
+        # which indicates that a poke happened.
+        if self.trial_data.get("Port1In"):
+            outcome = "left_poke"
+        if self.trial_data.get("Port2In"):
+            outcome = "center_poke"
+        if self.trial_data.get("Port3In"):
+            outcome = "right_poke"
+
+        # Register the outcome of the trial and the water consumed.
+        # Registering "water" (in microliters) is mandatory on every task --
+        # it's how the system tracks each subject's daily water intake.
+        self.register_value("outcome", outcome)
+        self.register_value("water", 0)
 ```
 
-### The `close()` Method
+### The `close()` method
+
+Called once when the task finishes (session ends, or manually stopped). Use it
+for any cleanup — closing a serial connection, sending a Slack/email summary,
+generating a plot, etc.
 
 ```python
     def close(self):
         """
-        Here you can perform any actions you want to take once the task is completed,
-        such as sending a message via email or Slack, creating a plot, and more.
+        We don't need to do any extra work when the task finishes.
         """
 
         pass
 ```
 
-### The FollowTheLight Task
+### A more complete example: FollowTheLight
 
-Now you can explore the more complex FollowTheLight Task, where we use other variables that
-were created in the settings training_protocol.
+Now let's look at a task closer to a real 2-choice discrimination protocol —
+`village/code/bpod_4_center_initiated.py` and `bpod_5_introduce_penalty.py` are
+the real versions of this in the project (respectively without and with a
+penalty for the wrong side); this walkthrough merges both into one task that
+switches behavior based on `self.settings.stage`:
+
+- The mouse initiates each trial by poking the center port (its LED turns on).
+- After the center poke, one of the two side LEDs turns on at random.
+- Poking the correct side delivers a reward.
+- In stage 1, poking the wrong side does nothing (the mouse can just try again).
+  In stage 2, it triggers a penalty (noise + timeout) instead.
+- Progression between stages is decided in `training_protocol.py`'s
+  `update_training_settings`, based on performance.
 
 ```python
-from village.classes.task import Event, Output, Task
-from village.manager import manager
 import random
 
+from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
 
-class FollowTheLight(Task):
+
+class FollowTheLight(TaskBase):
     def __init__(self):
         super().__init__()
 
         self.info = """
-
         Follow The Light Task
         -------------------
-
-        This task is a simple visual task where the mouse has
-        to poke the center port to start a trial.
-        After the center port is poked,
-        one of the two side ports will be illuminated.
-        If the mouse licks the correct side port, it receives a reward.
-        If the mouse licks the wrong side port, it receives a punishment.
-
-        It contains 2 training stages:
-        - Training stage 1: Only one side port is illuminated and gives reward.
-                            No punishment is given, and the mouse can choose again.
-        - Training stage 2: Both ports are illuminated with different intensity.
-                            Brighter port gives reward, the other one gives punishment.
-
-        The progression through the stages is defined in the training_settings.py file.
+        The mouse pokes the center port to start a trial. One of the two side
+        ports then lights up; poking it delivers a reward. Stage 1 has no
+        penalty for the wrong side, stage 2 does (see self.settings.stage).
         """
-
 
     def start(self):
         """
-        Al the variables created in training_protocol.py are accessible.
-        - self.settings.reward_amount_ml: reward volume
-        - self.settings.stage: current training stage
-        - self.settings.light_intensity_high: high light intensity
-        - self.settings.light_intensity_low: low light intensity
-        - self.settings.trial_types: possible trial types
-        - self.settings.punishment_time: punishment duration
-        - self.settings.iti_time: inter-trial interval
+        Required settings (defined in training_protocol.py):
+        - self.settings.reward_volume: reward volume delivered on a correct poke
+        - self.settings.led_intensity: port LED brightness (0-255)
+        - self.settings.c_led_on_time: time allowed to poke the center port, seconds
+        - self.settings.led_on_time: time allowed to poke the correct side, seconds
+        - self.settings.iti_time: inter-trial interval, seconds
+        - self.settings.stage: 1 (no penalty) or 2 (penalty for the wrong side)
+        - self.settings.noise_time, self.settings.timeout: only used in stage 2
         """
 
-        # First we calculate the time that the valves (or pumps) need to open to deliver
-        # the reward amount
-        # Make sure to calibrate the valves before using this function, otherwise
-        # it will return an Exception
-        self.left_valve_opening_time = manager.water_calibration.get_valve_time(
-            port=1, volume=self.settings.reward_amount_ml
+        self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
+            port=1, volume=self.settings.reward_volume
         )
-        self.right_valve_opening_time = manager.water_calibration.get_valve_time(
-            port=3, volume=self.settings.reward_amount_ml
+        self.valve_r_time = self.calibrations.water_calibration.get_valve_time(
+            port=3, volume=self.settings.reward_volume
         )
-
-        # determine if punishment will be used depending on stage
-        if self.settings.stage == 1:
-            # no punishment is used, let the mouse choose again
-            self.punish_condition = "stimulus_state"
-        else:
-            # punishment is used
-            self.punish_condition = "punish_state"
-
 
     def create_trial(self):
-        # Pick a trial type at random
-        self.this_trial_type = random.choice(self.settings.trial_types)
+        self.side = random.choice(["left", "right"])
 
-        # Set the variables for the stimulus states and the possible choices
-        # based on the trial type
-        self.stimulus_state_output = []
-        if "left" in self.this_trial_type:
-            self.stimulus_state_output.append(
-                (Output.PWM1, self.settings.light_intensity_high)
-            )
-            if "hard" in self.this_trial_type:
-                self.stimulus_state_output.append(
-                    (Output.PWM3, self.settings.light_intensity_low)
-                )
-            self.left_poke_action = "reward_state"
-            self.valve_to_open = Output.Valve1
-            self.valve_opening_time = self.left_valve_opening_time
-            self.right_poke_action = self.punish_condition
+        if self.side == "left":
+            valvetime = self.valve_l_time
+            valve_action = BpodOutput.Valve1
+            correct_led = (BpodOutput.PWM1, self.settings.led_intensity)
+            correct_side = BpodEvent.Port1In
+            wrong_side = BpodEvent.Port3In
+        else:
+            valvetime = self.valve_r_time
+            valve_action = BpodOutput.Valve3
+            correct_led = (BpodOutput.PWM3, self.settings.led_intensity)
+            correct_side = BpodEvent.Port3In
+            wrong_side = BpodEvent.Port1In
 
-        elif "right" in self.this_trial_type:
-            self.stimulus_state_output.append(
-                (Output.PWM3, self.settings.light_intensity_high)
-            )
-            if "hard" in self.this_trial_type:
-                self.stimulus_state_output.append(
-                    (Output.PWM1, self.settings.light_intensity_low)
-                )
-            self.left_poke_action = self.punish_condition
-            self.right_poke_action = "reward_state"
-            self.valve_to_open = Output.Valve3
-            self.valve_opening_time = self.right_valve_opening_time
+        # In stage 1, a wrong poke isn't wired to any transition, so it's just
+        # ignored and the mouse can try again before "side_led_on" times out.
+        side_led_on_conditions = {
+            BpodEvent.Tup: "exit",
+            correct_side: "water_delivery",
+        }
+        if self.settings.stage == 2:
+            side_led_on_conditions[wrong_side] = "wrong_choice"
 
-
-        # 'ready_to_initiate' state that waits for the poke in the middle port
+        # 'c_led_on': center LED on, waits for the trial-initiating center poke
         self.bpod.add_state(
-            state_name="ready_to_initiate",
-            state_timer=0,
-            state_change_conditions={Event.Port2In: "stimulus_state"},
-            output_actions=[(Output.PWM2, self.settings.light_intensity_high)],
-        )
-
-        # 'stimulus_state' lights the side ports
-        self.bpod.add_state(
-            state_name="stimulus_state",
-            state_timer=self.settings.timer_for_response,
+            state_name="c_led_on",
+            state_timer=self.settings.c_led_on_time,
             state_change_conditions={
-                Event.Port1In: self.left_poke_action,
-                Event.Port3In: self.right_poke_action,
-                Event.Tup: "exit",
+                BpodEvent.Tup: "exit",
+                BpodEvent.Port2In: "side_led_on",
             },
-            output_actions=self.stimulus_state_output,
+            output_actions=[(BpodOutput.PWM2, self.settings.led_intensity)],
         )
 
-        # 'reward_state' delivers the reward
+        # 'side_led_on': only the correct side's LED turns on
         self.bpod.add_state(
-            state_name="reward_state",
-            state_timer=self.valve_opening_time,
-            state_change_conditions={Event.Tup: "iti_state"},
-            output_actions=[self.valve_to_open],
+            state_name="side_led_on",
+            state_timer=self.settings.led_on_time,
+            state_change_conditions=side_led_on_conditions,
+            output_actions=[correct_led],
         )
 
-        # 'punish_state' waits during the punishment time
         self.bpod.add_state(
-            state_name="punish_state",
-            state_timer=self.settings.punishment_time,
-            state_change_conditions={Event.Tup: "iti_state"},
-            output_actions=[],
+            state_name="water_delivery",
+            state_timer=valvetime,
+            state_change_conditions={BpodEvent.Tup: "iti"},
+            output_actions=[valve_action],
         )
 
-        # 'iti_state' waits for certain time before starting the next trial
-        # (inter-trial interval)
         self.bpod.add_state(
-            state_name="iti_state",
+            state_name="iti",
             state_timer=self.settings.iti_time,
-            state_change_conditions={Event.Tup: "exit"},
+            state_change_conditions={BpodEvent.Tup: "exit"},
             output_actions=[],
         )
 
+        # Stage 2 only: noise, then a silent timeout, before exiting.
+        self.bpod.add_state(
+            state_name="wrong_choice",
+            state_timer=self.settings.noise_time,
+            state_change_conditions={BpodEvent.Tup: "timeout"},
+            output_actions=[BpodOutput.SoftCode4],
+        )
+
+        self.bpod.add_state(
+            state_name="timeout",
+            state_timer=self.settings.timeout - self.settings.noise_time,
+            state_change_conditions={BpodEvent.Tup: "exit"},
+            output_actions=[],
+        )
 
     def after_trial(self):
-        # First, we calculates the performance of a trial, comparing the trial type
-        # to the first port that the mouse poked.
-        # We can access the trial information in self.trial_data
+        """Work out response_side and outcome for this trial.
 
-        # get the side port that the mouse poked first
-        first_poke = self.find_first_occurrence(
-            self.trial_data["ordered_list_of_events"],
-            ["Port1In", "Port3In"],
+        Whichever side the animal poked first (if any) after the side LED
+        turned on determines the outcome, independently of which Bpod state
+        that poke happened to transition into -- this way stage 1 (where a
+        wrong poke isn't wired to any transition) and stage 2 (where it goes
+        to "wrong_choice") are scored the same way.
+        """
+
+        side_led_on_start = self.trial_data.get("STATE_side_led_on_START")
+        if not side_led_on_start:
+            # The center poke never happened -> side LED never turned on.
+            self.register_value("rewarded_side", self.side)
+            self.register_value("water", 0)
+            self.register_value("outcome", "omission")
+            self.register_value("response_side", "none")
+            return
+
+        t_side_led_on = side_led_on_start[0]
+
+        correct_key, wrong_key = (
+            ("Port1In", "Port3In") if self.side == "left" else ("Port3In", "Port1In")
         )
-        # check if the mouse poked the correct port
-        if first_poke == "Port1In" and "left" in self.this_trial_type:
-            correct = True
-        elif first_poke == "Port3In" and "right" in self.this_trial_type:
-            correct =  True
+        correct_pokes = [
+            t for t in self.trial_data.get(correct_key, []) if t >= t_side_led_on
+        ]
+        wrong_pokes = [
+            t for t in self.trial_data.get(wrong_key, []) if t >= t_side_led_on
+        ]
+
+        if correct_pokes and (not wrong_pokes or correct_pokes[0] <= wrong_pokes[0]):
+            outcome = "correct"
+            response_side = self.side
+            water = self.settings.reward_volume
+        elif wrong_pokes:
+            outcome = "incorrect"
+            response_side = "right" if self.side == "left" else "left"
+            water = 0
         else:
-            correct =  False
+            outcome = "miss"
+            response_side = "none"
+            water = 0
 
-        # register the amount of water given to the mouse in this trial
-        # (this is always mandatory)
-        self.register_value("water", self.settings.reward_amount_ml)
-
-        # we will also record the trial type
-        self.register_value("trial_type", self.this_trial_type)
-
-        # we will also record if the trial was correct or not
-        self.register_value("correct", correct)
-
+        self.register_value("rewarded_side", self.side)
+        self.register_value("water", water)
+        self.register_value("outcome", outcome)
+        self.register_value("response_side", response_side)
 
     def close(self):
         pass
-
-
-    def find_first_occurrence(self, event_list, targets):
-        """
-        Helper function to find the first occurrence of any target event in the list.
-
-        Args:
-            event_list: List of events
-            targets: List of target events to look for
-
-        Returns:
-            The first target event found, or "NaN" if none are found
-        """
-        for event in event_list:
-            if event in targets:
-                return event
-        return "NaN"
 ```
 
 ---

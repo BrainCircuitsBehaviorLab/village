@@ -98,7 +98,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -532,7 +535,7 @@ region), while its status (ALLOWED/NOT_ALLOWED/TRIGGER/OFF) and its
 threshold keep working exactly as before and stay editable from the GUI
 — only the position controls for that area are hidden, since the shape
 is no longer a plain rectangle.
-Subclass in the project code directory so it is picked up by import_all.</p>
+Subclass in the project code directory.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -568,6 +571,18 @@ Subclass in the project code directory so it is picked up by import_all.</p>
 <p>cv2.fillPoly/cv2.circle handle concave shapes and circles
 respectively. Override only for a shape that is neither (e.g. build
 it with numpy slicing).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">update_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_area_base.html#CameraAreaBase.update_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Marks the cached mask/bbox/contours as stale, so the next call to
+mask()/bbox()/contains() rebuilds them.</p>
+<p>_ensure_cached() only rebuilds automatically when the frame size
+(self.height/self.width) changes – it has no way to know if
+self.polygons/self.circles changed instead. Call this after
+mutating either of those at runtime (e.g. to move the shape to a
+new position) so the change actually takes effect.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -640,7 +655,7 @@ crossing lines a piece-by-piece outline would show.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

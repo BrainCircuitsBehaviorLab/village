@@ -98,7 +98,6 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../calibrations_index.html">CALIBRATIONS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../calibrations/bpod_water.html">Bpod Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/camera.html">Camera Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
@@ -264,6 +263,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
 </ul>
 </li>
 </ul>
@@ -482,13 +485,13 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.classes.null_classes</span><span class="w"> </span><span class="kn">import</span> <span class="n">NullCalibrationBase</span>
 </span><span data-line="5">
 </span><span data-line="6"><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-</span><span data-line="7">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.bpod_water_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">BpodWaterCalibration</span>
-</span><span data-line="8">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.camera_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraCalibration</span>
-</span><span data-line="9">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.corridor_threshold_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-</span><span data-line="10">        <span class="n">CorridorThresholdCalibration</span><span class="p">,</span>
-</span><span data-line="11">    <span class="p">)</span>
-</span><span data-line="12">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.optogrid_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptoGridCalibration</span>
-</span><span data-line="13">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.sound_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">SoundCalibration</span>
+</span><span data-line="7">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.camera_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraCalibration</span>
+</span><span data-line="8">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.corridor_threshold_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="9">        <span class="n">CorridorThresholdCalibration</span><span class="p">,</span>
+</span><span data-line="10">    <span class="p">)</span>
+</span><span data-line="11">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.optogrid_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">OptoGridCalibration</span>
+</span><span data-line="12">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.sound_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">SoundCalibration</span>
+</span><span data-line="13">    <span class="kn">from</span><span class="w"> </span><span class="nn">village.calibration.water_calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">WaterCalibration</span>
 </span><span data-line="14">
 </span><span data-line="15">
 <div class="viewcode-block" id="Calibrations">
@@ -498,7 +501,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="viewcode-block" id="Calibrations.__init__">
 <a class="viewcode-back" href="../../../api_generated/village.classes.calibrations.Calibrations.html#village.classes.calibrations.Calibrations.__init__">[docs]</a>
 </span><span data-line="18">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod_water_calibration</span><span class="p">:</span> <span class="n">BpodWaterCalibration</span> <span class="o">|</span> <span class="n">NullCalibrationBase</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">water_calibration</span><span class="p">:</span> <span class="n">WaterCalibration</span> <span class="o">|</span> <span class="n">NullCalibrationBase</span> <span class="o">=</span> <span class="p">(</span>
 </span><span data-line="20">            <span class="n">NullCalibrationBase</span><span class="p">()</span>
 </span><span data-line="21">        <span class="p">)</span>
 </span><span data-line="22">        <span class="bp">self</span><span class="o">.</span><span class="n">sound_calibration</span><span class="p">:</span> <span class="n">SoundCalibration</span> <span class="o">|</span> <span class="n">NullCalibrationBase</span> <span class="o">=</span> <span class="p">(</span>
@@ -541,7 +544,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=2d19330d"></script>
+      <script src="../../../_static/documentation_options.js?v=cc4509a5"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
