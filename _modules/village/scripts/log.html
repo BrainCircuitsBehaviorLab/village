@@ -650,7 +650,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="148">        <span class="n">entry_type</span> <span class="o">=</span> <span class="s2">"ALARM"</span>
 </span><span data-line="149">        <span class="n">date</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_string</span><span class="p">()</span>
 </span><span data-line="150">        <span class="n">message</span> <span class="o">=</span> <span class="n">description</span> <span class="k">if</span> <span class="n">subject</span> <span class="o">==</span> <span class="s2">"system"</span> <span class="k">else</span> <span class="n">description</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">+</span> <span class="n">subject</span>
-</span><span data-line="151">        <span class="bp">self</span><span class="o">.</span><span class="n">telegram_bot</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">)</span>
+</span><span data-line="151">        <span class="bp">self</span><span class="o">.</span><span class="n">telegram_bot</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">report</span><span class="o">=</span><span class="n">report</span><span class="p">)</span>
 </span><span data-line="152">        <span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
 </span><span data-line="153">        <span class="n">text</span> <span class="o">=</span> <span class="n">date</span> <span class="o">+</span> <span class="s2">"  "</span> <span class="o">+</span> <span class="n">entry_type</span> <span class="o">+</span> <span class="s2">"  "</span> <span class="o">+</span> <span class="n">subject</span> <span class="o">+</span> <span class="s2">"  "</span> <span class="o">+</span> <span class="n">description</span>
 </span><span data-line="154">        <span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="p">:</span>
@@ -725,7 +725,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=f12390b2"></script>
+      <script src="../../../_static/documentation_options.js?v=76de51c8"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
