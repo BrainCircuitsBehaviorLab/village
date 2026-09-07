@@ -83,7 +83,7 @@ class CameraTrigger(CameraTriggerBase):
 ```{admonition} Note
 :class: note
 `cam.areaN_is_triggered` also works transparently for a BOX area whose shape
-has been replaced by a `CustomAreaBase` (see
+has been replaced by a `CameraAreaBase` (see
 [Custom Detection Area](#custom-detection-area)) — it checks the actual
 polygon/circle, not just its bounding box.
 ```
@@ -95,7 +95,7 @@ polygon/circle, not just its bounding box.
 The 4 BOX areas are rectangles by default, positioned and resized from the
 GUI. If one of them needs to track the animal through a non-rectangular
 region (e.g. an L-shaped corridor between two zones, or a circular zone),
-subclass `CustomAreaBase` to **replace that area's shape** with a union of
+subclass `CameraAreaBase` to **replace that area's shape** with a union of
 polygons and/or circles defined in code.
 
 ```{admonition} Note
@@ -110,15 +110,15 @@ label is shown in their place instead, listing the area's `polygons`/
 ```
 
 Create a file inside your project's `code` directory and define a class that
-inherits from `CustomAreaBase`, setting `area_index` to the area it replaces
+inherits from `CameraAreaBase`, setting `area_index` to the area it replaces
 (1-4). The system detects it automatically. Create the area by adding polygons
 and/or circles — any number of each (zero or more), in any combination.
 
 ```python
-from village.custom_classes.custom_area_base import CustomAreaBase
+from village.custom_classes.camera_area_base import CameraAreaBase
 
 
-class LCorridor(CustomAreaBase):
+class LCorridor(CameraAreaBase):
     name = "L_CORRIDOR"
     area_index = 2  # replaces AREA2_BOX
 
@@ -135,9 +135,31 @@ class LCorridor(CustomAreaBase):
 
 ```{admonition} Note
 :class: note
-Only one `CustomAreaBase` per `area_index` is used — if two subclasses target
+Only one `CameraAreaBase` per `area_index` is used — if two subclasses target
 the same area, only the first one found is registered and an error is
 logged. An invalid `area_index` (not 1-4) is also rejected and logged.
+```
+
+#### Moving the shape at runtime
+
+`polygons`/`circles` don't have to stay fixed for the whole session — from
+within a task, reach the registered instance through
+`self.custom_areas[area_index]` and reassign them (e.g. to relocate a "home
+zone" the animal must enter to start each trial). After changing either one,
+call `update_area()` so the change is picked up on the next frame:
+
+```python
+area = self.custom_areas[2]
+area.circles = [(new_x, new_y, 40)]
+area.update_area()
+```
+
+```{admonition} Note
+:class: note
+The mask/bounding box/outline are cached and only rebuilt automatically when
+the camera's frame size changes — `update_area()` marks that cache stale so it
+rebuilds from the new `polygons`/`circles` instead. Without it, the shape keeps
+reacting to its old position until something else happens to trigger a rebuild.
 ```
 
 ---
@@ -276,14 +298,14 @@ Both methods `draw` and `draw_preview` receive these attributes on `cam`
 
 - `cam.number_of_areas` — number of configurable areas (always 4).
 - `cam.areas` — list of `[x1, y1, x2, y2]` pixel coordinates per area. For a
-  BOX area overridden by a `CustomAreaBase`, this is the shape's bounding
+  BOX area overridden by a `CameraAreaBase`, this is the shape's bounding
   box, not a real detection rectangle.
 - `cam.areas_active` — bool list, whether each area is enabled (not OFF).
 - `cam.areas_allowed` — bool list, `True` only for ALLOWED areas.
 - `cam.areas_not_allowed` — bool list, `True` only for NOT_ALLOWED areas.
 - `cam.areas_trigger` — bool list, `True` only for TRIGGER areas.
-- `cam.custom_areas` — `dict[int, CustomAreaBase]`, BOX area index (1-4) to
-  the `CustomAreaBase` overriding that area's shape, if any (see
+- `cam.custom_areas` — `dict[int, CameraAreaBase]`, BOX area index (1-4) to
+  the `CameraAreaBase` overriding that area's shape, if any (see
   [Custom Detection Area](#custom-detection-area)).
 
 **Detection results**

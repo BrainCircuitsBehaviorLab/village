@@ -748,7 +748,7 @@ class DataLayout(Layout):
         if manager.table == DataTable.SESSIONS_SUMMARY:
             if signal == "weights":
                 try:
-                    df = manager.sessions_summary.df.copy()
+                    df = manager.sessions_summary.df
                     figure = weights_plot(df, width, height)
                     pixmap = utils.create_pixmap(figure)
                 except Exception:
@@ -771,7 +771,7 @@ class DataLayout(Layout):
         elif manager.table == DataTable.SUBJECTS:
             if signal == "weights":
                 try:
-                    df = manager.sessions_summary.df.copy()
+                    df = manager.sessions_summary.df
                     figure = weights_plot(df, width, height)
                     pixmap = utils.create_pixmap(figure)
                 except Exception:
@@ -814,9 +814,7 @@ class DataLayout(Layout):
                     )
         elif manager.table == DataTable.TEMPERATURES:
             try:
-                figure = temperatures_plot(
-                    manager.temperatures.df.copy(), width, height
-                )
+                figure = temperatures_plot(manager.temperatures.df, width, height)
                 pixmap = utils.create_pixmap(figure)
             except Exception:
                 log.error(
@@ -2064,7 +2062,7 @@ class SubjectsLayout(Layout):
 
         if signal == "weights":
             try:
-                df = manager.sessions_summary.df.copy()
+                df = manager.sessions_summary.df
                 figure = weights_plot(df, width, height)
                 pixmap = utils.create_pixmap(figure)
             except Exception:

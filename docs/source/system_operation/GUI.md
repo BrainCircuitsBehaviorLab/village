@@ -107,7 +107,7 @@ This screen provides a dedicated panel for each calibration tool available on th
 
 Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the [Custom Calibrations][CALIBRATIONS] section for details.
 
-*   **`BPOD_WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller. See [Bpod Water Calibration](/calibrations/bpod_water.md).
+*   **`WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller. See [Water Calibration](/calibrations/water.md).
 
 *   **`SOUND_CALIBRATION`:** Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when `USE_SOUNDCARD` is **ON**. See [Sound Calibration](/calibrations/sound.md).
 

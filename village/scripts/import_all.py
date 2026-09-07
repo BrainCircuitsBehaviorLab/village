@@ -8,13 +8,13 @@ import traceback
 from pathlib import Path
 from typing import Any
 
-from village.calibration.bpod_water_calibration import BpodWaterCalibration
 from village.calibration.camera_calibration import CameraCalibration
 from village.calibration.corridor_threshold_calibration import (
     CorridorThresholdCalibration,
 )
 from village.calibration.optogrid_calibration import OptoGridCalibration
 from village.calibration.sound_calibration import SoundCalibration
+from village.calibration.water_calibration import WaterCalibration
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.custom_classes.calibration_base import CalibrationBase
@@ -31,6 +31,7 @@ from village.custom_classes.task_base import TaskBase
 from village.custom_classes.telegram_command_base import TelegramCommandBase
 from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
+from village.custom_classes.water_calibration_task_base import WaterCalibrationTaskBase
 from village.scripts.log import log
 from village.settings import settings
 
@@ -53,6 +54,7 @@ def import_all(manager) -> None:
     gpio_trigger_found = 0
     auto_no_mouse_found = 0
     direct_functions_found = 0
+    water_calibration_task_found = 0
     direct_functions_correct = False
     gpio_trigger_correct = False
     training_correct = False
@@ -64,11 +66,13 @@ def import_all(manager) -> None:
     camera_trigger_correct = False
     camera_draw_correct = False
     touch_trigger_correct = False
-    auto_no_mouse_correct = False
+    water_calibration_task_correct = False
     sound_path = ""
+    telegram_commands_seen: set[str] = set()
+    auto_no_mouse_seen: set[str] = set()
 
     calibration_classes: tuple[type[CalibrationBase], ...] = (
-        BpodWaterCalibration,
+        WaterCalibration,
         SoundCalibration,
         CameraCalibration,
         CorridorThresholdCalibration,
@@ -115,11 +119,23 @@ def import_all(manager) -> None:
                 if cls.__module__ != module_name:
                     continue
 
-                if issubclass(cls, TaskBase) and cls != TaskBase:
+                if (
+                    issubclass(cls, TaskBase)
+                    and cls != TaskBase
+                    and not issubclass(cls, WaterCalibrationTaskBase)
+                ):
                     name = cls.__name__
                     _ = cls()
                     if name not in tasks:
                         tasks[name] = cls
+                elif (
+                    issubclass(cls, WaterCalibrationTaskBase)
+                    and cls != WaterCalibrationTaskBase
+                ):
+                    water_calibration_task_found += 1
+                    if water_calibration_task_found == 1:
+                        manager.water_calibration_task_class = cls
+                        water_calibration_task_correct = True
                 elif (
                     issubclass(cls, TrainingProtocolBase)
                     and cls != TrainingProtocolBase
@@ -181,7 +197,15 @@ def import_all(manager) -> None:
                 elif (
                     issubclass(cls, TelegramCommandBase) and cls != TelegramCommandBase
                 ):
-                    manager.custom_telegram_commands.append(cls())
+                    if cls.command in telegram_commands_seen:
+                        log.error(
+                            "Multiple Telegram commands named '"
+                            + cls.command
+                            + "'; only the first one found is used."
+                        )
+                    else:
+                        telegram_commands_seen.add(cls.command)
+                        manager.custom_telegram_commands.append(cls())
                 elif issubclass(cls, CameraTriggerBase) and cls != CameraTriggerBase:
                     camera_trigger_found += 1
                     if camera_trigger_found == 1:
@@ -208,18 +232,30 @@ def import_all(manager) -> None:
                         gpio_trigger_correct = True
                 elif issubclass(cls, AutoNoMouseBase) and cls != AutoNoMouseBase:
                     auto_no_mouse_found += 1
-                    instance = cls()
-                    manager._auto_no_mouse_instances[cls.TASK_NAME] = instance
-                    auto_no_mouse_correct = True
+                    if cls.TASK_NAME in auto_no_mouse_seen:
+                        log.error(
+                            "Multiple Auto No Mouse classes target task '"
+                            + cls.TASK_NAME
+                            + "'; only the first one found is used."
+                        )
+                    else:
+                        auto_no_mouse_seen.add(cls.TASK_NAME)
+                        manager._auto_no_mouse_instances[cls.TASK_NAME] = cls()
                 elif issubclass(cls, CalibrationBase) and cls not in (
                     CalibrationBase,
                     CameraCalibration,
                     SoundCalibration,
-                    BpodWaterCalibration,
+                    WaterCalibration,
                     OptoGridCalibration,
                     CorridorThresholdCalibration,
                 ):
-                    if not hasattr(manager.calibrations, cls.name):
+                    if hasattr(manager.calibrations, cls.name):
+                        log.error(
+                            "Multiple custom calibrations named '"
+                            + cls.name
+                            + "'; only the first one found is used."
+                        )
+                    else:
                         instance = cls()
                         cls._instance = instance
                         setattr(manager.calibrations, cls.name, instance)
@@ -254,9 +290,13 @@ def import_all(manager) -> None:
         ("Camera Trigger", camera_trigger_found, camera_trigger_correct),
         ("Camera Draw", camera_draw_found, camera_draw_correct),
         ("Touch Trigger", touch_trigger_found, touch_trigger_correct),
-        ("Auto No Mouse", auto_no_mouse_found, auto_no_mouse_correct),
         ("Direct Functions", direct_functions_found, direct_functions_correct),
         ("Gpio Trigger", gpio_trigger_found, gpio_trigger_correct),
+        (
+            "Water Calibration Task",
+            water_calibration_task_found,
+            water_calibration_task_correct,
+        ),
     ]
 
     defaults, customs = [], []
@@ -288,3 +328,5 @@ def import_all(manager) -> None:
         log.info("Using default: " + ", ".join(defaults))
     if customs:
         log.info("Using custom: " + ", ".join(customs))
+    if len(auto_no_mouse_seen) > 0:
+        log.info(str(len(auto_no_mouse_seen)) + " Auto No Mouse class(es) imported")

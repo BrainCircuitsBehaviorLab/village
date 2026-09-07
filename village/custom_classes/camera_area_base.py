@@ -14,7 +14,7 @@ class CameraAreaBase:
     threshold keep working exactly as before and stay editable from the GUI
     — only the position controls for that area are hidden, since the shape
     is no longer a plain rectangle.
-    Subclass in the project code directory so it is picked up by import_all.
+    Subclass in the project code directory.
     """
 
     name = "CUSTOM"
@@ -50,6 +50,18 @@ class CameraAreaBase:
         for x, y, radius in self.circles:
             cv2.circle(mask, (x, y), radius, 255, -1)
         return mask
+
+    def update_area(self) -> None:
+        """Marks the cached mask/bbox/contours as stale, so the next call to
+        mask()/bbox()/contains() rebuilds them.
+
+        _ensure_cached() only rebuilds automatically when the frame size
+        (self.height/self.width) changes -- it has no way to know if
+        self.polygons/self.circles changed instead. Call this after
+        mutating either of those at runtime (e.g. to move the shape to a
+        new position) so the change actually takes effect.
+        """
+        self._cached_shape = None
 
     def _ensure_cached(self) -> None:
         """Rebuilds the mask, bounding box and outer contours when the frame

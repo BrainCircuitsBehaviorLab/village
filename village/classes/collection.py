@@ -45,12 +45,32 @@ class Collection:
         types (list[Type]): List of column data types.
         dict (dict): Dictionary mapping columns to types.
         path (Path): Path to the CSV file.
-        df (pd.DataFrame): The pandas DataFrame holding the data.
+        df (pd.DataFrame): The data, as a fresh copy on every access (see the
+            df property) -- safe to filter/sort/mutate without affecting the
+            collection's own data. Internal methods on this class read and
+            write the real data through self._df instead.
     """
 
     def __init__(self) -> None:
         """Initializes the Collection."""
         pass
+
+    @property
+    def df(self) -> pd.DataFrame:
+        """A fresh copy of the underlying DataFrame.
+
+        Always returns a copy, so callers (e.g. a plotting function doing
+        `df = collection.df; df = df[df["x"] > 0]`) can never accidentally
+        mutate the collection's own data.
+        """
+        return self._df.copy()
+
+    @df.setter
+    def df(self, value: pd.DataFrame) -> None:
+        """Replaces the underlying DataFrame with a copy of `value`, so the
+        collection is likewise insulated from later changes the caller makes
+        to the object they passed in."""
+        self._df = value.copy()
 
     def create_data_collection(
         self, name: str, columns: list[str], types: list[type]
@@ -61,7 +81,7 @@ class Collection:
         self.dict = dict(zip(self.columns, self.types, strict=False))
         filename = name if name.endswith(".csv") else name + ".csv"
         self.path: Path = Path(settings.get("SYSTEM_DIRECTORY")) / filename
-        self.df = pd.DataFrame()
+        self._df = pd.DataFrame()
 
         if name != "":
             if not self.path.exists():
@@ -69,7 +89,7 @@ class Collection:
                     columns_str: str = ";".join(self.columns) + "\n"
                     file.write(columns_str)
             try:
-                self.df = pd.read_csv(self.path, dtype=self.dict, sep=";")
+                self._df = pd.read_csv(self.path, dtype=self.dict, sep=";")
             except Exception:
                 log.error(
                     "error reading from: " + str(self.path),
@@ -88,7 +108,7 @@ class Collection:
         ]
         new_row = pd.DataFrame([entry_str], columns=self.columns)
         new_row = self.convert_df_to_types(new_row)
-        self.df = pd.concat([self.df, new_row], ignore_index=True)
+        self._df = pd.concat([self._df, new_row], ignore_index=True)
         with self.path.open("a", encoding="utf-8", newline="") as file:
             csv.writer(file, delimiter=";", lineterminator="\n").writerow(entry_str)
         self.check_split_csv()
@@ -135,17 +155,17 @@ class Collection:
         """Checks if the CSV file is too large and splits it if necessary."""
         max_size = 50000
         file_size = 40000
-        if len(self.df) > max_size:
-            first_rows: pd.DataFrame = self.df.head(file_size)
+        if len(self._df) > max_size:
+            first_rows: pd.DataFrame = self._df.head(file_size)
             date_str: str = time_utils.now_string_for_filename()
             new_filename: str = self.path.stem + "_" + date_str + ".csv"
             directory = Path(settings.get("SYSTEM_DIRECTORY"), "old_events")
             new_path = Path(directory, new_filename)
             directory.mkdir(parents=True, exist_ok=True)
             first_rows.to_csv(new_path, index=False, sep=";")
-            last: pd.DataFrame = self.df.tail(len(self.df) - file_size)
+            last: pd.DataFrame = self._df.tail(len(self._df) - file_size)
             last.to_csv(self.path, index=False, sep=";")
-            self.df = last
+            self._df = last
 
     def get_last_entry(self, column: str, value: str) -> pd.Series | None:
         """Gets the last entry matching a specific value in a column.
@@ -157,7 +177,7 @@ class Collection:
         Returns:
             Union[pd.Series, None]: The last matching row, or None.
         """
-        column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
+        column_df: pd.DataFrame = self._df[self._df[column].astype(str) == value]
         if not column_df.empty:
             return column_df.iloc[-1]
         return None
@@ -172,7 +192,7 @@ class Collection:
         Returns:
             str | None: The name, or None.
         """
-        column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
+        column_df: pd.DataFrame = self._df[self._df[column].astype(str) == value]
         name = None
         if not column_df.empty:
             row = column_df.iloc[-1]
@@ -193,7 +213,7 @@ class Collection:
         Returns:
             Union[pd.Series, None]: The first matching row, or None.
         """
-        column_df: pd.DataFrame = self.df[self.df[column].astype(str) == value]
+        column_df: pd.DataFrame = self._df[self._df[column].astype(str) == value]
         if not column_df.empty:
             return column_df.iloc[0]
         return None
@@ -205,7 +225,7 @@ class Collection:
             column (str): The column to update.
             value (Any): The new value.
         """
-        self.df.loc[self.df.index[-1], column] = value
+        self._df.loc[self._df.index[-1], column] = value
         self.save_from_df()
 
     def save_from_df(self, training: TrainingProtocolBase | None = None) -> None:
@@ -217,9 +237,9 @@ class Collection:
         """
         if training is None:
             training = TrainingProtocolBase()
-        new_df = self.df_from_df(self.df, training)
+        new_df = self.df_from_df(self._df, training)
         new_df.to_csv(self.path, index=False, sep=";")
-        self.df = new_df
+        self._df = new_df
 
     def df_from_df(
         self, df: pd.DataFrame, training: TrainingProtocolBase

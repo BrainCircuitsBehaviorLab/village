@@ -10,7 +10,6 @@ import pandas as pd
 import requests  # type: ignore
 
 from village.classes.calibrations import Calibrations
-from village.classes.collection import Collection
 from village.classes.enums import (
     Actions,
     Active,
@@ -42,6 +41,7 @@ from village.custom_classes.task_base import TaskBase
 from village.custom_classes.telegram_command_base import TelegramCommandBase
 from village.custom_classes.touch_trigger_base import TouchTriggerBase
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
+from village.data import data
 from village.devices.chip import (
     ir_light_box,
     ir_light_corridor,
@@ -107,6 +107,10 @@ class Manager:
         self.camera_draw: CameraDrawBase = CameraDrawBase()
         # BOX area index (1-4) -> CustomAreaBase overriding that area's shape.
         self.custom_areas: dict[int, CameraAreaBase] = {}
+        # Project-provided WaterCalibrationTaskBase subclass, used by the
+        # Water Calibration panel instead of the built-in Bpod one when the
+        # project's controller isn't Bpod. None if not provided.
+        self.water_calibration_task_class: type | None = None
         self.custom_telegram_commands: list[TelegramCommandBase] = []
         self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
         self.gpio = gpio
@@ -191,57 +195,17 @@ class Manager:
         ) or self._auto_no_mouse_instances.get("", AutoNoMouseBase())
 
     def create_collections(self) -> None:
-        """Creates and initializes data collections for events, summaries,
-        and measurements."""
-        self.events = Collection()
-        self.events.create_data_collection(
-            "events.csv",
-            ["date", "type", "subject", "description"],
-            [str, str, str, str],
-        )
-        self.sessions_summary = Collection()
-        self.sessions_summary.create_data_collection(
-            "sessions_summary.csv",
-            [
-                "date",
-                "subject",
-                "tag",
-                "weight",
-                "task",
-                "duration",
-                "trials",
-                "water",
-                "settings",
-            ],
-            [str, str, str, float, str, float, int, float, str],
-        )
-        self.subjects = Collection()
-        self.subjects.create_data_collection(
-            "subjects.csv",
-            [
-                "name",
-                "tag",
-                "basal_weight",
-                "active",
-                "next_session_time",
-                "next_settings",
-            ],
-            [str, str, float, str, str, str],
-        )
-        self.temperatures = Collection()
-        self.temperatures.create_data_collection(
-            "temperatures.csv",
-            ["date", "temperature", "humidity"],
-            [str, float, float],
-        )
-        self.deleted_sessions = Collection()
-        self.deleted_sessions.create_data_collection(
-            "deleted_sessions.csv",
-            [
-                "filename",
-            ],
-            [str],
-        )
+        """Loads the project's data collections (see village.data.Data,
+        which needs SYSTEM_DIRECTORY set up first -- this runs right after
+        that) and aliases them here so existing manager.events/
+        manager.sessions_summary/etc. call sites keep working unchanged."""
+        data.load()
+        self.data = data
+        self.events = data.events
+        self.sessions_summary = data.sessions_summary
+        self.subjects = data.subjects
+        self.temperatures = data.temperatures
+        self.deleted_sessions = data.deleted_sessions
 
     def get_subject_from_tag(self, tag: str) -> bool:
         """Retrieves a subject based on their RFID tag.
@@ -321,6 +285,7 @@ class Manager:
         """
         self.task.create_paths()
         self.task.cam_box = self.cam_box
+        self.task.custom_areas = self.custom_areas
         if self.subject.name != "None":
             self.task.cam_box.start_recording(
                 self.task.video_path, self.task.video_data_path
@@ -352,6 +317,7 @@ class Manager:
     def launch_task_calibration(self) -> None:
         """Launches a calibration task in manual mode."""
         self.task.cam_box = self.cam_box
+        self.task.custom_areas = self.custom_areas
         self.task.calibrations = self.calibrations
         self.task.settings.maximum_duration = 1000
         self.calibrating = True
@@ -395,6 +361,7 @@ class Manager:
                 self.task.training = self.training
                 self.task.create_paths()
                 self.task.cam_box = self.cam_box
+                self.task.custom_areas = self.custom_areas
                 self.task.cam_box.start_recording(
                     self.task.video_path, self.task.video_data_path
                 )
@@ -561,7 +528,7 @@ class Manager:
     def save_to_subjects(self) -> None:
         """Updates subject data, including next session time and training settings,
         after a successful session."""
-        df = self.subjects.df.copy()
+        df = self.subjects.df
         self.training.settings = self.task.settings
         next_settings = self.training.get_jsonstring(exclude=["observations"])
         df.loc[df["name"] == self.subject.name, "next_settings"] = next_settings
@@ -577,7 +544,7 @@ class Manager:
     def save_refractory_to_subjects(self) -> None:
         """Updates the subject's next session time based on the refractory period
         (without full save)."""
-        df = self.subjects.df.copy()
+        df = self.subjects.df
         time_val = time_utils.time_in_future_seconds(
             int(self.training.settings.refractory_period)
         )
@@ -721,9 +688,9 @@ class Manager:
                    non-session subjects, low water subjects, and sync status boolean.
         """
         minimum_water = float(settings.get("MINIMUM_WATER_SUBJECT_24H"))
-        events = self.events.df.copy()
-        subjects = self.subjects.df.copy()
-        sessions_summary = self.sessions_summary.df.copy()
+        events = self.events.df
+        subjects = self.subjects.df
+        sessions_summary = self.sessions_summary.df
 
         events["date"] = pd.to_datetime(events["date"], errors="coerce")
         sessions_summary["date"] = pd.to_datetime(

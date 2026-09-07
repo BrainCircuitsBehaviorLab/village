@@ -2193,7 +2193,7 @@ class CorridorPlotLayout(Layout):
                 zip(subjects_df["name"], subjects_df["active"], strict=False)
             )
             figure = corridor_plot(
-                manager.events.df.copy(),
+                manager.events.df,
                 self.subjects,
                 self.plot_width,
                 self.plot_height,

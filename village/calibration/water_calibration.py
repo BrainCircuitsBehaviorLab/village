@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import QLabel, QMessageBox, QPushButton, QScrollArea, QWidg
 
 from village.classes.enums import Active, ControllerEnum, State
 from village.custom_classes.calibration_base import CalibrationBase
-from village.custom_classes.task_base import BpodEvent, TaskBase
+from village.custom_classes.water_calibration_task_base import WaterCalibrationTaskBase
 from village.gui.layout import Label, Layout, LineEdit
 from village.manager import manager
 from village.scripts import utils
@@ -28,62 +28,25 @@ if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
 
-# ── Bpod task (internal) ───────────────────────────────────────────────────────
-
-
-class BpodWaterCalibrationTask(TaskBase):
-    """Bpod task for calibrating water delivery valves."""
-
-    def __init__(
-        self,
-        indices: list[int],
-        times: list[float],
-        maximum_number_of_trials: int,
-    ) -> None:
-        super().__init__()
-        self.indices = indices
-        self.times = times
-        self.maximum_number_of_trials = maximum_number_of_trials
-
-    def start(self) -> None:
-        self.states = ["valve" + str(i + 1) for i in self.indices] + ["exit"]
-        self.wait_states = ["wait" + str(i + 1) for i in self.indices] + ["exit"]
-        self.outputs = [
-            [("PWM" + str(i + 1), 255), "Valve" + str(i + 1)] for i in self.indices
-        ]
-
-    def create_trial(self) -> None:
-        for i in range(len(self.states) - 1):
-            self.bpod.add_state(
-                state_name=self.states[i],
-                state_timer=self.times[i],
-                state_change_conditions={BpodEvent.Tup: self.wait_states[i]},
-                output_actions=self.outputs[i],
-            )
-            self.bpod.add_state(
-                state_name=self.wait_states[i],
-                state_timer=0.1,
-                state_change_conditions={BpodEvent.Tup: self.states[i + 1]},
-                output_actions=[],
-            )
-
-    def after_trial(self) -> None:
-        pass
-
-    def close(self) -> None:
-        pass
-
-
 # ── Calibration panel ──────────────────────────────────────────────────────────
 
 
-class BpodWaterCalibration(CalibrationBase):
-    """Water port calibration and testing panel."""
+class WaterCalibration(CalibrationBase):
+    """Water port calibration and testing panel.
+
+    Works for any controller: with Bpod, the calibration/test sequence runs
+    through WaterCalibrationTaskBase's default Bpod state machine; with any
+    other controller, it runs through whatever WaterCalibrationTaskBase
+    subclass the project's code directory defines (see
+    manager.water_calibration_task_class, set by import_all.py) -- see
+    _get_task_class() below. If neither is available, calibrate/test show
+    an explanatory message instead of starting a task.
+    """
 
     def __init__(self) -> None:
         super().__init__()
 
-        name = "bpod_water_calibration"
+        name = "water_calibration"
         columns = [
             "date",
             "port_number",
@@ -99,7 +62,34 @@ class BpodWaterCalibration(CalibrationBase):
 
     @classmethod
     def is_active(cls) -> bool:
-        return manager.controller_type == ControllerEnum.BPOD
+        return True
+
+    def _get_task_class(self) -> type[WaterCalibrationTaskBase] | None:
+        """The task class to run for calibrate/test: whatever
+        WaterCalibrationTaskBase subclass the project provided, if any --
+        even under Bpod, so a project can override the default sequence --
+        otherwise the built-in Bpod one if the controller is Bpod, else
+        None."""
+        if manager.water_calibration_task_class is not None:
+            return manager.water_calibration_task_class
+        if manager.controller_type == ControllerEnum.BPOD:
+            return WaterCalibrationTaskBase
+        return None
+
+    def _warn_no_task_class(self) -> None:
+        QMessageBox.information(
+            self.window,
+            "Water Calibration not available",
+            "This project isn't using Bpod, and no water-calibration task "
+            "was found in its code directory.\n\n"
+            "Create a class inheriting from WaterCalibrationTaskBase "
+            "(village.custom_classes.water_calibration_task_base) in the "
+            "project's code directory. Its __init__ must accept "
+            "(indices, times, maximum_number_of_trials), and create_trial() "
+            "must run, on your controller, this sequence for "
+            "maximum_number_of_trials trials: for each entry i in indices, "
+            "open valve indices[i]+1 for times[i] seconds.",
+        )
 
     def create_plot(
         self,
@@ -160,7 +150,7 @@ class BpodWaterCalibration(CalibrationBase):
                 f"Cannot provide a valid time for {volume} µl on port {port}.\n"
                 f"1. Make sure you have calibrated the valves/pumps you are using.\n"
                 f"2. Make sure the volume is within calibration range.\n"
-                f"3. Check bpod_water_calibration.csv in 'data'.\n"
+                f"3. Check water_calibration.csv in 'data'.\n"
             ) from e
 
     def draw(self) -> None:
@@ -178,8 +168,9 @@ class BpodWaterCalibration(CalibrationBase):
         self.calibration_initiated = False
         self.test_initiated = False
         self.update_plot = False
-        # Indexed by real port number (0-7); None for ports not active in
-        # BPOD_BEHAVIOR_PORTS, which have no widget drawn for them.
+        # Indexed by real port number (0-7); None for ports with no widget
+        # drawn for them (inactive in BPOD_BEHAVIOR_PORTS, Bpod only -- see
+        # active_ports below).
         self.time_line_edits: list[LineEdit | None] = [None] * 8
         self.total_weight_line_edits: list[LineEdit | None] = [None] * 8
         self.water_delivered_labels: list[Label | None] = [None] * 8
@@ -206,11 +197,17 @@ class BpodWaterCalibration(CalibrationBase):
         self.test_index: int = 0
         self.test_row_dicts: list[dict] = []
 
-        # Only ports active in BPOD_BEHAVIOR_PORTS get a row, compacted (no
-        # gaps for inactive ports). Real port index (0-7) is kept for all
-        # per-port state; row_pos is only used for vertical positioning.
-        port_active = settings.get("BPOD_BEHAVIOR_PORTS")
-        active_ports = [i for i in range(8) if port_active[i] == Active.ON]
+        # With Bpod, only ports active in BPOD_BEHAVIOR_PORTS get a row,
+        # compacted (no gaps for inactive ports) -- that setting is
+        # meaningless for any other controller (it reflects which physical
+        # Bpod ports are wired), so every other controller just gets all 8.
+        # Real port index (0-7) is kept for all per-port state; row_pos is
+        # only used for vertical positioning.
+        if manager.controller_type == ControllerEnum.BPOD:
+            port_active = settings.get("BPOD_BEHAVIOR_PORTS")
+            active_ports = [i for i in range(8) if port_active[i] == Active.ON]
+        else:
+            active_ports = list(range(8))
 
         # ports
         for row_pos, i in enumerate(active_ports):
@@ -620,11 +617,15 @@ class BpodWaterCalibration(CalibrationBase):
                 self.window, "Warning", "Finish the current test first."
             )
             return
+        task_class = self._get_task_class()
+        if task_class is None:
+            self._warn_no_task_class()
+            return
         self.test_denied = True
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
         self.indices = [i for i, val in enumerate(self.times) if val != 0]
-        manager.task = BpodWaterCalibrationTask(
+        manager.task = task_class(
             indices=self.indices,
             times=[self.times[i] for i in self.indices],
             maximum_number_of_trials=self.iterations,
@@ -646,6 +647,10 @@ class BpodWaterCalibration(CalibrationBase):
             QMessageBox.information(
                 self.window, "Warning", "Save or delete the current calibration first."
             )
+            return
+        task_class = self._get_task_class()
+        if task_class is None:
+            self._warn_no_task_class()
             return
         self.calibration_denied = True
         self.calibrate_button.setDisabled(True)
@@ -681,7 +686,7 @@ class BpodWaterCalibration(CalibrationBase):
             QMessageBox.information(self.window, "Warning", text)
 
         if ok > 0:
-            manager.task = BpodWaterCalibrationTask(
+            manager.task = task_class(
                 indices=self.indices2,
                 times=[self.times2[i] for i in self.indices2],
                 maximum_number_of_trials=self.iterations2,
@@ -852,7 +857,7 @@ class BpodWaterCalibration(CalibrationBase):
             if line_edit is not None:
                 line_edit.setText("0")
 
-        df = self.df.copy()
+        df = self.df
         for index in self.indices2:
             # index in self.indices2, so its widgets are guaranteed to exist.
             weight_edit2 = self.total_weight_line_edits2[index]
@@ -1035,7 +1040,7 @@ class _CalibrationPlotLayout(Layout):
         window: GuiWindow,
         rows: int,
         columns: int,
-        parent: BpodWaterCalibration,
+        parent: WaterCalibration,
     ) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows
@@ -1082,7 +1087,7 @@ class _InfoLayout(Layout):
         window: GuiWindow,
         rows: int,
         columns: int,
-        parent: BpodWaterCalibration,
+        parent: WaterCalibration,
     ) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
         self.rows = rows

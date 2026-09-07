@@ -792,7 +792,7 @@ class SoundCalibration(CalibrationBase):
                 self.error_label2.setText(str(self.error2) + "% error")
                 self.ok_button2.setEnabled(True)
                 self.add_button2.setEnabled(True)
-                df = self.df.copy()
+                df = self.df
                 df = df[df["speaker"] == self.speaker2]
                 df = df[df["sound_name"] == self.sound2]
                 max_calibration = df["calibration_number"].max()

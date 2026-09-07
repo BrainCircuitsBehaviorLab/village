@@ -21,8 +21,7 @@ class Gpio:
     - Input (GPIO_IN, default 27): while a task is running the pin is watched
       and self.trigger.trigger_on() is called when it goes from OFF (low) to
       ON (high), and self.trigger.trigger_off() when it goes from ON to OFF.
-      The watching runs only while a task is active (the manager starts it
-      when the task starts and stops it when it ends). See GpioTriggerBase to
+      The watching runs only while a task is active. See GpioTriggerBase to
       customize what happens on trigger_on/trigger_off.
 
     - Output (GPIO_OUT, default 26): set_on() drives the pin HIGH and set_off()

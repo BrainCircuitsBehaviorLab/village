@@ -19,6 +19,7 @@ from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 if TYPE_CHECKING:
+    from village.custom_classes.camera_area_base import CameraAreaBase
     from village.devices.camera import Camera
     from village.devices.gpio import Gpio
 
@@ -193,6 +194,11 @@ class TaskBase:
         Output pin control (``set_on()`` / ``set_off()``). See the Custom GPIO
         Interaction docs for the input-pin trigger hook.
 
+    self.custom_areas : dict[int, CameraAreaBase]
+        BOX area index (1-4) -> the CameraAreaBase overriding that area's
+        shape, if any (see the Custom Detection Area docs). Empty for any
+        area not overridden.
+
     self.current_trial : int
         The current trial number starting from 1
 
@@ -293,6 +299,7 @@ class TaskBase:
 
         self.cam_box: Camera | NullCamera = NullCamera()
         self.gpio: Gpio | NullGpio = NullGpio()
+        self.custom_areas: dict[int, CameraAreaBase] = {}
 
         self.info: str = ""
 
