@@ -275,12 +275,12 @@ ir_light_box = LED(
 )
 
 if old_version_motor:
-    motor_corridor1 = get_motor_old(
-        settings.get("MOTOR1_CORRIDOR_INDEX"), settings.get("MOTOR1_VALUES")
-    )
-    motor_corridor2 = get_motor_old(
-        settings.get("MOTOR2_CORRIDOR_INDEX"), settings.get("MOTOR2_VALUES")
-    )
+    # The old HAT only exposes 6 fixed GPIO pins for servos (see MotorOld),
+    # unlike the new PCA9685 HAT where MOTORx_CORRIDOR_INDEX is a
+    # configurable PWM channel -- door 1 and door 2 are wired directly to
+    # pins 12 and 13, so that setting doesn't apply here.
+    motor_corridor1 = get_motor_old(12, settings.get("MOTOR1_VALUES"))
+    motor_corridor2 = get_motor_old(13, settings.get("MOTOR2_VALUES"))
     # The old HAT only wires up 2 servo motors, regardless of MOTOR3_CORRIDOR /
     # MOTOR4_CORRIDOR -- those settings only apply to the current PCA9685 HAT.
     motor_corridor3 = NullMotor()
