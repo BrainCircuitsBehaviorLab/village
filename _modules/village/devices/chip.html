@@ -800,12 +800,12 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="275"><span class="p">)</span>
 </span><span data-line="276">
 </span><span data-line="277"><span class="k">if</span> <span class="n">old_version_motor</span><span class="p">:</span>
-</span><span data-line="278">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span>
-</span><span data-line="279">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_CORRIDOR_INDEX"</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_VALUES"</span><span class="p">)</span>
-</span><span data-line="280">    <span class="p">)</span>
-</span><span data-line="281">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span>
-</span><span data-line="282">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_CORRIDOR_INDEX"</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_VALUES"</span><span class="p">)</span>
-</span><span data-line="283">    <span class="p">)</span>
+</span><span data-line="278">    <span class="c1"># The old HAT only exposes 6 fixed GPIO pins for servos (see MotorOld),</span>
+</span><span data-line="279">    <span class="c1"># unlike the new PCA9685 HAT where MOTORx_CORRIDOR_INDEX is a</span>
+</span><span data-line="280">    <span class="c1"># configurable PWM channel -- door 1 and door 2 are wired directly to</span>
+</span><span data-line="281">    <span class="c1"># pins 12 and 13, so that setting doesn't apply here.</span>
+</span><span data-line="282">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_VALUES"</span><span class="p">))</span>
+</span><span data-line="283">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_VALUES"</span><span class="p">))</span>
 </span><span data-line="284">    <span class="c1"># The old HAT only wires up 2 servo motors, regardless of MOTOR3_CORRIDOR /</span>
 </span><span data-line="285">    <span class="c1"># MOTOR4_CORRIDOR -- those settings only apply to the current PCA9685 HAT.</span>
 </span><span data-line="286">    <span class="n">motor_corridor3</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
@@ -851,7 +851,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=76de51c8"></script>
+      <script src="../../../_static/documentation_options.js?v=38c9a661"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
