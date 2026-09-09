@@ -685,7 +685,7 @@ default. Turning this ON reveals AREA_EXTRA_HOURS below.""",
     ),
     Setting(
         "AREA_EXTRA_HOURS",
-        4,
+        12,
         int,
         """Only used when CORRIDOR_AREA_EXTRA is ON. If the extra area is occupied
 (blocked) more than 90% of this many hours, a repeating alarm is raised saying

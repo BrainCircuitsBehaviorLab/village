@@ -2102,7 +2102,7 @@ class ExtraLayout(Layout):
         row = 2
         column = 2
         self.label1: Label = self.create_and_add_label(
-            "AREA_EXTRA_CORRIDOR", row, column, 16, 2, self.color_area_extra_str
+            "AREA_EXTRA_CORRIDOR", row, column, 22, 2, self.color_area_extra_str
         )
         row += 2
         for direction in ("left", "right", "top", "bottom", "thr_day", "thr_night"):
