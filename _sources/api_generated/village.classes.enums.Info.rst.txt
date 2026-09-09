@@ -33,5 +33,6 @@ Info
       ~Info.INFO
       ~Info.PLOT
       ~Info.DETECTION_SETTINGS
+      ~Info.EXTRA
    
    
