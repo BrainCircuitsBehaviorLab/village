@@ -191,10 +191,10 @@ class CameraDrawBase:
             # 5 areas, same row as usual, evenly spaced from area1 to extra.
             origin_areas = [
                 (int(cam.width * 0.3), int(cam.height / 15)),
-                (int(cam.width * 0.45), int(cam.height / 15)),
-                (int(cam.width * 0.6), int(cam.height / 15)),
-                (int(cam.width * 0.75), int(cam.height / 15)),
-                (int(cam.width * 0.9), int(cam.height / 15)),
+                (int(cam.width * 0.44), int(cam.height / 15)),
+                (int(cam.width * 0.58), int(cam.height / 15)),
+                (int(cam.width * 0.72), int(cam.height / 15)),
+                (int(cam.width * 0.86), int(cam.height / 15)),
             ]
         else:
             origin_areas = [
