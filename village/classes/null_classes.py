@@ -321,6 +321,10 @@ class NullCamera:
         """No-op for null camera."""
         return
 
+    def check_area_extra_occupation(self) -> None:
+        """No-op for null camera."""
+        return
+
     def print_info_about_config(self) -> None:
         """Prints camera configuration info."""
         return

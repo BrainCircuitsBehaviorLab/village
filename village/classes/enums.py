@@ -200,6 +200,7 @@ class Info(SuperEnum):
     INFO = "INFO"
     PLOT = "PLOT"
     DETECTION_SETTINGS = "DETECTION_SETTINGS"
+    EXTRA = "EXTRA"
 
 
 class DataTable(SuperEnum):

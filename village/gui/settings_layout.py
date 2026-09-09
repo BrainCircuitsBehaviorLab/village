@@ -97,6 +97,12 @@ _CONDITIONAL_KEYS: dict[str, str] = {
     "SYNC_TYPE": "SYNC SETTINGS",
     "USE_CORRIDOR": "CORRIDOR SETTINGS",
     "USE_BOX_BOARD": "BOX SETTINGS",
+    "CORRIDOR_AREA_EXTRA": "ADVANCED SETTINGS",
+}
+
+# Settings hidden unless another setting has a specific value.
+_HIDDEN_UNLESS: dict[str, tuple[str, Any]] = {
+    "AREA_EXTRA_HOURS": ("CORRIDOR_AREA_EXTRA", Active.ON),
 }
 
 # Enum settings rendered as a combo box instead of a toggle button
@@ -159,7 +165,14 @@ class SettingsLayout(Layout):
         return [s for s in MENU_SECTIONS if s not in hidden]
 
     def _should_show(self, key: str) -> bool:
-        return not (not manager.use_of_corridor and key in no_corridor)
+        if not manager.use_of_corridor and key in no_corridor:
+            return False
+        condition = _HIDDEN_UNLESS.get(key)
+        if condition is not None:
+            other_key, required_value = condition
+            if settings.get(other_key) != required_value:
+                return False
+        return True
 
     # ── Tracking lists ─────────────────────────────────────────────────────────
 

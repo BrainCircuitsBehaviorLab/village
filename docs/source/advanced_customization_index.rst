@@ -13,3 +13,4 @@ ADVANCED CUSTOMIZATION
     advanced_customization/telegram_commands.md
     advanced_customization/calibrations.md
     advanced_customization/auto.md
+    advanced_customization/homecage_camera_control.md

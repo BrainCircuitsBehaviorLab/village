@@ -675,6 +675,22 @@ preventing unnecessary processing.""",
         """Use the old version of the Hardware Attached on Top (HAT) that only has
 2 servo motors and no LEDs.""",
     ),
+    Setting(
+        "CORRIDOR_AREA_EXTRA",
+        "OFF",
+        Active,
+        """Enables a 5th, special corridor area (see the EXTRA tab in MONITOR)
+used to check that the passage between the two homecages isn't blocked. OFF by
+default. Turning this ON reveals AREA_EXTRA_HOURS below.""",
+    ),
+    Setting(
+        "AREA_EXTRA_HOURS",
+        4,
+        int,
+        """Only used when CORRIDOR_AREA_EXTRA is ON. If the extra area is occupied
+(blocked) more than 90% of this many hours, a repeating alarm is raised saying
+communication between homecages has been closed for more than this long.""",
+    ),
 ]
 
 controller_settings = [
@@ -768,6 +784,29 @@ day and night detection thresholds.""",
         """The fourth area of the corridor, located between the second door and the
 operant box. Values include left, top, right, and bottom coordinates, along with the
 day and night detection thresholds.""",
+    ),
+    Setting(
+        "AREA_EXTRA_CORRIDOR",
+        [150, 300, 250, 350, 100, 100],
+        list[int],
+        """A 5th, special corridor area used to check that the passage between the
+two homecages is not blocked. Only used when CORRIDOR_AREA_EXTRA (Advanced Settings)
+is ON. Values include left, top, right, and bottom coordinates, along with the day
+and night detection thresholds.""",
+    ),
+    Setting(
+        "DETECTION_OF_MOUSE_AREA_EXTRA",
+        [50, 2000],
+        list[int],
+        """If the number of detected pixels in the extra corridor area is less than
+empty_limit, it is considered empty (the passage is open). The second value
+(subject limit) is unused for this area.""",
+    ),
+    Setting(
+        "COLOR_AREA_EXTRA",
+        [255, 255, 0],
+        list[int],
+        "The color of the extra corridor area.",
     ),
     Setting(
         "AREA1_BOX",

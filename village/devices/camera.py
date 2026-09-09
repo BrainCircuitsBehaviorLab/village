@@ -31,7 +31,7 @@ from village.custom_classes.camera_area_base import CameraAreaBase
 from village.manager import manager
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
-from village.scripts.time_utils import time_utils
+from village.scripts.time_utils import TimeUtils, time_utils
 from village.settings import Color, settings
 
 BLACK_FRAME_MAX = 5
@@ -275,6 +275,16 @@ class Camera:
         self.camera_timestamp = time_utils.now_timestamp()
         self._hour_occupied: list[int] = [0, 0, 0, 0]
         self._hour_total: int = 0
+
+        # AREA_EXTRA: a 5th, special corridor area (see set_properties) that
+        # checks the passage between the two homecages isn't blocked, over a
+        # user-configurable window (AREA_EXTRA_HOURS) instead of the fixed
+        # 1-hour window used above for areas 1-4.
+        self.has_area_extra = False
+        self.area_extra_empty_limit = 0
+        self.area_extra_occupied: int = 0
+        self.area_extra_total: int = 0
+        self._area_extra_timer: TimeUtils.Timer | None = None
         self.last_good_frame = self.camera_timestamp  # last non-black frame
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
@@ -339,6 +349,44 @@ class Camera:
                     x1, y1, x2, y2 = override.bbox()
                     self.areas[i - 1] = [x1, y1, x2, y2]
 
+        # AREA_EXTRA: a 5th, special corridor area (see the EXTRA tab in
+        # MONITOR) appended after the 4 regular ones -- detect_black/white()
+        # and the drawing helpers already iterate over however many entries
+        # self.areas actually has, so appending here is enough to make it
+        # detected and drawn with no changes needed there. Not part of
+        # number_of_areas on purpose: that constant also bounds the settings
+        # keys read above (AREA1.._CORRIDOR/_BOX, USAGE1..4_BOX), and there
+        # is no AREA5_CORRIDOR/USAGE5_BOX to read.
+        self.has_area_extra = (
+            self.name == "CORRIDOR" and settings.get("CORRIDOR_AREA_EXTRA") == Active.ON
+        )
+        if self.has_area_extra:
+            area_extra = settings.get("AREA_EXTRA_CORRIDOR")
+            self.areas.append(area_extra[0:4])
+            self.thresholds.append(
+                area_extra[5] if (not day and len(area_extra) > 5) else area_extra[4]
+            )
+            self.areas_active.append(True)
+            self.areas_allowed.append(True)
+            self.areas_not_allowed.append(False)
+            self.areas_trigger.append(False)
+            self.area_extra_empty_limit = settings.get("DETECTION_OF_MOUSE_AREA_EXTRA")[
+                0
+            ]
+            hours = max(int(settings.get("AREA_EXTRA_HOURS")), 1)
+            if self._area_extra_timer is None or self._area_extra_timer.seconds != (
+                hours * 3600
+            ):
+                self._area_extra_timer = time_utils.Timer(hours * 3600)
+
+        # masks/counts are allocated once, at __init__, with 4 slots -- grow
+        # them (never shrink) to match self.areas whenever area_extra adds a
+        # 5th, so _detect_area(4, ...) has somewhere to write.
+        if len(self.masks) < len(self.areas):
+            grow = len(self.areas) - len(self.masks)
+            self.masks.extend([-1] * grow)
+            self.counts.extend([-1] * grow)
+
         # detection settings
         self.zero_or_one_mouse = settings.get("DETECTION_OF_MOUSE_" + self.name)[0]
         self.one_or_two_mice = settings.get("DETECTION_OF_MOUSE_" + self.name)[1]
@@ -353,6 +401,8 @@ class Camera:
         color_area3 = tuple(settings.get("COLOR_AREA3"))
         color_area4 = tuple(settings.get("COLOR_AREA4"))
         self.color_areas = [color_area1, color_area2, color_area3, color_area4]
+        if self.has_area_extra:
+            self.color_areas.append(tuple(settings.get("COLOR_AREA_EXTRA")))
         self.thickness_line = settings.get("RECTANGLES_LINEWIDTH")
         self.detection_color = tuple(settings.get("COLOR_DETECTION"))
         self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")
@@ -724,6 +774,10 @@ class Camera:
                     for i in range(4):
                         if self.counts[i] > self.zero_or_one_mouse:
                             self._hour_occupied[i] += 1
+                if self.has_area_extra and self.counts[4] != -1:
+                    self.area_extra_total += 1
+                    if self.counts[4] > self.area_extra_empty_limit:
+                        self.area_extra_occupied += 1
 
     def get_gray_frame(self) -> None:
         """Converts the current frame to grayscale."""
@@ -1128,6 +1182,29 @@ class Camera:
                 )
         self._hour_occupied = [0, 0, 0, 0]
         self._hour_total = 0
+
+    def check_area_extra_occupation(self) -> None:
+        """If AREA_EXTRA is active, checks whether it's been occupied more
+        than 90% of the last AREA_EXTRA_HOURS window, and raises a repeating
+        alarm if so. Called once per hour change, like check_hourly_occupation,
+        but only actually evaluates/resets once its own (longer) window has
+        elapsed.
+        """
+        if not self.has_area_extra or self._area_extra_timer is None:
+            return
+        if not self._area_extra_timer.has_elapsed():
+            return
+        if self.area_extra_total > 0:
+            hours = int(settings.get("AREA_EXTRA_HOURS"))
+            if self.area_extra_occupied / self.area_extra_total > 0.9:
+                log.alarm(
+                    "Communication between homecages has been closed for "
+                    f"more than {hours} hours",
+                    subject=manager.subject.name,
+                    repeat=True,
+                )
+        self.area_extra_occupied = 0
+        self.area_extra_total = 0
 
     def area_1_empty(self) -> bool:
         """Checks if area 1 is empty."""

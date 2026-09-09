@@ -98,6 +98,11 @@ class CameraDrawBase:
             tuple(settings.get("COLOR_AREA2")),
             tuple(settings.get("COLOR_AREA3")),
             tuple(settings.get("COLOR_AREA4")),
+            # 5th entry for AREA_EXTRA (see Camera.set_properties). Read
+            # unconditionally -- harmless when unused, since the drawing
+            # loops below are sized to len(cam.areas), which only reaches
+            # index 4 when CORRIDOR_AREA_EXTRA is ON.
+            tuple(settings.get("COLOR_AREA_EXTRA")),
         ]
 
         self.thickness_line = settings.get("RECTANGLES_LINEWIDTH")
@@ -187,12 +192,16 @@ class CameraDrawBase:
             (int(cam.width * 0.53125), int(cam.height / 15)),
             (int(cam.width * 0.6875), int(cam.height / 15)),
             (int(cam.width * 0.84375), int(cam.height / 15)),
+            # AREA_EXTRA (corridor-only, index 4): a second row so it never
+            # crowds the 4 regular labels above.
+            (int(cam.width * 0.375), int(cam.height / 8)),
         ]
-        for i in range(cam.number_of_areas):
+        for i in range(len(cam.areas)):
             if cam.areas_active[i]:
+                label = "extra" if i == 4 else "area" + str(i + 1)
                 cv2.putText(
                     cam.frame,
-                    "area" + str(i + 1) + ": " + str(cam.counts[i]),
+                    label + ": " + str(cam.counts[i]),
                     origin_areas[i],
                     font,
                     scale,
@@ -229,7 +238,7 @@ class CameraDrawBase:
         if not cam.view_detection:
             return
         color_areas = self.color_areas
-        for i in range(cam.number_of_areas):
+        for i in range(len(cam.areas)):
             if cam.areas_active[i]:
                 cv2.rectangle(
                     cam.frame,

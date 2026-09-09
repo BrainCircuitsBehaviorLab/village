@@ -619,6 +619,11 @@ class MonitorLayout(Layout):
         self.page6Layout = CorridorPlotLayout(self.window, 16, 200)
         self.page6.setLayout(self.page6Layout)
 
+        self.page8 = QWidget(self.bottom_widget)
+        self.page8.setStyleSheet("background-color:white")
+        self.page8Layout = ExtraLayout(self.window, 16, 200)
+        self.page8.setLayout(self.page8Layout)
+
         self.tab_widget = QTabWidget()
         self.tab_widget.setStyleSheet(_tab_style)
         self.tab_widget.tabBar().setExpanding(False)
@@ -630,6 +635,9 @@ class MonitorLayout(Layout):
             self._tab_map.append("PLOT")
         self.tab_widget.addTab(self.page7, "DETECTION SETTINGS")
         self._tab_map.append("DETECTION_SETTINGS")
+        if manager.use_of_corridor and settings.get("CORRIDOR_AREA_EXTRA") == Active.ON:
+            self.tab_widget.addTab(self.page8, "EXTRA")
+            self._tab_map.append("EXTRA")
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
 
         value_key = manager.info.value
@@ -680,6 +688,8 @@ class MonitorLayout(Layout):
                 self.page5Layout.update_gui()
             case manager.info.DETECTION_SETTINGS:
                 self.page7Layout.update_gui()
+            case manager.info.EXTRA:
+                self.page8Layout.update_gui()
             case manager.info.PLOT:
                 if manager.detection_change:
                     manager.detection_change = False
@@ -2044,6 +2054,94 @@ class DetectionLayout(Layout):
         """
         settings.set(key, value)
         self._camera_changed(box=True)
+
+
+class ExtraLayout(Layout):
+    """Layout for the EXTRA tab: configures AREA_EXTRA, the 5th, special
+    corridor area used to check that the passage between the two homecages
+    isn't blocked. Only added as a tab when CORRIDOR_AREA_EXTRA is ON (see
+    MonitorLayout.draw()).
+
+    Unlike the regular DETECTION SETTINGS tab, only "empty limit" is shown
+    (no "subject limit" -- this area only cares about blocked/not blocked,
+    not how many subjects), alongside the same VIEW_DETECTION_CORRIDOR
+    toggle and the AREA_EXTRA_CORRIDOR position/threshold controls.
+    """
+
+    def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
+        super().__init__(window, stacked=True, rows=rows, columns=columns)
+        self.color_area_extra_str = "rgb" + str(tuple(settings.get("COLOR_AREA_EXTRA")))
+        self.draw()
+
+    def draw(self) -> None:
+        self.lbs: list[LabelButtons] = []
+
+        lb = LabelButtons(
+            "DETECTION_OF_MOUSE_AREA_EXTRA", "empty_limit", 0, 2, 10, "black", self
+        )
+        self.lbs.append(lb)
+
+        self.detection_label: Label = self.create_and_add_label(
+            "View detection corridor: ", 0, 30, 20, 2, "black"
+        )
+        key = "VIEW_DETECTION_CORRIDOR"
+        possible_values = settings.get_values(key)
+        index = settings.get_index(key)
+        self.button_corridor = self.create_and_add_toggle_button(
+            key,
+            0,
+            50,
+            5,
+            2,
+            possible_values,
+            index,
+            self.toggle_corridor,
+            "View the detection in the corridor",
+        )
+
+        row = 2
+        column = 2
+        self.label1: Label = self.create_and_add_label(
+            "AREA_EXTRA_CORRIDOR", row, column, 16, 2, self.color_area_extra_str
+        )
+        row += 2
+        for direction in ("left", "right", "top", "bottom", "thr_day", "thr_night"):
+            lb = LabelButtons(
+                "AREA_EXTRA_CORRIDOR",
+                direction,
+                row,
+                column,
+                8,
+                self.color_area_extra_str,
+                self,
+            )
+            self.lbs.append(lb)
+            row += 2
+
+    def close(self) -> None:
+        """Closes the layout (no-op)."""
+        return
+
+    def update_gui(self) -> None:
+        """Dims whichever of thr_day/thr_night isn't the effective one,
+        mirroring DetectionLayout's corridor day/night dimming."""
+        is_day = manager.corridor_cycle_is_day
+        for lb in self.lbs:
+            if lb.direction == "thr_night":
+                lb.set_dimmed(is_day)
+            elif lb.direction == "thr_day":
+                lb.set_dimmed(not is_day)
+
+    def toggle_corridor(self, value: str, key: str) -> None:
+        """Toggles corridor detection view (same setting/effect as the one
+        in DETECTION SETTINGS -- this tab just also exposes it here).
+
+        Args:
+            value (str): The new value.
+            key (str): The setting key.
+        """
+        settings.set(key, value)
+        cam_corridor.change = True
 
 
 class InfoLayout(Layout):
