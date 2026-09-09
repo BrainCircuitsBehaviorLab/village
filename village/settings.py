@@ -803,12 +803,6 @@ empty_limit, it is considered empty (the passage is open). The second value
 (subject limit) is unused for this area.""",
     ),
     Setting(
-        "COLOR_AREA_EXTRA",
-        [153, 0, 255],
-        list[int],
-        "The color of the extra corridor area.",
-    ),
-    Setting(
         "AREA1_BOX",
         [200, 100, 300, 200, 100],
         list[int],
@@ -1043,6 +1037,13 @@ visual_settings = [
     Setting("COLOR_AREA2", [204, 51, 170], list[int], "The color of the second area."),
     Setting("COLOR_AREA3", [51, 119, 204], list[int], "The color of the third area."),
     Setting("COLOR_AREA4", [221, 51, 0], list[int], "The color of the fourth area."),
+    Setting(
+        "COLOR_EXTRA",
+        [153, 0, 255],
+        list[int],
+        """The color of the extra corridor area. Only used when
+CORRIDOR_AREA_EXTRA (Advanced Settings) is ON.""",
+    ),
     Setting("COLOR_DETECTION", [255, 0, 255], list[int], "The color of the detection."),
     Setting("RECTANGLES_LINEWIDTH", 2, int, "The linewidth of the areas."),
     Setting("DETECTION_CIRCLE_SIZE", 5, int, "The size of the detection circle."),

@@ -404,7 +404,7 @@ class Camera:
         color_area4 = tuple(settings.get("COLOR_AREA4"))
         self.color_areas = [color_area1, color_area2, color_area3, color_area4]
         if self.has_area_extra:
-            self.color_areas.append(tuple(settings.get("COLOR_AREA_EXTRA")))
+            self.color_areas.append(tuple(settings.get("COLOR_EXTRA")))
         self.thickness_line = settings.get("RECTANGLES_LINEWIDTH")
         self.detection_color = tuple(settings.get("COLOR_DETECTION"))
         self.detection_size = settings.get("DETECTION_CIRCLE_SIZE")

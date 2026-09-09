@@ -2070,7 +2070,7 @@ class ExtraLayout(Layout):
 
     def __init__(self, window: GuiWindow, rows: int, columns: int) -> None:
         super().__init__(window, stacked=True, rows=rows, columns=columns)
-        self.color_area_extra_str = "rgb" + str(tuple(settings.get("COLOR_AREA_EXTRA")))
+        self.color_area_extra_str = "rgb" + str(tuple(settings.get("COLOR_EXTRA")))
         self.draw()
 
     def draw(self) -> None:

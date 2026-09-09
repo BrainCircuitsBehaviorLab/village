@@ -102,7 +102,7 @@ class CameraDrawBase:
             # unconditionally -- harmless when unused, since the drawing
             # loops below are sized to len(cam.areas), which only reaches
             # index 4 when CORRIDOR_AREA_EXTRA is ON.
-            tuple(settings.get("COLOR_AREA_EXTRA")),
+            tuple(settings.get("COLOR_EXTRA")),
         ]
 
         self.thickness_line = settings.get("RECTANGLES_LINEWIDTH")
@@ -188,14 +188,13 @@ class CameraDrawBase:
         thickness_text = 1 if cam.width <= 640 else 2
         font = cv2.FONT_HERSHEY_SIMPLEX
         if cam.has_area_extra:
-            # 5 areas: same row as usual, just packed a bit tighter and
-            # starting slightly further left so they all fit.
+            # 5 areas, same row as usual, evenly spaced from area1 to extra.
             origin_areas = [
-                (int(cam.width * 0.35), int(cam.height / 15)),
-                (int(cam.width * 0.475), int(cam.height / 15)),
+                (int(cam.width * 0.3), int(cam.height / 15)),
+                (int(cam.width * 0.45), int(cam.height / 15)),
                 (int(cam.width * 0.6), int(cam.height / 15)),
-                (int(cam.width * 0.725), int(cam.height / 15)),
-                (int(cam.width * 0.85), int(cam.height / 15)),
+                (int(cam.width * 0.75), int(cam.height / 15)),
+                (int(cam.width * 0.9), int(cam.height / 15)),
             ]
         else:
             origin_areas = [

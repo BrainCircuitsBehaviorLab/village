@@ -103,6 +103,7 @@ _CONDITIONAL_KEYS: dict[str, str] = {
 # Settings hidden unless another setting has a specific value.
 _HIDDEN_UNLESS: dict[str, tuple[str, Any]] = {
     "AREA_EXTRA_HOURS": ("CORRIDOR_AREA_EXTRA", Active.ON),
+    "COLOR_EXTRA": ("CORRIDOR_AREA_EXTRA", Active.ON),
 }
 
 # Enum settings rendered as a combo box instead of a toggle button
