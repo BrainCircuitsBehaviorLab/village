@@ -804,7 +804,7 @@ empty_limit, it is considered empty (the passage is open). The second value
     ),
     Setting(
         "COLOR_AREA_EXTRA",
-        [255, 255, 0],
+        [153, 0, 255],
         list[int],
         "The color of the extra corridor area.",
     ),

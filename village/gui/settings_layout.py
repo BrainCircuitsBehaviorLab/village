@@ -170,7 +170,7 @@ class SettingsLayout(Layout):
         condition = _HIDDEN_UNLESS.get(key)
         if condition is not None:
             other_key, required_value = condition
-            if settings.get(other_key) != required_value:
+            if self._get(other_key) != required_value:
                 return False
         return True
 

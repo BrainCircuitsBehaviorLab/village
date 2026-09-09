@@ -187,15 +187,23 @@ class CameraDrawBase:
         scale = cam.width * 0.000625
         thickness_text = 1 if cam.width <= 640 else 2
         font = cv2.FONT_HERSHEY_SIMPLEX
-        origin_areas = [
-            (int(cam.width * 0.375), int(cam.height / 15)),
-            (int(cam.width * 0.53125), int(cam.height / 15)),
-            (int(cam.width * 0.6875), int(cam.height / 15)),
-            (int(cam.width * 0.84375), int(cam.height / 15)),
-            # AREA_EXTRA (corridor-only, index 4): a second row so it never
-            # crowds the 4 regular labels above.
-            (int(cam.width * 0.375), int(cam.height / 8)),
-        ]
+        if cam.has_area_extra:
+            # 5 areas: same row as usual, just packed a bit tighter and
+            # starting slightly further left so they all fit.
+            origin_areas = [
+                (int(cam.width * 0.35), int(cam.height / 15)),
+                (int(cam.width * 0.475), int(cam.height / 15)),
+                (int(cam.width * 0.6), int(cam.height / 15)),
+                (int(cam.width * 0.725), int(cam.height / 15)),
+                (int(cam.width * 0.85), int(cam.height / 15)),
+            ]
+        else:
+            origin_areas = [
+                (int(cam.width * 0.375), int(cam.height / 15)),
+                (int(cam.width * 0.53125), int(cam.height / 15)),
+                (int(cam.width * 0.6875), int(cam.height / 15)),
+                (int(cam.width * 0.84375), int(cam.height / 15)),
+            ]
         for i in range(len(cam.areas)):
             if cam.areas_active[i]:
                 label = "extra" if i == 4 else "area" + str(i + 1)

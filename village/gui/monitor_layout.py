@@ -2082,7 +2082,7 @@ class ExtraLayout(Layout):
         self.lbs.append(lb)
 
         self.detection_label: Label = self.create_and_add_label(
-            "View detection corridor: ", 0, 30, 20, 2, "black"
+            "View detection corridor: ", 0, 55, 20, 2, "black"
         )
         key = "VIEW_DETECTION_CORRIDOR"
         possible_values = settings.get_values(key)
@@ -2090,7 +2090,7 @@ class ExtraLayout(Layout):
         self.button_corridor = self.create_and_add_toggle_button(
             key,
             0,
-            50,
+            75,
             5,
             2,
             possible_values,
