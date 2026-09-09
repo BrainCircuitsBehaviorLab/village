@@ -42,9 +42,11 @@ Once active, a new `EXTRA` tab appears in `MONITOR`, alongside `INFO`, `PLOT` an
   in `DETECTION SETTINGS`. Position the rectangle over the passage between the two
   homecages.
 
-When active, the area is drawn on the corridor camera feed in a bright yellow
-rectangle — deliberately different from the 4 regular areas' colors, so it stands out
-against any background.
+When active, the area is drawn on the corridor camera feed in a vivid violet
+rectangle (`COLOR_EXTRA`, editable in `SETTINGS` -> `ADVANCED SETTINGS` -> `VISUAL
+SETTINGS`, alongside `COLOR_AREA1`-`COLOR_AREA4`, once `CORRIDOR_AREA_EXTRA` is ON) —
+deliberately different from the 4 regular areas' colors, so it stands out against any
+background.
 
 ---
 
