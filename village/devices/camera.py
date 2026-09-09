@@ -250,15 +250,26 @@ class Camera:
         # _concat_video_segments() when the session really ends.
         self._video_segments: list[str] = []
 
+        self.masks: list[Any] = [-1, -1, -1, -1]
+        self.counts: list[int] = [-1, -1, -1, -1]
+
+        # AREA_EXTRA: a 5th, special corridor area (see set_properties) that
+        # checks the passage between the two homecages isn't blocked, over a
+        # user-configurable window (AREA_EXTRA_HOURS) instead of the fixed
+        # 1-hour window used above for areas 1-4. Initialized before
+        # set_properties() below, since set_properties() reads/writes these.
+        self.has_area_extra = False
+        self.area_extra_empty_limit = 0
+        self.area_extra_occupied: int = 0
+        self.area_extra_total: int = 0
+        self._area_extra_timer: TimeUtils.Timer | None = None
+
         if self.change:
             self.set_properties()
             self.change = False
 
         self.frame_number = 0
         self.camera_timestamp_start = 0.0
-
-        self.masks: list[Any] = [-1, -1, -1, -1]
-        self.counts: list[int] = [-1, -1, -1, -1]
 
         self.error = ""
         self.error_frame = 0
@@ -276,15 +287,6 @@ class Camera:
         self._hour_occupied: list[int] = [0, 0, 0, 0]
         self._hour_total: int = 0
 
-        # AREA_EXTRA: a 5th, special corridor area (see set_properties) that
-        # checks the passage between the two homecages isn't blocked, over a
-        # user-configurable window (AREA_EXTRA_HOURS) instead of the fixed
-        # 1-hour window used above for areas 1-4.
-        self.has_area_extra = False
-        self.area_extra_empty_limit = 0
-        self.area_extra_occupied: int = 0
-        self.area_extra_total: int = 0
-        self._area_extra_timer: TimeUtils.Timer | None = None
         self.last_good_frame = self.camera_timestamp  # last non-black frame
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
