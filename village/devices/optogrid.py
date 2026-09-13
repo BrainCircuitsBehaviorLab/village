@@ -22,23 +22,24 @@ Design notes
                            accel+gyro only when not (yaw will drift)
     - save_magnetometer  : write mag_x/y/z (raw)
   The 'sample' and 'sync' columns are always written.
-* Data is written to Parquet; export_csv() converts a Parquet file to CSV.
 
-Requires: bleak, numpy, pyarrow, pandas, ahrs
+
+Requires: bleak, numpy, pandas, ahrs
 """
 
 from __future__ import annotations
 
 import asyncio
+import csv
 import struct
 import threading
+from collections import deque
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Any, TextIO
 
 import numpy as np
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 from ahrs.common.orientation import q2euler
 from ahrs.filters import EKF
 from bleak import BleakClient, BleakScanner
@@ -195,8 +196,16 @@ class IMUConfig:
         if self.save_magnetometer:
             cols += ["mag_x", "mag_y", "mag_z"]
         if self.save_orientation:
-            cols += ["roll", "pitch", "yaw"]
-        cols += ["sync"]
+            # uncertainty: trace of the EKF's error-covariance matrix for
+            # this sample's orientation estimate -- higher means less
+            # confident (e.g. right after fast motion or a magnetometer
+            # dropout). Diagnostic only, meaningless without orientation.
+            cols += ["roll", "pitch", "yaw", "uncertainty"]
+        # bat_v: battery voltage in volts, tagging whichever IMU sample
+        # arrives right after the last read_battery_mv() call -- None on
+        # every other row, since polling it per-sample over BLE isn't
+        # feasible at IMU sample rates. Always present, like sample/sync.
+        cols += ["sync", "bat_v"]
         return cols
 
 
@@ -220,16 +229,31 @@ class OptoGrid:
         command_timeout: float = 5.0,
         scan_timeout: float = 4.0,
         device_log: bool = False,
-        imu_config: IMUConfig | None = None,
+        save_accel_gyro: bool = True,
+        save_orientation: bool = True,
+        save_magnetometer: bool = False,
+        imu_logging: bool = True,
+        sham: bool = False,
     ):
         self.device_name = device_name
         self.command_timeout = command_timeout
         self.scan_timeout = scan_timeout
         self.device_log = device_log
-        self.imu_config = imu_config or IMUConfig()
+        self.imu_config = IMUConfig(
+            save_accel_gyro=save_accel_gyro,
+            save_orientation=save_orientation,
+            save_magnetometer=save_magnetometer,
+        )
         self.imu_config.validate()
         self.sessions_directory = sessions_directory
         self.filename = filename
+
+        # Defaults used by connect()/connect_async() when they're called
+        # without their own imu_logging/sham -- named with a leading
+        # underscore since `imu_logging` is already a read-only @property
+        # (whether IMU logging is active right now, not this setting).
+        self._default_imu_logging = imu_logging
+        self._default_sham = sham
 
         self._client: BleakClient | None = None
         self._selected: BLEDevice | None = None
@@ -243,9 +267,16 @@ class OptoGrid:
         self._imu_sample_rate = 100
         self._imu_buffer: list = []
         self._pending_sync: list = []
-        self._parquet_writer = None
-        self._parquet_schema = None
-        self._parquet_file: str | None = None
+        self._pending_battery_v: float | None = None
+        # Rolling snapshot of the last 500 IMU samples (same dicts written to
+        # the CSV), for GUIs to poll for a live display (e.g. the calibration
+        # panel's orientation box / raw-data plot) without subscribing to
+        # notifications themselves. Only ever grows while streaming is
+        # active, since that's the only time _on_imu_data() runs.
+        self.imu_raw_history: deque = deque(maxlen=500)
+        self._imu_file: TextIO | None = None
+        self._imu_csv_writer: Any = None
+        self._imu_file_path: str | None = None
         self._imu_columns: list[str] = []
 
         # orientation / EKF state
@@ -256,16 +287,6 @@ class OptoGrid:
         self._mag_seen = False  # whether we are currently receiving valid mag
 
         self.start()
-
-    # ---- IMU config can be changed before a logging session -------------- #
-
-    def configure_imu(self, imu_config: IMUConfig) -> None:
-        """Replace the IMU logging configuration. Cannot change mid-session."""
-        if self._imu_active:
-            raise RuntimeError("Cannot reconfigure IMU while logging is active")
-        imu_config.validate()
-        self.imu_config = imu_config
-        print(f"IMU config set: {imu_config}")
 
     # ---- lifecycle ------------------------------------------------------- #
 
@@ -339,6 +360,9 @@ class OptoGrid:
         target = identifier or self.device_name
         try:
             if self._submit(self._connect(target), timeout=timeout):
+                if self._default_imu_logging:
+                    self.start_imu_logging()
+                self.toggle_sham_led(self._default_sham)
                 return True
             print("Warning: Connect failed")
         except Exception as e:
@@ -396,7 +420,7 @@ class OptoGrid:
             # flush whatever we have; can't await here, do it directly
             try:
                 self._flush_imu()
-                self._close_parquet()
+                self._close_imu_file()
             except Exception as e:
                 print(f"Error flushing IMU on disconnect: {e}")
             self._imu_active = False
@@ -422,10 +446,7 @@ class OptoGrid:
             print(f"Error in device log handler: {e}")
 
     def connect_async(
-        self,
-        identifier: str | None = None,
-        timeout: float = 10.0,
-        imu_logging: bool = False,
+        self, identifier: str | None = None, timeout: float = 10.0
     ) -> None:
         """Connect in a background thread. Returns immediately.
         Check is_connected / is_connecting for status."""
@@ -434,18 +455,14 @@ class OptoGrid:
             return
         threading.Thread(
             target=self._run_connect_async,
-            args=(identifier, timeout, imu_logging),
+            args=(identifier, timeout),
             daemon=True,
         ).start()
 
-    def _run_connect_async(
-        self, identifier: str | None, timeout: float, imu_logging: bool
-    ) -> None:
+    def _run_connect_async(self, identifier: str | None, timeout: float) -> None:
         self._connecting = True
         try:
-            success = self.connect(identifier=identifier, timeout=timeout)
-            if success and imu_logging:
-                self.start_imu_logging()
+            self.connect(identifier=identifier, timeout=timeout)
         finally:
             self._connecting = False
 
@@ -620,14 +637,14 @@ class OptoGrid:
     # ---- IMU: enable / logging ------------------------------------------- #
 
     def start_imu_logging(self) -> str | None:
-        """Enable the IMU on the device and start logging to a Parquet file.
+        """Enable the IMU on the device and start logging to a CSV file.
         Returns the file path, or None on failure."""
         if not self.is_connected:
             print("Warning: start_imu_logging ignored — not connected")
             return None
         if self._imu_active:
             print("Warning: IMU logging already active")
-            return self._parquet_file
+            return self._imu_file_path
         try:
             return self._submit(self._start_imu())
         except Exception as e:
@@ -667,31 +684,25 @@ class OptoGrid:
         # subscribe to IMU notifications
         await self._client.start_notify(IMU_DATA_UUID, self._on_imu_data)
 
-        fname = str(Path(self.sessions_directory) / f"{self.filename}_IMU.parquet")
+        fname = str(Path(self.sessions_directory) / f"{self.filename}_IMU.csv")
 
-        # build schema from the configured columns
         self._imu_columns = self.imu_config.columns()
-        type_map = {
-            "sample": pa.int64(),
-            "sync": pa.int64(),
-            "acc_x": pa.int64(),
-            "acc_y": pa.int64(),
-            "acc_z": pa.int64(),
-            "gyro_x": pa.int64(),
-            "gyro_y": pa.int64(),
-            "gyro_z": pa.int64(),
-            "mag_x": pa.int64(),
-            "mag_y": pa.int64(),
-            "mag_z": pa.int64(),
-            "roll": pa.float64(),
-            "pitch": pa.float64(),
-            "yaw": pa.float64(),
-        }
-        self._parquet_schema = pa.schema([(c, type_map[c]) for c in self._imu_columns])
-        self._parquet_writer = pq.ParquetWriter(
-            fname, self._parquet_schema, compression="snappy"
-        )
-        self._parquet_file = fname
+        # Append, don't overwrite: start_imu_logging() gets called again after
+        # a reconnect (e.g. connect()/connect_async() following a battery-loss
+        # disconnect), and self.filename doesn't change within a session, so
+        # this is the same path as before. Opening in "w" here would silently
+        # truncate everything recorded before the disconnect. Only write the
+        # header if the file doesn't already exist -- if imu_config changed
+        # since the earlier segment, columns will no longer line up with it.
+        existing = Path(fname)
+        write_header = not (existing.exists() and existing.stat().st_size > 0)
+        # kept open across many _on_imu_data calls until _close_imu_file(),
+        # so this isn't a fit for a `with` block.
+        self._imu_file = existing.open("a", newline="")
+        self._imu_csv_writer = csv.writer(self._imu_file)
+        if write_header:
+            self._imu_csv_writer.writerow(self._imu_columns)
+        self._imu_file_path = fname
         self._imu_buffer = []
         self._pending_sync = []
         self._imu_active = True
@@ -705,9 +716,15 @@ class OptoGrid:
             # take a queued sync if present, else 0
             sync_value = self._pending_sync.pop(0) if self._pending_sync else 0
 
+            # tag this sample with the last read_battery_mv() reading, if any
+            # arrived since the previous sample; consumed once, like sync.
+            battery_v = self._pending_battery_v
+            self._pending_battery_v = None
+
             row = {
                 "sample": imu_vals[0],
                 "sync": sync_value,
+                "bat_v": battery_v,
             }
             if self.imu_config.save_accel_gyro:
                 row.update(
@@ -726,7 +743,40 @@ class OptoGrid:
                 )
             if self.imu_config.save_orientation:
                 roll, pitch, yaw = self._compute_orientation(imu_vals)
-                row.update({"roll": roll, "pitch": pitch, "yaw": yaw})
+                uncertainty = None
+                if self._ekf is not None:
+                    try:
+                        uncertainty = float(np.trace(self._ekf.P))
+                    except Exception:
+                        uncertainty = None
+                row.update(
+                    {
+                        "roll": roll,
+                        "pitch": pitch,
+                        "yaw": yaw,
+                        "uncertainty": uncertainty,
+                    }
+                )
+
+            # live snapshot for GUIs polling imu_raw_history (independent of
+            # imu_config -- always the raw values, regardless of what's
+            # configured to be written to the CSV)
+            self.imu_raw_history.append(
+                {
+                    "acc_x": imu_vals[1],
+                    "acc_y": imu_vals[2],
+                    "acc_z": imu_vals[3],
+                    "gyro_x": imu_vals[4],
+                    "gyro_y": imu_vals[5],
+                    "gyro_z": imu_vals[6],
+                    "mag_x": imu_vals[7],
+                    "mag_y": imu_vals[8],
+                    "mag_z": imu_vals[9],
+                    "roll": row.get("roll"),
+                    "pitch": row.get("pitch"),
+                    "yaw": row.get("yaw"),
+                }
+            )
 
             # store as a tuple in column order
             self._imu_buffer.append([row[c] for c in self._imu_columns])
@@ -760,33 +810,30 @@ class OptoGrid:
         print(f"Sync {value} queued for next IMU sample")
 
     def _flush_imu(self) -> None:
-        if not self._imu_buffer or not self._parquet_writer:
+        if not self._imu_buffer or not self._imu_csv_writer:
             return
         try:
-            df = pd.DataFrame(self._imu_buffer, columns=self._imu_columns)
-            table = pa.Table.from_pandas(
-                df, schema=self._parquet_schema, preserve_index=False
-            )
-            self._parquet_writer.write_table(table)
+            self._imu_csv_writer.writerows(self._imu_buffer)
             self._imu_buffer = []
         except Exception as e:
             print(f"Error flushing IMU buffer: {e}")
 
-    def _close_parquet(self) -> None:
-        if self._parquet_writer:
+    def _close_imu_file(self) -> None:
+        if self._imu_file:
             try:
-                self._parquet_writer.close()
+                self._imu_file.close()
             except Exception as e:
-                print(f"Error closing parquet writer: {e}")
-            self._parquet_writer = None
+                print(f"Error closing IMU file: {e}")
+            self._imu_file = None
+            self._imu_csv_writer = None
 
     def stop_imu_logging(self) -> str | None:
-        """Disable the IMU on the device and close the Parquet file. Returns the
+        """Disable the IMU on the device and close the CSV file. Returns the
         file path that was written."""
         if not self._imu_active:
             print("Warning: No active IMU logging to stop")
             return None
-        path = self._parquet_file
+        path = self._imu_file_path
         try:
             self._submit(self._stop_imu())
         except Exception as e:
@@ -806,9 +853,9 @@ class OptoGrid:
         except Exception:
             pass
         self._flush_imu()
-        self._close_parquet()
+        self._close_imu_file()
         self._imu_active = False
-        print(f"IMU logging stopped: {self._parquet_file}")
+        print(f"IMU logging stopped: {self._imu_file_path}")
 
     @property
     def imu_logging(self) -> bool:
@@ -842,7 +889,12 @@ class OptoGrid:
         if not self.is_connected:
             return None
         try:
-            return int(self._submit(self._read(BATTERY_UUID)))
+            mv = int(self._submit(self._read(BATTERY_UUID)))
+            # Stash for the IMU log's bat_v column -- tags whichever sample
+            # arrives next, since polling the battery per-sample over BLE
+            # isn't feasible at IMU sample rates.
+            self._pending_battery_v = mv / 1000.0
+            return mv
         except Exception as e:
             print(f"Error: Battery read failed: {e}")
             return None
@@ -928,18 +980,3 @@ def og_connect(
     if success and imu_logging:
         og.start_imu_logging()
     return OptoSetting(), og, success
-
-
-# --------------------------------------------------------------------------- #
-# Parquet -> CSV export
-# --------------------------------------------------------------------------- #
-
-
-def export_csv(parquet_path: str, csv_path: str | None = None) -> str:
-    """Convert a Parquet IMU log to CSV. If csv_path is omitted, uses the same
-    name with a .csv extension. Returns the CSV path."""
-    if csv_path is None:
-        csv_path = str(Path(parquet_path).with_suffix(".csv"))
-    df = pd.read_parquet(parquet_path)
-    df.to_csv(csv_path, index=False)
-    return csv_path

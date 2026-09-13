@@ -116,8 +116,6 @@ autodoc_mock_imports = [
     "pi5neo",
     "evdev",
     "alsaaudio",
-    "pyarrow",
-    "pyarrow.parquet",
     "ahrs",
     "ahrs.common",
     "ahrs.common.orientation",
