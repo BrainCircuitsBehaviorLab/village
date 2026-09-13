@@ -1,10 +1,11 @@
 ## Homecage Camera Control
 
 Some setups connect two homecages through the corridor, with animals able to move
-between them. `AREA_EXTRA` is a 5th, special corridor detection area (on top of the
-regular `AREA1_CORRIDOR`-`AREA4_CORRIDOR`) used to check that the passage between the
-two homecages isn't physically blocked (e.g. by bedding, an animal staying put for
-hours, or a mechanical issue) for longer than expected.
+between them. The passage between them can be blocked on purpose using pieces of a
+distinct color, placed to physically close it off. `AREA_EXTRA` is a 5th, special
+corridor detection area (on top of the regular `AREA1_CORRIDOR`-`AREA4_CORRIDOR`) used
+to detect those pieces and check that the passage hasn't stayed blocked by mistake for
+longer than expected.
 
 It's off by default, and everything about it is opt-in.
 
@@ -16,12 +17,6 @@ In `SETTINGS` -> `ADVANCED SETTINGS`, turn `CORRIDOR_AREA_EXTRA` ON. This reveal
 second setting, `AREA_EXTRA_HOURS`: the size, in hours, of the window used to decide
 whether the passage has been blocked for "too long" (see [Occupation alarm](#occupation-alarm)
 below).
-
-```{admonition} Note
-:class: note
-Like the other corridor/box camera options, `CORRIDOR_AREA_EXTRA` takes effect for the
-`MONITOR` tab described next after restarting the app.
-```
 
 ---
 

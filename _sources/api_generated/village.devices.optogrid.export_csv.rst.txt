@@ -1,6 +1,0 @@
-export\_csv
-===========
-
-.. currentmodule:: village.devices.optogrid
-
-.. autofunction:: export_csv

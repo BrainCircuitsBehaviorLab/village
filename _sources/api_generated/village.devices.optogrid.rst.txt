@@ -18,7 +18,6 @@ optogrid
       :toctree:
       :template: custom_base_template.rst
    
-      export_csv
       og_connect
    
    

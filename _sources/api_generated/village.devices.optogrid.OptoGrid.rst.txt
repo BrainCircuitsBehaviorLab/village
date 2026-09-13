@@ -17,7 +17,6 @@ OptoGrid
       :no-index:
    
       ~OptoGrid.__init__
-      ~OptoGrid.configure_imu
       ~OptoGrid.connect
       ~OptoGrid.connect_async
       ~OptoGrid.disconnect
