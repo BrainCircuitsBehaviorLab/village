@@ -794,10 +794,10 @@ class SettingsLayout(Layout):
                 self.critical_changes = True
             settings.set("SOUND_DEVICE", val)
 
-        try:
-            settings.set("FAVOURITE_TASK", self.favourite_task_combobox.currentText())
-        except Exception:
-            pass
+        # Same staleness issue as SOUND_DEVICE above: read from _pending,
+        # kept up to date by change_favourite_task(), not the widget.
+        if "FAVOURITE_TASK" in self._pending:
+            settings.set("FAVOURITE_TASK", self._pending["FAVOURITE_TASK"])
 
         cam_corridor.change = True
         cam_box.change = True
@@ -927,7 +927,7 @@ class SettingsLayout(Layout):
                 2,
                 possible_values,
                 index,
-                self.settings_changed,
+                self.change_favourite_task,
             )
             self.favourite_task_combobox.setProperty("type", type)
 
@@ -1170,6 +1170,10 @@ class SettingsLayout(Layout):
         return str(Path(sync_dest, directory + "_data"))
 
     def change_sound_device(self, value: str, key: str) -> None:
+        self._pending[key] = value
+        self.settings_changed(value, key)
+
+    def change_favourite_task(self, value: str, key: str) -> None:
         self._pending[key] = value
         self.settings_changed(value, key)
 
