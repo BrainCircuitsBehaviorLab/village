@@ -342,16 +342,30 @@ class SoundDevice:
                     return f"hw:{i},0", i
             if cards:
                 cid, i = next(iter(cards.items()))
-                log.error(
+                msg = (
                     f"SOUND_DEVICE '{text}' matches no card. Available: "
                     f"{', '.join(cards)}. Falling back to '{cid}'."
                 )
+                log.error(msg)
+                SoundDevice._report_resolve_fallback(msg)
                 return f"hw:{i},0", i
         except Exception:
             pass
 
-        log.error(f"Could not resolve SOUND_DEVICE '{text}'. Falling back to hw:0,0")
+        msg = f"Could not resolve SOUND_DEVICE '{text}'. Falling back to hw:0,0"
+        log.error(msg)
+        SoundDevice._report_resolve_fallback(msg)
         return "hw:0,0", 0
+
+    @staticmethod
+    def _report_resolve_fallback(msg: str) -> None:
+        """Surfaces a silent card-fallback to the user (Telegram/events),
+        not just the server log -- otherwise SOUND_DEVICE quietly pointing
+        at the wrong card looks identical to it working correctly."""
+        try:
+            error_queue.put_nowait(("sound", msg, ""))
+        except queue.Full:
+            pass
 
     @staticmethod
     def _set_realtime_priority() -> None:

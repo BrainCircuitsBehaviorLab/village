@@ -782,13 +782,17 @@ class SettingsLayout(Layout):
             s = self.list_of_toggle_buttons_settings[i]
             settings.set(s.key, [tb.text() for tb in list_toggle])
 
-        try:
-            val = self.sound_device_combobox.currentText()
+        # Read from _pending, not the combo box directly: the widget is
+        # torn down (.deleteLater()) whenever the section it lives in is
+        # redrawn or navigated away from, so a live read here would silently
+        # do nothing on a stale reference and drop an already-picked value.
+        # change_sound_device() and _flush_to_pending() both keep _pending
+        # up to date while the widget is still alive.
+        if "SOUND_DEVICE" in self._pending:
+            val = self._pending["SOUND_DEVICE"]
             if val != settings.get("SOUND_DEVICE"):
                 self.critical_changes = True
             settings.set("SOUND_DEVICE", val)
-        except Exception:
-            pass
 
         try:
             settings.set("FAVOURITE_TASK", self.favourite_task_combobox.currentText())
@@ -1166,6 +1170,7 @@ class SettingsLayout(Layout):
         return str(Path(sync_dest, directory + "_data"))
 
     def change_sound_device(self, value: str, key: str) -> None:
+        self._pending[key] = value
         self.settings_changed(value, key)
 
     def remove(self, name: str) -> None:
