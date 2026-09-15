@@ -70,6 +70,7 @@ Thanks to this rule, no matter what microcontroller you plug into that specific 
 3. **Check Hub-to-Satellite Cables:** Each satellite board is linked by two cables — an Ethernet cable carrying data, and a separate power cable (DC barrel jack on both ends) carrying 5V. Ensure both are firmly plugged into their respective dedicated ports on the Main HAT.
 4. **Check HAT Seating:** Ensure the Main HAT is fully pressed down and evenly seated onto the Raspberry Pi 5 GPIO header extension pins.
 5. **Test Power Lines:** Verify that the Main HAT is receiving a stable **5V (3A)** from the main power supply. A drop in voltage can cause I2C chips, scales, or servos to drop off the bus randomly.
+6. **Restart Village After Reconnecting a Motor:** Physically unplugging and replugging a servo can momentarily glitch the power rail feeding its PWM driver chip (PCA9685), resetting the chip's internal PWM frequency configuration. The Raspberry Pi's I2C connection to the chip keeps working (no error is shown), but the servo stops responding correctly because the pulse timing it's now receiving no longer matches what it expects. That frequency is only configured once, when Village starts — if a motor stops working after being disconnected and reconnected, **restart Village** to reinitialize it, rather than assuming the servo itself is broken.
 
 
 ---

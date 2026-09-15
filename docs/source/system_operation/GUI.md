@@ -38,6 +38,8 @@ Depending on your active configuration, several control tabs are available at th
 
     *The `Visible Light` and `IR Light` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.*
 
+    *If a motor stops responding to `OPEN`/`CLOSE` after being physically disconnected and reconnected, restart Village rather than assuming it's broken — see [Troubleshooting][TROUBLE].*
+
 *   **`FUNCTIONS`:** Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
     for writing and deploying these scripts can be found in the [Protocol Creation][CREATE] section.
 

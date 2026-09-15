@@ -228,6 +228,18 @@ class Motor:
         angle, total_ms = self.close_angle, self.time_close
         self._worker.submit(lambda: self._move_sync(angle, total_ms))
 
+    def open_no_hold(self, settle_ms: int = MOTOR_SETTLE_MS) -> None:
+        """Same as open(), but releases holding torque right after arriving
+        (see move_no_hold). Returns immediately."""
+        angle, total_ms = self.open_angle, self.time_open
+        self._worker.submit(lambda: self._move_no_hold_sync(angle, total_ms, settle_ms))
+
+    def close_no_hold(self, settle_ms: int = MOTOR_SETTLE_MS) -> None:
+        """Same as close(), but releases holding torque right after arriving
+        (see move_no_hold). Returns immediately."""
+        angle, total_ms = self.close_angle, self.time_close
+        self._worker.submit(lambda: self._move_no_hold_sync(angle, total_ms, settle_ms))
+
 
 class LED:
     def __init__(self, channel: int, n_channels: int, pwm) -> None:

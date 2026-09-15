@@ -124,7 +124,6 @@ autodoc_mock_imports = [
     "bleak.backends",
     "bleak.backends.device",
     "BpodPorts",
-    "utils_functions",
 ]
 
 # Add the module path to sys.path here.
