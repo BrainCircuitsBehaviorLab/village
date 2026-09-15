@@ -24,7 +24,6 @@ To ensure all connectivity alerts arrive in the exact same Telegram group chat u
 1. On your healthchecks.io dashboard, click on the **Integrations** tab at the top.
 2. Locate the **Telegram** option and click **Add Integration**.
 3. Follow the on-screen instructions provided by the healthchecks bot. It will prompt you to invite the healthchecks notification bot into your existing laboratory group chat and provide the same **Group Chat ID** you retrieved during the Telegram setup phase.
-4. Send a test notification from the dashboard to verify that the group chat receives the alert successfully.
 
 #### Phase 3: Update Your Village Settings
 1. Open a terminal on your Raspberry Pi and launch the application interface by typing `village`.

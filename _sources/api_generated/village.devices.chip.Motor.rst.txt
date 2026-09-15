@@ -20,6 +20,7 @@ Motor
       ~Motor.close
       ~Motor.disable
       ~Motor.move
+      ~Motor.move_no_hold
       ~Motor.open
       ~Motor.servo_pulse
    

@@ -522,7 +522,7 @@ data-aria-dark="Switch to auto color mode">
 <h1>get_motor</h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_motor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Motor</span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#get_motor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">get_motor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_ChipWorker</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Motor</span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#get_motor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Factory function to create and initialize a Motor instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -530,6 +530,10 @@ data-aria-dark="Switch to auto color mode">
 <li><p><strong>channel</strong> (<em>int</em>) – The PWM channel number.</p></li>
 <li><p><strong>values</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – [open, close, time_open, time_close] (times are the
 total ms to open/close). Legacy [open, close] is also accepted.</p></li>
+<li><p><strong>pwm</strong> – The PWM chip (or NullChip) the motor is wired to.</p></li>
+<li><p><strong>worker</strong> (<em>_ChipWorker</em>) – The worker thread that serializes moves for
+whichever chip <cite>pwm</cite> belongs to (chip_box_worker/
+chip_corridor_worker).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -580,7 +584,7 @@ total ms to open/close). Legacy [open, close] is also accepted.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=48eb77ff"></script>
+      <script src="../_static/documentation_options.js?v=77dc0447"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
