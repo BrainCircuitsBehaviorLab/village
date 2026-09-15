@@ -730,210 +730,228 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="227"><span class="w">        </span><span class="sd">"""Moves the motor to the close position. Returns immediately."""</span>
 </span><span data-line="228">        <span class="n">angle</span><span class="p">,</span> <span class="n">total_ms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_close</span>
 </span><span data-line="229">        <span class="bp">self</span><span class="o">.</span><span class="n">_worker</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_move_sync</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">total_ms</span><span class="p">))</span></div>
-</div>
 
 </span><span data-line="230">
-</span><span data-line="231">
-<div class="viewcode-block" id="LED">
-<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED">[docs]</a>
-</span><span data-line="232"><span class="k">class</span><span class="w"> </span><span class="nc">LED</span><span class="p">:</span>
-<div class="viewcode-block" id="LED.__init__">
-<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.__init__">[docs]</a>
-</span><span data-line="233">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pwm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="234">        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
-</span><span data-line="235">        <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">=</span> <span class="n">n_channels</span>
-</span><span data-line="236">        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span></div>
+<div class="viewcode-block" id="Motor.open_no_hold">
+<a class="viewcode-back" href="../../../api_generated/village.devices.chip.Motor.html#village.devices.chip.Motor.open_no_hold">[docs]</a>
+</span><span data-line="231">    <span class="k">def</span><span class="w"> </span><span class="nf">open_no_hold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settle_ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">MOTOR_SETTLE_MS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="232"><span class="w">        </span><span class="sd">"""Same as open(), but releases holding torque right after arriving</span>
+</span><span data-line="233"><span class="sd">        (see move_no_hold). Returns immediately."""</span>
+</span><span data-line="234">        <span class="n">angle</span><span class="p">,</span> <span class="n">total_ms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_angle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_open</span>
+</span><span data-line="235">        <span class="bp">self</span><span class="o">.</span><span class="n">_worker</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_move_no_hold_sync</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">total_ms</span><span class="p">,</span> <span class="n">settle_ms</span><span class="p">))</span></div>
 
-</span><span data-line="237">
-<div class="viewcode-block" id="LED.set">
-<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.set">[docs]</a>
-</span><span data-line="238">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="239">        <span class="n">ticks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4095</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span>
-</span><span data-line="240">        <span class="c1"># single channel is a visible LED strip connected to a single channel</span>
-</span><span data-line="241">        <span class="c1"># multiple channels is individual IR LEDs, each connected to its own</span>
-</span><span data-line="242">        <span class="c1"># channel, with inverted logic (4095 - ticks): they turn on at 0 and</span>
-</span><span data-line="243">        <span class="c1"># off at 4095</span>
-</span><span data-line="244">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="245">            <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
-</span><span data-line="246">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="247">            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">):</span>
-</span><span data-line="248">                <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">4095</span> <span class="o">-</span> <span class="n">ticks</span><span class="p">))</span></div>
-
-</span><span data-line="249">
-<div class="viewcode-block" id="LED.on">
-<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.on">[docs]</a>
-</span><span data-line="250">    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="251"><span class="w">        </span><span class="sd">"""Turns the LED on."""</span>
-</span><span data-line="252">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span></div>
-
-</span><span data-line="253">
-<div class="viewcode-block" id="LED.off">
-<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.off">[docs]</a>
-</span><span data-line="254">    <span class="k">def</span><span class="w"> </span><span class="nf">off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="255"><span class="w">        </span><span class="sd">"""Turns the LED off."""</span>
-</span><span data-line="256">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span></div>
+</span><span data-line="236">
+<div class="viewcode-block" id="Motor.close_no_hold">
+<a class="viewcode-back" href="../../../api_generated/village.devices.chip.Motor.html#village.devices.chip.Motor.close_no_hold">[docs]</a>
+</span><span data-line="237">    <span class="k">def</span><span class="w"> </span><span class="nf">close_no_hold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settle_ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">MOTOR_SETTLE_MS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="238"><span class="w">        </span><span class="sd">"""Same as close(), but releases holding torque right after arriving</span>
+</span><span data-line="239"><span class="sd">        (see move_no_hold). Returns immediately."""</span>
+</span><span data-line="240">        <span class="n">angle</span><span class="p">,</span> <span class="n">total_ms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_angle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_close</span>
+</span><span data-line="241">        <span class="bp">self</span><span class="o">.</span><span class="n">_worker</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_move_no_hold_sync</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">total_ms</span><span class="p">,</span> <span class="n">settle_ms</span><span class="p">))</span></div>
 </div>
 
-</span><span data-line="257">
-</span><span data-line="258">
+</span><span data-line="242">
+</span><span data-line="243">
+<div class="viewcode-block" id="LED">
+<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED">[docs]</a>
+</span><span data-line="244"><span class="k">class</span><span class="w"> </span><span class="nc">LED</span><span class="p">:</span>
+<div class="viewcode-block" id="LED.__init__">
+<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.__init__">[docs]</a>
+</span><span data-line="245">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pwm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="246">        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
+</span><span data-line="247">        <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">=</span> <span class="n">n_channels</span>
+</span><span data-line="248">        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span></div>
+
+</span><span data-line="249">
+<div class="viewcode-block" id="LED.set">
+<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.set">[docs]</a>
+</span><span data-line="250">    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="251">        <span class="n">ticks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">4095</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span>
+</span><span data-line="252">        <span class="c1"># single channel is a visible LED strip connected to a single channel</span>
+</span><span data-line="253">        <span class="c1"># multiple channels is individual IR LEDs, each connected to its own</span>
+</span><span data-line="254">        <span class="c1"># channel, with inverted logic (4095 - ticks): they turn on at 0 and</span>
+</span><span data-line="255">        <span class="c1"># off at 4095</span>
+</span><span data-line="256">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span data-line="257">            <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
+</span><span data-line="258">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="259">            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">):</span>
+</span><span data-line="260">                <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">4095</span> <span class="o">-</span> <span class="n">ticks</span><span class="p">))</span></div>
+
+</span><span data-line="261">
+<div class="viewcode-block" id="LED.on">
+<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.on">[docs]</a>
+</span><span data-line="262">    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="263"><span class="w">        </span><span class="sd">"""Turns the LED on."""</span>
+</span><span data-line="264">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span></div>
+
+</span><span data-line="265">
+<div class="viewcode-block" id="LED.off">
+<a class="viewcode-back" href="../../../api_generated/village.devices.chip.LED.html#village.devices.chip.LED.off">[docs]</a>
+</span><span data-line="266">    <span class="k">def</span><span class="w"> </span><span class="nf">off</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="267"><span class="w">        </span><span class="sd">"""Turns the LED off."""</span>
+</span><span data-line="268">        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span></div>
+</div>
+
+</span><span data-line="269">
+</span><span data-line="270">
 <div class="viewcode-block" id="get_motor">
 <a class="viewcode-back" href="../../../api_generated/village.devices.chip.get_motor.html#village.devices.chip.get_motor">[docs]</a>
-</span><span data-line="259"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">_ChipWorker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Motor</span><span class="p">:</span>
-</span><span data-line="260"><span class="w">    </span><span class="sd">"""Factory function to create and initialize a Motor instance.</span>
-</span><span data-line="261">
-</span><span data-line="262"><span class="sd">    Args:</span>
-</span><span data-line="263"><span class="sd">        channel (int): The PWM channel number.</span>
-</span><span data-line="264"><span class="sd">        values (list[int]): [open, close, time_open, time_close] (times are the</span>
-</span><span data-line="265"><span class="sd">            total ms to open/close). Legacy [open, close] is also accepted.</span>
-</span><span data-line="266"><span class="sd">        pwm: The PWM chip (or NullChip) the motor is wired to.</span>
-</span><span data-line="267"><span class="sd">        worker (_ChipWorker): The worker thread that serializes moves for</span>
-</span><span data-line="268"><span class="sd">            whichever chip `pwm` belongs to (chip_box_worker/</span>
-</span><span data-line="269"><span class="sd">            chip_corridor_worker).</span>
-</span><span data-line="270">
-</span><span data-line="271"><span class="sd">    Returns:</span>
-</span><span data-line="272"><span class="sd">        Motor: An initialized Motor instance.</span>
-</span><span data-line="273"><span class="sd">    """</span>
-</span><span data-line="274">
-</span><span data-line="275">    <span class="n">motor</span> <span class="o">=</span> <span class="n">Motor</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="o">=</span><span class="n">worker</span><span class="p">)</span>
-</span><span data-line="276">    <span class="k">return</span> <span class="n">motor</span></div>
+</span><span data-line="271"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">_ChipWorker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Motor</span><span class="p">:</span>
+</span><span data-line="272"><span class="w">    </span><span class="sd">"""Factory function to create and initialize a Motor instance.</span>
+</span><span data-line="273">
+</span><span data-line="274"><span class="sd">    Args:</span>
+</span><span data-line="275"><span class="sd">        channel (int): The PWM channel number.</span>
+</span><span data-line="276"><span class="sd">        values (list[int]): [open, close, time_open, time_close] (times are the</span>
+</span><span data-line="277"><span class="sd">            total ms to open/close). Legacy [open, close] is also accepted.</span>
+</span><span data-line="278"><span class="sd">        pwm: The PWM chip (or NullChip) the motor is wired to.</span>
+</span><span data-line="279"><span class="sd">        worker (_ChipWorker): The worker thread that serializes moves for</span>
+</span><span data-line="280"><span class="sd">            whichever chip `pwm` belongs to (chip_box_worker/</span>
+</span><span data-line="281"><span class="sd">            chip_corridor_worker).</span>
+</span><span data-line="282">
+</span><span data-line="283"><span class="sd">    Returns:</span>
+</span><span data-line="284"><span class="sd">        Motor: An initialized Motor instance.</span>
+</span><span data-line="285"><span class="sd">    """</span>
+</span><span data-line="286">
+</span><span data-line="287">    <span class="n">motor</span> <span class="o">=</span> <span class="n">Motor</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="o">=</span><span class="n">worker</span><span class="p">)</span>
+</span><span data-line="288">    <span class="k">return</span> <span class="n">motor</span></div>
 
-</span><span data-line="277">
-</span><span data-line="278">
+</span><span data-line="289">
+</span><span data-line="290">
 <div class="viewcode-block" id="get_motor_old">
 <a class="viewcode-back" href="../../../api_generated/village.devices.chip.get_motor_old.html#village.devices.chip.get_motor_old">[docs]</a>
-</span><span data-line="279"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor_old</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span><span class="p">:</span>
-</span><span data-line="280"><span class="w">    </span><span class="sd">"""Factory function to create and initialize a Motor instance.</span>
-</span><span data-line="281">
-</span><span data-line="282"><span class="sd">    Args:</span>
-</span><span data-line="283"><span class="sd">        channel (int): The GPIO channel number.</span>
-</span><span data-line="284"><span class="sd">        angles (list[int]): A list containing [open_angle, close_angle].</span>
-</span><span data-line="285">
-</span><span data-line="286"><span class="sd">    Returns:</span>
-</span><span data-line="287"><span class="sd">        Motor: An initialized Motor instance.</span>
-</span><span data-line="288"><span class="sd">    """</span>
-</span><span data-line="289">
-</span><span data-line="290">    <span class="k">if</span> <span class="ow">not</span> <span class="n">use_of_corridor</span><span class="p">:</span>
-</span><span data-line="291">        <span class="n">null_motor</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
-</span><span data-line="292">        <span class="n">null_motor</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">""</span>
-</span><span data-line="293">        <span class="k">return</span> <span class="n">null_motor</span>
-</span><span data-line="294">    <span class="k">try</span><span class="p">:</span>
-</span><span data-line="295">        <span class="n">motor</span> <span class="o">=</span> <span class="n">MotorOld</span><span class="p">(</span><span class="n">pin</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="n">angles</span><span class="p">)</span>
-</span><span data-line="296">        <span class="k">return</span> <span class="n">motor</span>
-</span><span data-line="297">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="298">        <span class="n">null_motor</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
-</span><span data-line="299">        <span class="n">null_motor</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span>
-</span><span data-line="300">            <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="s2">"Could not initialize motor"</span>
-</span><span data-line="301">        <span class="p">)</span>
-</span><span data-line="302">        <span class="k">return</span> <span class="n">null_motor</span></div>
+</span><span data-line="291"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor_old</span><span class="p">(</span><span class="n">channel</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">angles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span><span class="p">:</span>
+</span><span data-line="292"><span class="w">    </span><span class="sd">"""Factory function to create and initialize a Motor instance.</span>
+</span><span data-line="293">
+</span><span data-line="294"><span class="sd">    Args:</span>
+</span><span data-line="295"><span class="sd">        channel (int): The GPIO channel number.</span>
+</span><span data-line="296"><span class="sd">        angles (list[int]): A list containing [open_angle, close_angle].</span>
+</span><span data-line="297">
+</span><span data-line="298"><span class="sd">    Returns:</span>
+</span><span data-line="299"><span class="sd">        Motor: An initialized Motor instance.</span>
+</span><span data-line="300"><span class="sd">    """</span>
+</span><span data-line="301">
+</span><span data-line="302">    <span class="k">if</span> <span class="ow">not</span> <span class="n">use_of_corridor</span><span class="p">:</span>
+</span><span data-line="303">        <span class="n">null_motor</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
+</span><span data-line="304">        <span class="n">null_motor</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">""</span>
+</span><span data-line="305">        <span class="k">return</span> <span class="n">null_motor</span>
+</span><span data-line="306">    <span class="k">try</span><span class="p">:</span>
+</span><span data-line="307">        <span class="n">motor</span> <span class="o">=</span> <span class="n">MotorOld</span><span class="p">(</span><span class="n">pin</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">angles</span><span class="o">=</span><span class="n">angles</span><span class="p">)</span>
+</span><span data-line="308">        <span class="k">return</span> <span class="n">motor</span>
+</span><span data-line="309">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="310">        <span class="n">null_motor</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
+</span><span data-line="311">        <span class="n">null_motor</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span>
+</span><span data-line="312">            <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="s2">"Could not initialize motor"</span>
+</span><span data-line="313">        <span class="p">)</span>
+</span><span data-line="314">        <span class="k">return</span> <span class="n">null_motor</span></div>
 
-</span><span data-line="303">
-</span><span data-line="304">
-</span><span data-line="305"><span class="n">motor_corridor1</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
-</span><span data-line="306"><span class="n">motor_corridor2</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
-</span><span data-line="307"><span class="n">motor_corridor3</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
-</span><span data-line="308"><span class="n">motor_corridor4</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
-</span><span data-line="309">
-</span><span data-line="310">
+</span><span data-line="315">
+</span><span data-line="316">
+</span><span data-line="317"><span class="n">motor_corridor1</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
+</span><span data-line="318"><span class="n">motor_corridor2</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
+</span><span data-line="319"><span class="n">motor_corridor3</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
+</span><span data-line="320"><span class="n">motor_corridor4</span><span class="p">:</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">MotorOld</span> <span class="o">|</span> <span class="n">NullMotor</span>
+</span><span data-line="321">
+</span><span data-line="322">
 <div class="viewcode-block" id="get_motor_if_active">
 <a class="viewcode-back" href="../../../api_generated/village.devices.chip.get_motor_if_active.html#village.devices.chip.get_motor_if_active">[docs]</a>
-</span><span data-line="311"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="312">    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">index_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">_ChipWorker</span>
-</span><span data-line="313"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">NullMotor</span><span class="p">:</span>
-</span><span data-line="314"><span class="w">    </span><span class="sd">"""Builds a Motor from its settings if the `key` presence flag is ON.</span>
-</span><span data-line="315">
-</span><span data-line="316"><span class="sd">    Args:</span>
-</span><span data-line="317"><span class="sd">        key (str): The Active setting that gates whether this motor exists.</span>
-</span><span data-line="318"><span class="sd">        index_key (str): The setting holding the motor's PWM channel index.</span>
-</span><span data-line="319"><span class="sd">        values_key (str): The setting holding the motor's [open, close,</span>
-</span><span data-line="320"><span class="sd">            time_open, time_close] values.</span>
-</span><span data-line="321"><span class="sd">        pwm: The PWM chip (or NullChip) the motor is wired to.</span>
-</span><span data-line="322"><span class="sd">        worker (_ChipWorker): The worker thread for whichever chip `pwm`</span>
-</span><span data-line="323"><span class="sd">            belongs to (chip_box_worker/chip_corridor_worker).</span>
-</span><span data-line="324">
-</span><span data-line="325"><span class="sd">    Returns:</span>
-</span><span data-line="326"><span class="sd">        Motor | NullMotor: A real Motor if enabled, otherwise a NullMotor.</span>
-</span><span data-line="327"><span class="sd">    """</span>
-</span><span data-line="328">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
-</span><span data-line="329">        <span class="k">return</span> <span class="n">NullMotor</span><span class="p">()</span>
-</span><span data-line="330">    <span class="k">return</span> <span class="n">get_motor</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index_key</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">values_key</span><span class="p">),</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="p">)</span></div>
+</span><span data-line="323"><span class="k">def</span><span class="w"> </span><span class="nf">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="324">    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">index_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">_ChipWorker</span>
+</span><span data-line="325"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Motor</span> <span class="o">|</span> <span class="n">NullMotor</span><span class="p">:</span>
+</span><span data-line="326"><span class="w">    </span><span class="sd">"""Builds a Motor from its settings if the `key` presence flag is ON.</span>
+</span><span data-line="327">
+</span><span data-line="328"><span class="sd">    Args:</span>
+</span><span data-line="329"><span class="sd">        key (str): The Active setting that gates whether this motor exists.</span>
+</span><span data-line="330"><span class="sd">        index_key (str): The setting holding the motor's PWM channel index.</span>
+</span><span data-line="331"><span class="sd">        values_key (str): The setting holding the motor's [open, close,</span>
+</span><span data-line="332"><span class="sd">            time_open, time_close] values.</span>
+</span><span data-line="333"><span class="sd">        pwm: The PWM chip (or NullChip) the motor is wired to.</span>
+</span><span data-line="334"><span class="sd">        worker (_ChipWorker): The worker thread for whichever chip `pwm`</span>
+</span><span data-line="335"><span class="sd">            belongs to (chip_box_worker/chip_corridor_worker).</span>
+</span><span data-line="336">
+</span><span data-line="337"><span class="sd">    Returns:</span>
+</span><span data-line="338"><span class="sd">        Motor | NullMotor: A real Motor if enabled, otherwise a NullMotor.</span>
+</span><span data-line="339"><span class="sd">    """</span>
+</span><span data-line="340">    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span><span class="p">:</span>
+</span><span data-line="341">        <span class="k">return</span> <span class="n">NullMotor</span><span class="p">()</span>
+</span><span data-line="342">    <span class="k">return</span> <span class="n">get_motor</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">index_key</span><span class="p">),</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">values_key</span><span class="p">),</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">worker</span><span class="p">)</span></div>
 
-</span><span data-line="331">
-</span><span data-line="332">
-</span><span data-line="333"><span class="n">motor_box1</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="334">    <span class="s2">"MOTOR1_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR1_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR1_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
-</span><span data-line="335"><span class="p">)</span>
-</span><span data-line="336"><span class="n">motor_box2</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="337">    <span class="s2">"MOTOR2_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR2_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR2_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
-</span><span data-line="338"><span class="p">)</span>
-</span><span data-line="339"><span class="n">motor_box3</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="340">    <span class="s2">"MOTOR3_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR3_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR3_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
-</span><span data-line="341"><span class="p">)</span>
-</span><span data-line="342"><span class="n">motor_box4</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="343">    <span class="s2">"MOTOR4_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR4_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR4_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
-</span><span data-line="344"><span class="p">)</span>
-</span><span data-line="345"><span class="n">motor_box5</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="346">    <span class="s2">"MOTOR5_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR5_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR5_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
+</span><span data-line="343">
+</span><span data-line="344">
+</span><span data-line="345"><span class="n">motor_box1</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="346">    <span class="s2">"MOTOR1_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR1_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR1_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
 </span><span data-line="347"><span class="p">)</span>
-</span><span data-line="348"><span class="n">motor_box6</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="349">    <span class="s2">"MOTOR6_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR6_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR6_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
+</span><span data-line="348"><span class="n">motor_box2</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="349">    <span class="s2">"MOTOR2_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR2_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR2_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
 </span><span data-line="350"><span class="p">)</span>
-</span><span data-line="351"><span class="n">motor_box7</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="352">    <span class="s2">"MOTOR7_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR7_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR7_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
+</span><span data-line="351"><span class="n">motor_box3</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="352">    <span class="s2">"MOTOR3_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR3_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR3_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
 </span><span data-line="353"><span class="p">)</span>
-</span><span data-line="354">
-</span><span data-line="355"><span class="n">visible_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
-</span><span data-line="356">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"VISIBLE_LIGHT_CORRIDOR_INDEX"</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pwm_corridor</span>
-</span><span data-line="357"><span class="p">)</span>
-</span><span data-line="358"><span class="n">ir_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"IR_LIGHT_CORRIDOR_INDEX"</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="n">pwm_corridor</span><span class="p">)</span>
-</span><span data-line="359"><span class="n">visible_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
-</span><span data-line="360">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"VISIBLE_LIGHT_BOX_INDEX"</span><span class="p">),</span>
-</span><span data-line="361">    <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="362">    <span class="n">pwm_box</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"VISIBLE_LIGHT_BOX"</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span> <span class="k">else</span> <span class="n">NullChip</span><span class="p">(),</span>
-</span><span data-line="363"><span class="p">)</span>
-</span><span data-line="364"><span class="n">ir_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
-</span><span data-line="365">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"IR_LIGHT_BOX_INDEX"</span><span class="p">),</span>
-</span><span data-line="366">    <span class="mi">4</span><span class="p">,</span>
-</span><span data-line="367">    <span class="n">pwm_box</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"IR_LIGHT_BOX"</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span> <span class="k">else</span> <span class="n">NullChip</span><span class="p">(),</span>
-</span><span data-line="368"><span class="p">)</span>
-</span><span data-line="369">
-</span><span data-line="370"><span class="k">if</span> <span class="n">old_version_motor</span><span class="p">:</span>
-</span><span data-line="371">    <span class="c1"># The old HAT only exposes 6 fixed GPIO pins for servos (see MotorOld),</span>
-</span><span data-line="372">    <span class="c1"># unlike the new PCA9685 HAT where MOTORx_CORRIDOR_INDEX is a</span>
-</span><span data-line="373">    <span class="c1"># configurable PWM channel -- door 1 and door 2 are wired directly to</span>
-</span><span data-line="374">    <span class="c1"># pins 12 and 13, so that setting doesn't apply here.</span>
-</span><span data-line="375">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_VALUES"</span><span class="p">))</span>
-</span><span data-line="376">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_VALUES"</span><span class="p">))</span>
-</span><span data-line="377">    <span class="c1"># The old HAT only wires up 2 servo motors, regardless of MOTOR3_CORRIDOR /</span>
-</span><span data-line="378">    <span class="c1"># MOTOR4_CORRIDOR -- those settings only apply to the current PCA9685 HAT.</span>
-</span><span data-line="379">    <span class="n">motor_corridor3</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
-</span><span data-line="380">    <span class="n">motor_corridor4</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
-</span><span data-line="381"><span class="k">else</span><span class="p">:</span>
-</span><span data-line="382">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="383">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_CORRIDOR_INDEX"</span><span class="p">),</span>
-</span><span data-line="384">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_VALUES"</span><span class="p">),</span>
-</span><span data-line="385">        <span class="n">pwm_corridor</span><span class="p">,</span>
-</span><span data-line="386">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
-</span><span data-line="387">    <span class="p">)</span>
-</span><span data-line="388">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
-</span><span data-line="389">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_CORRIDOR_INDEX"</span><span class="p">),</span>
-</span><span data-line="390">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_VALUES"</span><span class="p">),</span>
-</span><span data-line="391">        <span class="n">pwm_corridor</span><span class="p">,</span>
-</span><span data-line="392">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
-</span><span data-line="393">    <span class="p">)</span>
-</span><span data-line="394">    <span class="n">motor_corridor3</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="395">        <span class="s2">"MOTOR3_CORRIDOR"</span><span class="p">,</span>
-</span><span data-line="396">        <span class="s2">"MOTOR3_CORRIDOR_INDEX"</span><span class="p">,</span>
-</span><span data-line="397">        <span class="s2">"MOTOR3_VALUES"</span><span class="p">,</span>
-</span><span data-line="398">        <span class="n">pwm_corridor</span><span class="p">,</span>
-</span><span data-line="399">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
-</span><span data-line="400">    <span class="p">)</span>
-</span><span data-line="401">    <span class="n">motor_corridor4</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
-</span><span data-line="402">        <span class="s2">"MOTOR4_CORRIDOR"</span><span class="p">,</span>
-</span><span data-line="403">        <span class="s2">"MOTOR4_CORRIDOR_INDEX"</span><span class="p">,</span>
-</span><span data-line="404">        <span class="s2">"MOTOR4_VALUES"</span><span class="p">,</span>
-</span><span data-line="405">        <span class="n">pwm_corridor</span><span class="p">,</span>
-</span><span data-line="406">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
-</span><span data-line="407">    <span class="p">)</span>
+</span><span data-line="354"><span class="n">motor_box4</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="355">    <span class="s2">"MOTOR4_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR4_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR4_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
+</span><span data-line="356"><span class="p">)</span>
+</span><span data-line="357"><span class="n">motor_box5</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="358">    <span class="s2">"MOTOR5_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR5_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR5_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
+</span><span data-line="359"><span class="p">)</span>
+</span><span data-line="360"><span class="n">motor_box6</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="361">    <span class="s2">"MOTOR6_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR6_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR6_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
+</span><span data-line="362"><span class="p">)</span>
+</span><span data-line="363"><span class="n">motor_box7</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="364">    <span class="s2">"MOTOR7_BOX"</span><span class="p">,</span> <span class="s2">"MOTOR7_BOX_INDEX"</span><span class="p">,</span> <span class="s2">"MOTOR7_BOX_VALUES"</span><span class="p">,</span> <span class="n">pwm_box</span><span class="p">,</span> <span class="n">chip_box_worker</span>
+</span><span data-line="365"><span class="p">)</span>
+</span><span data-line="366">
+</span><span data-line="367"><span class="n">visible_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
+</span><span data-line="368">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"VISIBLE_LIGHT_CORRIDOR_INDEX"</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pwm_corridor</span>
+</span><span data-line="369"><span class="p">)</span>
+</span><span data-line="370"><span class="n">ir_light_corridor</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"IR_LIGHT_CORRIDOR_INDEX"</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="n">pwm_corridor</span><span class="p">)</span>
+</span><span data-line="371"><span class="n">visible_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
+</span><span data-line="372">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"VISIBLE_LIGHT_BOX_INDEX"</span><span class="p">),</span>
+</span><span data-line="373">    <span class="mi">1</span><span class="p">,</span>
+</span><span data-line="374">    <span class="n">pwm_box</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"VISIBLE_LIGHT_BOX"</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span> <span class="k">else</span> <span class="n">NullChip</span><span class="p">(),</span>
+</span><span data-line="375"><span class="p">)</span>
+</span><span data-line="376"><span class="n">ir_light_box</span> <span class="o">=</span> <span class="n">LED</span><span class="p">(</span>
+</span><span data-line="377">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"IR_LIGHT_BOX_INDEX"</span><span class="p">),</span>
+</span><span data-line="378">    <span class="mi">4</span><span class="p">,</span>
+</span><span data-line="379">    <span class="n">pwm_box</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"IR_LIGHT_BOX"</span><span class="p">)</span> <span class="o">==</span> <span class="n">Active</span><span class="o">.</span><span class="n">ON</span> <span class="k">else</span> <span class="n">NullChip</span><span class="p">(),</span>
+</span><span data-line="380"><span class="p">)</span>
+</span><span data-line="381">
+</span><span data-line="382"><span class="k">if</span> <span class="n">old_version_motor</span><span class="p">:</span>
+</span><span data-line="383">    <span class="c1"># The old HAT only exposes 6 fixed GPIO pins for servos (see MotorOld),</span>
+</span><span data-line="384">    <span class="c1"># unlike the new PCA9685 HAT where MOTORx_CORRIDOR_INDEX is a</span>
+</span><span data-line="385">    <span class="c1"># configurable PWM channel -- door 1 and door 2 are wired directly to</span>
+</span><span data-line="386">    <span class="c1"># pins 12 and 13, so that setting doesn't apply here.</span>
+</span><span data-line="387">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_VALUES"</span><span class="p">))</span>
+</span><span data-line="388">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor_old</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_VALUES"</span><span class="p">))</span>
+</span><span data-line="389">    <span class="c1"># The old HAT only wires up 2 servo motors, regardless of MOTOR3_CORRIDOR /</span>
+</span><span data-line="390">    <span class="c1"># MOTOR4_CORRIDOR -- those settings only apply to the current PCA9685 HAT.</span>
+</span><span data-line="391">    <span class="n">motor_corridor3</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
+</span><span data-line="392">    <span class="n">motor_corridor4</span> <span class="o">=</span> <span class="n">NullMotor</span><span class="p">()</span>
+</span><span data-line="393"><span class="k">else</span><span class="p">:</span>
+</span><span data-line="394">    <span class="n">motor_corridor1</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="395">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_CORRIDOR_INDEX"</span><span class="p">),</span>
+</span><span data-line="396">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR1_VALUES"</span><span class="p">),</span>
+</span><span data-line="397">        <span class="n">pwm_corridor</span><span class="p">,</span>
+</span><span data-line="398">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
+</span><span data-line="399">    <span class="p">)</span>
+</span><span data-line="400">    <span class="n">motor_corridor2</span> <span class="o">=</span> <span class="n">get_motor</span><span class="p">(</span>
+</span><span data-line="401">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_CORRIDOR_INDEX"</span><span class="p">),</span>
+</span><span data-line="402">        <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MOTOR2_VALUES"</span><span class="p">),</span>
+</span><span data-line="403">        <span class="n">pwm_corridor</span><span class="p">,</span>
+</span><span data-line="404">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
+</span><span data-line="405">    <span class="p">)</span>
+</span><span data-line="406">    <span class="n">motor_corridor3</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="407">        <span class="s2">"MOTOR3_CORRIDOR"</span><span class="p">,</span>
+</span><span data-line="408">        <span class="s2">"MOTOR3_CORRIDOR_INDEX"</span><span class="p">,</span>
+</span><span data-line="409">        <span class="s2">"MOTOR3_VALUES"</span><span class="p">,</span>
+</span><span data-line="410">        <span class="n">pwm_corridor</span><span class="p">,</span>
+</span><span data-line="411">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
+</span><span data-line="412">    <span class="p">)</span>
+</span><span data-line="413">    <span class="n">motor_corridor4</span> <span class="o">=</span> <span class="n">get_motor_if_active</span><span class="p">(</span>
+</span><span data-line="414">        <span class="s2">"MOTOR4_CORRIDOR"</span><span class="p">,</span>
+</span><span data-line="415">        <span class="s2">"MOTOR4_CORRIDOR_INDEX"</span><span class="p">,</span>
+</span><span data-line="416">        <span class="s2">"MOTOR4_VALUES"</span><span class="p">,</span>
+</span><span data-line="417">        <span class="n">pwm_corridor</span><span class="p">,</span>
+</span><span data-line="418">        <span class="n">chip_corridor_worker</span><span class="p">,</span>
+</span><span data-line="419">    <span class="p">)</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -958,7 +976,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=77dc0447"></script>
+      <script src="../../../_static/documentation_options.js?v=63870091"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

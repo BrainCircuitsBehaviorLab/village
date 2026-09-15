@@ -579,6 +579,20 @@ all run together as one job on this chip’s worker thread.</p>
 <dd><p>Moves the motor to the close position. Returns immediately.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">open_no_hold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settle_ms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">MOTOR_SETTLE_MS</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#Motor.open_no_hold"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Same as open(), but releases holding torque right after arriving
+(see move_no_hold). Returns immediately.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">close_no_hold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settle_ms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">MOTOR_SETTLE_MS</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#Motor.close_no_hold"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Same as close(), but releases holding torque right after arriving
+(see move_no_hold). Returns immediately.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -620,7 +634,7 @@ all run together as one job on this chip’s worker thread.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=77dc0447"></script>
+      <script src="../_static/documentation_options.js?v=63870091"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -18,10 +18,12 @@ Motor
    
       ~Motor.__init__
       ~Motor.close
+      ~Motor.close_no_hold
       ~Motor.disable
       ~Motor.move
       ~Motor.move_no_hold
       ~Motor.open
+      ~Motor.open_no_hold
       ~Motor.servo_pulse
    
    
