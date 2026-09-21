@@ -1,6 +1,0 @@
-parse\_timestamp\_from\_filename
-================================
-
-.. currentmodule:: village.scripts.safe_removal_of_data
-
-.. autofunction:: parse_timestamp_from_filename
