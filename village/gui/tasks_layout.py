@@ -278,6 +278,8 @@ class TasksLayout(Layout):
     # ── Task / training selection ──────────────────────────────────────────────
 
     def select_task(self, cls: type, name: str) -> None:
+        if manager.state.task_is_running():
+            return
         if issubclass(cls, TaskBase):
             self.testing_training = False
             self.selected = name
@@ -312,6 +314,8 @@ class TasksLayout(Layout):
             self._apply_current_subject(testing_training=False)
 
     def training_button_clicked(self) -> None:
+        if manager.state.task_is_running():
+            return
         self.testing_training = True
         self.selected = ""
         self.central_sub_layout.delete_optional_widgets("optional")

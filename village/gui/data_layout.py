@@ -185,7 +185,7 @@ class TableView(QTableView):
                 super().mouseDoubleClickEvent(event)
 
         elif manager.table == DataTable.SESSIONS_SUMMARY:
-            if flags & Qt.ItemIsEditable:
+            if flags & Qt.ItemIsEditable and manager.state.can_edit_data():
                 if column_name == "settings":
                     manager.state = State.MANUAL_MODE
                     current_value = model.data(index, Qt.DisplayRole)
@@ -213,6 +213,10 @@ class TableView(QTableView):
                     text = str(index.data())
                     text = text.replace("  |  ", "\n")
                     QMessageBox.information(self, "", text)
+            elif flags & Qt.ItemIsEditable:
+                text = "Wait until the box is empty or synchronization is complete"
+                text += " before editing the tables."
+                QMessageBox.information(self, "EDIT", text)
         else:
             model = self._model()
             row = index.row()

@@ -155,7 +155,9 @@ class State(SuperEnum):
         """
         return self in (
             State.RUN_INITIAL,
+            State.CLOSE_DOOR2,
             State.RUN_CLOSED,
+            State.OPEN_DOOR2,
             State.RUN_OPEN,
             State.RUN_MANUAL,
         )

@@ -732,8 +732,11 @@ class Manager:
         active_subjects = subjects.loc[
             subjects["active"].apply(utils.is_active), "name"
         ].tolist()
+        active_changes = utils.build_active_changes(self.active_history.df)
         active_24h = {
-            row["name"]: utils.active_last_24_hours(row["active"])
+            row["name"]: utils.subject_active_every_hour(
+                active_changes.get(row["name"], []), row["active"], 24
+            )
             for _, row in subjects.iterrows()
         }
 
@@ -841,6 +844,35 @@ class Manager:
         except Exception:
             pass
 
+    def _some_subject_active_every_hour(self, hours: int) -> bool:
+        """True if, for every one of the last `hours` hours, at least one
+        subject's *actual* schedule at that hour had it active
+
+        Used to gate the "No sessions in the last N hours" alarm: if some
+        hour in the window had nobody scheduled active at all (everyone
+        OFF, or off by schedule -- e.g. a Sunday), the lack of sessions is
+        expected, not a problem, so the alarm should stay quiet. Unlike
+        "No detections in the last N hours", which intentionally stays
+        schedule-blind (a subject not being detected while it should be in
+        the corridor is worth flagging regardless).
+        """
+        active_changes = utils.build_active_changes(self.active_history.df)
+        now = time_utils.now()
+        for delta in range(hours):
+            hour_end = now - datetime.timedelta(hours=delta)
+            hour_start = hour_end - datetime.timedelta(hours=1)
+            any_active = False
+            for _, row in self.subjects.df.iterrows():
+                changes = active_changes.get(row["name"], [])
+                if utils.is_subject_active_during_hour(
+                    changes, hour_start, hour_end, row["active"]
+                ):
+                    any_active = True
+                    break
+            if not any_active:
+                return False
+        return True
+
     def hourly_checks(self) -> None:
         """Performs hourly system health checks including temperature, disk space,
         and recent activity."""
@@ -855,7 +887,9 @@ class Manager:
                 value = str(self.detections.hours)
                 log.alarm("No detections in the last " + value + " hours", repeat=True)
 
-            if self.sessions.trigger_empty():
+            if self.sessions.trigger_empty() and self._some_subject_active_every_hour(
+                self.sessions.hours
+            ):
                 value = str(self.sessions.hours)
                 log.alarm("No sessions in the last " + value + " hours", repeat=True)
 

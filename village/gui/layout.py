@@ -499,7 +499,7 @@ class Layout(QGridLayout):
             self.mice_button.setStyleSheet(sty)
 
         state = manager.state
-        if state == State.RUN_MANUAL or state.task_is_running():
+        if state.task_is_running():
             self.stop_button.setText("STOP TASK")
             self.stop_button.setToolTip("Stop the running task")
             self.stop_button.setEnabled(True)

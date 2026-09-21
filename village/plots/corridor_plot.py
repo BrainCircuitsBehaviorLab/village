@@ -12,42 +12,6 @@ from village.scripts.time_utils import time_utils
 from village.settings import settings
 
 
-def _is_subject_active_during_hour(
-    changes: list[tuple[pd.Timestamp, str]],
-    hour_start: pd.Timestamp,
-    hour_end: pd.Timestamp,
-    fallback_value: str,
-) -> bool:
-    """True if the subject's schedule was active at any point during
-    [hour_start, hour_end) -- checked against every distinct schedule value
-    that held during that hour: the one already in effect at hour_start, plus
-    any changes that happened partway through it. An hour only counts as
-    inactive if every one of those values says so for the whole hour.
-
-    Args:
-        changes: (timestamp, active_value) pairs for this subject, sorted by
-            timestamp ascending (see log.active_changed).
-        hour_start: Start of the hour being checked (inclusive).
-        hour_end: End of the hour being checked (exclusive).
-        fallback_value: Used only if `changes` is empty (no history at all
-            for this subject) -- today's live active value.
-    """
-    candidates = [value for ts, value in changes if hour_start <= ts < hour_end]
-
-    before = [value for ts, value in changes if ts <= hour_start]
-    if before:
-        candidates.append(before[-1])
-    elif changes:
-        # No change recorded before this hour, but we do have later ones --
-        # best guess is that the earliest known value already applied.
-        candidates.append(changes[0][1])
-    else:
-        # No history at all for this subject -- fall back to today's value.
-        candidates.append(fallback_value)
-
-    return any(utils.is_active_at(value, hour_start) for value in candidates)
-
-
 def corridor_plot(
     df: pd.DataFrame,
     subjects: list[str],
@@ -129,15 +93,7 @@ def corridor_plot(
     # schedule actually was at any past hour. Not filtered to the plotted
     # window -- a change from before start_first is still what was in effect
     # at its start.
-    active_changes: dict[str, list[tuple[pd.Timestamp, str]]] = {}
-    if active_history_df is not None and not active_history_df.empty:
-        changes_df = active_history_df.copy()
-        changes_df["date"] = pd.to_datetime(changes_df["date"])
-        changes_df = changes_df.sort_values("date")
-        for subject_name, group in changes_df.groupby("subject"):
-            active_changes[str(subject_name)] = list(
-                zip(group["date"], group["active"], strict=False)
-            )
+    active_changes = utils.build_active_changes(active_history_df)
 
     df = df[df["date"] >= start_first]
 
@@ -182,7 +138,7 @@ def corridor_plot(
         inactive_ranges = []
         run_start = None
         for i in range(len(hour_edges) - 1):
-            active = _is_subject_active_during_hour(
+            active = utils.is_subject_active_during_hour(
                 changes, hour_edges[i], hour_edges[i + 1], fallback_value
             )
             inactive = not active

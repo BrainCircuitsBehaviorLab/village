@@ -261,22 +261,6 @@ def is_active(value: str) -> bool:
     return now.hour in schedule[today]
 
 
-def active_last_24_hours(value: str) -> bool:
-    """Return True if every hour in the last 24 h was scheduled as active."""
-    if value == "ON":
-        return True
-    if value == "OFF":
-        return False
-    now = time_utils.now()
-    schedule = _parse_schedule(value)
-    for delta in range(25):
-        check_dt = now - timedelta(hours=delta)
-        day_name = _DAYS[check_dt.weekday()]
-        if day_name not in schedule or check_dt.hour not in schedule[day_name]:
-            return False
-    return True
-
-
 def is_active_at(value: str, dt: datetime) -> bool:
     """Return True if `value` (ON/OFF/schedule) is scheduled active at `dt`."""
     if value == "ON":
@@ -286,6 +270,81 @@ def is_active_at(value: str, dt: datetime) -> bool:
     schedule = _parse_schedule(value)
     day_name = _DAYS[dt.weekday()]
     return day_name in schedule and dt.hour in schedule[day_name]
+
+
+def build_active_changes(
+    active_history_df: pd.DataFrame | None,
+) -> dict[str, list[tuple[pd.Timestamp, str]]]:
+    """Groups active_history.csv (see log.active_changed) into a per-subject,
+    time-sorted list of (timestamp, active_value) changes.
+    """
+    active_changes: dict[str, list[tuple[pd.Timestamp, str]]] = {}
+    if active_history_df is None or active_history_df.empty:
+        return active_changes
+    changes_df = active_history_df.copy()
+    changes_df["date"] = pd.to_datetime(changes_df["date"])
+    changes_df = changes_df.sort_values("date")
+    for subject_name, group in changes_df.groupby("subject"):
+        active_changes[str(subject_name)] = list(
+            zip(group["date"], group["active"], strict=False)
+        )
+    return active_changes
+
+
+def is_subject_active_during_hour(
+    changes: list[tuple[pd.Timestamp, str]],
+    hour_start: pd.Timestamp,
+    hour_end: pd.Timestamp,
+    fallback_value: str,
+) -> bool:
+    """True if the subject's schedule was active at any point during
+    [hour_start, hour_end) -- checked against every distinct schedule value
+    that held during that hour: the one already in effect at hour_start, plus
+    any changes that happened partway through it. An hour only counts as
+    inactive if every one of those values says so for the whole hour.
+
+    Args:
+        changes: (timestamp, active_value) pairs for this subject, sorted by
+            timestamp ascending -- see build_active_changes().
+        hour_start: Start of the hour being checked (inclusive).
+        hour_end: End of the hour being checked (exclusive).
+        fallback_value: Used only if `changes` is empty (no history at all
+            for this subject) -- today's live active value.
+    """
+    candidates = [value for ts, value in changes if hour_start <= ts < hour_end]
+
+    before = [value for ts, value in changes if ts <= hour_start]
+    if before:
+        candidates.append(before[-1])
+    elif changes:
+        # No change recorded before this hour, but we do have later ones --
+        # best guess is that the earliest known value already applied.
+        candidates.append(changes[0][1])
+    else:
+        # No history at all for this subject -- fall back to today's value.
+        candidates.append(fallback_value)
+
+    return any(is_active_at(value, hour_start) for value in candidates)
+
+
+def subject_active_every_hour(
+    changes: list[tuple[pd.Timestamp, str]],
+    fallback_value: str,
+    hours: int,
+    now: datetime | None = None,
+) -> bool:
+    """True if this subject's reconstructed schedule was active during every
+    one of the last `hours` one-hour buckets ending now.
+    """
+    now = now or time_utils.now()
+    for delta in range(hours):
+        hour_end = now - timedelta(hours=delta)
+        hour_start = hour_end - timedelta(hours=1)
+        if not is_subject_active_during_hour(
+            changes, hour_start, hour_end, fallback_value
+        ):
+            return False
+    return True
 
 
 def delete_all_elements_from_layout(layout: QLayout) -> None:
