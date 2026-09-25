@@ -92,6 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gpio.html">GPIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
@@ -466,7 +467,7 @@ data-aria-dark="Switch to auto color mode">
 <h1>Corridor Hardware Setup</h1>
 <p>The corridor elements must be calibrated. Navigate to the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> Screen:</p>
 <ol class="arabic simple">
-<li><p><strong>Set Door Motor Angles</strong>: Select the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> tab in the center of the screen. Each installed motor has its own <code class="docutils literal notranslate"><span class="pre">MOTORx</span> <span class="pre">VALUES</span></code> button (<code class="docutils literal notranslate"><span class="pre">MOTOR1</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR2</span></code> are always shown; <code class="docutils literal notranslate"><span class="pre">MOTOR3</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR4</span></code> only appear if enabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>). Clicking it opens a dialog with the <code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> and <code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> fields, plus <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> buttons to move the motor immediately and test the values before committing. The closing angle should allow the door to gently touch the top without pushing further.</p></li>
+<li><p><strong>Set Door Motor Angles</strong>: Select the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> tab in the center of the screen. Each installed motor has its own <code class="docutils literal notranslate"><span class="pre">MOTORx</span> <span class="pre">VALUES</span></code> button (<code class="docutils literal notranslate"><span class="pre">MOTOR1</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR2</span></code> are always shown; <code class="docutils literal notranslate"><span class="pre">MOTOR3</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR4</span></code> only appear if enabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>). Clicking it opens a dialog with the <code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> and <code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> fields, a <code class="docutils literal notranslate"><span class="pre">Hold</span> <span class="pre">position</span></code> checkbox, plus <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> buttons to move the motor immediately and test the values before committing. The closing angle should allow the door to gently touch the top without pushing further.</p></li>
 </ol>
 <div class="tip admonition">
 <p class="admonition-title">Note</p>
@@ -478,6 +479,16 @@ data-aria-dark="Switch to auto color mode">
 <li><p>Adjust the final <code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">angle</span></code> incrementally until the gate allows the animal to pass through easily when open.</p></li>
 <li><p>Once you are happy with the angles and times, click <strong>SAVE</strong> to persist them (or <strong>DISCARD</strong> to revert to the values the motor had before opening the dialog).</p></li>
 </ol>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Hold position</p>
+<p><code class="docutils literal notranslate"><span class="pre">Hold</span> <span class="pre">position</span></code> sets what the motor does <strong>after</strong> it arrives, and it is saved per motor along with the angles and times:</p>
+<ul class="simple">
+<li><p><strong>Checked</strong> (the default): the servo stays powered and keeps its holding torque, so it resists a load — but it hums continuously and warms up.</p></li>
+<li><p><strong>Unchecked</strong>: the PWM signal is cut once the motor has arrived, so the servo goes quiet and cool — but anything pushing on it can move it out of position.</p></li>
+</ul>
+<p>Corridor doors normally want it checked, since the door has to stay where it was put. A mechanism that latches on its own, or one that only has to reach a position and then be left alone, is better off unchecked.</p>
+<p>The checkbox takes effect immediately on <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code>, so you can hear the difference before saving. It only sets the <strong>default</strong>: task code can override it for a single movement (see <a class="reference internal" href="motors.html"><span class="std std-doc">Motors</span></a>).</p>
 </div>
 <ol class="arabic simple" start="2">
 <li><p><strong>Calibrate the Scale</strong>: Use the <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code> button with a known weight to calibrate the scale, <code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code> to zero it, and verify functionality by pressing <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code>.</p></li>
@@ -530,7 +541,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=93173eab"></script>
+      <script src="../_static/documentation_options.js?v=19a1b118"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

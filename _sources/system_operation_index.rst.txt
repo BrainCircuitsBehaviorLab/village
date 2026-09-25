@@ -20,6 +20,7 @@ SYSTEM OPERATION
     system_operation/screen.md
     system_operation/led_strip.md
     system_operation/gpio.md
+    system_operation/motors.md
     system_operation/data.md
     system_operation/timing.md
     system_operation/state_machine.md

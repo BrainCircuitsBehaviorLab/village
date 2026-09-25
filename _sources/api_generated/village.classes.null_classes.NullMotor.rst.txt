@@ -18,6 +18,8 @@ NullMotor
    
       ~NullMotor.__init__
       ~NullMotor.close
+      ~NullMotor.disable
+      ~NullMotor.move
       ~NullMotor.open
    
    
@@ -30,7 +32,11 @@ NullMotor
       :no-index:
    
       ~NullMotor.close_angle
+      ~NullMotor.current_angle
       ~NullMotor.error
+      ~NullMotor.hold
       ~NullMotor.open_angle
+      ~NullMotor.time_close
+      ~NullMotor.time_open
    
    

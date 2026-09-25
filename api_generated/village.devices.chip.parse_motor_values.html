@@ -92,6 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -470,11 +471,13 @@ data-aria-dark="Switch to auto color mode">
 <h1>parse_motor_values</h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">parse_motor_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#parse_motor_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Unpack a MOTOR*_VALUES setting into (open, close, time_open, time_close).</p>
-<p>time_open/time_close are the TOTAL milliseconds to open/close. Legacy
-settings only store [open, close]; missing times fall back to
-DEFAULT_MOTOR_TIME so old calibrations keep working.</p>
+<span class="sig-name descname"><span class="pre">parse_motor_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/devices/chip.html#parse_motor_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Unpack MOTOR*_VALUES into (open, close, time_open, time_close, hold).</p>
+<p>time_open/time_close are the TOTAL milliseconds to open/close. hold is this
+motor’s default for whether to keep holding torque after arriving (see
+Motor.move). Legacy settings are shorter – the oldest store only
+[open, close] – and every missing field falls back to a default (0 ms,
+hold on), so old calibrations keep working untouched.</p>
 </dd></dl>
 
 </section>
@@ -516,7 +519,7 @@ DEFAULT_MOTOR_TIME so old calibrations keep working.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=93173eab"></script>
+      <script src="../_static/documentation_options.js?v=19a1b118"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

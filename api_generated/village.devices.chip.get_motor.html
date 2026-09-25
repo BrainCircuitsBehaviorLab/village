@@ -92,6 +92,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -476,8 +477,9 @@ data-aria-dark="Switch to auto color mode">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<em>int</em>) – The PWM channel number.</p></li>
-<li><p><strong>values</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – [open, close, time_open, time_close] (times are the
-total ms to open/close). Legacy [open, close] is also accepted.</p></li>
+<li><p><strong>values</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – [open, close, time_open, time_close, hold] (times
+are the total ms to open/close; hold 1/0 is this motor’s default
+for keeping holding torque). Shorter legacy values are accepted.</p></li>
 <li><p><strong>pwm</strong> – The PWM chip (or NullChip) the motor is wired to.</p></li>
 <li><p><strong>worker</strong> (<em>_ChipWorker</em>) – The worker thread that serializes moves for
 whichever chip <cite>pwm</cite> belongs to (chip_box_worker/
@@ -532,7 +534,7 @@ chip_corridor_worker).</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=93173eab"></script>
+      <script src="../_static/documentation_options.js?v=19a1b118"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

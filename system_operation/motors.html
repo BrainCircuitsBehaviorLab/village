@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Methods &amp; Attributes - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Direct, Audio &amp; Video Functions" href="functions.html" /><link rel="prev" title="Task Development Guide" href="task.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task_methods.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Motors - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Saved Data and Video" href="data.html" /><link rel="prev" title="GPIO" href="gpio.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/motors.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -22,8 +22,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task_methods.html"/>
-  <meta property="og:title" content="Task Methods &amp; Attributes"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/motors.html"/>
+  <meta property="og:title" content="Motors"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -80,22 +80,22 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../preparation/animal.html">Animal Handling</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="toolbar.html">Toolbar Controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sound.html">Sound Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="screen.html">Screen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio.html">GPIO</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Motors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">Timing, Clocks &amp; Latencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
@@ -106,15 +106,15 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="creating.html">Protocol Creation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="task.html">Task Development Guide</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Task Methods &amp; Attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct, Audio &amp; Video Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">Custom GPIO Interaction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plots.html">Custom Plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/task_methods.html">Task Methods &amp; Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">Custom GPIO Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
@@ -392,21 +392,14 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#methods-you-must-override">Methods you must override</a></li>
-<li><a class="reference internal" href="#methods-you-can-call">Methods you can call</a><ul>
-<li><a class="reference internal" href="#registering-controller-events">Registering controller events</a></li>
-<li><a class="reference internal" href="#registering-a-raspberry-side-event">Registering a Raspberry-side event</a></li>
-<li><a class="reference internal" href="#registering-a-value">Registering a value</a></li>
-<li><a class="reference internal" href="#executing-a-direct-function">Executing a direct function</a></li>
+<li><a class="reference internal" href="#which-motors-exist">Which motors exist</a></li>
+<li><a class="reference internal" href="#calibration">Calibration</a></li>
+<li><a class="reference internal" href="#holding-torque">Holding torque</a></li>
+<li><a class="reference internal" href="#using-motors-in-tasks">Using motors in tasks</a><ul>
+<li><a class="reference internal" href="#method-reference">Method reference</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#attributes-you-can-read">Attributes you can read</a><ul>
-<li><a class="reference internal" href="#self-info"><code class="docutils literal notranslate"><span class="pre">self.info</span></code></a></li>
-<li><a class="reference internal" href="#self-calibrations"><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></a></li>
-<li><a class="reference internal" href="#self-should-stop-read-only-property"><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</a></li>
-<li><a class="reference internal" href="#self-trial-data-dict"><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#these-calls-never-block">These calls never block</a></li>
 </ul>
 </div></div>
   </aside>
@@ -428,11 +421,11 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../protocol_index.html"><span itemprop="name">PROTOCOL &amp; TASK DESIGN</span></a>
+        <a itemprop="item" href="../system_operation_index.html"><span itemprop="name">SYSTEM OPERATION</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Task Methods &amp; Attributes</strong>
+        <strong itemprop="name">Motors</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -449,7 +442,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/motors.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -463,299 +456,229 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/motors.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/motors.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/motors.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/system_operation/motors.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="task-methods-attributes">
-<h1>Task Methods &amp; Attributes</h1>
-<p>Full reference for <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code> — every method you can override or call, and every
-attribute you can read, from inside your own task. For a walkthrough of building a
-task from scratch, see the <a class="reference internal" href="task.html"><span class="std std-doc">Task Development Guide</span></a>.</p>
-<hr class="docutils" />
-<section id="methods-you-must-override">
-<h2>Methods you must override</h2>
+          <section id="motors">
+<h1>Motors</h1>
+<p>The Training Village drives standard hobby servomotors through <strong>PCA9685</strong> PWM
+controllers over I2C: one chip on the corridor board (up to 4 door motors) and one
+on the box board (up to 7 motors). Each motor is calibrated individually and stored
+in its own <code class="docutils literal notranslate"><span class="pre">MOTORx_VALUES</span></code> setting.</p>
+<section id="which-motors-exist">
+<h2>Which motors exist</h2>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
-<tr class="row-odd"><th class="head"><p>Method</p></th>
-<th class="head"><p>Called</p></th>
-<th class="head"><p>Use it to</p></th>
+<tr class="row-odd"><th class="head"><p>Motor</p></th>
+<th class="head"><p>Enabled by</p></th>
+<th class="head"><p>Values setting</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">start(self)</span></code></p></td>
-<td><p>Once, before the trial loop begins.</p></td>
-<td><p>Configure hardware, pre-compute stimuli, open files, etc.</p></td>
+<tr class="row-even"><td><p>Corridor doors 1–2</p></td>
+<td><p>always present</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MOTOR1_VALUES</span></code>, <code class="docutils literal notranslate"><span class="pre">MOTOR2_VALUES</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">create_trial(self)</span></code></p></td>
-<td><p>Once at the start of every trial.</p></td>
-<td><p>Build and run the trial.</p></td>
+<tr class="row-odd"><td><p>Corridor doors 3–4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MOTOR3_CORRIDOR</span></code>, <code class="docutils literal notranslate"><span class="pre">MOTOR4_CORRIDOR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MOTOR3_VALUES</span></code>, <code class="docutils literal notranslate"><span class="pre">MOTOR4_VALUES</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">after_trial(self)</span></code></p></td>
-<td><p>Immediately after each trial finishes.</p></td>
-<td><p>Score performance, update adaptive parameters, call <code class="docutils literal notranslate"><span class="pre">register_value</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close(self)</span></code></p></td>
-<td><p>Once after the trial loop ends (session finished, forced stop, or error).</p></td>
-<td><p>Close files, stop hardware, release resources.</p></td>
+<tr class="row-even"><td><p>Box motors 1–7</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MOTOR1_BOX</span></code> … <code class="docutils literal notranslate"><span class="pre">MOTOR7_BOX</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MOTOR1_BOX_VALUES</span></code> … <code class="docutils literal notranslate"><span class="pre">MOTOR7_BOX_VALUES</span></code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>The corridor motors are enabled under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code> and the box
+motors under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>. A motor left <code class="docutils literal notranslate"><span class="pre">OFF</span></code> is replaced by a
+<code class="docutils literal notranslate"><span class="pre">NullMotor</span></code>, whose methods accept the same calls and do nothing, so a task that
+drives a disabled motor still runs without errors.</p>
+</section>
+<hr class="docutils" />
+<section id="calibration">
+<h2>Calibration</h2>
+<p>Motor values are <strong>not</strong> edited from the <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> screen. Each motor has its own
+<code class="docutils literal notranslate"><span class="pre">MOTORx</span> <span class="pre">VALUES</span></code> button in the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen, under the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tab,
+which opens a dialog where the values can be changed and tested with <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code>
+before saving. See <a class="reference internal" href="corridor.html"><span class="std std-doc">Corridor Hardware Setup</span></a> for the full calibration
+procedure.</p>
+<p>Each motor stores five values:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">open</span> <span class="pre">angle</span></code></p></td>
+<td><p>Angle (0–180°) of the open position</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close</span> <span class="pre">angle</span></code></p></td>
+<td><p>Angle (0–180°) of the closed position</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">open</span> <span class="pre">time</span> <span class="pre">(ms)</span></code></p></td>
+<td><p><strong>Total</strong> milliseconds the travel to open should take. <code class="docutils literal notranslate"><span class="pre">0</span></code> = as fast as the servo can move</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close</span> <span class="pre">time</span> <span class="pre">(ms)</span></code></p></td>
+<td><p>Same, for the travel to close</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hold</span></code></p></td>
+<td><p>Whether the servo keeps holding torque after arriving (see below)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Travel time is not a delay: the movement is split into 5° steps and the time is
+spread evenly across them, so the door glides instead of snapping. A 30° move with
+<code class="docutils literal notranslate"><span class="pre">close</span> <span class="pre">time</span> <span class="pre">=</span> <span class="pre">300</span></code> performs 6 steps of 50 ms each.</p>
+</section>
+<hr class="docutils" />
+<section id="holding-torque">
+<h2>Holding torque</h2>
+<p>A powered servo actively fights anything that tries to move it. That is usually what
+a door wants — but it also means the motor hums continuously and warms up, and for a
+mechanism that does not need to resist anything, that is wasted wear and noise.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">hold</span></code> value decides what happens <strong>after</strong> the motor reaches its target:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">hold</span></code></p></th>
+<th class="head"><p>Behaviour</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> (checked, the default)</p></td>
+<td><p>The PWM signal keeps running. The servo resists a load and stays exactly in place, but hums and warms up.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">False</span></code> (unchecked)</p></td>
+<td><p>The PWM signal is cut once the motor has arrived. The servo goes silent and cool, but anything pushing on it can move it out of position.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Corridor doors normally want <code class="docutils literal notranslate"><span class="pre">hold</span></code> on, since the door must stay where it was put.
+A mechanism that latches mechanically, or that only needs to reach a position and
+then be left alone, is better off with it unchecked.</p>
 <div class="note admonition">
-<p class="admonition-title">create_trial with Bpod</p>
-<p>Each call starts with an empty state machine. Add states with <code class="docutils literal notranslate"><span class="pre">self.bpod.add_state</span></code>
-— when the method returns, the state machine is sent and run automatically, and
-<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called once it finishes. Without Bpod, you’re responsible for
-creating and running the trial logic yourself.</p>
-</div>
-<div class="warning admonition">
-<p class="admonition-title">after_trial must register “water”</p>
-<p>Always call <code class="docutils literal notranslate"><span class="pre">self.register_value(&quot;water&quot;,</span> <span class="pre">...)</span></code> with the amount of water consumed
-during the trial. The system sums it across the session to get total water
-consumption — if that total falls below a configurable threshold, an alarm is
-triggered (adjustable in the Settings tab of the GUI).</p>
+<p class="admonition-title">Note</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">hold</span></code> is off and the travel time is <code class="docutils literal notranslate"><span class="pre">0</span></code> (an instant move), the system waits one
+second before cutting the power, so the servo has time to physically get there —
+cutting it immediately would leave the motor stranded mid-travel. This wait is the
+<code class="docutils literal notranslate"><span class="pre">MOTOR_SETTLE_MS</span></code> constant in <code class="docutils literal notranslate"><span class="pre">village/devices/chip.py</span></code>; a heavier door with a long
+travel may need it raised.</p>
 </div>
 </section>
 <hr class="docutils" />
-<section id="methods-you-can-call">
-<h2>Methods you can call</h2>
-<p>Do not override these — call them from inside your task’s own methods.</p>
-<section id="registering-controller-events">
-<h3>Registering controller events</h3>
-<p>If you’re using Bpod, all four of these are called automatically — you never need
-to call them yourself. With <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>, call them with
-the right timestamps to populate <code class="docutils literal notranslate"><span class="pre">trial_data</span></code> (see below).</p>
+<section id="using-motors-in-tasks">
+<h2>Using motors in tasks</h2>
+<p>Import the module-level instance of the motor you need and call it directly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.chip</span><span class="w"> </span><span class="kn">import</span> <span class="n">motor_box1</span><span class="p">,</span> <span class="n">motor_corridor1</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="c1"># Move to the calibrated open/close positions, using this motor's saved</span>
+</span><span data-line="4"><span class="c1"># angles, times and hold value</span>
+</span><span data-line="5"><span class="n">motor_box1</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+</span><span data-line="6"><span class="n">motor_box1</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="c1"># Override the saved hold value for a single movement</span>
+</span><span data-line="9"><span class="n">motor_box1</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">hold</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>   <span class="c1"># release the servo once it is open</span>
+</span><span data-line="10"><span class="n">motor_box1</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">hold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># keep this one powered, whatever the setting says</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="c1"># Move to an arbitrary angle over an arbitrary time</span>
+</span><span data-line="13"><span class="n">motor_box1</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>            <span class="c1"># instantly</span>
+</span><span data-line="14"><span class="n">motor_box1</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>       <span class="c1"># spread over 500 ms</span>
+</span><span data-line="15"><span class="n">motor_box1</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">hold</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="c1"># Release holding torque at any later moment</span>
+</span><span data-line="18"><span class="n">motor_box1</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<section id="method-reference">
+<h3>Method reference</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Method</p></th>
-<th class="head"><p>Args</p></th>
-<th class="head"><p>When to call it (<code class="docutils literal notranslate"><span class="pre">OTHER</span></code>)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp:</span> <span class="pre">float,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
-<td><p>At the beginning of each trial.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
-<td><p>At the end of each trial.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">state_name:</span> <span class="pre">str,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
-<td><p>Whenever you enter a state.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">str,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
-<td><p>To register any other controller event.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>: the Raspberry Pi’s own clock — get it with <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code>: read from the microcontroller’s own clock (e.g. an Arduino’s <code class="docutils literal notranslate"><span class="pre">millis()</span></code>, converted to seconds), if you’re talking to one and it reports its own timing.</p></li>
-<li><p>If you’re not syncing against an external clock (no microcontroller, or one that doesn’t report its own timing), <code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code> is exactly the same as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> uses the two timestamps together to compute a clock offset
-(<code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span> <span class="pre">-</span> <span class="pre">controller_timestamp</span></code>), used to convert every later
-<code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code> back to Raspberry Pi absolute time.</p>
-</section>
-<section id="registering-a-raspberry-side-event">
-<h3>Registering a Raspberry-side event</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_raspberry_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raspberry_timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></pre></div>
-</div>
-<p>For events generated by the Raspberry Pi itself, asynchronously from the controller
-— e.g. executing a direct function, or a camera/touchscreen detection. Pass
-<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p>
-</section>
-<section id="registering-a-value">
-<h3>Registering a value</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></pre></div>
-</div>
-<p>Saves a custom value to the current trial row in the CSV — call it inside
-<code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="2"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_time"</span><span class="p">,</span> <span class="mf">0.432</span><span class="p">)</span>
-</span></pre></div>
-</div>
-</section>
-<section id="executing-a-direct-function">
-<h3>Executing a direct function</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">execute_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></pre></div>
-</div>
-<p>Runs the direct function registered at index <code class="docutils literal notranslate"><span class="pre">i</span></code> (1-99). See
-<a class="reference internal" href="functions.html"><span class="std std-doc">Direct, Audio &amp; Video Functions</span></a> for how those get registered and
-the other ways they can be triggered.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># executes the function registered at index 1</span>
-</span></pre></div>
-</div>
-</section>
-</section>
-<hr class="docutils" />
-<section id="attributes-you-can-read">
-<h2>Attributes you can read</h2>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Attribute</p></th>
-<th class="head"><p>Type</p></th>
+<th class="head"><p>Arguments</p></th>
 <th class="head"><p>Description</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.name</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td><p>Name of the task (the class name).</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">open(hold=None,</span> <span class="pre">settle_ms=1000)</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Moves to the calibrated open angle over the calibrated open time.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.subject</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td><p>Name of the subject running the session.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close(hold=None,</span> <span class="pre">settle_ms=1000)</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Moves to the calibrated close angle over the calibrated close time.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.system_name</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td><p>Name of the system, as defined in the Settings tab.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">move(angle,</span> <span class="pre">total_ms=0,</span> <span class="pre">hold=None,</span> <span class="pre">settle_ms=1000)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: 0–180, <code class="docutils literal notranslate"><span class="pre">total_ms</span></code>: total travel time</p></td>
+<td><p>Moves to an arbitrary angle.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.bpod</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">BpodController</span></code></p></td>
-<td><p>Bpod interface — state machine construction, sending, etc. Mainly used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.arduino</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ArduinoController</span></code></p></td>
-<td><p>Arduino interface, for tasks using an Arduino instead of Bpod.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Settings</span></code></p></td>
-<td><p>Session parameters defined in the training protocol. Read and write its attributes to implement adaptive training.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.cam_box</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Camera</span> <span class="pre">|</span> <span class="pre">NullCamera</span></code></p></td>
-<td><p>Camera attached to the operant box (<code class="docutils literal notranslate"><span class="pre">NullCamera</span></code> if not configured).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.gpio</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Gpio</span> <span class="pre">|</span> <span class="pre">NullGpio</span></code></p></td>
-<td><p>Output pin control (<code class="docutils literal notranslate"><span class="pre">set_on()</span></code> / <code class="docutils literal notranslate"><span class="pre">set_off()</span></code>). See <a class="reference internal" href="gpio_trigger.html"><span class="std std-doc">Custom GPIO Interaction</span></a> for the input-pin trigger hook.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.current_trial</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
-<td><p>The current trial number, starting from 1.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.date</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td><p>Date string of the current session, set once when it starts.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.run_mode</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.force_stop</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
-<td><p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> from your own task logic (e.g. in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>) to make the task stop.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.stop_button_pressed</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> once something external (e.g. the STOP TASK button) has asked the task to stop. Read-only — react to it, don’t set it.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.chrono</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Chrono</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">self.chrono.get_seconds()</span></code> gives the time in seconds since the task started.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">disable()</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Cuts the PWM signal, releasing holding torque immediately.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<section id="self-info">
-<h3><code class="docutils literal notranslate"><span class="pre">self.info</span></code></h3>
-<p>Human-readable description of the task, set once (usually in <code class="docutils literal notranslate"><span class="pre">__init__</span></code>). Shown to
-the user when selecting the task in the GUI.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
-</span><span data-line="2"><span class="s2">My Task</span>
-</span><span data-line="3"><span class="s2">-------</span>
-</span><span data-line="4"><span class="s2">Describe what the task does and how it progresses here.</span>
-</span><span data-line="5"><span class="s2">"""</span>
-</span></pre></div>
-</div>
+<p><code class="docutils literal notranslate"><span class="pre">hold=None</span></code> (the default on all three movement methods) means <strong>use this motor’s
+saved value</strong>. Pass <code class="docutils literal notranslate"><span class="pre">hold=True</span></code> or <code class="docutils literal notranslate"><span class="pre">hold=False</span></code> to override it for that one call
+without changing the setting. <code class="docutils literal notranslate"><span class="pre">settle_ms</span></code> only has an effect when <code class="docutils literal notranslate"><span class="pre">hold</span></code> resolves to
+<code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 </section>
-<section id="self-calibrations">
-<h3><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></h3>
-<p>Holds the task’s calibrations — call its methods to convert between hardware
-values and real-world units (see <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"white_noise"</span>
-</span><span data-line="3"><span class="p">)</span>
-</span></pre></div>
-</div>
 </section>
-<section id="self-should-stop-read-only-property">
-<h3><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</h3>
-<p><code class="docutils literal notranslate"><span class="pre">True</span></code> once <em>any</em> stopping condition is met: the trial/time limit (Manual mode
-only — Auto mode runs until the subject leaves the corridor, not for a fixed
-number of trials), <code class="docutils literal notranslate"><span class="pre">force_stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">stop_button_pressed</span></code>.</p>
-<div class="tip admonition">
-<p class="admonition-title">Needed for a task with its own waiting loop</p>
-<p>Trial/time limits and <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> are only checked <em>between</em> trials, by the
-task’s own run loop — they can’t interrupt a <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> that’s blocked inside
-its own waiting loop. If your task doesn’t use Bpod and waits on its own
-condition inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>, poll <code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> so the loop actually
-exits when asked to:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="2">    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
-</span><span data-line="3">        <span class="o">...</span>  <span class="c1"># wait for your own condition</span>
-</span></pre></div>
-</div>
-</div>
-</section>
-<section id="self-trial-data-dict">
-<h3><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</h3>
-<p>Populated automatically at the end of each trial — available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
-<p><strong>Keys always present:</strong></p>
+<hr class="docutils" />
+<section id="these-calls-never-block">
+<h2>These calls never block</h2>
+<p>Every <code class="docutils literal notranslate"><span class="pre">open()</span></code>, <code class="docutils literal notranslate"><span class="pre">close()</span></code>, <code class="docutils literal notranslate"><span class="pre">move()</span></code> and <code class="docutils literal notranslate"><span class="pre">disable()</span></code> call <strong>returns immediately</strong>. The
+movement itself — including the step-by-step ramp, the settle wait and cutting the
+power — runs on a background thread, one per PWM chip.</p>
+<p>This matters in two ways:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;date&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;trial&quot;</span></code> (int), <code class="docutils literal notranslate"><span class="pre">&quot;subject&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;system_name&quot;</span></code> (str)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_END&quot;</span></code> (float): absolute timestamps (UNIX epoch seconds)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ordered_list_of_events&quot;</span></code> (list[str]): event names in the order they occurred (e.g. <code class="docutils literal notranslate"><span class="pre">[&quot;Port1In&quot;,</span> <span class="pre">&quot;Port1Out&quot;,</span> <span class="pre">&quot;Port1In&quot;]</span></code>)</p></li>
+<li><p>A task, a GUI button or the corridor state machine can command a 300 ms door
+movement without stalling for 300 ms. Nothing waits for a servo.</p></li>
+<li><p>Commands to motors on the <strong>same</strong> chip are executed strictly one at a time, in the
+order they were submitted. Two box motors never move simultaneously, and a
+<code class="docutils literal notranslate"><span class="pre">close()</span></code> issued right after an <code class="docutils literal notranslate"><span class="pre">open()</span></code> always happens after it finishes. The
+corridor chip and the box chip have separate threads, so they do run in parallel
+with each other.</p></li>
 </ul>
-<p><strong>Keys added per state visited</strong> (Bpod or manual):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code> (list[float]): timestamps of every
-entry/exit for that state — a list because the same state can be visited more
-than once per trial.</p></li>
-</ul>
-<p><strong>Keys added per event type:</strong></p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;EventName&gt;&quot;</span></code> (list[float]): timestamps of every occurrence of that event
-(e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>).</p></li>
-</ul>
-<p>When using Bpod, all state and event keys are filled in automatically. Without
-Bpod, call <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> and <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> /
-<code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code> yourself to populate them.</p>
-<p><strong>Keys added by you:</strong> any name passed to <code class="docutils literal notranslate"><span class="pre">register_value</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="2">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span data-line="3">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">difficulty</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="4">    <span class="n">t_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">"STATE_stimulus_START"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="5">    <span class="n">t_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">"STATE_stimulus_END"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="6">    <span class="n">response_time</span> <span class="o">=</span> <span class="n">t_end</span> <span class="o">-</span> <span class="n">t_start</span>
-</span></pre></div>
+<p>Because the calls return before the movement is done, there is no return value and no
+way to wait for completion. If a task needs to know the door has finished, it must
+allow for the travel time itself (the <code class="docutils literal notranslate"><span class="pre">open</span> <span class="pre">time</span></code>/<code class="docutils literal notranslate"><span class="pre">close</span> <span class="pre">time</span></code> it was calibrated
+with).</p>
+<div class="warning admonition">
+<p class="admonition-title">Warning</p>
+<p>A motor that was not connected when Village started is not picked up later. After
+plugging a motor in, or after enabling one in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>, Village must be restarted —
+see <a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a>.</p>
 </div>
-</section>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>Systems using the legacy corridor board (<code class="docutils literal notranslate"><span class="pre">OLD_VERSION</span></code> enabled in
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>) drive the corridor doors straight from the
+Raspberry Pi’s hardware PWM instead of a PCA9685. Those motors move instantly, ignore
+travel times, and have no <code class="docutils literal notranslate"><span class="pre">hold</span></code> option: their dialog shows no <code class="docutils literal notranslate"><span class="pre">Hold</span> <span class="pre">position</span></code>
+checkbox, and only <code class="docutils literal notranslate"><span class="pre">open()</span></code> and <code class="docutils literal notranslate"><span class="pre">close()</span></code> are available.</p>
+</div>
 </section>
 </section>
 
@@ -765,16 +688,16 @@ Bpod, call <code class="docutils literal notranslate"><span class="pre">register
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="task.html">
+    <a href="gpio.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Task Development Guide</div></div>
+        <span>Previous</span><div class="title">GPIO</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="functions.html">
+    <a href="data.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Direct, Audio &amp; Video Functions</div>
+        <div class="title">Saved Data and Video</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
