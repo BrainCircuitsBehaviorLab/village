@@ -955,80 +955,113 @@ brighter target (digital gain -> brightest but noisier).""",
 motor_settings = [
     Setting(
         "MOTOR1_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Corridor door 1: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Corridor door 1: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR2_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Corridor door 2: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Corridor door 2: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR3_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Corridor door 3: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Corridor door 3: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR4_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Corridor door 4: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Corridor door 4: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR1_BOX_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Box motor 1: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Box motor 1: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR2_BOX_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Box motor 2: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Box motor 2: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR3_BOX_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Box motor 3: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Box motor 3: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR4_BOX_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Box motor 4: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Box motor 4: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR5_BOX_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Box motor 5: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Box motor 5: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR6_BOX_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Box motor 6: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Box motor 6: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
     Setting(
         "MOTOR7_BOX_VALUES",
-        [50, 80, 0, 300],
+        [50, 80, 0, 300, 1],
         list[int],
-        """Box motor 7: [open, close, time_open, time_close]. Angles 0-180;
-time_open/time_close = total ms to open/close (0 = instant).""",
+        """Box motor 7: [open, close, time_open, time_close, hold]. Angles 0-180;
+time_open/time_close = total ms to open/close (0 = instant); hold 1/0 =
+whether the servo keeps holding torque after arriving by default (1 resists a
+load but hums and warms up, 0 is quiet but can be pushed out of position).
+Edited from the motor's VALUES dialog in the MONITOR tab, not here.""",
     ),
 ]
 

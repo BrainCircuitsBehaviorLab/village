@@ -194,13 +194,35 @@ class NullMotor:
     error: str = ""
     open_angle: int = 0
     close_angle: int = 0
+    time_open: int = 0
+    time_close: int = 0
+    hold: bool = True
+    current_angle: int = 0
 
-    def open(self) -> None:
+    # Signatures mirror Motor's exactly, keywords included: this is what
+    # get_motor_if_active returns for a motor switched OFF, so task code
+    # written against the real API (move(), or open(hold=False)) has to be a
+    # no-op here rather than a TypeError/AttributeError.
+    def open(self, hold: bool | None = None, settle_ms: int = 0) -> None:
         """Opens the motor/device."""
         return
 
-    def close(self) -> None:
+    def close(self, hold: bool | None = None, settle_ms: int = 0) -> None:
         """Closes the motor/device."""
+        return
+
+    def move(
+        self,
+        angle: int,
+        total_ms: int = 0,
+        hold: bool | None = None,
+        settle_ms: int = 0,
+    ) -> None:
+        """Moves the motor/device to an angle."""
+        return
+
+    def disable(self) -> None:
+        """Releases holding torque."""
         return
 
 

@@ -77,34 +77,39 @@ if TYPE_CHECKING:
 def show_motor_edit_dialog(
     parent: Layout, name: str, motor: Any, values_key: str
 ) -> None:
-    """Opens a dialog to edit one motor's open/close angles and times.
+    """Opens a dialog to edit one motor's open/close angles, times and hold.
 
     OPEN/CLOSE apply the fields currently typed (falling back to the current
     value on bad input) to the motor and move it there immediately, so changes
-    can be tested before committing. SAVE persists the tested/typed values to
-    values_key and the motor; DISCARD restores the motor's original values
+    can be tested before committing -- including the hold checkbox, so you can
+    hear whether the servo keeps humming. SAVE persists the tested/typed values
+    to values_key and the motor; DISCARD restores the motor's original values
     (undoing anything OPEN/CLOSE tested) and leaves the setting untouched.
 
-    Works for both Motor (ramped, supports timing) and MotorOld (instant,
-    ignores timing) since it only calls the .open()/.close() interface both
-    implement, never .move() directly (MotorOld has no .move()).
+    Works for both Motor (ramped, supports timing and hold) and MotorOld
+    (instant, neither) since it only calls the .open()/.close() interface both
+    implement, never .move() directly (MotorOld has no .move()), and hides the
+    hold checkbox when the motor has no such attribute.
     """
-    open_a, close_a, time_o, time_c = parse_motor_values(settings.get(values_key))
-    # MotorOld has no time_open/time_close (it moves instantly, no ramping) --
-    # read those defensively so this dialog works for it too.
+    open_a, close_a, time_o, time_c, hold = parse_motor_values(settings.get(values_key))
+    # MotorOld has neither time_open/time_close (it moves instantly, no ramping)
+    # nor hold (no way to cut its PWM) -- read those defensively so this dialog
+    # works for it too, and only show the hold checkbox for a real Motor.
     orig = (
         motor.open_angle,
         motor.close_angle,
         getattr(motor, "time_open", 0),
         getattr(motor, "time_close", 0),
+        getattr(motor, "hold", True),
     )
+    has_hold = hasattr(motor, "hold")
 
     dialog = QDialog()
     dialog.setWindowTitle(f"{name} angles and times")
     x = parent.column_width * 74
     y = parent.row_height * 21
     width = parent.column_width * 60
-    height = parent.row_height * 8
+    height = parent.row_height * 10  # 10, not 8: the hold checkbox adds a row
     dialog.setGeometry(x, y, width, height)
 
     main_layout = QVBoxLayout()
@@ -135,6 +140,17 @@ def show_motor_edit_dialog(
     grid.addWidget(close_time_edit, 1, 3)
     grid.addWidget(btn_close, 1, 4)
 
+    hold_check = QCheckBox("Hold position (keep the servo powered after moving)")
+    hold_check.setChecked(bool(hold))
+    hold_check.setToolTip(
+        "On: the servo resists a load but hums and warms up. Off: the PWM is "
+        "cut once it arrives, so it is quiet and cool but can be pushed out of "
+        "position. This is only the default -- open()/close()/move() can "
+        "override it per call with hold=True/False."
+    )
+    if has_hold:
+        grid.addWidget(hold_check, 2, 0, 1, 5)
+
     main_layout.addLayout(grid)
 
     def field(i: int, current: int) -> int:
@@ -148,6 +164,8 @@ def show_motor_edit_dialog(
         motor.close_angle = field(1, close_a)
         motor.time_open = field(2, time_o)
         motor.time_close = field(3, time_c)
+        if has_hold:
+            motor.hold = hold_check.isChecked()
 
     def open_clicked() -> None:
         apply_fields_to_motor()
@@ -175,10 +193,24 @@ def show_motor_edit_dialog(
         apply_fields_to_motor()
         settings.set(
             values_key,
-            (motor.open_angle, motor.close_angle, motor.time_open, motor.time_close),
+            (
+                motor.open_angle,
+                motor.close_angle,
+                motor.time_open,
+                motor.time_close,
+                int(getattr(motor, "hold", True)),
+            ),
         )
     else:
-        motor.open_angle, motor.close_angle, motor.time_open, motor.time_close = orig
+        (
+            motor.open_angle,
+            motor.close_angle,
+            motor.time_open,
+            motor.time_close,
+            restored_hold,
+        ) = orig
+        if has_hold:
+            motor.hold = restored_hold
 
 
 def show_motor_move_dialog(parent: Layout, name: str, motor: Any) -> None:

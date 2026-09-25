@@ -54,8 +54,8 @@ else:
 class _ChipWorker:
     """One background daemon thread per PCA9685 chip.
 
-    Every Motor.move()/open()/close()/move_no_hold()/disable() call on a
-    given chip is submitted here instead of run on the caller's thread, so:
+    Every Motor.move()/open()/close()/disable() call on a given chip is
+    submitted here instead of run on the caller's thread, so:
     - callers (GUI button clicks, the corridor state machine in main.py)
       never block waiting for a servo to finish moving/sleeping.
     - two motors on the SAME chip can never move at the same time, since one
@@ -97,24 +97,29 @@ chip_corridor_worker = _ChipWorker("motor_corridor_worker")
 # possible. DEFAULT_MOTOR_TIME is used for legacy settings with no times.
 MOTOR_STEP_DEGREES = 5  # degrees moved per step
 
-# Extra wait move_no_hold() adds after an instant (total_ms == 0) move, before
-# cutting power, so the servo has time to physically reach the target angle
-# rather than losing holding torque mid-travel.
+# Extra wait a hold=False move adds after an instant (total_ms == 0) move,
+# before cutting power, so the servo has time to physically reach the target
+# angle rather than losing holding torque mid-travel.
 MOTOR_SETTLE_MS = 1000
 
 
-def parse_motor_values(values: list[int]) -> tuple[int, int, int, int]:
-    """Unpack a MOTOR*_VALUES setting into (open, close, time_open, time_close).
+def parse_motor_values(values: list[int]) -> tuple[int, int, int, int, bool]:
+    """Unpack MOTOR*_VALUES into (open, close, time_open, time_close, hold).
 
-    time_open/time_close are the TOTAL milliseconds to open/close. Legacy
-    settings only store [open, close]; missing times fall back to
-    DEFAULT_MOTOR_TIME so old calibrations keep working.
+    time_open/time_close are the TOTAL milliseconds to open/close. hold is this
+    motor's default for whether to keep holding torque after arriving (see
+    Motor.move). Legacy settings are shorter -- the oldest store only
+    [open, close] -- and every missing field falls back to a default (0 ms,
+    hold on), so old calibrations keep working untouched.
     """
     open_angle = int(values[0])
     close_angle = int(values[1])
     time_open = int(values[2]) if len(values) > 2 else 0
     time_close = int(values[3]) if len(values) > 3 else 0
-    return open_angle, close_angle, time_open, time_close
+    # int() first, like every field above: a value coming back as the string
+    # "0" would be truthy if passed straight to bool().
+    hold = bool(int(values[4])) if len(values) > 4 else True
+    return open_angle, close_angle, time_open, time_close, hold
 
 
 class Motor:
@@ -124,11 +129,16 @@ class Motor:
         self.pwm = pwm
         self.channel = channel
         self._worker = worker
-        open_angle, close_angle, time_open, time_close = parse_motor_values(values)
+        open_angle, close_angle, time_open, time_close, hold = parse_motor_values(
+            values
+        )
         self.open_angle = open_angle
         self.close_angle = close_angle
         self.time_open = time_open  # total ms to travel to the open position
         self.time_close = time_close  # total ms to travel to the close position
+        # This motor's default for keeping holding torque after a move. Every
+        # move()/open()/close() call can override it with hold=True/False.
+        self.hold = hold
         self.error = ""
         # Last commanded angle; ramps start here. The real position is unknown
         # at boot, so the first move() goes straight to the target and syncs.
@@ -183,7 +193,28 @@ class Motor:
     # ── Public API -- non-blocking: each call just queues one job on this
     # motor's chip worker thread and returns immediately. See _ChipWorker.
 
-    def move(self, angle: int, total_ms: int = 0) -> None:
+    def _submit(
+        self, angle: int, total_ms: int, hold: bool | None, settle_ms: int
+    ) -> None:
+        """Queues one move on this chip's worker, holding torque or not.
+
+        hold is resolved here, once: None means "use this motor's default",
+        which comes from the 5th field of its MOTOR*_VALUES setting.
+        """
+        if self.hold if hold is None else hold:
+            self._worker.submit(lambda: self._move_sync(angle, total_ms))
+        else:
+            self._worker.submit(
+                lambda: self._move_no_hold_sync(angle, total_ms, settle_ms)
+            )
+
+    def move(
+        self,
+        angle: int,
+        total_ms: int = 0,
+        hold: bool | None = None,
+        settle_ms: int = MOTOR_SETTLE_MS,
+    ) -> None:
         """Ramps the servo to `angle`, spreading `total_ms` over the steps.
 
         The travel is split into MOTOR_STEP_DEGREES-degree steps; each step waits
@@ -191,54 +222,30 @@ class Motor:
         first move after boot goes straight to the target (the real position is
         unknown) and just syncs current_angle; every later move ramps smoothly.
 
+        hold decides whether the servo keeps holding torque once it arrives.
+        None (the default) uses this motor's own setting; True keeps it powered,
+        so it resists a load but hums and heats up; False cuts the PWM after
+        settle_ms, which is quiet and cool but lets anything push it out of
+        position. settle_ms only matters for hold=False: cutting power right
+        after the order to move would not give the servo time to physically get
+        there, so that wait is added first (raise it for a heavier door).
+
         Returns immediately -- the move itself runs on this chip's worker
         thread, one command at a time.
         """
-        self._worker.submit(lambda: self._move_sync(angle, total_ms))
+        self._submit(angle, total_ms, hold, settle_ms)
 
     def disable(self) -> None:
         """Stops PWM signal to release holding torque."""
         self._worker.submit(self._disable_sync)
 
-    def move_no_hold(
-        self, angle: int, total_ms: int = 0, settle_ms: int = MOTOR_SETTLE_MS
-    ) -> None:
-        """Same as move(), but releases holding torque right after arriving.
+    def open(self, hold: bool | None = None, settle_ms: int = MOTOR_SETTLE_MS) -> None:
+        """Moves the motor to the open position (see move). Returns immediately."""
+        self._submit(self.open_angle, self.time_open, hold, settle_ms)
 
-        Useful for a servo that doesn't need to resist any load once it's in
-        position (so it doesn't hum/heat up holding it), unlike open()/close()
-        which stay powered to keep the door in place.
-
-        cutting power right after the order to move would not give the servo time to
-        physically get there. settle_ms is an extra wait added here, after move(),
-        for exactly that case; raise it for a heavier door/longer travel.
-
-        Returns immediately, same as move() -- the move, wait and disable
-        all run together as one job on this chip's worker thread.
-        """
-        self._worker.submit(lambda: self._move_no_hold_sync(angle, total_ms, settle_ms))
-
-    def open(self) -> None:
-        """Moves the motor to the open position. Returns immediately."""
-        angle, total_ms = self.open_angle, self.time_open
-        self._worker.submit(lambda: self._move_sync(angle, total_ms))
-
-    def close(self) -> None:
-        """Moves the motor to the close position. Returns immediately."""
-        angle, total_ms = self.close_angle, self.time_close
-        self._worker.submit(lambda: self._move_sync(angle, total_ms))
-
-    def open_no_hold(self, settle_ms: int = MOTOR_SETTLE_MS) -> None:
-        """Same as open(), but releases holding torque right after arriving
-        (see move_no_hold). Returns immediately."""
-        angle, total_ms = self.open_angle, self.time_open
-        self._worker.submit(lambda: self._move_no_hold_sync(angle, total_ms, settle_ms))
-
-    def close_no_hold(self, settle_ms: int = MOTOR_SETTLE_MS) -> None:
-        """Same as close(), but releases holding torque right after arriving
-        (see move_no_hold). Returns immediately."""
-        angle, total_ms = self.close_angle, self.time_close
-        self._worker.submit(lambda: self._move_no_hold_sync(angle, total_ms, settle_ms))
+    def close(self, hold: bool | None = None, settle_ms: int = MOTOR_SETTLE_MS) -> None:
+        """Moves the motor to the close position (see move). Returns immediately."""
+        self._submit(self.close_angle, self.time_close, hold, settle_ms)
 
 
 class LED:
@@ -273,8 +280,9 @@ def get_motor(channel: int, values: list[int], pwm, worker: _ChipWorker) -> Moto
 
     Args:
         channel (int): The PWM channel number.
-        values (list[int]): [open, close, time_open, time_close] (times are the
-            total ms to open/close). Legacy [open, close] is also accepted.
+        values (list[int]): [open, close, time_open, time_close, hold] (times
+            are the total ms to open/close; hold 1/0 is this motor's default
+            for keeping holding torque). Shorter legacy values are accepted.
         pwm: The PWM chip (or NullChip) the motor is wired to.
         worker (_ChipWorker): The worker thread that serializes moves for
             whichever chip `pwm` belongs to (chip_box_worker/
