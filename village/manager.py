@@ -35,6 +35,7 @@ from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.gpio_trigger_base import GpioTriggerBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
+from village.custom_classes.scale_trigger_base import ScaleTriggerBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
 from village.custom_classes.task_base import TaskBase
@@ -49,6 +50,7 @@ from village.devices.chip import (
     visible_light_corridor,
 )
 from village.devices.gpio import gpio
+from village.devices.scale import scale_box
 from village.devices.screen import screen
 from village.devices.sound_device import sound_device
 from village.devices.temp_sensor import temp_sensor
@@ -115,6 +117,8 @@ class Manager:
         self.touch_trigger: TouchTriggerBase = TouchTriggerBase()
         self.gpio = gpio
         self.gpio_trigger: GpioTriggerBase = GpioTriggerBase()
+        self.scale_box = scale_box
+        self.scale_trigger: ScaleTriggerBase = ScaleTriggerBase()
         self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
             "": AutoNoMouseBase()
         }
@@ -304,6 +308,9 @@ class Manager:
             self.gpio.trigger = self.gpio_trigger
             self.task.gpio = self.gpio
             self.gpio.start()
+            self.scale_trigger.task = self.task
+            self.scale_box.trigger = self.scale_trigger
+            self.scale_box.start()
             log.start(task=self.task.name, subject=self.subject.name)
             self.run_task_in_thread()
             return True
@@ -333,6 +340,9 @@ class Manager:
         self.gpio.trigger = self.gpio_trigger
         self.task.gpio = self.gpio
         self.gpio.start()
+        self.scale_trigger.task = self.task
+        self.scale_box.trigger = self.scale_trigger
+        self.scale_box.start()
         log.start(task=self.task.name, subject="None")
         self.run_task_in_thread()
 
@@ -378,6 +388,9 @@ class Manager:
                 self.gpio.trigger = self.gpio_trigger
                 self.task.gpio = self.gpio
                 self.gpio.start()
+                self.scale_trigger.task = self.task
+                self.scale_box.trigger = self.scale_trigger
+                self.scale_box.start()
                 log.start(task=task_name, subject=self.subject.name)
                 self.run_task_in_thread()
                 return True
@@ -493,6 +506,7 @@ class Manager:
         screen.stop_drawing()
         sound_device.stop()  # cut any sound still playing at session end
         self.gpio.stop()  # stop the GPIO reader thread at session end
+        self.scale_box.stop()  # stop the box scale reader thread at session end
         # Stop routing device events into a recorder whose task is ending.
         sound_device.recorder = None
         screen.recorder = None

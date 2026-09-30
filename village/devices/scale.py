@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 import struct
+import threading
 import time
 import traceback
+from typing import TYPE_CHECKING
 
 import numpy as np
 import smbus2
@@ -10,6 +14,9 @@ from village.classes.null_classes import NullScale
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
+
+if TYPE_CHECKING:
+    from village.custom_classes.scale_trigger_base import ScaleTriggerBase
 
 scale_corridor_enabled: bool = settings.get("USE_CORRIDOR") == Active.ON
 scale_box_enabled: bool = (
@@ -46,6 +53,9 @@ class Scale(NullScale):
         alarm_timer (time_utils.Timer): Timer for non-responsive alarms.
         min (float): Minimum weight threshold.
         max (float): Maximum weight threshold.
+        trigger (ScaleTriggerBase | None): Receives every reading made by the
+            reader thread (see start()).
+        last_weight (float): The last weight read by the reader thread.
     """
 
     def __init__(
@@ -82,17 +92,69 @@ class Scale(NullScale):
         self.i2cbus.write_i2c_block_data(self.I2C_ADDR, 0x01, [0x8C, 0x03])
         self.alarm_timer = time_utils.Timer(3600)
         self.weights_list: list[float] = []
+        # Reentrant: tare/calibrate call get_value. Serializes the reader
+        # thread with the GUI (get weight, calibration wizard) and main loop
+        # (tare) so they never interleave samples or change the offset
+        # mid-reading.
+        self._lock = threading.RLock()
+        self.trigger: ScaleTriggerBase | None = None
+        self.last_weight = 0.0
+        self._thread: threading.Thread | None = None
+        self._stop_event = threading.Event()
         self.tare()
+
+    def start(self) -> None:
+        """Starts reading the scale in its own thread every trigger.period
+        seconds, calling trigger.on_weight with every reading."""
+        if self._thread is not None:
+            return
+        self._stop_event.clear()
+        self._thread = threading.Thread(target=self._read_loop, daemon=True)
+        self._thread.start()
+
+    def stop(self) -> None:
+        """Stops the reader thread and waits for it to finish."""
+        if self._thread is None:
+            return
+        self._stop_event.set()
+        self._thread.join(timeout=2)
+        self._thread = None
+
+    def _read_loop(self) -> None:
+        next_time = time.monotonic()
+        while not self._stop_event.is_set():
+            trigger = self.trigger
+            period = max(float(getattr(trigger, "period", 0.1)), 0.02)
+            weight = self.get_weight()
+            timestamp = time_utils.now_timestamp()
+            self.last_weight = weight
+            if trigger is not None:
+                try:
+                    trigger.on_weight(weight, timestamp)
+                except Exception:
+                    if self.error_message_timer.has_elapsed():
+                        log.error(
+                            "Error in scale trigger", exception=traceback.format_exc()
+                        )
+            # Fixed schedule so the rate doesn't drift; if a reading or the
+            # trigger took longer than the period, restart from now instead
+            # of firing a burst of readings to catch up.
+            next_time += period
+            now = time.monotonic()
+            if next_time < now:
+                next_time = now
+            self._stop_event.wait(next_time - now)
 
     # @time_utils.measure_time
     def tare(self) -> None:
         """Tares the scale (sets the current weight as zero)."""
-        self.weights_list = []
-        try:
-            self.offset = self.get_value()
-            log.info("The scale has been tared.")
-        except Exception:
-            log.error("Error taring scale", exception=traceback.format_exc())
+        with self._lock:
+            self.weights_list = []
+            try:
+                self.offset = self.get_value()
+                log.info("The scale has been tared.")
+            except Exception:
+                log.error("Error taring scale", exception=traceback.format_exc())
 
     def calibrate(self, weight: float) -> None:
         """Calibrates the scale with a known weight.
@@ -100,44 +162,38 @@ class Scale(NullScale):
         Args:
             weight (float): The known weight in grams used for calibration.
         """
-        self.weights_list = []
-        try:
-            raw_value: float = self.get_value()
-            new_calibration = (raw_value - self.offset) / weight
-            self.calibration = new_calibration
-            settings.set(self.calibration_key, new_calibration)
-            settings.set(self.weight_to_calibrate_key, weight)
-        except Exception:
-            log.error("Error calibrating scale", exception=traceback.format_exc())
+        with self._lock:
+            self.weights_list = []
+            try:
+                raw_value: float = self.get_value()
+                new_calibration = (raw_value - self.offset) / weight
+                self.calibration = new_calibration
+                settings.set(self.calibration_key, new_calibration)
+                settings.set(self.weight_to_calibrate_key, weight)
+            except Exception:
+                log.error("Error calibrating scale", exception=traceback.format_exc())
 
-    def get_value(self, samples: int = 5, interval_s: float = 0.005) -> int:
-        """Reads raw values from the scale.
-
-        Args:
-            samples (int): Number of samples to read.
-            interval_s (float): Delay between samples in seconds.
+    def get_value(self) -> int:
+        """Reads one raw value from the scale (no averaging). A failed I2C read
+        is retried up to 3 attempts in total, since the bus is shared with
+        other devices and a single read can occasionally fail.
 
         Returns:
-            int: The mean of the raw values.
+            int: The raw value (0 if the scale did not respond).
         """
-        values: list[int] = []
-        for i in range(samples):
-            try:
-                data = self.i2cbus.read_i2c_block_data(
-                    self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
-                )
-                v = struct.unpack(">h", bytes(data))[0]
-                values.append(v)
-            except Exception:
-                pass
-            if interval_s > 0 and i < samples - 1:
-                time.sleep(interval_s)
-        if not values:
-            if self.alarm_timer.has_elapsed():
-                log.alarm("Scale not responding, please check the connection.")
-            return 0
-        mean = int(np.mean(values))
-        return mean
+        with self._lock:
+            for attempt in range(3):
+                try:
+                    data = self.i2cbus.read_i2c_block_data(
+                        self.I2C_ADDR, self.REG_DATA_GET_RAM_DATA, 2
+                    )
+                    return int(struct.unpack(">h", bytes(data))[0])
+                except Exception:
+                    if attempt < 2:
+                        time.sleep(0.002)
+        if self.alarm_timer.has_elapsed():
+            log.alarm("Scale not responding, please check the connection.")
+        return 0
 
     def get_weight(self) -> float:
         """Gets the current weight in grams.
@@ -145,19 +201,20 @@ class Scale(NullScale):
         Returns:
             float: The weight in grams.
         """
-        try:
-            value = (self.get_value() - self.offset) / self.calibration
-        except Exception:
-            if self.error_message_timer.has_elapsed():
-                log.error("Error getting weight", exception=traceback.format_exc())
-            value = 0.0
+        with self._lock:
+            try:
+                value = (self.get_value() - self.offset) / self.calibration
+            except Exception:
+                if self.error_message_timer.has_elapsed():
+                    log.error("Error getting weight", exception=traceback.format_exc())
+                value = 0.0
 
-        if self.min < value < self.max:
-            self.weights_list.append(value)
-            if len(self.weights_list) > 8:
-                self.weights_list.pop(0)
-        else:
-            self.weights_list = []
+            if self.min < value < self.max:
+                self.weights_list.append(value)
+                if len(self.weights_list) > 8:
+                    self.weights_list.pop(0)
+            else:
+                self.weights_list = []
         return round(value, 2)
 
     def real_weight_inference(self) -> tuple[bool, float]:

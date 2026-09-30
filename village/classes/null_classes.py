@@ -125,6 +125,16 @@ class NullTelegramBot:
 
 class NullScale:
     error: str = ""
+    trigger: Any = None
+    last_weight: float = 0.0
+
+    def start(self) -> None:
+        """Starts the reader thread."""
+        return
+
+    def stop(self) -> None:
+        """Stops the reader thread."""
+        return
 
     def tare(self) -> None:
         """Tares the scale."""

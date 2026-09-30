@@ -16,4 +16,5 @@ PROTOCOL & TASK DESIGN
     protocols/camera.md
     protocols/touchscreen.md
     protocols/gpio_trigger.md
+    protocols/scale_trigger.md
     protocols/plots.md

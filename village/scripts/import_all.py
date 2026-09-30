@@ -25,6 +25,7 @@ from village.custom_classes.change_cycle_base import ChangeCycleBase
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
 from village.custom_classes.gpio_trigger_base import GpioTriggerBase
 from village.custom_classes.online_plot_base import OnlinePlotBase
+from village.custom_classes.scale_trigger_base import ScaleTriggerBase
 from village.custom_classes.session_plot_base import SessionPlotBase
 from village.custom_classes.subject_plot_base import SubjectPlotBase
 from village.custom_classes.task_base import TaskBase
@@ -52,11 +53,13 @@ def import_all(manager) -> None:
     camera_draw_found = 0
     touch_trigger_found = 0
     gpio_trigger_found = 0
+    scale_trigger_found = 0
     auto_no_mouse_found = 0
     direct_functions_found = 0
     water_calibration_task_found = 0
     direct_functions_correct = False
     gpio_trigger_correct = False
+    scale_trigger_correct = False
     training_correct = False
     session_plot_correct = False
     subject_plot_correct = False
@@ -230,6 +233,12 @@ def import_all(manager) -> None:
                         gp = cls()
                         manager.gpio_trigger = gp
                         gpio_trigger_correct = True
+                elif issubclass(cls, ScaleTriggerBase) and cls != ScaleTriggerBase:
+                    scale_trigger_found += 1
+                    if scale_trigger_found == 1:
+                        st = cls()
+                        manager.scale_trigger = st
+                        scale_trigger_correct = True
                 elif issubclass(cls, AutoNoMouseBase) and cls != AutoNoMouseBase:
                     auto_no_mouse_found += 1
                     if cls.TASK_NAME in auto_no_mouse_seen:
@@ -292,6 +301,7 @@ def import_all(manager) -> None:
         ("Touch Trigger", touch_trigger_found, touch_trigger_correct),
         ("Direct Functions", direct_functions_found, direct_functions_correct),
         ("Gpio Trigger", gpio_trigger_found, gpio_trigger_correct),
+        ("Scale Trigger", scale_trigger_found, scale_trigger_correct),
         (
             "Water Calibration Task",
             water_calibration_task_found,

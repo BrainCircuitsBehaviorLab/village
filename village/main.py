@@ -122,6 +122,8 @@ device_errors = [
     ("motor_box1", motor_box1),
     ("motor_box2", motor_box2),
     ("scale", scale),
+    # error is only set when USE_BOX_BOARD and SCALE_BOX are both ON
+    ("scale_box", scale_box),
     ("temp_sensor", temp_sensor),
     ("touch", touch),
     ("sound_device", sound_device),
@@ -138,6 +140,11 @@ if chip_corridor.error != "":
         (name, device)
         for name, device in device_errors
         if name not in ("scale", "temp_sensor")
+    ]
+# Same for the box scale, which shares the box board with chip_box.
+if chip_box.error != "":
+    device_errors = [
+        (name, device) for name, device in device_errors if name != "scale_box"
     ]
 failed_devices = []
 for device_name, device in device_errors:
