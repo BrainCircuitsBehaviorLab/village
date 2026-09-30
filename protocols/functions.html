@@ -114,6 +114,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">Custom GPIO Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_trigger.html">Custom Scale Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plots.html">Custom Plotting</a></li>
 </ul>
 </li>
@@ -225,6 +226,10 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.html">scale_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.ScaleTriggerBase.html">ScaleTriggerBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
@@ -527,6 +532,8 @@ with its docstring. Clicking it calls that function right away.</p></li>
 <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase.trigger</span></code>. See <a class="reference internal" href="camera.html#camera-triggers"><span class="std std-ref">Camera Triggers</span></a>.</p></li>
 <li><p><strong>GPIO trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> /
 <code class="docutils literal notranslate"><span class="pre">trigger_off</span></code>. See <a class="reference internal" href="gpio_trigger.html"><span class="std std-doc">Custom GPIO Interaction</span></a>.</p></li>
+<li><p><strong>Scale trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside
+<code class="docutils literal notranslate"><span class="pre">ScaleTriggerBase.on_weight</span></code>. See <a class="reference internal" href="scale_trigger.html"><span class="std std-doc">Custom Scale Interaction</span></a>.</p></li>
 <li><p><strong>Touchscreen trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside
 <code class="docutils literal notranslate"><span class="pre">TouchTriggerBase.trigger</span></code>. See <a class="reference internal" href="touchscreen.html"><span class="std std-doc">Touchscreen</span></a>.</p></li>
 <li><p><strong>Bpod softcodes</strong> — if <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> is <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>, functions 1-98 can be
@@ -685,7 +692,7 @@ directly wherever you need it, the same way <code class="docutils literal notran
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=19a1b118"></script>
+      <script src="../_static/documentation_options.js?v=bd343ec5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

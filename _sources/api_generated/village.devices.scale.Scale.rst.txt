@@ -21,6 +21,8 @@ Scale
       ~Scale.get_value
       ~Scale.get_weight
       ~Scale.real_weight_inference
+      ~Scale.start
+      ~Scale.stop
       ~Scale.tare
    
    
@@ -33,5 +35,7 @@ Scale
       :no-index:
    
       ~Scale.error
+      ~Scale.last_weight
+      ~Scale.trigger
    
    

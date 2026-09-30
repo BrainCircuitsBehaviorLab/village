@@ -1,0 +1,26 @@
+ScaleTriggerBase
+================
+
+.. currentmodule:: village.custom_classes.scale_trigger_base
+
+.. autoclass:: ScaleTriggerBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~ScaleTriggerBase.__init__
+      ~ScaleTriggerBase.on_weight
+   
+   
+
+   
+   
+   

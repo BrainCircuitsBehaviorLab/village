@@ -55,6 +55,8 @@ playback and on-screen stimuli.
   `CameraTriggerBase.trigger`. See [Camera Triggers](camera.md#camera-triggers).
 - **GPIO trigger** — call `self.task.execute_function(N)` inside `trigger_on` /
   `trigger_off`. See [Custom GPIO Interaction](gpio_trigger.md).
+- **Scale trigger** — call `self.task.execute_function(N)` inside
+  `ScaleTriggerBase.on_weight`. See [Custom Scale Interaction](scale_trigger.md).
 - **Touchscreen trigger** — call `self.task.execute_function(N)` inside
   `TouchTriggerBase.trigger`. See [Touchscreen](touchscreen.md).
 - **Bpod softcodes** — if `BEHAVIOR_CONTROLLER` is `BPOD`, functions 1-98 can be

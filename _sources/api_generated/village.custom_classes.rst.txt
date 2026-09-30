@@ -41,6 +41,7 @@
    direct_functions_base
    gpio_trigger_base
    online_plot_base
+   scale_trigger_base
    session_plot_base
    subject_plot_base
    task_base

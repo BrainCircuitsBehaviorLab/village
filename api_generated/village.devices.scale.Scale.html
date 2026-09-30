@@ -114,6 +114,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">Custom GPIO Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/scale_trigger.html">Custom Scale Interaction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
 </ul>
 </li>
@@ -225,6 +226,10 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.custom_classes.scale_trigger_base.html">scale_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.custom_classes.scale_trigger_base.ScaleTriggerBase.html">ScaleTriggerBase</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
@@ -632,6 +637,29 @@ calibration weight is stored under.</p>
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">trigger</span></span></dt>
+<dd><p>Receives every reading made by the
+reader thread (see start()).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ScaleTriggerBase | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">last_weight</span></span></dt>
+<dd><p>The last weight read by the reader thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SCALE_CALIBRATION_VALUE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_to_calibrate_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SCALE_WEIGHT_TO_CALIBRATE'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -655,6 +683,19 @@ weight last used to calibrate this scale.</p></li>
 <p class="rubric">Attributes</p>
 <dl class="py method">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Starts reading the scale in its own thread every trigger.period
+seconds, calling trigger.on_weight with every reading.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Stops the reader thread and waits for it to finish.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">tare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.tare"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Tares the scale (sets the current weight as zero).</p>
 </dd></dl>
@@ -672,20 +713,16 @@ weight last used to calibrate this scale.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.005</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reads raw values from the scale.</p>
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/village/devices/scale.html#Scale.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reads one raw value from the scale (no averaging). A failed I2C read
+is retried up to 3 attempts in total, since the bus is shared with
+other devices and a single read can occasionally fail.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>samples</strong> (<em>int</em>) – Number of samples to read.</p></li>
-<li><p><strong>interval_s</strong> (<em>float</em>) – Delay between samples in seconds.</p></li>
-</ul>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The raw value (0 if the scale did not respond).</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean of the raw values.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -764,7 +801,7 @@ weight last used to calibrate this scale.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=19a1b118"></script>
+      <script src="../_static/documentation_options.js?v=bd343ec5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
