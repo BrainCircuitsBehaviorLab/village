@@ -23,7 +23,14 @@ State
       ~State.can_exit
       ~State.can_edit_data
       ~State.can_calibrate_scale
+      ~State.is_heavy_work
+      ~State.can_restart_corridor_video
+      ~State.box_in_use
       ~State.task_is_running
+      ~State.manual_task_running
+      ~State.auto_task_running
+      ~State.manual_task_in_progress
+      ~State.can_enter_manual_mode
       ~State.can_stop_syncing
       ~State.can_go_to_wait
       ~State.__init__

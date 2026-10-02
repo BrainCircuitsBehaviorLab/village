@@ -17,6 +17,8 @@ If you prefer to build the Training Village yourself, start by reviewing the com
 
 - 1. Connect the Corridor Board to the Raspberry Pi assembly using a standard Ethernet cable. **It is vital to plug this into the correct port**, as the Main HAT features two distinct Ethernet ports: one labeled **Corridor** and one labeled **Box**. If your configuration utilizes the Box Board (for operant box lighting or other peripherals), connect it to the "Box" port at this time.
 
+- 1. Connect the Corridor Board to the Raspberry Pi assembly using the two cables previously connected to the Corridor Board: the Ethernet cable (data) and the DC barrel jack cable (5 V power). It is vital to use the correct ports, as the Main HAT features two sets of connectors: one labeled **Corridor** and one labeled **Box**. If your configuration uses the Box Board (for operant box lighting or other peripherals), connect its cables to the **Box** ports at this time.
+
 - 2. If your experimental paradigm integrates a Bpod (or any other external behavioral controller), connect its USB cable to the bottom USB 3.0 port (the blue port closest to the Raspberry Pi's native Ethernet jack).
 
 - 3. Connect your dedicated 5V, 3A power supply directly to the power input barrel jack located on the Main HAT. Using a 3A power source is mandatory to ensure there is enough current to reliably power all visible and IR illumination LEDs simultaneously.
