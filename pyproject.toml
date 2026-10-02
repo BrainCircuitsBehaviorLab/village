@@ -76,6 +76,9 @@ include = ["village*"]
 exclude = ["tests", "docs*"]
 
 [tool.pytest.ini_options]
+# Only the tests folder: otherwise any test_*.py anywhere (a script, a local
+# project folder) is collected and imported as a test.
+testpaths = ["tests"]
 addopts = "--cov=village"
 filterwarnings = [
     "error",
