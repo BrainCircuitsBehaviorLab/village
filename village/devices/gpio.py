@@ -44,7 +44,9 @@ class Gpio:
         if self._input is not None:
             return
         try:
-            self._input = DigitalInputDevice(self.pin_in)
+            # Explicit, not left to gpiozero's default: internal pull-down, so
+            # the pin reads LOW (OFF) when nothing drives it and ON is HIGH.
+            self._input = DigitalInputDevice(self.pin_in, pull_up=False)
             self._input.when_activated = self._trigger_on  # OFF -> ON
             self._input.when_deactivated = self._trigger_off  # ON -> OFF
         except Exception:
