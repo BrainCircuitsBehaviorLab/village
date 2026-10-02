@@ -40,6 +40,7 @@
    rsync_to_hard_drive
    rsync_to_server
    safe_removal_of_data
+   test_gpio_in
    time_utils
    utils
 
