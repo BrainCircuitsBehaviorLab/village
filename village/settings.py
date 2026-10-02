@@ -654,7 +654,9 @@ preventing unnecessary processing.""",
         "CORRIDOR_VIDEO_DURATION",
         1800,
         int,
-        "The duration of the corridor videos in seconds.",
+        """The duration of the corridor videos in seconds. A new video is never
+started while a task is being launched, run or saved: if the duration is reached
+then, the video continues until the task ends, so it can be longer.""",
     ),
     Setting(
         "DAYS_OF_VIDEO_STORAGE",

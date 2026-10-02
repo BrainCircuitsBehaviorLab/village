@@ -58,6 +58,40 @@ from village.settings import settings
 if TYPE_CHECKING:
     from village.gui.gui_window import GuiWindow
 
+# When jumping to a moment in a video, start this many seconds before it, to
+# see what led to it.
+EVENT_VIDEO_CONTEXT_S = 5
+SESSION_VIDEO_CONTEXT_S = 5
+
+
+def frame_from_video_csv(video_path: str, timestamp: float) -> int | None:
+    """Finds the frame of a video recorded at a given time.
+
+    Every recorded frame has one row, with its timestamp, in the CSV saved
+    next to the video (same name, .csv), so the row number is the frame number
+    in the video. Unlike seconds * fps, this is not thrown off by dropped
+    frames, camera restarts, the video starting before the first trial or the
+    fps the file declares.
+
+    Args:
+        video_path (str): The path to the video.
+        timestamp (float): The time to find (same clock as the CSV timestamps).
+
+    Returns:
+        int | None: The frame number, or None if the CSV is missing or does not
+        cover that time.
+    """
+    try:
+        timestamps = pd.read_csv(
+            Path(video_path).with_suffix(".csv"), sep=";", usecols=["timestamp"]
+        )["timestamp"].to_numpy(dtype=float)
+    except Exception:
+        return None
+    if len(timestamps) == 0 or timestamp > timestamps[-1] + 1:
+        return None
+    index = int(np.searchsorted(timestamps, timestamp))
+    return min(index, len(timestamps) - 1)
+
 
 def _get_calibration_by_name(name: str) -> CalibrationBase | None:
     for cal in vars(manager.calibrations).values():
@@ -732,10 +766,10 @@ class DataLayout(Layout):
 
         self.update_data()
 
-    def change_to_video(self, path: str, seconds: int) -> None:
+    def change_to_video(self, path: str, seconds: int, frame: int) -> None:
         self.central_layout.setCurrentWidget(self.page2)
         if Path(path).exists():
-            self.page2Layout.start_video(path, seconds)
+            self.page2Layout.start_video(path, seconds, frame)
         else:
             t = "The file could not be found. It might be too old and already deleted."
             QMessageBox.information(self.window, "WARNING", t)
@@ -904,7 +938,7 @@ class DfLayout(Layout):
     """Layout for displaying and searching data tables."""
 
     plot_change_requested = pyqtSignal(str)
-    video_change_requested = pyqtSignal((str, int))
+    video_change_requested = pyqtSignal((str, int, int))
 
     def __init__(
         self, window: GuiWindow, rows: int, columns: int, subjects_only: bool = False
@@ -1565,45 +1599,49 @@ class DfLayout(Layout):
         index = selected[0]
         return self.model.df.iloc[index.row()]
 
-    def get_seconds_from_session_row(self) -> int:
-        """Calculates the time elapsed in seconds from the session start
-        for the selected row.
+    def get_session_row_times(self) -> tuple[float, float] | None:
+        """Gets the start time of the selected row and of the session.
 
         Returns:
-            int: The elapsed time in seconds.
+            tuple[float, float] | None: (row time, session start time), as
+            absolute timestamps, or None if not available.
         """
         try:
             sel_model = self.table_view.selectionModel()
             if not sel_model:
-                return 0
+                return None
             selected = sel_model.selectedRows()
             if not selected:
-                return 0
+                return None
             index = selected[0].row()
             if "TRIAL_START" in self.model.df.columns:
                 init_time = self.model.df.iloc[0]["TRIAL_START"]
                 row_time = self.model.df.iloc[index]["TRIAL_START"]
-                return int(row_time - init_time)
+                return float(row_time), float(init_time)
             else:
                 init_time = self.model.df.iloc[0]["START"]
                 while index >= 0:
                     row = self.model.df.iloc[index]
                     if not pd.isna(row["START"]):
-                        row_time = row["START"]
-                        return int(row_time - init_time)
+                        return float(row["START"]), float(init_time)
                     index -= 1
-                return 0
+                return None
         except Exception:
-            return 0
+            return None
 
-    def get_path_and_seconds_from_events_row(self, row: pd.Series) -> tuple[str, int]:
-        """Finds the corresponding video path and timestamp for an event row.
+    def get_path_and_seconds_from_events_row(
+        self, row: pd.Series
+    ) -> tuple[str, int, int]:
+        """Finds the corresponding video path and position for an event row.
 
         Args:
             row (pd.Series): The event row.
 
         Returns:
-            tuple[str, int]: The video path and timestamp in seconds.
+            tuple[str, int, int]: The video path, the position in seconds
+            (approximate, from the video file name) and the exact frame from
+            the video's CSV (-1 if not available), both EVENT_VIDEO_CONTEXT_S
+            before the event.
         """
         date_str = row["date"]
         date = time_utils.date_from_string(date_str)
@@ -1615,9 +1653,13 @@ class DfLayout(Layout):
             text += "of a new video, which will allow you to view the previous one."
             QMessageBox.information(self.window, "EDIT", text)
         video_directory = settings.get("VIDEOS_DIRECTORY")
-        return time_utils.find_closest_file_and_seconds(
+        path, seconds = time_utils.find_closest_file_and_seconds(
             video_directory, "CORRIDOR", date
         )
+        frame = None
+        if path:
+            frame = frame_from_video_csv(path, date.timestamp() - EVENT_VIDEO_CONTEXT_S)
+        return path, seconds, -1 if frame is None else frame
 
     def get_path_from_subjects_row(self, row: pd.Series) -> str:
         """Constructs the path to the subject's CSV file.
@@ -1690,10 +1732,13 @@ class DfLayout(Layout):
         """Actions to take when the VIDEO button is clicked."""
         path = ""
         seconds = 0
+        frame = -1  # exact frame from the video's CSV; -1: use seconds instead
         selected_row = self.get_selected_row_series()
         if selected_row is not None:
             if manager.table == DataTable.EVENTS:
-                path, seconds = self.get_path_and_seconds_from_events_row(selected_row)
+                path, seconds, frame = self.get_path_and_seconds_from_events_row(
+                    selected_row
+                )
             elif manager.table == DataTable.SESSIONS_SUMMARY:
                 path = self.get_paths_from_sessions_summary_row(selected_row)[3]
             elif (
@@ -1701,11 +1746,19 @@ class DfLayout(Layout):
                 or manager.table == DataTable.OLD_SESSION_RAW
             ):
                 path = self.video_selected_path
-                seconds = self.get_seconds_from_session_row()
+                times = self.get_session_row_times()
+                if times is not None:
+                    row_time, init_time = times
+                    seconds = int(row_time - init_time)
+                    found = frame_from_video_csv(
+                        path, row_time - SESSION_VIDEO_CONTEXT_S
+                    )
+                    if found is not None:
+                        frame = found
         else:
             if manager.table in (DataTable.OLD_SESSION, DataTable.OLD_SESSION_RAW):
                 path = self.video_selected_path
-        self.video_change_requested.emit(path, seconds)
+        self.video_change_requested.emit(path, seconds, frame)
 
     def plot_button_clicked(self) -> None:
         """Actions to take when the PLOT button is clicked."""
@@ -2306,12 +2359,15 @@ class VideoLayout(Layout):
             self.stop_button_clicked()
             self.start_video(path, 0)
 
-    def start_video(self, path: str, seconds: int) -> None:
-        """Starts video playback from a specific time.
+    def start_video(self, path: str, seconds: int, frame: int = -1) -> None:
+        """Starts video playback from a specific frame or time.
 
         Args:
             path (str): The path to the video file.
-            seconds (int): The number of seconds to skip.
+            seconds (int): The number of seconds to skip, used only if frame
+                is not known (approximate: assumes a constant fps).
+            frame (int): The exact frame to start at, from the video's CSV
+                (see frame_from_video_csv). -1 if not known.
         """
         self.video_path = path
         try:
@@ -2320,7 +2376,11 @@ class VideoLayout(Layout):
             self.total_frames = self.cap.get(cv2.CAP_PROP_FRAME_COUNT)
             self.millisecs = int(1000.0 / self.fps / self.speed)
 
-            if seconds > 0:
+            if frame >= 0:
+                if self.total_frames > 0:
+                    frame = int(min(frame, self.total_frames - 1))
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame)
+            elif seconds > 0:
                 frames_to_skip = int(self.fps * seconds)
                 new_frame_position = min(frames_to_skip, self.total_frames - 60)
                 self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame_position)

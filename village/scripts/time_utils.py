@@ -346,7 +346,7 @@ class TimeUtils:
         if closest_file and closest_time:
             path = str(Path(directory, closest_file))
             delta = date - closest_time
-            time_seconds = int(delta.total_seconds() - 10)
+            time_seconds = int(delta.total_seconds() - 5)
 
         return path, time_seconds
 

@@ -38,6 +38,8 @@ Depending on your active configuration, several control tabs are available at th
 
     *The `Visible Light` and `IR Light` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.*
 
+    *The box must never be completely dark, even between sessions: the box camera is watched all the time, both to check that no animal is left inside and to detect a failing camera, which delivers completely black frames. If the image stays completely black for 10 seconds, the system treats the camera as failed and restarts it. So keep some light in the box at all times: set the `IR Light` (or the `Visible Light`) to `ON` instead of `AUTO`. `AUTO` for both lights is only safe if the box gets some light from another source (light coming in from outside, a photogate, a port LED...), enough for the image not to be fully black.*
+
     *If a motor stops responding to `OPEN`/`CLOSE` after being physically disconnected and reconnected, restart Village rather than assuming it's broken — see [Troubleshooting][TROUBLE].*
 
 *   **`FUNCTIONS`:** Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions

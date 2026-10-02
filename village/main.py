@@ -206,7 +206,10 @@ def system_run() -> None:
             except queue.Empty:
                 pass
 
-            if cam_corridor.timing // 1000 > corridor_video_duration:
+            if (
+                cam_corridor.timing // 1000 > corridor_video_duration
+                and manager.state.can_restart_corridor_video()
+            ):
                 cam_corridor.stop_recording()
                 cam_corridor.start_recording()
 
@@ -279,7 +282,14 @@ def system_run() -> None:
             case State.DETECTION:
                 # Gathering subject data, checking requirements to enter
                 manager.previous_state_wait = False
-                if checking_subject_requirements:
+                if not cam_corridor.has_image():
+                    # Without image (only black frames: the camera is failing)
+                    # the corridor areas cannot be trusted. With white mice they
+                    # would all look empty and let a second animal in, so no
+                    # entries until the image is back. No alarm here: the
+                    # camera watchdog already reports it ("no frames in 10s").
+                    manager.state = State.WAIT
+                elif checking_subject_requirements:
                     manager.detections.add_timestamp()
                     if (
                         manager.get_subject_from_tag(tag_id)
@@ -350,7 +360,8 @@ def system_run() -> None:
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
                 elif (
-                    cam_corridor.area_2_empty()
+                    cam_corridor.has_image()  # never close door2 blind
+                    and cam_corridor.area_2_empty()
                     and cam_corridor.area_3_empty()
                     and cam_corridor.area_4_empty()
                     and manager.task.chrono.get_seconds() > 1
@@ -419,7 +430,8 @@ def system_run() -> None:
                 # task running, the subject can leave
                 manager.getting_weights = True
                 if (
-                    cam_corridor.area_2_empty()
+                    cam_corridor.has_image()  # never tare with a possible animal
+                    and cam_corridor.area_2_empty()
                     and cam_corridor.area_3_empty()
                     and tare_timer.has_elapsed()
                 ):
@@ -460,7 +472,8 @@ def system_run() -> None:
                     manager.state = State.SAVE_INSIDE
                 else:
                     if (
-                        not cam_corridor.area_2_empty()
+                        cam_corridor.has_image()
+                        and not cam_corridor.area_2_empty()
                         and cam_corridor.area_3_empty()
                         and cam_corridor.area_4_empty()
                     ):
@@ -520,7 +533,8 @@ def system_run() -> None:
 
                 else:
                     if (
-                        not cam_corridor.area_2_empty()
+                        cam_corridor.has_image()
+                        and not cam_corridor.area_2_empty()
                         and cam_corridor.area_3_empty()
                         and cam_corridor.area_4_empty()
                     ):
@@ -567,6 +581,7 @@ def system_run() -> None:
                 else:
                     manager.detection_change = True
                     manager.state = State.WAIT
+                    manager.check_box_lights()  # launch failed: lights off again
                     log.info("Going to WAIT State")
 
             case State.RUN_MANUAL:
@@ -594,6 +609,10 @@ def system_run() -> None:
             case State.SYNC:
                 # Synchronizing data or doing user-defined tasks
                 gc.enable()
+                # Collect now, inside SYNC, the garbage piled up while gc was
+                # disabled during the session, instead of whenever Python
+                # decides later (which could stall the cameras outside SYNC).
+                gc.collect()
                 time_utils.sync()
                 if manager.after_session_flag:
                     manager.after_session_flag = False

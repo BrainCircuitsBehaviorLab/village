@@ -413,6 +413,11 @@ class SoundDevice:
             if not self._playing and self._pcm_state() == "PREPARED":
                 return
             time.sleep(0.001)
+        # This thread may itself have been frozen past the timeout (GIL held
+        # elsewhere) while the device got ready: check once more before
+        # calling the device stuck.
+        if not self._playing and self._pcm_state() == "PREPARED":
+            return
         msg = (
             f"Sound device: timed out waiting for the PCM to be ready "
             f"(state='{self._pcm_state()}', playing={self._playing}). If playing "

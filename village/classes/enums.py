@@ -147,6 +147,63 @@ class State(SuperEnum):
         """
         return self in (State.WAIT, State.MANUAL_MODE)
 
+    def is_heavy_work(self) -> bool:
+        """Checks if this is a state where the system saves or syncs data.
+
+        That work (saving the session and video CSVs, the garbage collection
+        and the rsync in SYNC) can keep Python busy long enough for the
+        cameras to miss frames, so their watchdog tolerates it.
+
+        Returns:
+            bool: True if heavy saving/syncing work happens in this state.
+        """
+        return self in (
+            State.SAVE_INSIDE,
+            State.SAVE_OUTSIDE,
+            State.SAVE_MANUAL,
+            State.SYNC,
+        )
+
+    def can_restart_corridor_video(self) -> bool:
+        """Checks if a new corridor video can be started in this state.
+
+        Starting one stalls Python for ~1 s (stopping the encoder, launching
+        ffmpeg), which would disturb a running task, so
+        the periodic split (CORRIDOR_VIDEO_DURATION) waits until no task is
+        being launched, run or saved. A restart after a camera failure is
+        not restricted.
+
+        Returns:
+            bool: True if a new corridor video can be started.
+        """
+        return self in (State.WAIT, State.MANUAL_MODE, State.WAIT_SUBJECT_EXIT)
+
+    def box_in_use(self) -> bool:
+        """Checks if the box is in use in this state.
+
+        True from the moment a task is launched until the subject has left
+        the box (or, for a manual task, until it is saved): a task is running
+        in the box or a subject may be inside. Not the same as "a subject is
+        in the box": while launching the subject may still be in the corridor,
+        and a manual task or a calibration may run with no subject at all.
+
+        Returns:
+            bool: True if the box is in use.
+        """
+        return self in (
+            State.LAUNCH_AUTO,
+            State.LAUNCH_MANUAL,
+            State.RUN_INITIAL,
+            State.CLOSE_DOOR2,
+            State.OPEN_DOOR2,
+            State.RUN_OPEN,
+            State.RUN_CLOSED,
+            State.SAVE_INSIDE,
+            State.WAIT_SUBJECT_EXIT,
+            State.OPEN_DOOR2_STOP,
+            State.RUN_MANUAL,
+        )
+
     def task_is_running(self) -> bool:
         """Checks if a task is currently running.
 
@@ -161,6 +218,45 @@ class State(SuperEnum):
             State.RUN_OPEN,
             State.RUN_MANUAL,
         )
+
+    def manual_task_running(self) -> bool:
+        """Checks if a manual task is being launched or running.
+
+        Returns:
+            bool: True if a manual task is being launched or running.
+        """
+        return self in (State.LAUNCH_MANUAL, State.RUN_MANUAL)
+
+    def auto_task_running(self) -> bool:
+        """Checks if an automatic task is being launched or running.
+
+        Returns:
+            bool: True if an automatic task is being launched or running.
+        """
+        return self in (
+            State.LAUNCH_AUTO,
+            State.RUN_INITIAL,
+            State.RUN_OPEN,
+            State.RUN_CLOSED,
+            State.OPEN_DOOR2,
+            State.CLOSE_DOOR2,
+        )
+
+    def manual_task_in_progress(self) -> bool:
+        """Checks if a manual task (or calibration) is running or being saved.
+
+        Returns:
+            bool: True if a manual task has not finished yet.
+        """
+        return self in (State.RUN_MANUAL, State.SAVE_MANUAL)
+
+    def can_enter_manual_mode(self) -> bool:
+        """Checks if the system can switch to MANUAL_MODE in this state.
+
+        Returns:
+            bool: True if switching to MANUAL_MODE is allowed.
+        """
+        return self in (State.WAIT, State.MANUAL_MODE)
 
     def can_stop_syncing(self) -> bool:
         """Checks if syncing process can be stopped.

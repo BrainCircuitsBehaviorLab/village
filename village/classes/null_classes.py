@@ -377,6 +377,14 @@ class NullCamera:
         """
         return
 
+    def has_image(self) -> bool:
+        """Whether the camera is giving a real image.
+
+        Returns:
+            bool: Always True.
+        """
+        return True
+
     def areas_corridor_ok(self) -> bool:
         """Checks corridor areas status.
 

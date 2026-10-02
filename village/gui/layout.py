@@ -650,7 +650,7 @@ class Layout(QGridLayout):
     def tasks_button_clicked(self) -> None:
         """Handles tasks button click."""
         if self.change_layout():
-            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+            if manager.state.can_enter_manual_mode():
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
                 self.close_online_plot_window()
@@ -678,7 +678,7 @@ class Layout(QGridLayout):
     def calibration_button_clicked(self) -> None:
         """Handles calibration button click."""
         if self.change_layout():
-            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+            if manager.state.can_enter_manual_mode():
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
                 self.close_online_plot_window()
@@ -694,7 +694,7 @@ class Layout(QGridLayout):
     def settings_button_clicked(self) -> None:
         """Handles settings button click."""
         if self.change_layout():
-            if manager.state in [State.WAIT, State.MANUAL_MODE]:
+            if manager.state.can_enter_manual_mode():
                 manager.state = State.MANUAL_MODE
                 manager.reset_subject_task_training()
                 self.close_online_plot_window()

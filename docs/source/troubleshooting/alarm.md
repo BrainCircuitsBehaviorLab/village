@@ -113,7 +113,8 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
 
 * - Maximum time reached and areas 3 or 4 were never empty
   - After a subject enters the operant box, door 2 should close once areas 3 and 4 are empty. If the maximum task duration is reached and these areas were never cleared, the alarm is triggered. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
-  - Check lighting and remove any dirt or objects in the corridor. Verify whether the animal fell asleep in the corridor or hesitated to enter the operant box. Review previous videos to check for door malfunction or issues with pixel detection.
+  - Check lighting and remove any dirt or objects in the corridor.
+  Check whether there was also a corridor camera alarm. Verify whether the animal fell asleep in the corridor or hesitated to enter the operant box. Review previous videos to check for door malfunction or issues with pixel detection.
 
 * - Error running task
   - A task execution error occurred, likely caused by an exception in the task code.
@@ -184,8 +185,8 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.
 
 * - Camera not responding
-  - The camera automatically restarts if it fails to deliver frames for 10 seconds, if its recording process (ffmpeg) dies unexpectedly, or if it fails to start recording in the first place. This usually indicates an intermittent connection or insufficient signal quality along the camera cable.
-  - Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts.
+  - The camera automatically restarts if it fails to deliver frames for 10 seconds (a failing camera usually delivers completely black frames, which count as no frames), if its recording process (ffmpeg) dies unexpectedly, or if it fails to start recording in the first place. This usually indicates an intermittent connection or insufficient signal quality along the camera cable. It can also be a box left completely dark: see the box lights in the [GUI](../system_operation/GUI.md) section. A lack of frames while the data is being saved or synced after a session is expected and is ignored.
+  - Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts. If it is the box camera, check that the box is not completely dark.
 
 * - Area(s) occupied more than 90% of the last hour
   - One or more corridor areas were continuously occupied for more than 90% of the last hour. This may indicate an animal is sleeping in the corridor, or that a false detection is occurring due to lighting or dirt. This check can be enabled or disabled in the settings using `CORRIDOR_OCCUPATION_ALARM`.

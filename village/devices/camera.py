@@ -34,7 +34,21 @@ from village.scripts.log import log
 from village.scripts.time_utils import TimeUtils, time_utils
 from village.settings import Color, settings
 
-BLACK_FRAME_MAX = 5
+BLACK_FRAME_MAX = 1
+# has_image(): seconds without a non-black frame after which the image is
+# considered lost (a failing camera delivers black frames).
+NO_IMAGE_S = 3
+
+# Watchdog restarts: after a restart that did not bring the image back, the
+# next one waits twice as long (20 s, 40 s, 80 s... up to 15 min), so a
+# broken camera or cable is not restarted in a loop. Back to 20 s as soon as
+# the camera works again.
+RESTART_BACKOFF_S = 20
+RESTART_BACKOFF_MAX_S = 900
+# During a session the BOX camera is restarted at most this many times, so a
+# broken camera does not keep disturbing the task (sound, timing). Outside a
+# session only the backoff above applies.
+BOX_MAX_RESTARTS_PER_SESSION = 3
 
 # info about picamera2: https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf
 
@@ -288,6 +302,10 @@ class Camera:
         self._hour_total: int = 0
 
         self.last_good_frame = self.camera_timestamp  # last non-black frame
+        self._restart_backoff_s: float = RESTART_BACKOFF_S
+        self._next_restart_allowed = 0.0  # monotonic time
+        self._session_restarts = 0  # BOX only, reset when a session starts
+        self._gave_up_restarting = False  # BOX only, idem
         self.watchdog_timer = QTimer()
         self.watchdog_timer.setInterval(20000)
         self.watchdog_timer.timeout.connect(self.watchdog_tick)
@@ -464,6 +482,11 @@ class Camera:
             self.path_csv = path_csv
             self.camera_timestamp_start = 0.0
             self._video_segments = [self.path_video]
+            # a new session: the BOX restart limit and backoff start again
+            self._session_restarts = 0
+            self._gave_up_restarting = False
+            self._restart_backoff_s = RESTART_BACKOFF_S
+            self._next_restart_allowed = 0.0
         elif is_restart and self._video_segments:
             base = Path(self._video_segments[0])
             segment_number = len(self._video_segments) + 1
@@ -522,20 +545,20 @@ class Camera:
         # no-ops safely if recording was never actually started.
         self.save_csv()
         if self.name == "BOX" and len(self._video_segments) > 1:
-            segments = list(self._video_segments)
-            threading.Thread(
-                target=self._concat_video_segments,
-                args=(segments,),
-                daemon=True,
-            ).start()
+            # Synchronous on purpose: this runs in SAVE_* (covered by the
+            # camera watchdog window), and the merge must be finished before
+            # SYNC's rsync or an app exit, or they would find the extra
+            # segments and a half-written merged file.
+            self._concat_video_segments(list(self._video_segments))
         self.reset_values()
 
     def _concat_video_segments(self, segments: list[str]) -> None:
         """Merges BOX video segments produced by watchdog restarts back into
         segments[0] via ffmpeg stream-copy (fast, no re-encode -- just
         repackages the compressed frames), then deletes the extra segment
-        files. Runs in a background thread so a slow merge never blocks the
-        GUI at session end.
+        files. Called from stop_recording, in the main loop, so the merge is
+        done before anything else (rsync, a project's after_session, an app
+        exit) can see the segments.
         """
         final_path = segments[0]
         list_file = final_path + ".concat.txt"
@@ -681,10 +704,25 @@ class Camera:
         print()
 
     def watchdog_tick(self) -> None:
-        """Restarts the camera if it froze OR if the ffmpeg recorder died."""
+        """Restarts the camera if it froze OR if the ffmpeg recorder died.
+
+        Checked all the time, recording or not: a failing camera delivers
+        black frames, so the box must never be completely dark (it is also
+        how the box is checked to be empty between sessions). ffmpeg is only
+        checked while recording.
+
+        A lack of frames while the system saves or syncs data (and for 10 s
+        after) is expected, not a camera failure: the 10 s without frames only
+        count outside that window (see Manager.camera_gap_expected).
+
+        Restarts that do not bring the image back are spaced out (see
+        RESTART_BACKOFF_S), and the BOX is restarted at most
+        BOX_MAX_RESTARTS_PER_SESSION times per session (while recording).
+        """
         reason = ""
         try:
-            if time_utils.now_timestamp() - self.last_good_frame > 10:
+            no_frames = time_utils.now_timestamp() - self.last_good_frame > 10
+            if no_frames and not manager.camera_gap_expected():
                 reason = "no frames in 10s"
             elif self.is_recording:
                 ff = getattr(self.output, "ffmpeg", None)
@@ -693,11 +731,37 @@ class Camera:
                     reason = "ffmpeg died"
         except Exception:
             return
-        if reason:
-            try:
-                self.restart_camera(reason)
-            except Exception:
-                pass
+        if not reason:
+            if not no_frames:
+                self._restart_backoff_s = RESTART_BACKOFF_S  # working again
+            return
+        now = time.monotonic()
+        if now < self._next_restart_allowed:
+            return
+        if self.name == "BOX" and self.is_recording:
+            if self._session_restarts >= BOX_MAX_RESTARTS_PER_SESSION:
+                if not self._gave_up_restarting:
+                    self._gave_up_restarting = True
+                    msg = (
+                        "Camera BOX: still failing after "
+                        + str(BOX_MAX_RESTARTS_PER_SESSION)
+                        + " restarts. Not restarting it again until the next"
+                        + " session."
+                    )
+                    try:
+                        error_queue.put_nowait(("cam", msg, ""))
+                    except queue.Full:
+                        pass
+                return
+            self._session_restarts += 1
+        self._next_restart_allowed = now + self._restart_backoff_s
+        self._restart_backoff_s = min(
+            self._restart_backoff_s * 2, RESTART_BACKOFF_MAX_S
+        )
+        try:
+            self.restart_camera(reason)
+        except Exception:
+            pass
 
     def restart_camera(self, reason: str = "not responding") -> None:
         """Restarts the camera subprocess and watchdog.
@@ -721,6 +785,15 @@ class Camera:
             self.cam.stop()
         except Exception:
             pass
+        if self.name == "CORRIDOR":
+            # Each corridor video has its own CSV: save the interrupted one's
+            # and start the next one clean. (The BOX keeps a single CSV across
+            # its segments, so it is not touched here.)
+            try:
+                self.save_csv()
+            except Exception:
+                pass
+            self.reset_values()
         time.sleep(1)
         started = False
         try:
@@ -1096,6 +1169,18 @@ class Camera:
             text (str): The annotation text.
         """
         self.annotation = text
+
+    def has_image(self) -> bool:
+        """Whether the camera is giving a real image (not only black frames).
+
+        Without image the area counts mean nothing: with black frames every
+        area looks full for black mice and empty for white mice.
+
+        Returns:
+            bool: True if a non-black frame arrived in the last NO_IMAGE_S
+            seconds.
+        """
+        return time_utils.now_timestamp() - self.last_good_frame <= NO_IMAGE_S
 
     def areas_corridor_ok(self) -> bool:
         """Checks if the corridor areas are in valid states (no unexpected detections).

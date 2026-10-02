@@ -510,7 +510,7 @@ class WaterCalibration(CalibrationBase):
         self.layout.addLayout(self.plot_layout, 0, 121, 36, 51)
 
     def change_layout(self) -> bool:
-        if manager.state in [State.RUN_MANUAL, State.SAVE_MANUAL]:
+        if manager.state.manual_task_in_progress():
             QMessageBox.information(
                 self.window, "WARNING", "Wait until the task finishes."
             )

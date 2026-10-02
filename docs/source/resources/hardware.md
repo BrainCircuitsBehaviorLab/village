@@ -387,9 +387,10 @@ antenna here.
 **Peripheral Connections**: Mount the Corridor Board in its fixed position on the physical
 corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale
 (load cell), white LED strips, and IR illumination LEDs. Always verify wiring polarities
-against the board's silk-screen labels before insertion. Finally, connect an Ethernet
-cable to link this board to the main Raspberry Pi board.
-:::
+against the board's silk-screen labels before insertion. Finally, connect an Ethernet cable
+(data) and a DC cable with barrel jack connectors on both ends (5 V power) to this board.
+The other ends will be connected to the main Raspberry Pi HAT board in a later step.
+
 :::{grid-item}
 :columns: 8
 ```{image} /_static/corridor_connections2.png

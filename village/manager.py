@@ -1,4 +1,5 @@
 import datetime
+import time
 import traceback
 from collections.abc import Callable
 from pathlib import Path
@@ -122,7 +123,10 @@ class Manager:
         self._auto_no_mouse_instances: dict[str, AutoNoMouseBase] = {
             "": AutoNoMouseBase()
         }
-        self.state: State = State.WAIT
+        self._state: State = State.WAIT
+        # monotonic time when the system last left a heavy-work state (see
+        # State.is_heavy_work and camera_gap_expected)
+        self.heavy_work_end: float = 0.0
         self.previous_state_wait: bool = True
         self.calibrating: bool = False
         self.table: DataTable | str = DataTable.EVENTS
@@ -190,6 +194,35 @@ class Manager:
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
         self.task.calibrations = self.calibrations
+
+    @property
+    def state(self) -> State:
+        """The current state of the system."""
+        return self._state
+
+    @state.setter
+    def state(self, value: State) -> None:
+        if self._state.is_heavy_work() and not value.is_heavy_work():
+            self.heavy_work_end = time.monotonic()
+        self._state = value
+
+    def camera_gap_expected(self, grace_s: float = 10.0) -> bool:
+        """Whether the cameras may be missing frames because of heavy work.
+
+        True while in a heavy-work state (saving or syncing data) and for
+        grace_s seconds after leaving it. The camera watchdog does not count
+        a lack of frames in that window as a camera failure.
+
+        Args:
+            grace_s (float): Seconds after the heavy work still tolerated.
+
+        Returns:
+            bool: True if a lack of frames is expected now.
+        """
+        return (
+            self._state.is_heavy_work()
+            or time.monotonic() - self.heavy_work_end < grace_s
+        )
 
     @property
     def auto_no_mouse(self) -> AutoNoMouseBase:
@@ -432,7 +465,7 @@ class Manager:
             screen.gpio = self.gpio
             self.task.run()
         except Exception:
-            if self.state in [State.LAUNCH_MANUAL, State.RUN_MANUAL]:
+            if self.state.manual_task_running():
                 log.error(
                     "Error running task " + self.task.name,
                     subject=self.subject.name,
@@ -440,14 +473,7 @@ class Manager:
                 )
                 self.error_in_manual_task = True
                 self.state = State.SAVE_MANUAL
-            elif self.state in [
-                State.LAUNCH_AUTO,
-                State.RUN_INITIAL,
-                State.RUN_OPEN,
-                State.RUN_CLOSED,
-                State.OPEN_DOOR2,
-                State.CLOSE_DOOR2,
-            ]:
+            elif self.state.auto_task_running():
                 log.alarm(
                     "Error running task "
                     + self.task.name
@@ -618,23 +644,13 @@ class Manager:
     def check_box_lights(self) -> None:
         """Checks the state of the box lights and sets them based
         on the current state."""
-        task_running = self.state in [
-            State.RUN_INITIAL,
-            State.CLOSE_DOOR2,
-            State.OPEN_DOOR2,
-            State.RUN_OPEN,
-            State.RUN_CLOSED,
-            State.SAVE_INSIDE,
-            State.WAIT_SUBJECT_EXIT,
-            State.OPEN_DOOR2_STOP,
-            State.RUN_MANUAL,
-        ]
+        box_in_use = self.state.box_in_use()
 
         if self.visible_box_cycle == Cycle.ON:
             visible_light_box.on()
         elif self.visible_box_cycle == Cycle.OFF:
             visible_light_box.off()
-        elif task_running:
+        elif box_in_use:
             visible_light_box.on()
         else:
             visible_light_box.off()
@@ -643,7 +659,7 @@ class Manager:
             ir_light_box.on()
         elif self.ir_box_cycle == Cycle.OFF:
             ir_light_box.off()
-        elif task_running:
+        elif box_in_use:
             ir_light_box.on()
         else:
             ir_light_box.off()
