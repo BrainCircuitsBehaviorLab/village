@@ -44,11 +44,11 @@ pinout below.
 
 ### Default pins
 
-By default `GPIO_IN` is BCM 27 and `GPIO_OUT` is BCM 26 (`SETTINGS` →
+By default `GPIO_IN` is BCM 26 and `GPIO_OUT` is BCM 27 (`SETTINGS` →
 `DEVICE ADDRESSES`). Both are free — neither the Main HAT nor the Audio HAT
 uses them — so they are safe to use as-is.
 
-`GPIO_IN` (BCM 27) is already wired, at the PCB level, to the **Switch
+`GPIO_IN` (BCM 26) is already wired, at the PCB level, to the **Switch
 Connector** on the Box Board: it lets a mechanical switch drive the pin
 directly, going HIGH when the switch is activated and LOW when it is
 released, without any extra wiring. See

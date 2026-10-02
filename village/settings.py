@@ -333,7 +333,7 @@ additional functions, such as raising or lowering a water bottle in the home cag
     ),
     Setting(
         "GPIO_IN",
-        27,
+        26,
         int,
         """BCM number of the GPIO pin used as input by Gpio: it reads an
 external signal and fires the triggers (trigger_on / trigger_off in
@@ -341,7 +341,7 @@ GpioTriggerBase).""",
     ),
     Setting(
         "GPIO_OUT",
-        26,
+        27,
         int,
         """BCM number of the GPIO pin used as output by Gpio: gpio.set_on() /
 gpio.set_off() drive it. It can be used at the same time as GPIO_IN, since they are

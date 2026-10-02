@@ -7,7 +7,7 @@ internal pull-down, and callbacks on OFF -> ON (trigger_on) and ON -> OFF
 
 Village must not be running (the pin would be busy). Run it on the Raspberry:
 
-    python3 village/scripts/test_gpio_in.py            # pin 27, like GPIO_IN
+    python3 village/scripts/test_gpio_in.py            # pin 26, like GPIO_IN
     python3 village/scripts/test_gpio_in.py --pin 17
     python3 village/scripts/test_gpio_in.py --pull up  # internal pull-up
 
@@ -25,7 +25,7 @@ from gpiozero import DigitalInputDevice
 
 parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
 parser.add_argument(
-    "--pin", type=int, default=27, help="BCM pin number (default: 27, as GPIO_IN)"
+    "--pin", type=int, default=26, help="BCM pin number (default: 26, as GPIO_IN)"
 )
 parser.add_argument(
     "--pull",

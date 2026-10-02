@@ -18,13 +18,13 @@ class Gpio:
     Both work at the same time, since they are different pins (set by the
     GPIO_IN and GPIO_OUT settings, in DEVICE ADDRESSES):
 
-    - Input (GPIO_IN, default 27): while a task is running the pin is watched
+    - Input (GPIO_IN, default 26): while a task is running the pin is watched
       and self.trigger.trigger_on() is called when it goes from OFF (low) to
       ON (high), and self.trigger.trigger_off() when it goes from ON to OFF.
       The watching runs only while a task is active. See GpioTriggerBase to
       customize what happens on trigger_on/trigger_off.
 
-    - Output (GPIO_OUT, default 26): set_on() drives the pin HIGH and set_off()
+    - Output (GPIO_OUT, default 27): set_on() drives the pin HIGH and set_off()
       drives it LOW. Call them from anywhere (a task, a trigger, direct
       functions, the screen sync...); they work regardless of the input.
     """
