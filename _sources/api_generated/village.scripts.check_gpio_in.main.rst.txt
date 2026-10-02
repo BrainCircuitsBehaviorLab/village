@@ -1,0 +1,6 @@
+main
+====
+
+.. currentmodule:: village.scripts.check_gpio_in
+
+.. autofunction:: main
