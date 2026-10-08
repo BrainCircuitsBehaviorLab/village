@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>sound_functions.py - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="video_functions.py" href="video_functions.html" /><link rel="prev" title="direct_functions.py" href="direct_functions.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/examples/sound_functions.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/examples/sound_functions.html"/>
+  <meta property="og:title" content="sound_functions.py"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/logo_light.svg" alt="village" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/logo_dark.svg" alt="village" height="28" loading="lazy" />
+      <strong>village</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../overview/system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/BrainCircuitsBehaviorLab/village" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../preparation_index.html">PREPARATION &amp; SETUP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/initial.html">Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/launching.html">Launching the TV Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/access.html">Remote Access Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/telegram.html">Telegram Bot Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/backup.html">Data Persistence &amp; Backups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/heartbeat.html">Remote Heartbeat Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/animal.html">Animal Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">Protocol Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/task_methods.html">Task Methods &amp; Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct, Audio &amp; Video Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Custom Camera Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Custom Touchscreen Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">Custom GPIO Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/scale_trigger.html">Custom Scale Interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Custom Plotting</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../examples_index.html">PROTOCOL &amp; TASK EXAMPLES</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="training_protocol.html">training_protocol.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_1_habituation.html">bpod_1_habituation.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_2_passive.html">bpod_2_passive.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_3_active.html">bpod_3_active.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_6_delay.html">bpod_6_delay.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_area2_sound.html">bpod_area2_sound.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_purge_ports.html">bpod_purge_ports.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_touchscreen.html">bpod_touchscreen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arduino_1_habituation.html">arduino_1_habituation.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arduino_2_passive.html">arduino_2_passive.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arduino_3_active.html">arduino_3_active.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arduino_6_delay.html">arduino_6_delay.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="camera_trigger.html">camera_trigger.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="touch_trigger.html">touch_trigger.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="direct_functions.html">direct_functions.py</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">sound_functions.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="video_functions.html">video_functions.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="online_plot.html">online_plot.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="session_plot.html">session_plot.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="subject_plot.html">subject_plot.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_follow_the_light.html">auto_follow_the_light.py</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/homecage_camera_control.html">Homecage Camera Control</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; ALARMS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.html">corridor_threshold_detection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.area_count.html">area_count</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.scan_video.html">scan_video</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.select_from_grays.html">select_from_grays</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.enums.html">enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ControllerEnum.html">ControllerEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.CycleDay.html">CycleDay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.null_classes.html">null_classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCalibrationBase.html">NullCalibrationBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullGpio.html">NullGpio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullLEDStrip.html">NullLEDStrip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoundDevice.html">NullSoundDevice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTouch.html">NullTouch</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.settings_class.html">settings_class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.custom_classes.html">custom_classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouseBase.html">AutoNoMouseBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.html">camera_area_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html">CameraAreaBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.html">gpio_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html">GpioTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.html">scale_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.ScaleTriggerBase.html">ScaleTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.SessionPlotBase.html">SessionPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.html">telegram_command_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.TelegramCommandBase.html">TelegramCommandBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_if_active.html">get_motor_if_active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.parse_motor_values.html">parse_motor_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.gpio.html">gpio</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.gpio.Gpio.html">Gpio</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.og_connect.html">og_connect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.match_sound_device_setting.html">match_sound_device_setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.weights_plot.html">weights_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.scripts.html">scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.playground.html">playground</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hardware.html">HARDWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../resources/list_of_parts.html">List of Parts &amp; Design Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware.html">Assembly Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware_large.html">Assembly Guide (with Eco-HAB)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware_rats.html">Assembly Guide (Rat Version)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Custom Bpod Firmware</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../faq_index2.html">FAQ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">village</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../documentation_index.html"><span itemprop="name">DOCUMENTATION</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../examples_index.html"><span itemprop="name">PROTOCOL &amp; TASK EXAMPLES</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">sound_functions.py</strong>
+        <meta itemprop="position" content="4" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <div class="copy-page-wrapper relative pb-4 lg:absolute lg:top-8 lg:right-6 xl:right-12">
+  <div id="copy-page-trigger">
+    <button
+      type="button"
+      class="js-copy px-3 py-1 inline-flex items-center gap-1"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/examples/sound_functions.md.txt"
+    >
+      <i class="i-lucide" data-icon="copy"></i>
+      <span>Copy page</span>
+    </button>
+    <button class="js-menu px-2 py-1" type="button" aria-label="More actions"
+      aria-haspopup="menu" aria-expanded="false" aria-controls="copy-page-content">
+      <i class="i-lucide chevron-down"></i>
+    </button>
+  </div>
+  <div id="copy-page-content" role="menu" aria-orientation="vertical" aria-hidden="true">
+    <div role="presentation">
+      <div class="flex flex-col" role="group">
+        <button class="js-copy" type="button" role="menuitem"
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/examples/sound_functions.md.txt">
+          <span class="iconify-icon">
+            <i class="i-lucide" data-icon="copy"></i>
+          </span>
+          <span>Copy page</span>
+        </button>
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/examples/sound_functions.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/examples/sound_functions.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:openai"></iconify-icon>
+          <span>Open in ChatGPT</span>
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/examples/sound_functions.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:claude"></iconify-icon>
+          <span>Open in Claude</span>
+        </a></div>
+    </div>
+  </div>
+</div><article class="yue" role="main">
+          <section id="sound-functions-py">
+<h1>sound_functions.py</h1>
+<p>Sound generators (tones, white noise) used by the direct functions, and the list of sounds offered in the sound calibration.</p>
+<p><a class="reference download internal" download="" href="../_downloads/62e4b061c6d05487b3d6e1b77333b150/sound_functions.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">sound_functions.py</span></code></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Sound generators for this project. Two kinds of functions live here:</span>
+</span><span data-line="2"><span class="c1">#</span>
+</span><span data-line="3"><span class="c1"># 1. Generic generators (tone_generator, whitenoise_generator) that take</span>
+</span><span data-line="4"><span class="c1">#    whatever arguments they need and can be called from anywhere, e.g. from</span>
+</span><span data-line="5"><span class="c1">#    direct_functions.py or a task or touchscreen trigger, camera trigger, etc.</span>
+</span><span data-line="6"><span class="c1"># 2. Calibration-sound wrappers (whitenoise, tone_600, tone_1000, ...) that</span>
+</span><span data-line="7"><span class="c1">#    thinly wrap a generic generator, fixing every argument except duration</span>
+</span><span data-line="8"><span class="c1">#    and gain (Sound Calibration always calls them with just those two).</span>
+</span><span data-line="9"><span class="c1">#    They are listed in sound_calibration_functions below, which fills the</span>
+</span><span data-line="10"><span class="c1">#    SOUND dropdown in the Sound Calibration panel. A wrapper's __name__ is</span>
+</span><span data-line="11"><span class="c1">#    stored as the sound's identity in the calibration data (sound_name) and</span>
+</span><span data-line="12"><span class="c1">#    in get_sound_gain(..., sound_name=...) calls elsewhere in the project --</span>
+</span><span data-line="13"><span class="c1">#    rename a wrapper here and every reference to its old name has to be</span>
+</span><span data-line="14"><span class="c1">#    updated too, or the calibration lookup silently stops matching.</span>
+</span><span data-line="15"><span class="c1">#</span>
+</span><span data-line="16"><span class="c1"># gain here is a raw signal amplitude in [0, 1], not dB -- the dB &lt;-&gt; gain</span>
+</span><span data-line="17"><span class="c1"># conversion is what the calibration curve is for (see get_sound_gain).</span>
+</span><span data-line="18">
+</span><span data-line="19"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span data-line="20">
+</span><span data-line="21"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
+</span><span data-line="22">
+</span><span data-line="23">
+</span><span data-line="24"><span class="c1"># generators of sounds, must return numpy arrays</span>
+</span><span data-line="25"><span class="k">def</span><span class="w"> </span><span class="nf">tone_generator</span><span class="p">(</span>
+</span><span data-line="26">    <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="27">    <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="28">    <span class="n">frequency</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+</span><span data-line="29"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="30"><span class="w">    </span><span class="sd">"""</span>
+</span><span data-line="31"><span class="sd">    Generate a single tone</span>
+</span><span data-line="32"><span class="sd">    Args:</span>
+</span><span data-line="33"><span class="sd">        duration (float): Duration (seconds)</span>
+</span><span data-line="34"><span class="sd">        gain (float): Tone amplitude</span>
+</span><span data-line="35"><span class="sd">        frequency (int): Tone frequency</span>
+</span><span data-line="36"><span class="sd">    Returns:</span>
+</span><span data-line="37"><span class="sd">        np.ndarray: Generated sound</span>
+</span><span data-line="38"><span class="sd">    """</span>
+</span><span data-line="39">
+</span><span data-line="40">    <span class="n">samplerate</span> <span class="o">=</span> <span class="n">sound_device</span><span class="o">.</span><span class="n">samplerate</span>
+</span><span data-line="41">
+</span><span data-line="42">    <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">))</span>
+</span><span data-line="43">    <span class="c1"># If no frequency specified, return zero array</span>
+</span><span data-line="44">    <span class="k">if</span> <span class="n">frequency</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="45">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+</span><span data-line="46">    <span class="c1"># Generate tone</span>
+</span><span data-line="47">    <span class="n">tone</span> <span class="o">=</span> <span class="n">gain</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">time</span><span class="p">)</span>
+</span><span data-line="48">    <span class="k">return</span> <span class="n">tone</span>
+</span><span data-line="49">
+</span><span data-line="50">
+</span><span data-line="51"><span class="k">def</span><span class="w"> </span><span class="nf">whitenoise_generator</span><span class="p">(</span>
+</span><span data-line="52">    <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="53">    <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="54"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="55"><span class="w">    </span><span class="sd">"""</span>
+</span><span data-line="56"><span class="sd">    Generate white noise</span>
+</span><span data-line="57"><span class="sd">    Args:</span>
+</span><span data-line="58"><span class="sd">        duration (float): Duration (seconds)</span>
+</span><span data-line="59"><span class="sd">        gain (float): Noise amplitude</span>
+</span><span data-line="60"><span class="sd">    Returns:</span>
+</span><span data-line="61"><span class="sd">        np.ndarray: Generated sound</span>
+</span><span data-line="62"><span class="sd">    """</span>
+</span><span data-line="63">
+</span><span data-line="64">    <span class="n">samplerate</span> <span class="o">=</span> <span class="n">sound_device</span><span class="o">.</span><span class="n">samplerate</span>
+</span><span data-line="65">
+</span><span data-line="66">    <span class="c1"># Generate noise</span>
+</span><span data-line="67">    <span class="n">noise</span> <span class="o">=</span> <span class="n">gain</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">))</span>
+</span><span data-line="68">    <span class="k">return</span> <span class="n">noise</span>
+</span><span data-line="69">
+</span><span data-line="70">
+</span><span data-line="71"><span class="c1"># Calibration sounds. Each one must take exactly (duration, gain) -- that's</span>
+</span><span data-line="72"><span class="c1"># the signature the Sound Calibration panel calls them with -- so any extra</span>
+</span><span data-line="73"><span class="c1"># parameter of the underlying generator (like tone_generator's frequency) is</span>
+</span><span data-line="74"><span class="c1"># pinned to a fixed value here.</span>
+</span><span data-line="75"><span class="k">def</span><span class="w"> </span><span class="nf">whitenoise</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="76">    <span class="k">return</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">)</span>
+</span><span data-line="77">
+</span><span data-line="78">
+</span><span data-line="79"><span class="k">def</span><span class="w"> </span><span class="nf">tone_600</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="80">    <span class="k">return</span> <span class="n">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+</span><span data-line="81">
+</span><span data-line="82">
+</span><span data-line="83"><span class="k">def</span><span class="w"> </span><span class="nf">tone_1000</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="84">    <span class="k">return</span> <span class="n">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</span><span data-line="85">
+</span><span data-line="86">
+</span><span data-line="87"><span class="k">def</span><span class="w"> </span><span class="nf">tone_5000</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="88">    <span class="k">return</span> <span class="n">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</span><span data-line="89">
+</span><span data-line="90">
+</span><span data-line="91"><span class="k">def</span><span class="w"> </span><span class="nf">tone_10000</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="92">    <span class="k">return</span> <span class="n">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+</span><span data-line="93">
+</span><span data-line="94">
+</span><span data-line="95"><span class="k">def</span><span class="w"> </span><span class="nf">tone_20000</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+</span><span data-line="96">    <span class="k">return</span> <span class="n">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">20000</span><span class="p">)</span>
+</span><span data-line="97">
+</span><span data-line="98">
+</span><span data-line="99"><span class="c1"># Order here is the order the SOUND dropdown shows them in, in both the</span>
+</span><span data-line="100"><span class="c1"># Calibrating and Testing sections of the Sound Calibration panel.</span>
+</span><span data-line="101"><span class="n">sound_calibration_functions</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="102">    <span class="n">whitenoise</span><span class="p">,</span>
+</span><span data-line="103">    <span class="n">tone_600</span><span class="p">,</span>
+</span><span data-line="104">    <span class="n">tone_1000</span><span class="p">,</span>
+</span><span data-line="105">    <span class="n">tone_5000</span><span class="p">,</span>
+</span><span data-line="106">    <span class="n">tone_10000</span><span class="p">,</span>
+</span><span data-line="107">    <span class="n">tone_20000</span><span class="p">,</span>
+</span><span data-line="108"><span class="p">]</span>
+</span></pre></div>
+</div>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="direct_functions.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">direct_functions.py</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="video_functions.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">video_functions.py</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright">
+        <p>© <a href="https://braincircuitsbehavior.org">Brain Circuits and Behavior Lab</a></p>
+        <p>Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://shibuya.lepture.com">Shibuya theme</a>.</p>
+      </div>
+      <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
+        <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=cfeecbf0"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
+</html>
