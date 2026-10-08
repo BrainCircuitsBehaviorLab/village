@@ -68,6 +68,7 @@ class TrialRecorder:
             self._time_offset = raspberry_timestamp - controller_timestamp
 
             self._trial_start = round(raspberry_timestamp, 4)
+            self._trial_end = None
             self._current_state = None
             self._current_state_start = None
             self._states_start = {}
@@ -160,6 +161,30 @@ class TrialRecorder:
                         state.replace("_START", ""),
                         "",
                     )
+
+    @property
+    def trial_started(self) -> bool:
+        """True once start_trial() has been called for the current trial
+        (until get_trial_data() takes its data)."""
+        with self._lock:
+            return self._trial_active
+
+    @property
+    def trial_ended(self) -> bool:
+        """True once end_trial() has been called for the current trial."""
+        with self._lock:
+            return self._trial_end is not None
+
+    def end_trial_now(self, raspberry_timestamp: float) -> None:
+        """Ends the trial at a Raspberry time, for when the task did not call
+        end_trial itself. Converted to the controller clock with the offset
+        computed in start_trial, so no controller timestamp is needed.
+
+        Args:
+            raspberry_timestamp: Raspberry time (UNIX epoch in seconds).
+        """
+        with self._lock:
+            self.end_trial(raspberry_timestamp - self._time_offset)
 
     def get_trial_data(
         self, date: str, trial: int, subject: str, name: str, system_name: str

@@ -98,7 +98,9 @@ class TaskBase:
         No need to call this if you are using a Bpod controller, it is called
         automatically.
         For other controllers, call this at the beginning of each trial to register
-        the start of the trial.
+        the start of the trial. It is REQUIRED: without it nothing of the trial is
+        recorded (events, states) and the session would not be saved, so the task
+        stops with an error at the end of the first trial that misses it.
         We use 2 timestamps because we use the start of the trial to synchronize the
         clocks between the raspberry and the controller.
         If you are not using a controller, (i.e. the controller is the same raspberry),
@@ -108,8 +110,10 @@ class TaskBase:
     register_end_trial(self, controller_timestamp: float)
         No need to call this if you are using a Bpod controller, it is called
         automatically.
-        For other controllers, call this at the end of each trial to register the
-        end of the trial.
+        For other controllers it is optional: if create_trial returns without
+        calling it, the trial is ended at that moment (Raspberry time, converted
+        to the controller clock). Call it yourself to use the controller's own
+        end time.
 
     register_enter_state(self, state_name: str, controller_timestamp: float)
         No need to call this if you are using a Bpod controller, it is called
@@ -226,11 +230,17 @@ class TaskBase:
           they occurred during the trial (e.g.
           ``["Port1In", "Port1Out", "Port1In"]``).
 
+        All filled automatically, with or without Bpod, except TRIAL_START
+        without Bpod: it comes from register_start_trial, which is required.
+        TRIAL_END comes from register_end_trial, or is set automatically when
+        create_trial returns if it was not called.
+
         **Keys added per state visited (Bpod or manual):**
 
         - ``"STATE_<name>_START"`` (list[float]): timestamps of every entry
           into that state. It is a list because the same state can be visited
-          more than once in a single trial.
+          more than once in a single trial. With Bpod, a state that was not
+          visited appears as ``[nan]``; without Bpod it does not appear.
         - ``"STATE_<name>_END"`` (list[float]): timestamps of every exit from
           that state, paired with the corresponding START list.
 
@@ -240,9 +250,10 @@ class TaskBase:
           that event (e.g. ``"Port1In"``, ``"Port1Out"``).
 
         When using Bpod all state and event keys are filled automatically.
-        When not using Bpod, call ``register_enter_state`` and
-        ``register_controller_event`` / ``register_raspberry_event`` yourself
-        to populate them.
+        When not using Bpod, call ``register_enter_state`` (if your trial has
+        states) and ``register_controller_event`` /
+        ``register_raspberry_event`` yourself to populate them, between
+        ``register_start_trial`` and the end of ``create_trial``.
 
         **Keys added by you:**
 
@@ -392,7 +403,8 @@ class TaskBase:
         self.recorder.start_trial(raspberry_timestamp, controller_timestamp)
 
     def register_end_trial(self, controller_timestamp: float) -> None:
-        """Registers the end of a trial.
+        """Registers the end of a trial. Optional without Bpod: if create_trial
+        returns without calling it, the trial is ended at that moment.
         If you are not using a controller, (i.e. the controller is the same raspberry),
         pass time_utils.now_timestamp() as controller_timestamp.
 
@@ -405,6 +417,10 @@ class TaskBase:
         self, state_name: str, controller_timestamp: float
     ) -> None:
         """Registers the entry into a state machine state.
+
+        Closes the previous state (its end time is this timestamp) and opens
+        this one, exactly as Bpod does: trial_data gets STATE_<name>_START and
+        STATE_<name>_END. register_end_trial closes the last state.
         If you are not using a controller, (i.e. the controller is the same raspberry),
         pass time_utils.now_timestamp() as controller_timestamp.
 
@@ -412,7 +428,7 @@ class TaskBase:
             state_name (str): The name of the state entered.
             controller_timestamp (float): Controller clock timestamp.
         """
-        self.recorder.add_controller_event(f"enter_{state_name}", controller_timestamp)
+        self.recorder.enter_state(state_name, controller_timestamp)
 
     def register_controller_event(self, name: str, controller_timestamp: float) -> None:
         """Registers a custom event using a controller clock timestamp.
@@ -525,6 +541,7 @@ class TaskBase:
         else:
             self.cam_box.trial = self.current_trial
             self.create_trial()
+            self.close_trial_without_bpod()
         self.trial_data = self.recorder.get_trial_data(
             self.date, self.current_trial, self.subject, self.name, self.system_name
         )
@@ -532,6 +549,26 @@ class TaskBase:
         self.concatenate_trial_data()
         self.current_trial += 1
         return
+
+    def close_trial_without_bpod(self) -> None:
+        """Without Bpod, checks the trial was started and ends it if needed.
+
+        register_start_trial is required (it cannot be automatic: only the task
+        knows the controller's clock); if create_trial did not call it, nothing
+        of the trial was recorded and the session would not be saved, so the
+        task is stopped with a TaskError. Like any other task error, it is
+        reported by the manager (an alarm in automatic runs, an error in manual
+        ones). register_end_trial is optional: if it was not called, the trial
+        is ended now, at the Raspberry time.
+        """
+        if not self.recorder.trial_started:
+            raise TaskError(
+                "register_start_trial was not called in create_trial: nothing of "
+                "the trial is recorded and the session would not be saved. Call it "
+                "at the beginning of every trial."
+            )
+        if not self.recorder.trial_ended:
+            self.recorder.end_trial_now(time_utils.now_timestamp())
 
     def concatenate_trial_data(self) -> None:
         """Appends the current trial's data to the session DataFrame."""
@@ -696,9 +733,12 @@ class TaskBase:
             else:
                 log.alarm(message, subject=self.subject)
 
-        trials = int(self.raw_df["TRIAL"].iloc[-1])
+        # Saved if at least one trial was completed. session_df gets a row only
+        # when a trial finishes (after_trial), so the trial still running when
+        # the session stopped is not in it -- the raw file keeps everything.
+        trials = self.session_df.shape[0]
 
-        if trials > 1:
+        if trials >= 1:
             non_nan_values = self.raw_df["START"].dropna()
             # sort it
             non_nan_values = non_nan_values.sort_values(ascending=True)
@@ -708,8 +748,6 @@ class TaskBase:
                 duration = round(duration, 4)
 
             self.raw_df.to_csv(self.raw_session_path, index=False, header=True, sep=";")
-
-            trials = self.session_df.shape[0]
 
             try:
                 water = int(self.session_df["water"].sum())

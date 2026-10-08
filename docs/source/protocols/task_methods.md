@@ -31,6 +31,28 @@ consumption — if that total falls below a configurable threshold, an alarm is
 triggered (adjustable in the Settings tab of the GUI).
 ```
 
+```{admonition} What is saved when a session stops
+:class: note
+Each session saves two files:
+
+- The **raw** file (`<session>_RAW.csv`) has one line per event, written as it
+  happens, so it keeps everything — including the trial that was still running
+  when the session stopped.
+- The **clean** file (`<session>.csv`) is a table with one row per trial, and a
+  trial's row is only created when the trial finishes (after `after_trial`). So
+  the trial that was still running when the session stopped never gets its row.
+
+The session is saved if at least one trial was completed. If none was, nothing
+is saved (neither file) and the "No trials were recorded" alarm is raised (if
+`NO_TRIALS_PERFORMED` is on).
+
+Because the trial in progress is always lost from the clean file, design your
+tasks so that trials keep advancing as time passes: a trial should end after a
+reasonable time even if the animal does nothing (e.g. with a timeout), instead
+of waiting indefinitely. A task that runs the whole session as a single trial
+would never be saved.
+```
+
 ---
 
 ### Methods you can call
@@ -40,14 +62,15 @@ Do not override these — call them from inside your task's own methods.
 #### Registering controller events
 
 If you're using Bpod, all four of these are called automatically — you never need
-to call them yourself. With `BEHAVIOR_CONTROLLER` set to `OTHER`, call them with
-the right timestamps to populate `trial_data` (see below).
+to call them yourself, and you can skip this section. With `BEHAVIOR_CONTROLLER`
+set to `OTHER`, call them with the right timestamps to populate `trial_data` (see
+below).
 
 | Method | Args | When to call it (`OTHER`) |
 |--------|------|------|
-| `register_start_trial` | `raspberry_timestamp: float, controller_timestamp: float` | At the beginning of each trial. |
-| `register_end_trial` | `controller_timestamp: float` | At the end of each trial. |
-| `register_enter_state` | `state_name: str, controller_timestamp: float` | Whenever you enter a state. |
+| `register_start_trial` | `raspberry_timestamp: float, controller_timestamp: float` | At the beginning of each trial. **Required.** |
+| `register_end_trial` | `controller_timestamp: float` | At the end of each trial. Optional (see below). |
+| `register_enter_state` | `state_name: str, controller_timestamp: float` | Whenever you enter a state (closes the previous one). |
 | `register_controller_event` | `name: str, controller_timestamp: float` | To register any other controller event. |
 
 - `raspberry_timestamp`: the Raspberry Pi's own clock — get it with `time_utils.now_timestamp()`.
@@ -57,6 +80,43 @@ the right timestamps to populate `trial_data` (see below).
 `register_start_trial` uses the two timestamps together to compute a clock offset
 (`raspberry_timestamp - controller_timestamp`), used to convert every later
 `controller_timestamp` back to Raspberry Pi absolute time.
+
+`````{admonition} Without Bpod, register_start_trial is required
+:class: warning
+Call `register_start_trial` at the beginning of **every** trial, in
+`create_trial`. Without it **the task stops with an error**.
+
+`register_end_trial` is optional: if `create_trial` returns without calling it,
+the trial is ended at that moment (Raspberry time, converted to the controller
+clock with the offset above). Call it yourself if you want the controller's own
+end time instead.
+
+With a controller that has its own clock (e.g. an Arduino), register the trial
+start in both clocks, and everything the controller reports in its own clock
+(`read_controller_time()` stands for your own way of getting it — the `arduino_*`
+example tasks use the milliseconds since the Arduino received the start command):
+
+```python
+def create_trial(self):
+    t0 = time_utils.now_timestamp()
+    c0 = self.read_controller_time()
+    self.register_start_trial(raspberry_timestamp=t0, controller_timestamp=c0)
+    ...  # the trial: register_enter_state / register_controller_event with
+         # the controller's times
+    c1 = self.read_controller_time()
+    self.register_end_trial(controller_timestamp=c1)  # optional
+```
+
+Without an external clock (the Raspberry Pi is the controller), pass the same
+time as both, and leave the end to the automatic one:
+
+```python
+def create_trial(self):
+    t0 = time_utils.now_timestamp()
+    self.register_start_trial(raspberry_timestamp=t0, controller_timestamp=t0)
+    ...  # the trial: register_enter_state / register_raspberry_event
+```
+`````
 
 #### Registering a Raspberry-side event
 
@@ -172,28 +232,124 @@ Populated automatically at the end of each trial — available inside `after_tri
 - `"TRIAL_START"` / `"TRIAL_END"` (float): absolute timestamps (UNIX epoch seconds)
 - `"ordered_list_of_events"` (list[str]): event names in the order they occurred (e.g. `["Port1In", "Port1Out", "Port1In"]`)
 
+You don't have to do anything for these, with or without Bpod — with one
+exception: without Bpod, `TRIAL_START` comes from your call to
+`register_start_trial`, which is required (see above). `TRIAL_END` comes from
+`register_end_trial`, or is set automatically when `create_trial` returns if you
+didn't call it.
+
 **Keys added per state visited** (Bpod or manual):
 
 - `"STATE_<name>_START"` / `"STATE_<name>_END"` (list[float]): timestamps of every
   entry/exit for that state — a list because the same state can be visited more
   than once per trial.
 
+With Bpod they are added automatically, and a state that was **not visited** still
+appears, with `[nan]`. Without Bpod, if your trial is organized in states, call
+`register_enter_state(name, timestamp)` every time you enter one: it closes the
+previous state (its end time is the new state's start) and opens the new one,
+exactly as Bpod does. The trial's end (`register_end_trial`, or the automatic
+one) closes the last one. Here a state that was not visited simply does not
+appear.
+
+To check whether a state was visited in both cases, look at its first start time
+with a `nan` default (see the example below).
+
 **Keys added per event type:**
 
 - `"<EventName>"` (list[float]): timestamps of every occurrence of that event
-  (e.g. `"Port1In"`, `"Port1Out"`).
+  (e.g. `"Port1In"`, `"Port1Out"`, `"Tup"`).
 
-When using Bpod, all state and event keys are filled in automatically. Without
-Bpod, call `register_enter_state` and `register_controller_event` /
-`register_raspberry_event` yourself to populate them.
+With Bpod they are added automatically. Without Bpod, register them yourself,
+between `register_start_trial` and the end of `create_trial` (anything registered
+outside that window is ignored). Which method to use depends on **which clock
+timed the event** — there are two:
+
+- **The Raspberry Pi's clock** (`time_utils.now_timestamp()`): for events the Pi
+  itself detects or produces — a camera or touchscreen detection, a direct
+  function, a sound. Use `register_raspberry_event`.
+- **The controller's own clock** (e.g. an Arduino's `millis()`, in seconds): for
+  events the controller detects and timestamps itself — a poke on a port wired to
+  the Arduino. Use `register_controller_event`; it is converted to Raspberry Pi
+  time with the offset computed in `register_start_trial`.
+
+If there is no external controller (the Raspberry Pi is the controller), both
+clocks are the same and both methods do the same.
 
 **Keys added by you:** any name passed to `register_value` inside `after_trial`.
 
+##### Example
+
+A short trial with four states: the animal pokes the right port (3) while
+waiting, starts the trial in the center port (2), and then pokes the left port
+(1), which is rewarded:
+
 ```python
-def after_trial(self):
-    if self.trial_data.get("correct") == 1:
-        self.settings.difficulty += 1
-    t_start = self.trial_data["STATE_stimulus_START"][0]
-    t_end = self.trial_data["STATE_stimulus_END"][0]
-    response_time = t_end - t_start
+{
+    "date": "2026-10-08 10:15:02",
+    "trial": 12,
+    "subject": "mouse1",
+    "task": "MyTask",
+    "system_name": "village01",
+    "TRIAL_START": 1791454502.10,
+    "TRIAL_END": 1791454506.35,
+    "STATE_WAIT_POKE_START": [1791454502.10],
+    "STATE_WAIT_POKE_END": [1791454503.20],
+    "STATE_RESPONSE_START": [1791454503.20],
+    "STATE_RESPONSE_END": [1791454504.90],
+    "STATE_REWARD_START": [1791454504.90],
+    "STATE_REWARD_END": [1791454504.95],
+    "STATE_ITI_START": [1791454504.95],
+    "STATE_ITI_END": [1791454506.35],
+    "Port3In": [1791454502.60],
+    "Port3Out": [1791454502.75],
+    "Port2In": [1791454503.20],
+    "Port2Out": [1791454503.41],
+    "Port1In": [1791454504.90],
+    "Tup": [1791454504.95, 1791454506.35],
+    "ordered_list_of_events": [
+        "Port3In", "Port3Out", "Port2In", "Port2Out", "Port1In", "Tup", "Tup"
+    ],
+}
 ```
+
+Getting information out of it in `after_trial`:
+
+```python
+import math
+
+def after_trial(self):
+    # 1. Did the animal reach the REWARD state? With Bpod a state that was not
+    # visited is [nan]; without Bpod it is missing. This works in both cases.
+    t_reward = self.trial_data.get("STATE_REWARD_START", [math.nan])[0]
+    rewarded = not math.isnan(t_reward)
+
+    # 2. First poke from the RESPONSE state onwards. Strictly after its start:
+    # the center poke that started RESPONSE has exactly that timestamp.
+    first_response_poke = "none"
+    t_response = self.trial_data.get("STATE_RESPONSE_START", [math.nan])[0]
+    if not math.isnan(t_response):
+        pokes = [
+            (t, port)
+            for port in ("Port1In", "Port2In", "Port3In")
+            for t in self.trial_data.get(port, [])
+            if t > t_response
+        ]
+        if pokes:
+            first_response_poke = min(pokes)[1]  # the earliest one
+
+    # 3. Register the results (and, as always, the water).
+    if rewarded:
+        outcome = "correct"
+    elif first_response_poke == "none":
+        outcome = "miss"
+    else:
+        outcome = "incorrect"
+    self.register_value("first_response_poke", first_response_poke)
+    self.register_value("outcome", outcome)
+    self.register_value("water", self.settings.reward_volume if rewarded else 0)
+```
+
+With the example above: `rewarded` is `True`, `first_response_poke` is
+`"Port1In"` (the `Port3In` came before RESPONSE and the `Port2In` is the one that
+started it), and `outcome` is `"correct"`.
