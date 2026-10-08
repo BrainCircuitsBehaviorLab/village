@@ -46,6 +46,11 @@ import time
 
 from village.classes.enums import Active, State
 from village.controllers.bpod_controller import bpod
+from village.manager import manager
+
+# Prepare the project on disk and start the log before the devices below are
+# imported, so the startup messages they log are recorded too.
+manager.start()
 
 # Suppress libcamera C-level stderr during camera import. libcamera writes
 # INFO/WARN messages directly to file descriptor 2 from C++ static initializers,
@@ -80,7 +85,6 @@ from village.devices.telegram_bot import telegram_bot
 from village.devices.temp_sensor import temp_sensor
 from village.devices.touch import touch
 from village.gui.gui import Gui
-from village.manager import manager
 from village.scripts.error_queue import error_queue
 from village.scripts.import_all import import_all
 from village.scripts.log import log

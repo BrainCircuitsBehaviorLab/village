@@ -97,7 +97,12 @@ class Manager:
     """
 
     def __init__(self) -> None:
-        """Initializes the Manager with default settings and initializes collections."""
+        """Initializes the Manager's state from the settings.
+
+        Nothing here touches the disk, the log or the hardware, so importing
+        village has no side effects (the API docs, tests, scripts). That is
+        done by start(), which main.py calls once, at startup.
+        """
         self.subject = Subject()
         self.task = TaskBase()
         self.training: TrainingProtocolBase = TrainingProtocolBase()
@@ -153,14 +158,6 @@ class Manager:
         self.cycle_change_detector = time_utils.CycleChangeDetector(
             settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
         )
-        utils.change_system_directory_settings()
-        utils.copy_demo_project()
-        utils.create_directories()
-        self.create_collections()
-        log.event = self.events
-        log.temp = self.temperatures
-        log.active_history = self.active_history
-        log.start("VILLAGE")
         self.controller_type = settings.get("BEHAVIOR_CONTROLLER")
         self.use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
         self.use_of_box_chip: bool = settings.get("USE_BOX_BOARD") == Active.ON
@@ -168,7 +165,6 @@ class Manager:
         self.old_version_motor: bool = settings.get("OLD_VERSION") != OldVersion.OFF
         if self.controller_type == ControllerEnum.BPOD:
             self.bpod = bpod
-            self.bpod.check_connection()
         self.detections = time_utils.TimestampTracker(
             hours=int(settings.get("NO_DETECTION_HOURS") or 6)
         )
@@ -194,6 +190,25 @@ class Manager:
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
         self.task.calibrations = self.calibrations
+
+    def start(self) -> None:
+        """Prepares the system at startup: the project's directories, the
+        example project (the first time), the data collections (events,
+        sessions...), the log, and the Bpod connection check.
+
+        Called once by main.py, before the devices are imported, so the
+        startup messages they log are recorded in the events too.
+        """
+        utils.change_system_directory_settings()
+        utils.copy_demo_project()
+        utils.create_directories()
+        self.create_collections()
+        log.event = self.events
+        log.temp = self.temperatures
+        log.active_history = self.active_history
+        log.start("VILLAGE")
+        if self.controller_type == ControllerEnum.BPOD:
+            self.bpod.check_connection()
 
     @property
     def state(self) -> State:
