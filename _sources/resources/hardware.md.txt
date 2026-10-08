@@ -390,6 +390,7 @@ corridor frame. Connect its local peripherals: servo motors, RFID reader, weighi
 against the board's silk-screen labels before insertion. Finally, connect an Ethernet cable
 (data) and a DC cable with barrel jack connectors on both ends (5 V power) to this board.
 The other ends will be connected to the main Raspberry Pi HAT board in a later step.
+:::
 
 :::{grid-item}
 :columns: 8

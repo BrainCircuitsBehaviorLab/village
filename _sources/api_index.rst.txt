@@ -15,4 +15,3 @@ API
     village.plots
     village.scripts
     village.manager
-    village.main
