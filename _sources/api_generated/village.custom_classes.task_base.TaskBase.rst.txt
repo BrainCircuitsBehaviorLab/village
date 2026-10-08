@@ -19,6 +19,7 @@ TaskBase
       ~TaskBase.__init__
       ~TaskBase.after_trial
       ~TaskBase.close
+      ~TaskBase.close_trial_without_bpod
       ~TaskBase.concatenate_trial_data
       ~TaskBase.create_paths
       ~TaskBase.create_trial

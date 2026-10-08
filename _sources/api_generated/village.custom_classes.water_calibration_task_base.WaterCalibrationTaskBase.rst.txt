@@ -19,6 +19,7 @@ WaterCalibrationTaskBase
       ~WaterCalibrationTaskBase.__init__
       ~WaterCalibrationTaskBase.after_trial
       ~WaterCalibrationTaskBase.close
+      ~WaterCalibrationTaskBase.close_trial_without_bpod
       ~WaterCalibrationTaskBase.concatenate_trial_data
       ~WaterCalibrationTaskBase.create_paths
       ~WaterCalibrationTaskBase.create_trial

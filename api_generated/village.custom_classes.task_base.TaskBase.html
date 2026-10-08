@@ -528,7 +528,9 @@ METHODS YOU CAN CALL (do not override)
 <dt>register_start_trial(self, raspberry_timestamp: float, controller_timestamp: float)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
 automatically.
 For other controllers, call this at the beginning of each trial to register
-the start of the trial.
+the start of the trial. It is REQUIRED: without it nothing of the trial is
+recorded (events, states) and the session would not be saved, so the task
+stops with an error at the end of the first trial that misses it.
 We use 2 timestamps because we use the start of the trial to synchronize the
 clocks between the raspberry and the controller.
 If you are not using a controller, (i.e. the controller is the same raspberry),
@@ -537,8 +539,10 @@ To get the raspberry timestamp you can use time_utils.now_timestamp().</p>
 </dd>
 <dt>register_end_trial(self, controller_timestamp: float)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
 automatically.
-For other controllers, call this at the end of each trial to register the
-end of the trial.</p>
+For other controllers it is optional: if create_trial returns without
+calling it, the trial is ended at that moment (Raspberry time, converted
+to the controller clock). Call it yourself to use the controller’s own
+end time.</p>
 </dd>
 <dt>register_enter_state(self, state_name: str, controller_timestamp: float)</dt><dd><p>No need to call this if you are using a Bpod controller, it is called
 automatically.
@@ -636,11 +640,16 @@ when the trial started.</p></li>
 they occurred during the trial (e.g.
 <code class="docutils literal notranslate"><span class="pre">[&quot;Port1In&quot;,</span> <span class="pre">&quot;Port1Out&quot;,</span> <span class="pre">&quot;Port1In&quot;]</span></code>).</p></li>
 </ul>
+<p>All filled automatically, with or without Bpod, except TRIAL_START
+without Bpod: it comes from register_start_trial, which is required.
+TRIAL_END comes from register_end_trial, or is set automatically when
+create_trial returns if it was not called.</p>
 <p><strong>Keys added per state visited (Bpod or manual):</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code> (list[float]): timestamps of every entry
 into that state. It is a list because the same state can be visited
-more than once in a single trial.</p></li>
+more than once in a single trial. With Bpod, a state that was not
+visited appears as <code class="docutils literal notranslate"><span class="pre">[nan]</span></code>; without Bpod it does not appear.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code> (list[float]): timestamps of every exit from
 that state, paired with the corresponding START list.</p></li>
 </ul>
@@ -650,9 +659,10 @@ that state, paired with the corresponding START list.</p></li>
 that event (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>).</p></li>
 </ul>
 <p>When using Bpod all state and event keys are filled automatically.
-When not using Bpod, call <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> and
-<code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> / <code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code> yourself
-to populate them.</p>
+When not using Bpod, call <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> (if your trial has
+states) and <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> /
+<code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code> yourself to populate them, between
+<code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> and the end of <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p>
 <p><strong>Keys added by you:</strong></p>
 <ul class="simple">
 <li><p>Any name passed to <code class="docutils literal notranslate"><span class="pre">register_value</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p></li>
@@ -742,7 +752,8 @@ To obtain the raspberry_timestamp, use time_utils.now_timestamp().</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">register_end_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_end_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Registers the end of a trial.
+<dd><p>Registers the end of a trial. Optional without Bpod: if create_trial
+returns without calling it, the trial is ended at that moment.
 If you are not using a controller, (i.e. the controller is the same raspberry),
 pass time_utils.now_timestamp() as controller_timestamp.</p>
 <dl class="field-list simple">
@@ -755,7 +766,10 @@ pass time_utils.now_timestamp() as controller_timestamp.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">register_enter_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller_timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.register_enter_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Registers the entry into a state machine state.
+<dd><p>Registers the entry into a state machine state.</p>
+<p>Closes the previous state (its end time is this timestamp) and opens
+this one, exactly as Bpod does: trial_data gets STATE_&lt;name&gt;_START and
+STATE_&lt;name&gt;_END. register_end_trial closes the last state.
 If you are not using a controller, (i.e. the controller is the same raspberry),
 pass time_utils.now_timestamp() as controller_timestamp.</p>
 <dl class="field-list simple">
@@ -852,6 +866,19 @@ subject leaves the corridor, not for a fixed number of trials.</p>
 <dd><p>Executes a single trial.</p>
 <p>Initializes the state machine, runs it, collects data, and performs
 post-trial updates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">close_trial_without_bpod</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.close_trial_without_bpod"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Without Bpod, checks the trial was started and ends it if needed.</p>
+<p>register_start_trial is required (it cannot be automatic: only the task
+knows the controller’s clock); if create_trial did not call it, nothing
+of the trial was recorded and the session would not be saved, so the
+task is stopped with a TaskError. Like any other task error, it is
+reported by the manager (an alarm in automatic runs, an error in manual
+ones). register_end_trial is optional: if it was not called, the trial
+is ended now, at the Raspberry time.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -968,7 +995,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=04be0391"></script>
+      <script src="../_static/documentation_options.js?v=4282153a"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
