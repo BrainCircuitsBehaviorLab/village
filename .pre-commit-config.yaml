@@ -31,7 +31,7 @@ repos:
       rev: v1.8.0
       hooks:
           - id: mypy
-            exclude: "village/pybpodapi/.*"
+            exclude: "village/pybpodapi/.*|docs/source/examples/files/.*|docs/tools/.*"
             additional_dependencies:
                 - types-setuptools
     - repo: https://github.com/mgedmin/check-manifest
