@@ -1101,18 +1101,11 @@ crash, or hang instead of silently vanishing.""",
         "GITHUB_REPOSITORIES_DOWNLOADED",
         "OFF",
         Active,
-        "GitHub repositories downloaded.",
+        """Whether the example project has already been set up (copied; older
+versions downloaded it from GitHub, hence the name).""",
     ),
     Setting(
         "DEFAULT_PROJECT_NAME", default_project_name, str, "The default project name."
-    ),
-    Setting(
-        "GITHUB_REPOSITORY_EXAMPLES",
-        [
-            "https://github.com/BrainCircuitsBehaviorLab/demo-village-project.git",
-        ],
-        list[str],
-        "GitHub repositories with downloadable example projects.",
     ),
     Setting(
         "DEFAULT_CODE_DIRECTORY",

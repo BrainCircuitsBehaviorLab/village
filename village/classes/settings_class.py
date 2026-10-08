@@ -196,9 +196,11 @@ class Settings:
     # Keys that have no GUI (or any other in-app way) to edit them, so a
     # stored value can only ever be stale/wrong -- force them back to their
     # source-of-truth default on every startup instead of trusting storage.
-    _fixed_hidden_keys = frozenset(
-        {"DEFAULT_PROJECT_NAME", "DEFAULT_CODE_DIRECTORY", "GITHUB_REPOSITORY_EXAMPLES"}
-    )
+    _fixed_hidden_keys = frozenset({"DEFAULT_PROJECT_NAME", "DEFAULT_CODE_DIRECTORY"})
+
+    # Keys of settings that no longer exist: removed from storage on startup so
+    # systems upgraded from an older version don't keep an orphan value.
+    _obsolete_keys = frozenset({"GITHUB_REPOSITORY_EXAMPLES"})
 
     def restore_fixed_settings(self) -> None:
         """Reset device wiring settings and a few fixed hidden settings to
@@ -209,6 +211,8 @@ class Settings:
         for s in self.hidden_settings:
             if s.key in self._fixed_hidden_keys:
                 self.saved_settings.setValue(s.key, s.value)
+        for key in self._obsolete_keys:
+            self.saved_settings.remove(key)
 
     def check_settings(self) -> None:
         """Ensure all required settings exist in storage.

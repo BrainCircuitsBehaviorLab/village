@@ -154,7 +154,7 @@ class Manager:
             settings.get("DAYTIME") or "08:00", settings.get("NIGHTTIME") or "20:00"
         )
         utils.change_system_directory_settings()
-        utils.download_github_repositories(settings.get("GITHUB_REPOSITORY_EXAMPLES"))
+        utils.copy_demo_project()
         utils.create_directories()
         self.create_collections()
         log.event = self.events

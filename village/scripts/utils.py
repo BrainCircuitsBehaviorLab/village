@@ -2,7 +2,6 @@ import getpass
 import logging
 import re
 import shutil
-import subprocess
 import traceback
 from datetime import datetime, timedelta
 from io import BytesIO
@@ -116,60 +115,45 @@ def create_directories_from_path(p: str) -> bool:
         return False
 
 
-def download_github_repositories(repositories: list[str]) -> None:
-    """Clone a list of GitHub repositories into the user's village_projects directory.
+# The example code shipped with Village (also shown in the documentation).
+EXAMPLES_DIRECTORY = (
+    Path(__file__).resolve().parents[2] / "docs" / "source" / "examples" / "files"
+)
 
-    If a repository already exists and is not empty, it is skipped.
-    Updates the 'GITHUB_REPOSITORIES_DOWNLOADED' setting upon success.
 
-    Args:
-        repositories (list[str]): A list of GitHub repository URLs.
+def copy_demo_project() -> None:
+    """Copies the example code into the default project, the first time Village runs.
+
+    The examples (EXAMPLES_DIRECTORY) are copied into DEFAULT_CODE_DIRECTORY
+    (village_projects/demo-village-project/code). Only once, and only into an
+    empty folder: that code is the user's to edit, so it is never overwritten.
+    The flag is still called GITHUB_REPOSITORIES_DOWNLOADED because older
+    versions downloaded the demo project from GitHub: a system that already
+    has it skips this too. If the copy fails, the default project falls back
+    to an empty one.
     """
     if settings.get("GITHUB_REPOSITORIES_DOWNLOADED") == Active.ON:
         return
-    downloaded_demo = False
-    downloaded_all = True
-    base_dir = Path("/home", getpass.getuser(), "village_projects")
-    base_dir.mkdir(parents=True, exist_ok=True)
-
-    for repository in repositories:
-        name = repository.rstrip("/").split("/")[-1]
-        name = re.sub(r"\.git$", "", name)
-        base_dir2 = Path(base_dir, name)
-        directory = Path(base_dir2, "code")
-        if directory.exists() and any(directory.iterdir()):
-            continue
-        directory.mkdir(parents=True, exist_ok=True)
-        try:
-            result = subprocess.run(
-                ["git", "clone", repository, str(directory)],
-                capture_output=True,
-                text=True,
-            )
-            if result.returncode == 0:
-                log.info("Repository " + repository + " downloaded")
-                if directory == Path(settings.get("DEFAULT_CODE_DIRECTORY")):
-                    downloaded_demo = True
-                continue
-            stderr_txt = result.stderr or ""
-            downloaded_all = False
-            shutil.rmtree(base_dir2, ignore_errors=True)
-            log.error(
-                "Error downloading repository " + repository,
-                exception=stderr_txt,
-            )
-        except Exception:
-            downloaded_all = False
-            shutil.rmtree(base_dir2, ignore_errors=True)
-            log.error(
-                "Error downloading repository " + repository,
-                exception=traceback.format_exc(),
-            )
-    if downloaded_all:
+    directory = Path(settings.get("DEFAULT_CODE_DIRECTORY"))
+    if directory.exists() and any(directory.iterdir()):
         settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "ON")
-    if not downloaded_demo:
-        new_path = str(Path(base_dir, "empty-project"))
-        change_directory_settings(new_path=new_path)
+        return
+    try:
+        shutil.copytree(
+            EXAMPLES_DIRECTORY,
+            directory,
+            dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
+        settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "ON")
+        log.info("Example project copied to " + str(directory))
+    except Exception:
+        log.error(
+            "Could not copy the example project from " + str(EXAMPLES_DIRECTORY),
+            exception=traceback.format_exc(),
+        )
+        base_dir = Path("/home", getpass.getuser(), "village_projects")
+        change_directory_settings(new_path=str(Path(base_dir, "empty-project")))
 
 
 _DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
