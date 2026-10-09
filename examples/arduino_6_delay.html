@@ -526,354 +526,355 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="10"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 </span><span data-line="11">
 </span><span data-line="12"><span class="c1"># Curriculum-based probability distribution over delay values, used by</span>
-</span><span data-line="13"><span class="c1"># create_trial() to pick each trial's delay. As learning progress p goes</span>
-</span><span data-line="14"><span class="c1"># from 0 to 1, longer delays are introduced gradually instead of all at</span>
-</span><span data-line="15"><span class="c1"># once: at p=0 only the easiest (shortest) delays are likely, at p=1 every</span>
-</span><span data-line="16"><span class="c1"># delay is equally likely. thresholds[d] is the p value at which delay d</span>
-</span><span data-line="17"><span class="c1"># starts being seriously considered; tau controls how sharp that</span>
-</span><span data-line="18"><span class="c1"># introduction is, gamma how strongly the curriculum favors easier delays</span>
-</span><span data-line="19"><span class="c1"># below their threshold.</span>
-</span><span data-line="20"><span class="n">_DELAYS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
-</span><span data-line="21"><span class="n">_THRESHOLDS</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mi">40</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">:</span> <span class="mf">0.50</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">:</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">}</span>
+</span><span data-line="13"><span class="c1"># create_trial() to pick each trial's delay. The longer the delay between the</span>
+</span><span data-line="14"><span class="c1"># two side LEDs, the easier the trial. As the difficulty p goes from 0 to 1,</span>
+</span><span data-line="15"><span class="c1"># the shorter (harder) delays are introduced gradually instead of all at</span>
+</span><span data-line="16"><span class="c1"># once: at p=0 only the easiest (longest) delays are likely, at p=1 every</span>
+</span><span data-line="17"><span class="c1"># delay is equally likely. The delays and the p value at which each one</span>
+</span><span data-line="18"><span class="c1"># starts being seriously considered come from settings.delay_thresholds (see</span>
+</span><span data-line="19"><span class="c1"># training_protocol.py). tau controls how sharp that introduction is, gamma</span>
+</span><span data-line="20"><span class="c1"># how strongly the curriculum favors easier delays below their threshold.</span>
+</span><span data-line="21">
 </span><span data-line="22">
-</span><span data-line="23">
-</span><span data-line="24"><span class="k">def</span><span class="w"> </span><span class="nf">get_delay_probabilities</span><span class="p">(</span>
-</span><span data-line="25">    <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.08</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span data-line="26"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-</span><span data-line="27"><span class="w">    </span><span class="sd">"""Returns (delays, probabilities) -- probabilities sums to 1, same</span>
-</span><span data-line="28"><span class="sd">    order as _DELAYS -- for np.random.choice(delays, p=probabilities)."""</span>
-</span><span data-line="29">    <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="30">    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">_DELAYS</span><span class="p">:</span>
-</span><span data-line="31">        <span class="n">t</span> <span class="o">=</span> <span class="n">_THRESHOLDS</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span>
-</span><span data-line="32">        <span class="c1"># t == 0 (the easiest delay) never fades out, it just slowly loses</span>
-</span><span data-line="33">        <span class="c1"># dominance to the others as p grows.</span>
-</span><span data-line="34">        <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="n">tau</span><span class="p">))</span>
-</span><span data-line="35">        <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="n">gamma</span><span class="p">)</span>
-</span><span data-line="36">    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
-</span><span data-line="37">    <span class="k">return</span> <span class="n">_DELAYS</span><span class="p">,</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</span><span data-line="38">
-</span><span data-line="39">
-</span><span data-line="40"><span class="c1"># Protocol (see arduino_6_delay.ino):</span>
-</span><span data-line="41"><span class="c1">#</span>
-</span><span data-line="42"><span class="c1"># Pi -&gt; Arduino, 10 raw bytes, sent once at the start of each trial:</span>
-</span><span data-line="43"><span class="c1">#   [CMD_START_TRIAL, first_port, c_led_on_timeout_ms (uint16, LE),</span>
-</span><span data-line="44"><span class="c1">#    delay_ms (uint16, LE), total_timeout_ms (uint16, LE),</span>
-</span><span data-line="45"><span class="c1">#    valve_time_ms (uint16, LE)]</span>
-</span><span data-line="46"><span class="c1">#   Tells the Arduino which side lights up first this trial, how long to</span>
-</span><span data-line="47"><span class="c1">#   wait for the center poke, how long to wait before lighting the other</span>
-</span><span data-line="48"><span class="c1">#   side too, the overall response window, and the valve time for a</span>
-</span><span data-line="49"><span class="c1">#   correct response. From here the Arduino runs</span>
-</span><span data-line="50"><span class="c1">#   the whole trial (center poke, both cue phases, valve) on its own; the</span>
-</span><span data-line="51"><span class="c1">#   Pi just listens and plays the penalty sound itself when told a wrong</span>
-</span><span data-line="52"><span class="c1">#   poke happened (the Arduino has no speaker to do that with).</span>
-</span><span data-line="53"><span class="c1">#</span>
-</span><span data-line="54"><span class="c1"># Arduino -&gt; Pi, 6 raw bytes per message:</span>
-</span><span data-line="55"><span class="c1">#   [EVENT_POKE, port, elapsed_ms (uint32, LE)]</span>
-</span><span data-line="56"><span class="c1">#     -- once per poke that matters (the center poke, then whichever side</span>
-</span><span data-line="57"><span class="c1">#        port is poked first)</span>
-</span><span data-line="58"><span class="c1">#   [EVENT_STATE, state, elapsed_ms (uint32, LE)]</span>
-</span><span data-line="59"><span class="c1">#     -- every time the Arduino enters a new state (see STATE_NAMES), so it</span>
-</span><span data-line="60"><span class="c1">#        can be registered with register_enter_state, as Bpod does.</span>
-</span><span data-line="61"><span class="c1">#   [EVENT_TRIAL_END, outcome, elapsed_ms (uint32, LE)]</span>
-</span><span data-line="62"><span class="c1">#     -- once, when the trial is over</span>
-</span><span data-line="63"><span class="c1">#   elapsed_ms is milliseconds since the Arduino received CMD_START_TRIAL</span>
-</span><span data-line="64"><span class="c1">#   for THIS trial (its own timer, reset every trial). It is the controller</span>
-</span><span data-line="65"><span class="c1">#   clock: the trial start is registered as controller time 0 at the moment</span>
-</span><span data-line="66"><span class="c1">#   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller</span>
-</span><span data-line="67"><span class="c1">#   timestamp (register_controller_event / register_enter_state), so the two</span>
-</span><span data-line="68"><span class="c1">#   clocks never need to be synchronized.</span>
-</span><span data-line="69"><span class="n">CMD_START_TRIAL</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="70">
-</span><span data-line="71"><span class="n">EVENT_POKE</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="72"><span class="n">EVENT_TRIAL_END</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span data-line="73"><span class="n">EVENT_STATE</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span data-line="74">
-</span><span data-line="75"><span class="c1"># State ids sent by the Arduino (same names as bpod_6_delay.py). "iti",</span>
-</span><span data-line="76"><span class="c1"># "wrong_choice" and "timeout" are done by the Pi, after EVENT_TRIAL_END.</span>
-</span><span data-line="77"><span class="n">STATE_NAMES</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="78">    <span class="mi">1</span><span class="p">:</span> <span class="s2">"c_led_on"</span><span class="p">,</span>
-</span><span data-line="79">    <span class="mi">2</span><span class="p">:</span> <span class="s2">"first_side_led"</span><span class="p">,</span>
-</span><span data-line="80">    <span class="mi">3</span><span class="p">:</span> <span class="s2">"both_side_leds"</span><span class="p">,</span>
-</span><span data-line="81">    <span class="mi">4</span><span class="p">:</span> <span class="s2">"correct_choice"</span><span class="p">,</span>
-</span><span data-line="82"><span class="p">}</span>
-</span><span data-line="83">
-</span><span data-line="84"><span class="n">OUTCOME_OMISSION</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="85"><span class="n">OUTCOME_CORRECT</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="86"><span class="n">OUTCOME_INCORRECT</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span data-line="87"><span class="n">OUTCOME_MISS</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span data-line="88"><span class="n">_OUTCOME_NAMES</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="89">    <span class="n">OUTCOME_OMISSION</span><span class="p">:</span> <span class="s2">"omission"</span><span class="p">,</span>
-</span><span data-line="90">    <span class="n">OUTCOME_CORRECT</span><span class="p">:</span> <span class="s2">"correct"</span><span class="p">,</span>
-</span><span data-line="91">    <span class="n">OUTCOME_INCORRECT</span><span class="p">:</span> <span class="s2">"incorrect"</span><span class="p">,</span>
-</span><span data-line="92">    <span class="n">OUTCOME_MISS</span><span class="p">:</span> <span class="s2">"miss"</span><span class="p">,</span>
-</span><span data-line="93"><span class="p">}</span>
-</span><span data-line="94">
-</span><span data-line="95"><span class="n">BAUDRATE</span> <span class="o">=</span> <span class="mi">9600</span>  <span class="c1"># must match the Arduino sketch's Serial.begin(...)</span>
-</span><span data-line="96"><span class="n">READ_TIMEOUT</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># seconds; also how often should_stop gets re-checked</span>
-</span><span data-line="97"><span class="n">MESSAGE_SIZE</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># every Arduino -&gt; Pi message is exactly this many bytes</span>
-</span><span data-line="98"><span class="n">TOTAL_RESPONSE_WINDOW</span> <span class="o">=</span> <span class="mi">40</span>  <span class="c1"># seconds, from the first cue turning on</span>
+</span><span data-line="23"><span class="k">def</span><span class="w"> </span><span class="nf">get_delay_probabilities</span><span class="p">(</span>
+</span><span data-line="24">    <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delay_thresholds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.08</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="25"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+</span><span data-line="26"><span class="w">    </span><span class="sd">"""Returns (delays, probabilities) -- probabilities sums to 1, same</span>
+</span><span data-line="27"><span class="sd">    order as delays -- for np.random.choice(delays, p=probabilities).</span>
+</span><span data-line="28">
+</span><span data-line="29"><span class="sd">    delay_thresholds maps each delay (seconds) to its threshold. Its keys may</span>
+</span><span data-line="30"><span class="sd">    be strings (settings are saved as JSON, whose keys are always strings),</span>
+</span><span data-line="31"><span class="sd">    so they are converted to numbers here.</span>
+</span><span data-line="32"><span class="sd">    """</span>
+</span><span data-line="33">    <span class="n">delays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">delay_thresholds</span><span class="p">])</span>
+</span><span data-line="34">    <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="35">    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">delay_thresholds</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+</span><span data-line="36">        <span class="n">t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</span><span data-line="37">        <span class="c1"># t == 0 (the easiest, longest delays) never fades out, it just</span>
+</span><span data-line="38">        <span class="c1"># slowly loses dominance to the others as p grows.</span>
+</span><span data-line="39">        <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="n">tau</span><span class="p">))</span>
+</span><span data-line="40">        <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="n">gamma</span><span class="p">)</span>
+</span><span data-line="41">    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+</span><span data-line="42">    <span class="k">return</span> <span class="n">delays</span><span class="p">,</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</span><span data-line="43">
+</span><span data-line="44">
+</span><span data-line="45"><span class="c1"># Protocol (see arduino_6_delay.ino):</span>
+</span><span data-line="46"><span class="c1">#</span>
+</span><span data-line="47"><span class="c1"># Pi -&gt; Arduino, 10 raw bytes, sent once at the start of each trial:</span>
+</span><span data-line="48"><span class="c1">#   [CMD_START_TRIAL, first_port, c_led_on_timeout_ms (uint16, LE),</span>
+</span><span data-line="49"><span class="c1">#    delay_ms (uint16, LE), total_timeout_ms (uint16, LE),</span>
+</span><span data-line="50"><span class="c1">#    valve_time_ms (uint16, LE)]</span>
+</span><span data-line="51"><span class="c1">#   Tells the Arduino which side lights up first this trial, how long to</span>
+</span><span data-line="52"><span class="c1">#   wait for the center poke, how long to wait before lighting the other</span>
+</span><span data-line="53"><span class="c1">#   side too, the overall response window, and the valve time for a</span>
+</span><span data-line="54"><span class="c1">#   correct response. From here the Arduino runs</span>
+</span><span data-line="55"><span class="c1">#   the whole trial (center poke, both cue phases, valve) on its own; the</span>
+</span><span data-line="56"><span class="c1">#   Pi just listens and plays the penalty sound itself when told a wrong</span>
+</span><span data-line="57"><span class="c1">#   poke happened (the Arduino has no speaker to do that with).</span>
+</span><span data-line="58"><span class="c1">#</span>
+</span><span data-line="59"><span class="c1"># Arduino -&gt; Pi, 6 raw bytes per message:</span>
+</span><span data-line="60"><span class="c1">#   [EVENT_POKE, port, elapsed_ms (uint32, LE)]</span>
+</span><span data-line="61"><span class="c1">#     -- once per poke that matters (the center poke, then whichever side</span>
+</span><span data-line="62"><span class="c1">#        port is poked first)</span>
+</span><span data-line="63"><span class="c1">#   [EVENT_STATE, state, elapsed_ms (uint32, LE)]</span>
+</span><span data-line="64"><span class="c1">#     -- every time the Arduino enters a new state (see STATE_NAMES), so it</span>
+</span><span data-line="65"><span class="c1">#        can be registered with register_enter_state, as Bpod does.</span>
+</span><span data-line="66"><span class="c1">#   [EVENT_TRIAL_END, outcome, elapsed_ms (uint32, LE)]</span>
+</span><span data-line="67"><span class="c1">#     -- once, when the trial is over</span>
+</span><span data-line="68"><span class="c1">#   elapsed_ms is milliseconds since the Arduino received CMD_START_TRIAL</span>
+</span><span data-line="69"><span class="c1">#   for THIS trial (its own timer, reset every trial). It is the controller</span>
+</span><span data-line="70"><span class="c1">#   clock: the trial start is registered as controller time 0 at the moment</span>
+</span><span data-line="71"><span class="c1">#   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller</span>
+</span><span data-line="72"><span class="c1">#   timestamp (register_controller_event / register_enter_state), so the two</span>
+</span><span data-line="73"><span class="c1">#   clocks never need to be synchronized.</span>
+</span><span data-line="74"><span class="n">CMD_START_TRIAL</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="75">
+</span><span data-line="76"><span class="n">EVENT_POKE</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="77"><span class="n">EVENT_TRIAL_END</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span data-line="78"><span class="n">EVENT_STATE</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="79">
+</span><span data-line="80"><span class="c1"># State ids sent by the Arduino (same names as bpod_6_delay.py). "iti",</span>
+</span><span data-line="81"><span class="c1"># "wrong_choice" and "timeout" are done by the Pi, after EVENT_TRIAL_END.</span>
+</span><span data-line="82"><span class="n">STATE_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="83">    <span class="mi">1</span><span class="p">:</span> <span class="s2">"c_led_on"</span><span class="p">,</span>
+</span><span data-line="84">    <span class="mi">2</span><span class="p">:</span> <span class="s2">"first_side_led"</span><span class="p">,</span>
+</span><span data-line="85">    <span class="mi">3</span><span class="p">:</span> <span class="s2">"both_side_leds"</span><span class="p">,</span>
+</span><span data-line="86">    <span class="mi">4</span><span class="p">:</span> <span class="s2">"correct_choice"</span><span class="p">,</span>
+</span><span data-line="87"><span class="p">}</span>
+</span><span data-line="88">
+</span><span data-line="89"><span class="n">OUTCOME_OMISSION</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="90"><span class="n">OUTCOME_CORRECT</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="91"><span class="n">OUTCOME_INCORRECT</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span data-line="92"><span class="n">OUTCOME_MISS</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="93"><span class="n">_OUTCOME_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="94">    <span class="n">OUTCOME_OMISSION</span><span class="p">:</span> <span class="s2">"omission"</span><span class="p">,</span>
+</span><span data-line="95">    <span class="n">OUTCOME_CORRECT</span><span class="p">:</span> <span class="s2">"correct"</span><span class="p">,</span>
+</span><span data-line="96">    <span class="n">OUTCOME_INCORRECT</span><span class="p">:</span> <span class="s2">"incorrect"</span><span class="p">,</span>
+</span><span data-line="97">    <span class="n">OUTCOME_MISS</span><span class="p">:</span> <span class="s2">"miss"</span><span class="p">,</span>
+</span><span data-line="98"><span class="p">}</span>
 </span><span data-line="99">
-</span><span data-line="100">
-</span><span data-line="101"><span class="k">class</span><span class="w"> </span><span class="nc">Arduino6Delay</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
-</span><span data-line="102">
-</span><span data-line="103">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="104">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="100"><span class="n">BAUDRATE</span> <span class="o">=</span> <span class="mi">9600</span>  <span class="c1"># must match the Arduino sketch's Serial.begin(...)</span>
+</span><span data-line="101"><span class="n">READ_TIMEOUT</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># seconds; also how often should_stop gets re-checked</span>
+</span><span data-line="102"><span class="n">MESSAGE_SIZE</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># every Arduino -&gt; Pi message is exactly this many bytes</span>
+</span><span data-line="103"><span class="n">TOTAL_RESPONSE_WINDOW</span> <span class="o">=</span> <span class="mi">40</span>  <span class="c1"># seconds, from the first cue turning on</span>
+</span><span data-line="104">
 </span><span data-line="105">
-</span><span data-line="106">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
-</span><span data-line="107"><span class="s2">        Delayed Side-Cue Discrimination Task, easy version</span>
-</span><span data-line="108"><span class="s2">        -----------------------------------------------------------------------------</span>
-</span><span data-line="109"><span class="s2">        - The mouse must poke the center port to start each trial, within</span>
-</span><span data-line="110"><span class="s2">          c_led_on_time seconds. No poke: the trial ends as an omission</span>
-</span><span data-line="111"><span class="s2">          (it doesn't count for the difficulty adaptation).</span>
-</span><span data-line="112"><span class="s2">        - One side's LED then turns on (the "first cue", side chosen at</span>
-</span><span data-line="113"><span class="s2">          random each trial). If the delay set for this trial passes with</span>
-</span><span data-line="114"><span class="s2">          no poke, the other side's LED turns on too, and the response</span>
-</span><span data-line="115"><span class="s2">          window continues up to a fixed total.</span>
-</span><span data-line="116"><span class="s2">        - Whichever port is poked first (in either phase) decides the</span>
-</span><span data-line="117"><span class="s2">          outcome: correct if it's the side that was cued first, incorrect</span>
-</span><span data-line="118"><span class="s2">          otherwise. No poke within the whole window is a miss.</span>
-</span><span data-line="119"><span class="s2">            * correct -&gt; reward, then a short delay before the next trial</span>
-</span><span data-line="120"><span class="s2">            * incorrect -&gt; the Pi plays a buzzer, then a silent timeout</span>
-</span><span data-line="121"><span class="s2">            * miss -&gt; the trial just ends, no penalty</span>
-</span><span data-line="122">
-</span><span data-line="123"><span class="s2">        The delay is drawn from a distribution controlled by self.p (0-1):</span>
-</span><span data-line="124"><span class="s2">        higher self.p means the second cue tends to come later, making the</span>
-</span><span data-line="125"><span class="s2">        trial harder. self.p is tuned automatically after every trial based</span>
-</span><span data-line="126"><span class="s2">        on a rolling accuracy window (see after_trial).</span>
-</span><span data-line="127"><span class="s2">        """</span>
-</span><span data-line="128">
-</span><span data-line="129">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="130"><span class="w">        </span><span class="sd">"""Opens the serial connection to the Arduino, and uses the</span>
-</span><span data-line="131"><span class="sd">        calibration to get the valve opening times (in seconds) for ports 1</span>
-</span><span data-line="132"><span class="sd">        (left) and 3 (right), for both the normal and large reward volumes.</span>
-</span><span data-line="133"><span class="sd">        Also pre-generates the first-cued side for every trial in the</span>
-</span><span data-line="134"><span class="sd">        session, and initializes the rolling-accuracy bookkeeping used to</span>
-</span><span data-line="135"><span class="sd">        adapt the task's difficulty (self.p).</span>
-</span><span data-line="136">
-</span><span data-line="137"><span class="sd">        Required settings (defined in training_protocol.py):</span>
-</span><span data-line="138"><span class="sd">        - self.settings.reward_volume: normal reward volume delivered on a</span>
-</span><span data-line="139"><span class="sd">          correct poke</span>
-</span><span data-line="140"><span class="sd">        - self.settings.reward_volume_large: larger reward volume, given on</span>
-</span><span data-line="141"><span class="sd">          ~10% of trials</span>
-</span><span data-line="142"><span class="sd">        - self.settings.c_led_on_time: max wait for the center poke, seconds</span>
-</span><span data-line="143"><span class="sd">        - self.settings.iti_time: inter-trial interval after a correct</span>
-</span><span data-line="144"><span class="sd">          response, seconds</span>
-</span><span data-line="145"><span class="sd">        - self.settings.noise_time: buzzer duration after a wrong poke, seconds</span>
-</span><span data-line="146"><span class="sd">        - self.settings.timeout: total penalty duration (buzzer + silence),</span>
-</span><span data-line="147"><span class="sd">          seconds</span>
-</span><span data-line="148"><span class="sd">        - self.settings.N_trials: size of the pre-generated first-cued-side</span>
-</span><span data-line="149"><span class="sd">          sequence -- must be at least the number of trials the session can run</span>
-</span><span data-line="150"><span class="sd">        - self.settings.p (optional, default 0.0): initial difficulty, 0-1</span>
-</span><span data-line="151"><span class="sd">        - self.settings.curve_power (optional, default 3.0): shape parameter</span>
-</span><span data-line="152"><span class="sd">          for the delay distribution, see get_delay_probabilities</span>
-</span><span data-line="153"><span class="sd">        """</span>
-</span><span data-line="154">
-</span><span data-line="155">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span>
-</span><span data-line="156">            <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"CONTROLLER_PORT"</span><span class="p">),</span>
-</span><span data-line="157">            <span class="n">baudrate</span><span class="o">=</span><span class="n">BAUDRATE</span><span class="p">,</span>
-</span><span data-line="158">            <span class="n">timeout</span><span class="o">=</span><span class="n">READ_TIMEOUT</span><span class="p">,</span>
-</span><span data-line="159">        <span class="p">)</span>
-</span><span data-line="160">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">reset_input_buffer</span><span class="p">()</span>
-</span><span data-line="161">
-</span><span data-line="162">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="163">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
+</span><span data-line="106"><span class="k">class</span><span class="w"> </span><span class="nc">Arduino6Delay</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
+</span><span data-line="107">
+</span><span data-line="108">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="109">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="110">
+</span><span data-line="111">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
+</span><span data-line="112"><span class="s2">        Delayed Side-Cue Discrimination Task, easy version</span>
+</span><span data-line="113"><span class="s2">        -----------------------------------------------------------------------------</span>
+</span><span data-line="114"><span class="s2">        - The mouse must poke the center port to start each trial, within</span>
+</span><span data-line="115"><span class="s2">          c_led_on_time seconds. No poke: the trial ends as an omission</span>
+</span><span data-line="116"><span class="s2">          (it doesn't count for the difficulty adaptation).</span>
+</span><span data-line="117"><span class="s2">        - One side's LED then turns on (the "first cue", side chosen at</span>
+</span><span data-line="118"><span class="s2">          random each trial). If the delay set for this trial passes with</span>
+</span><span data-line="119"><span class="s2">          no poke, the other side's LED turns on too, and the response</span>
+</span><span data-line="120"><span class="s2">          window continues up to a fixed total.</span>
+</span><span data-line="121"><span class="s2">        - Whichever port is poked first (in either phase) decides the</span>
+</span><span data-line="122"><span class="s2">          outcome: correct if it's the side that was cued first, incorrect</span>
+</span><span data-line="123"><span class="s2">          otherwise. No poke within the whole window is a miss.</span>
+</span><span data-line="124"><span class="s2">            * correct -&gt; reward, then a short delay before the next trial</span>
+</span><span data-line="125"><span class="s2">            * incorrect -&gt; the Pi plays a buzzer, then a silent timeout</span>
+</span><span data-line="126"><span class="s2">            * miss -&gt; the trial just ends, no penalty</span>
+</span><span data-line="127">
+</span><span data-line="128"><span class="s2">        The delay is drawn from a distribution controlled by self.p (0-1):</span>
+</span><span data-line="129"><span class="s2">        higher self.p means the second cue tends to come later, making the</span>
+</span><span data-line="130"><span class="s2">        trial harder. self.p is tuned automatically after every trial based</span>
+</span><span data-line="131"><span class="s2">        on a rolling accuracy window (see after_trial).</span>
+</span><span data-line="132"><span class="s2">        """</span>
+</span><span data-line="133">
+</span><span data-line="134">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="135"><span class="w">        </span><span class="sd">"""Opens the serial connection to the Arduino, and uses the</span>
+</span><span data-line="136"><span class="sd">        calibration to get the valve opening times (in seconds) for ports 1</span>
+</span><span data-line="137"><span class="sd">        (left) and 3 (right), for both the normal and large reward volumes.</span>
+</span><span data-line="138"><span class="sd">        Also initializes the rolling-accuracy bookkeeping used to adapt the</span>
+</span><span data-line="139"><span class="sd">        task's difficulty (self.p).</span>
+</span><span data-line="140">
+</span><span data-line="141"><span class="sd">        Required settings (defined in training_protocol.py):</span>
+</span><span data-line="142"><span class="sd">        - self.settings.reward_volume: normal reward volume delivered on a</span>
+</span><span data-line="143"><span class="sd">          correct poke</span>
+</span><span data-line="144"><span class="sd">        - self.settings.reward_volume_large: larger reward volume, given on</span>
+</span><span data-line="145"><span class="sd">          ~10% of trials</span>
+</span><span data-line="146"><span class="sd">        - self.settings.c_led_on_time: max wait for the center poke, seconds</span>
+</span><span data-line="147"><span class="sd">        - self.settings.iti_time: inter-trial interval after a correct</span>
+</span><span data-line="148"><span class="sd">          response, seconds</span>
+</span><span data-line="149"><span class="sd">        - self.settings.noise_time: buzzer duration after a wrong poke, seconds</span>
+</span><span data-line="150"><span class="sd">        - self.settings.timeout: total penalty duration (buzzer + silence),</span>
+</span><span data-line="151"><span class="sd">          seconds</span>
+</span><span data-line="152"><span class="sd">        - self.settings.p (optional, default 0.0): initial difficulty, 0-1</span>
+</span><span data-line="153"><span class="sd">        - self.settings.curve_power (optional, default 3.0): shape parameter</span>
+</span><span data-line="154"><span class="sd">          for the delay distribution, see get_delay_probabilities</span>
+</span><span data-line="155"><span class="sd">        - self.settings.delay_thresholds: the possible delays between the two</span>
+</span><span data-line="156"><span class="sd">          side cues (seconds) and, for each one, the p from which it starts</span>
+</span><span data-line="157"><span class="sd">          to appear (0: always)</span>
+</span><span data-line="158"><span class="sd">        """</span>
+</span><span data-line="159">
+</span><span data-line="160">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span>
+</span><span data-line="161">            <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"CONTROLLER_PORT"</span><span class="p">),</span>
+</span><span data-line="162">            <span class="n">baudrate</span><span class="o">=</span><span class="n">BAUDRATE</span><span class="p">,</span>
+</span><span data-line="163">            <span class="n">timeout</span><span class="o">=</span><span class="n">READ_TIMEOUT</span><span class="p">,</span>
 </span><span data-line="164">        <span class="p">)</span>
-</span><span data-line="165">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="166">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
-</span><span data-line="167">        <span class="p">)</span>
-</span><span data-line="168">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="169">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
-</span><span data-line="170">        <span class="p">)</span>
-</span><span data-line="171">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="172">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
-</span><span data-line="173">        <span class="p">)</span>
-</span><span data-line="174">
-</span><span data-line="175">        <span class="c1"># The side of the first cue is decided once per session, not per</span>
-</span><span data-line="176">        <span class="c1"># trial, so the whole sequence is reproducible/inspectable up front.</span>
-</span><span data-line="177">        <span class="bp">self</span><span class="o">.</span><span class="n">first_led_side_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
-</span><span data-line="178">            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">N_trials</span><span class="p">)</span>
-</span><span data-line="179">        <span class="p">)</span>
-</span><span data-line="180">
-</span><span data-line="181">        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-</span><span data-line="182">
-</span><span data-line="183">        <span class="c1"># Rolling-window accuracy, used to adapt self.p after every trial.</span>
-</span><span data-line="184">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="185">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">:</span> <span class="n">deque</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-</span><span data-line="186">
-</span><span data-line="187">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="188"><span class="w">        </span><span class="sd">"""Picks the trial's first-cued side, delay and reward volume,</span>
-</span><span data-line="189"><span class="sd">        loads the penalty sound, hands everything the Arduino needs to</span>
-</span><span data-line="190"><span class="sd">        run the trial in one message, then just listens for whatever it</span>
-</span><span data-line="191"><span class="sd">        reports until it signals the trial is over. The deadline below is</span>
-</span><span data-line="192"><span class="sd">        only a safety net for a lost/garbled message -- in normal operation</span>
-</span><span data-line="193"><span class="sd">        the Arduino's own EVENT_TRIAL_END always arrives well before it.</span>
-</span><span data-line="194"><span class="sd">        """</span>
-</span><span data-line="195">
-</span><span data-line="196">        <span class="n">first_side</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_led_side_vec</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-</span><span data-line="197">        <span class="n">curve_power</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"curve_power"</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
-</span><span data-line="198">        <span class="n">delay_values</span><span class="p">,</span> <span class="n">delay_probs</span> <span class="o">=</span> <span class="n">get_delay_probabilities</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">curve_power</span><span class="p">)</span>
-</span><span data-line="199">        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">delay_values</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">delay_probs</span><span class="p">)</span>
-</span><span data-line="200">        <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span>
-</span><span data-line="201">
-</span><span data-line="202">        <span class="n">large_reward</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.10</span>
-</span><span data-line="203">        <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="204">            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
-</span><span data-line="205">            <span class="k">if</span> <span class="n">large_reward</span>
-</span><span data-line="206">            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
-</span><span data-line="207">        <span class="p">)</span>
-</span><span data-line="208">
-</span><span data-line="209">        <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># left</span>
-</span><span data-line="210">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"left"</span>
-</span><span data-line="211">            <span class="n">port</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="212">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span>
-</span><span data-line="213">        <span class="k">else</span><span class="p">:</span>  <span class="c1"># right</span>
-</span><span data-line="214">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"right"</span>
-</span><span data-line="215">            <span class="n">port</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span data-line="216">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span>
-</span><span data-line="217">
-</span><span data-line="218">        <span class="n">c_led_on_timeout_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-</span><span data-line="219">        <span class="n">delay_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-</span><span data-line="220">        <span class="n">total_timeout_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TOTAL_RESPONSE_WINDOW</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-</span><span data-line="221">        <span class="n">valve_time_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">valvetime</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
-</span><span data-line="222">
-</span><span data-line="223">        <span class="c1"># Load the penalty sound now, well ahead of when it's actually</span>
-</span><span data-line="224">        <span class="c1"># needed (see the "incorrect" branch below) -- this is Pi-only</span>
-</span><span data-line="225">        <span class="c1"># hardware, the Arduino has no part in it.</span>
-</span><span data-line="226">        <span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</span><span data-line="227">
-</span><span data-line="228">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-</span><span data-line="229">            <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
-</span><span data-line="230">                <span class="s2">"&lt;BBHHHH"</span><span class="p">,</span>
-</span><span data-line="231">                <span class="n">CMD_START_TRIAL</span><span class="p">,</span>
-</span><span data-line="232">                <span class="n">port</span><span class="p">,</span>
-</span><span data-line="233">                <span class="n">c_led_on_timeout_ms</span><span class="p">,</span>
-</span><span data-line="234">                <span class="n">delay_ms</span><span class="p">,</span>
-</span><span data-line="235">                <span class="n">total_timeout_ms</span><span class="p">,</span>
-</span><span data-line="236">                <span class="n">valve_time_ms</span><span class="p">,</span>
-</span><span data-line="237">            <span class="p">)</span>
-</span><span data-line="238">        <span class="p">)</span>
-</span><span data-line="239">        <span class="n">t_sent</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
-</span><span data-line="240">        <span class="c1"># The Arduino's clock (elapsed_ms) starts at 0 when it gets the command.</span>
-</span><span data-line="241">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t_sent</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-</span><span data-line="242">
-</span><span data-line="243">        <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="s2">"omission"</span>
-</span><span data-line="244">        <span class="n">t_end</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># controller time of EVENT_TRIAL_END</span>
-</span><span data-line="245">        <span class="n">deadline</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="246">            <span class="n">t_sent</span>
-</span><span data-line="247">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span>
-</span><span data-line="248">            <span class="o">+</span> <span class="n">TOTAL_RESPONSE_WINDOW</span>
-</span><span data-line="249">            <span class="o">+</span> <span class="n">valvetime</span>
-</span><span data-line="250">            <span class="o">+</span> <span class="mf">2.0</span>  <span class="c1"># margin for serial/USB latency, never expected to matter</span>
-</span><span data-line="251">        <span class="p">)</span>
-</span><span data-line="252">        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
-</span><span data-line="253">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
-</span><span data-line="254">            <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">MESSAGE_SIZE</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
-</span><span data-line="255">            <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
-</span><span data-line="256">                <span class="k">continue</span>
-</span><span data-line="257">            <span class="n">buffer</span> <span class="o">+=</span> <span class="n">chunk</span>
-</span><span data-line="258">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MESSAGE_SIZE</span><span class="p">:</span>
-</span><span data-line="259">                <span class="k">continue</span>
-</span><span data-line="260">
-</span><span data-line="261">            <span class="n">event</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">elapsed_ms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&lt;BBI"</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
-</span><span data-line="262">            <span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="263">            <span class="n">t</span> <span class="o">=</span> <span class="n">elapsed_ms</span> <span class="o">/</span> <span class="mf">1000.0</span>  <span class="c1"># controller clock, seconds</span>
-</span><span data-line="264">
-</span><span data-line="265">            <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_STATE</span><span class="p">:</span>
-</span><span data-line="266">                <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="n">STATE_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"state</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
-</span><span data-line="267">
-</span><span data-line="268">            <span class="k">elif</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_POKE</span><span class="p">:</span>
-</span><span data-line="269">                <span class="bp">self</span><span class="o">.</span><span class="n">register_controller_event</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Port</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">In"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</span><span data-line="270">            <span class="k">elif</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_TRIAL_END</span><span class="p">:</span>
-</span><span data-line="271">                <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="n">_OUTCOME_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"miss"</span><span class="p">)</span>
-</span><span data-line="272">                <span class="n">t_end</span> <span class="o">=</span> <span class="n">t</span>
-</span><span data-line="273">                <span class="k">break</span>
-</span><span data-line="274">
-</span><span data-line="275">        <span class="k">if</span> <span class="n">t_end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="276">            <span class="k">return</span>  <span class="c1"># stopped or lost message: the trial is ended automatically</span>
-</span><span data-line="277">
-</span><span data-line="278">        <span class="c1"># The ITI and the penalty are timed by the Pi, starting when the</span>
-</span><span data-line="279">        <span class="c1"># Arduino finished, with the same states as the Bpod version.</span>
-</span><span data-line="280">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">:</span>
-</span><span data-line="281">            <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"iti"</span><span class="p">,</span> <span class="n">t_end</span><span class="p">)</span>
-</span><span data-line="282">            <span class="n">t_end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span><span class="p">)</span>
-</span><span data-line="283">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"incorrect"</span><span class="p">:</span>
-</span><span data-line="284">            <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"wrong_choice"</span><span class="p">,</span> <span class="n">t_end</span><span class="p">)</span>
-</span><span data-line="285">            <span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># play the sound loaded above</span>
-</span><span data-line="286">            <span class="n">t_end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">)</span>
-</span><span data-line="287">            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
-</span><span data-line="288">                <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"timeout"</span><span class="p">,</span> <span class="n">t_end</span><span class="p">)</span>
-</span><span data-line="289">                <span class="n">t_end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">)</span>
-</span><span data-line="290">        <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">t_end</span><span class="p">)</span>
-</span><span data-line="291">
-</span><span data-line="292">    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">):</span>
-</span><span data-line="293"><span class="w">        </span><span class="sd">"""Waits up to `seconds` (less if the task is asked to stop), discarding</span>
-</span><span data-line="294"><span class="sd">        any stray serial bytes. Returns the time actually waited, in seconds."""</span>
-</span><span data-line="295">
-</span><span data-line="296">        <span class="n">start</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
-</span><span data-line="297">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">start</span> <span class="o">+</span> <span class="n">seconds</span><span class="p">:</span>
-</span><span data-line="298">            <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">MESSAGE_SIZE</span><span class="p">)</span>
-</span><span data-line="299">        <span class="k">return</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
-</span><span data-line="300">
-</span><span data-line="301">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="302"><span class="w">        </span><span class="sd">"""Reads back the outcome the Arduino already decided, then adapts</span>
-</span><span data-line="303"><span class="sd">        self.p based on a rolling accuracy window."""</span>
-</span><span data-line="304">
-</span><span data-line="305">        <span class="c1"># No center poke: the animal didn't choose, so it doesn't count for</span>
-</span><span data-line="306">        <span class="c1"># the accuracy nor for adapting the difficulty.</span>
-</span><span data-line="307">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"omission"</span><span class="p">:</span>
-</span><span data-line="308">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
-</span><span data-line="309">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span><span data-line="310">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="s2">"omission"</span><span class="p">)</span>
-</span><span data-line="311">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="s2">"none"</span><span class="p">)</span>
-</span><span data-line="312">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
-</span><span data-line="313">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
-</span><span data-line="314">            <span class="k">return</span>
-</span><span data-line="315">
-</span><span data-line="316">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">:</span>
-</span><span data-line="317">            <span class="n">response_side</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span>
-</span><span data-line="318">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="319">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"incorrect"</span><span class="p">:</span>
-</span><span data-line="320">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"right"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">==</span> <span class="s2">"left"</span> <span class="k">else</span> <span class="s2">"left"</span>
-</span><span data-line="321">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="322">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="323">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"none"</span>
-</span><span data-line="324">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="325">
-</span><span data-line="326">        <span class="n">water</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span> <span class="k">else</span> <span class="mi">0</span>
-</span><span data-line="327">
-</span><span data-line="328">        <span class="c1"># Adapt difficulty: raise self.p after a strong window, lower it</span>
-</span><span data-line="329">        <span class="c1"># after a weak one, based on the last 20 trials.</span>
-</span><span data-line="330">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
-</span><span data-line="331">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
-</span><span data-line="332">        <span class="n">running_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">:])</span>
-</span><span data-line="333">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">maxlen</span><span class="p">:</span>
-</span><span data-line="334">            <span class="n">window_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span>
-</span><span data-line="335">            <span class="k">if</span> <span class="n">window_accuracy</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">:</span>
-</span><span data-line="336">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-</span><span data-line="337">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="338">            <span class="k">elif</span> <span class="n">window_accuracy</span> <span class="o">&lt;</span> <span class="mf">0.50</span><span class="p">:</span>
-</span><span data-line="339">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-</span><span data-line="340">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="341">
-</span><span data-line="342">        <span class="c1"># The response is the first side poke (Port1In / Port3In), if any.</span>
-</span><span data-line="343">        <span class="n">side_pokes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port1In"</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-</span><span data-line="344">            <span class="s2">"Port3In"</span><span class="p">,</span> <span class="p">[]</span>
-</span><span data-line="345">        <span class="p">)</span>
-</span><span data-line="346">        <span class="k">if</span> <span class="n">side_pokes</span><span class="p">:</span>
-</span><span data-line="347">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"first_trial_response_time"</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">side_pokes</span><span class="p">))</span>
-</span><span data-line="348">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"running_accuracy"</span><span class="p">,</span> <span class="n">running_accuracy</span><span class="p">)</span>
-</span><span data-line="349">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
-</span><span data-line="350">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="n">water</span><span class="p">)</span>
-</span><span data-line="351">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>
-</span><span data-line="352">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="n">response_side</span><span class="p">)</span>
-</span><span data-line="353">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
-</span><span data-line="354">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
-</span><span data-line="355">
-</span><span data-line="356">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="357"><span class="w">        </span><span class="sd">"""Closes the serial connection to the Arduino."""</span>
-</span><span data-line="358">
-</span><span data-line="359">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">is_open</span><span class="p">:</span>
-</span><span data-line="360">            <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="165">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">reset_input_buffer</span><span class="p">()</span>
+</span><span data-line="166">
+</span><span data-line="167">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="168">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
+</span><span data-line="169">        <span class="p">)</span>
+</span><span data-line="170">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="171">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
+</span><span data-line="172">        <span class="p">)</span>
+</span><span data-line="173">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="174">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
+</span><span data-line="175">        <span class="p">)</span>
+</span><span data-line="176">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="177">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
+</span><span data-line="178">        <span class="p">)</span>
+</span><span data-line="179">
+</span><span data-line="180">        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="181">
+</span><span data-line="182">        <span class="c1"># Rolling-window accuracy, used to adapt self.p after every trial.</span>
+</span><span data-line="183">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="184">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">:</span> <span class="n">deque</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</span><span data-line="185">
+</span><span data-line="186">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="187"><span class="w">        </span><span class="sd">"""Picks the trial's first-cued side, delay and reward volume,</span>
+</span><span data-line="188"><span class="sd">        loads the penalty sound, hands everything the Arduino needs to</span>
+</span><span data-line="189"><span class="sd">        run the trial in one message, then just listens for whatever it</span>
+</span><span data-line="190"><span class="sd">        reports until it signals the trial is over. The deadline below is</span>
+</span><span data-line="191"><span class="sd">        only a safety net for a lost/garbled message -- in normal operation</span>
+</span><span data-line="192"><span class="sd">        the Arduino's own EVENT_TRIAL_END always arrives well before it.</span>
+</span><span data-line="193"><span class="sd">        """</span>
+</span><span data-line="194">
+</span><span data-line="195">        <span class="n">first_side</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># first-cued side: 0 left, 1 right</span>
+</span><span data-line="196">        <span class="n">curve_power</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"curve_power"</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+</span><span data-line="197">        <span class="n">delay_values</span><span class="p">,</span> <span class="n">delay_probs</span> <span class="o">=</span> <span class="n">get_delay_probabilities</span><span class="p">(</span>
+</span><span data-line="198">            <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">delay_thresholds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">delay_thresholds</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">curve_power</span>
+</span><span data-line="199">        <span class="p">)</span>
+</span><span data-line="200">        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">delay_values</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">delay_probs</span><span class="p">)</span>
+</span><span data-line="201">        <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span>
+</span><span data-line="202">
+</span><span data-line="203">        <span class="n">large_reward</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.10</span>
+</span><span data-line="204">        <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="205">            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
+</span><span data-line="206">            <span class="k">if</span> <span class="n">large_reward</span>
+</span><span data-line="207">            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
+</span><span data-line="208">        <span class="p">)</span>
+</span><span data-line="209">
+</span><span data-line="210">        <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># left</span>
+</span><span data-line="211">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"left"</span>
+</span><span data-line="212">            <span class="n">port</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="213">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span>
+</span><span data-line="214">        <span class="k">else</span><span class="p">:</span>  <span class="c1"># right</span>
+</span><span data-line="215">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"right"</span>
+</span><span data-line="216">            <span class="n">port</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="217">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span>
+</span><span data-line="218">
+</span><span data-line="219">        <span class="n">c_led_on_timeout_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span data-line="220">        <span class="n">delay_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span data-line="221">        <span class="n">total_timeout_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">TOTAL_RESPONSE_WINDOW</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span data-line="222">        <span class="n">valve_time_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">valvetime</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+</span><span data-line="223">
+</span><span data-line="224">        <span class="c1"># Load the penalty sound now, well ahead of when it's actually</span>
+</span><span data-line="225">        <span class="c1"># needed (see the "incorrect" branch below) -- this is Pi-only</span>
+</span><span data-line="226">        <span class="c1"># hardware, the Arduino has no part in it.</span>
+</span><span data-line="227">        <span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span data-line="228">
+</span><span data-line="229">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+</span><span data-line="230">            <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+</span><span data-line="231">                <span class="s2">"&lt;BBHHHH"</span><span class="p">,</span>
+</span><span data-line="232">                <span class="n">CMD_START_TRIAL</span><span class="p">,</span>
+</span><span data-line="233">                <span class="n">port</span><span class="p">,</span>
+</span><span data-line="234">                <span class="n">c_led_on_timeout_ms</span><span class="p">,</span>
+</span><span data-line="235">                <span class="n">delay_ms</span><span class="p">,</span>
+</span><span data-line="236">                <span class="n">total_timeout_ms</span><span class="p">,</span>
+</span><span data-line="237">                <span class="n">valve_time_ms</span><span class="p">,</span>
+</span><span data-line="238">            <span class="p">)</span>
+</span><span data-line="239">        <span class="p">)</span>
+</span><span data-line="240">        <span class="n">t_sent</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="241">        <span class="c1"># The Arduino's clock (elapsed_ms) starts at 0 when it gets the command.</span>
+</span><span data-line="242">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t_sent</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="243">
+</span><span data-line="244">        <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="s2">"omission"</span>
+</span><span data-line="245">        <span class="n">t_end</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># controller time of EVENT_TRIAL_END</span>
+</span><span data-line="246">        <span class="n">deadline</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="247">            <span class="n">t_sent</span>
+</span><span data-line="248">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span>
+</span><span data-line="249">            <span class="o">+</span> <span class="n">TOTAL_RESPONSE_WINDOW</span>
+</span><span data-line="250">            <span class="o">+</span> <span class="n">valvetime</span>
+</span><span data-line="251">            <span class="o">+</span> <span class="mf">2.0</span>  <span class="c1"># margin for serial/USB latency, never expected to matter</span>
+</span><span data-line="252">        <span class="p">)</span>
+</span><span data-line="253">        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+</span><span data-line="254">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+</span><span data-line="255">            <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">MESSAGE_SIZE</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
+</span><span data-line="256">            <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+</span><span data-line="257">                <span class="k">continue</span>
+</span><span data-line="258">            <span class="n">buffer</span> <span class="o">+=</span> <span class="n">chunk</span>
+</span><span data-line="259">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MESSAGE_SIZE</span><span class="p">:</span>
+</span><span data-line="260">                <span class="k">continue</span>
+</span><span data-line="261">
+</span><span data-line="262">            <span class="n">event</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">elapsed_ms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&lt;BBI"</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
+</span><span data-line="263">            <span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="264">            <span class="n">t</span> <span class="o">=</span> <span class="n">elapsed_ms</span> <span class="o">/</span> <span class="mf">1000.0</span>  <span class="c1"># controller clock, seconds</span>
+</span><span data-line="265">
+</span><span data-line="266">            <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_STATE</span><span class="p">:</span>
+</span><span data-line="267">                <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="n">STATE_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"state</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
+</span><span data-line="268">
+</span><span data-line="269">            <span class="k">elif</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_POKE</span><span class="p">:</span>
+</span><span data-line="270">                <span class="bp">self</span><span class="o">.</span><span class="n">register_controller_event</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Port</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">In"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</span><span data-line="271">            <span class="k">elif</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_TRIAL_END</span><span class="p">:</span>
+</span><span data-line="272">                <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="n">_OUTCOME_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"miss"</span><span class="p">)</span>
+</span><span data-line="273">                <span class="n">t_end</span> <span class="o">=</span> <span class="n">t</span>
+</span><span data-line="274">                <span class="k">break</span>
+</span><span data-line="275">
+</span><span data-line="276">        <span class="k">if</span> <span class="n">t_end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="277">            <span class="k">return</span>  <span class="c1"># stopped or lost message: the trial is ended automatically</span>
+</span><span data-line="278">
+</span><span data-line="279">        <span class="c1"># The ITI and the penalty are timed by the Pi, starting when the</span>
+</span><span data-line="280">        <span class="c1"># Arduino finished, with the same states as the Bpod version.</span>
+</span><span data-line="281">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">:</span>
+</span><span data-line="282">            <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"iti"</span><span class="p">,</span> <span class="n">t_end</span><span class="p">)</span>
+</span><span data-line="283">            <span class="n">t_end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span><span class="p">)</span>
+</span><span data-line="284">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"incorrect"</span><span class="p">:</span>
+</span><span data-line="285">            <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"wrong_choice"</span><span class="p">,</span> <span class="n">t_end</span><span class="p">)</span>
+</span><span data-line="286">            <span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># play the sound loaded above</span>
+</span><span data-line="287">            <span class="n">t_end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">)</span>
+</span><span data-line="288">            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
+</span><span data-line="289">                <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"timeout"</span><span class="p">,</span> <span class="n">t_end</span><span class="p">)</span>
+</span><span data-line="290">                <span class="n">t_end</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">)</span>
+</span><span data-line="291">        <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">t_end</span><span class="p">)</span>
+</span><span data-line="292">
+</span><span data-line="293">    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">):</span>
+</span><span data-line="294"><span class="w">        </span><span class="sd">"""Waits up to `seconds` (less if the task is asked to stop), discarding</span>
+</span><span data-line="295"><span class="sd">        any stray serial bytes. Returns the time actually waited, in seconds."""</span>
+</span><span data-line="296">
+</span><span data-line="297">        <span class="n">start</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="298">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">start</span> <span class="o">+</span> <span class="n">seconds</span><span class="p">:</span>
+</span><span data-line="299">            <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">MESSAGE_SIZE</span><span class="p">)</span>
+</span><span data-line="300">        <span class="k">return</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+</span><span data-line="301">
+</span><span data-line="302">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="303"><span class="w">        </span><span class="sd">"""Reads back the outcome the Arduino already decided, then adapts</span>
+</span><span data-line="304"><span class="sd">        self.p based on a rolling accuracy window."""</span>
+</span><span data-line="305">
+</span><span data-line="306">        <span class="c1"># No center poke: the animal didn't choose, so it doesn't count for</span>
+</span><span data-line="307">        <span class="c1"># the accuracy nor for adapting the difficulty.</span>
+</span><span data-line="308">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"omission"</span><span class="p">:</span>
+</span><span data-line="309">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+</span><span data-line="310">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="311">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="s2">"omission"</span><span class="p">)</span>
+</span><span data-line="312">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="s2">"none"</span><span class="p">)</span>
+</span><span data-line="313">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
+</span><span data-line="314">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
+</span><span data-line="315">            <span class="k">return</span>
+</span><span data-line="316">
+</span><span data-line="317">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">:</span>
+</span><span data-line="318">            <span class="n">response_side</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span>
+</span><span data-line="319">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="320">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"incorrect"</span><span class="p">:</span>
+</span><span data-line="321">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"right"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">==</span> <span class="s2">"left"</span> <span class="k">else</span> <span class="s2">"left"</span>
+</span><span data-line="322">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="323">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="324">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"none"</span>
+</span><span data-line="325">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="326">
+</span><span data-line="327">        <span class="n">water</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span> <span class="k">else</span> <span class="mi">0</span>
+</span><span data-line="328">
+</span><span data-line="329">        <span class="c1"># Adapt difficulty: raise self.p after a strong window, lower it</span>
+</span><span data-line="330">        <span class="c1"># after a weak one, based on the last 20 trials.</span>
+</span><span data-line="331">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
+</span><span data-line="332">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
+</span><span data-line="333">        <span class="n">running_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">:])</span>
+</span><span data-line="334">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">maxlen</span><span class="p">:</span>
+</span><span data-line="335">            <span class="n">window_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span>
+</span><span data-line="336">            <span class="k">if</span> <span class="n">window_accuracy</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">:</span>
+</span><span data-line="337">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span data-line="338">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="339">            <span class="k">elif</span> <span class="n">window_accuracy</span> <span class="o">&lt;</span> <span class="mf">0.50</span><span class="p">:</span>
+</span><span data-line="340">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="341">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="342">
+</span><span data-line="343">        <span class="c1"># The response is the first side poke (Port1In / Port3In), if any.</span>
+</span><span data-line="344">        <span class="n">side_pokes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port1In"</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span><span data-line="345">            <span class="s2">"Port3In"</span><span class="p">,</span> <span class="p">[]</span>
+</span><span data-line="346">        <span class="p">)</span>
+</span><span data-line="347">        <span class="k">if</span> <span class="n">side_pokes</span><span class="p">:</span>
+</span><span data-line="348">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"first_trial_response_time"</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">side_pokes</span><span class="p">))</span>
+</span><span data-line="349">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"running_accuracy"</span><span class="p">,</span> <span class="n">running_accuracy</span><span class="p">)</span>
+</span><span data-line="350">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+</span><span data-line="351">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="n">water</span><span class="p">)</span>
+</span><span data-line="352">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span><span class="p">)</span>
+</span><span data-line="353">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="n">response_side</span><span class="p">)</span>
+</span><span data-line="354">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
+</span><span data-line="355">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
+</span><span data-line="356">
+</span><span data-line="357">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="358"><span class="w">        </span><span class="sd">"""Closes the serial connection to the Arduino."""</span>
+</span><span data-line="359">
+</span><span data-line="360">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">is_open</span><span class="p">:</span>
+</span><span data-line="361">            <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </section>
@@ -1130,7 +1131,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ce4f1c03"></script>
+      <script src="../_static/documentation_options.js?v=9ef4031c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -83,32 +83,24 @@ code/
 
 The training protocol must live in a file named exactly `training_protocol.py` inside
 your `code/` folder. It defines a class called `TrainingProtocol` that inherits from
-`TrainingProtocolBase`:
+`TrainingProtocolBase`.
 
-```python
-from village.classes.training import TrainingProtocolBase
+The code on this page is taken from the training protocol of the example tasks
+([training_protocol.py](../examples/training_protocol.md)), which moves each subject
+through six Bpod stages, from habituation to a delay discrimination task:
 
-class TrainingProtocol(TrainingProtocolBase):
-    """
-    Defines the automated training logic for the project.
+<!-- The code on this page is included from docs/source/examples/files/training_protocol.py,
+selected by method name (pyobject) and by some lines of text (start-at / end-before).
+If those lines change there, update them here too, and check the page: a block whose
+text is not found can come out empty. -->
 
-    Runs every time a session ends and determines:
-    - Which task the subject will run next
-    - How training parameters are updated based on performance
-    - How long the subject must wait before its next session (refractory period)
-
-    Required methods:
-    - __init__
-    - default_training_settings
-    - update_training_settings
-
-    Optional method:
-    - gui_tabs
-    """
-
-    def __init__(self) -> None:
-        super().__init__()
+```{literalinclude} ../examples/files/training_protocol.py
+:language: python
+:end-before: "    def default_training_settings"
 ```
+
+Every `TrainingProtocol` must define `default_training_settings` and
+`update_training_settings`; `define_gui_tabs` is optional.
 
 ---
 
@@ -134,55 +126,34 @@ After creation, a subject's settings can be modified in three ways: manually fro
 within a running task; or automatically by `update_training_settings()` at the end of
 each session.
 
-
-```python
-    def default_training_settings(self) -> None:
-        """
-        Define all initial training parameters for new subjects.
-
-        Required parameters:
-        - next_task (str): Name of the first task the subject will run.
-        - refractory_period (int): Seconds the subject must wait between sessions.
-        - minimum_duration (int): Seconds before door 2 opens (subject may leave).
-        - maximum_duration (int): Seconds before the task stops automatically.
-
-        Any additional task-specific parameters can be defined below.
-        """
-
-        # Required parameters
-        self.settings.next_task = "Habituation"
-        self.settings.refractory_period = 3600 * 4   # 4 hours between sessions
-        self.settings.minimum_duration = 600          # 10 min minimum session length
-        self.settings.maximum_duration = 900          # 15 min maximum session length
-
-        # Task-specific parameters
-        self.settings.reward_amount_ml = 0.08
-        self.settings.stage = 1
-        self.settings.light_intensity_high = 255      # Port light intensity (0–255)
-        self.settings.light_intensity_low = 50
-        self.settings.trial_types = ["left_easy", "right_easy",
-                                     "left_hard", "right_hard"]
-        self.settings.punishment_time = 1             # seconds
-        self.settings.iti_time = 2                    # inter-trial interval, seconds
-        self.settings.response_time = 10              # seconds before timeout
+```{literalinclude} ../examples/files/training_protocol.py
+:language: python
+:pyobject: TrainingProtocol.default_training_settings
+:start-at: "# Required parameters"
+:dedent: 8
 ```
 
-`next_task` determines the first task run for a newly created subject. `refractory_period`
-controls how long a subject must wait after finishing a session before it is allowed back
-into the operant box — important in multi-animal setups to prevent individual animals from
-monopolizing access. `minimum_duration` is when door 2 opens and the animal can choose to
-leave; `maximum_duration` is when the task stops unconditionally and the system waits for
-the animal to return home (door 2 is already open at this point, so
+The first four settings are required. `next_task` determines the first task run for a
+newly created subject. `refractory_period` controls how long a subject must wait after
+finishing a session before it is allowed back into the operant box — important in
+multi-animal setups to prevent individual animals from monopolizing access.
+`minimum_duration` is when door 2 opens and the animal can choose to leave;
+`maximum_duration` is when the task stops unconditionally and the system waits for the
+animal to return home (door 2 is already open at this point, so
 `maximum_duration` ≥ `minimum_duration` always).
+
+The rest are the settings your tasks read — here, the ones used by the six example
+tasks (each task lists the ones it needs in its own code).
 
 ---
 
 #### `update_training_settings()`
 
-This method runs automatically at the end of every session. It receives the subject's
-full session history as a DataFrame and updates whichever settings should change based
-on performance. The updated values are stored back into `subjects.csv` and used in the
-subject's next session.
+This method runs automatically at the end of every session. It looks at the subject's
+history and updates whichever settings should change based on performance: typically
+`next_task`, to move the subject to the next stage, and any setting that changes with
+it. The updated values are stored back into `subjects.csv` and used in the subject's
+next session.
 
 ```{admonition} Warning
 :class: warning
@@ -196,93 +167,94 @@ explicitly.
 ```
 
 Available attributes:
-- `self.subject` — name of the current subject
-- `self.last_task` — name of the task that just finished
-- `self.df` — DataFrame with all historical session data for this subject
+- `self.subject` — name of the current subject.
+- `self.last_task` — name of the task that has just finished.
+- `self.df` — every trial this subject has ever done, in all its sessions and tasks:
+  **one row per trial**, including the session that has just finished. The
+  `session` column tells the sessions apart (it is numbered per subject), the `task`
+  column says which task each trial belongs to, and every value the tasks registered
+  with `register_value` is a column too (`outcome`, `water`...).
 
+Because `self.df` has one row per trial, a criterion like "100 trials in the last two
+sessions" is computed by filtering rows:
 
+- `df2 = self.df[self.df["task"] == "Bpod2Passive"]` — the trials of one task.
+- `df2["session"].unique()` — its sessions, in order (so `[-2:]` are the last two).
+- `df2[df2["session"].isin(last_2_sessions)]` — the trials of those sessions; its
+  number of rows is the number of trials.
+- `(df3_last_2["outcome"] == "correct").mean()` — the fraction of those trials whose
+  `outcome` was `"correct"` (a value registered by the task in `after_trial`).
 
-```python
-    def update_training_settings(self) -> None:
+The first three stages of the example protocol show the usual kinds of criteria, from
+the simplest to the most complete:
 
-        """This example auto-advances the subject once it shows consistent performance:
-
-            - After "Habituation": once there are at least 3 sessions and the last
-            one had 100+ trials, it moves the subject to "FollowTheLight" and lowers
-            the reward to 0.07 ml.
-
-            - After "FollowTheLight": once there are at least 2 sessions, and both the
-            last two hit ≥85% correct and ≥100 trials, it advances the subject to
-            stage = 2 (still the same task) and lowers the reward further to 0.05 ml."""
-
-        if self.last_task == "Habituation":
-            df_habituation = self.df[self.df["task"] == "Habituation"]
-
-            if len(df_habituation) >= 3:
-                trials_last_session = df_habituation.iloc[-1]["trial"].iloc[-1]
-
-                if trials_last_session >= 100:
-                    self.settings.next_task = "FollowTheLight"
-                    self.settings.reward_amount_ml = 0.07
-
-        elif self.last_task == "FollowTheLight":
-            df_ftl = self.df[self.df["task"] == "FollowTheLight"]
-
-            if len(df_ftl) >= 2:
-                perf_last = df_ftl.iloc[-1]["correct"].mean()
-                perf_prev = df_ftl.iloc[-2]["correct"].mean()
-                trials_last = df_ftl.iloc[-1]["trial"].iloc[-1]
-                trials_prev = df_ftl.iloc[-2]["trial"].iloc[-1]
-
-                if (perf_last >= 0.85 and perf_prev >= 0.85 and
-                        trials_last >= 100 and trials_prev >= 100):
-                    self.settings.stage = 2
-                    self.settings.reward_amount_ml = 0.05
+```{literalinclude} ../examples/files/training_protocol.py
+:language: python
+:pyobject: TrainingProtocol.update_training_settings
+:start-at: if self.last_task == "Bpod1Habituation":
+:end-before: elif self.last_task == "Bpod4CenterInitiated":
+:dedent: 8
 ```
+
+- **After habituation**, the subject always moves on: one session is enough.
+- **After the passive stage**, it needs at least 2 sessions, and at least 100 trials
+  between the last two.
+- **After the active stage**, it also needs at least 70% of those trials to be correct.
+
+When the subject moves on, the protocol sets the next task and the settings that change
+with it (here, longer sessions). If the criterion is not met, nothing is changed, so
+`next_task` stays the same and the subject repeats the stage. Stages 4 and 5 follow the
+same pattern, with 200 trials, and stage 5 also turns on the penalty settings.
+
+The last stage shows another use: carrying a value over from one session to the next.
+The delay task adapts its difficulty `p` during the session and registers it in every
+trial; the protocol makes the next session start from the last value, minus 0.05:
+
+```{literalinclude} ../examples/files/training_protocol.py
+:language: python
+:pyobject: TrainingProtocol.update_training_settings
+:start-at: elif self.last_task == "Bpod6Delay":
+:dedent: 8
+```
+
+Any other task (one run manually, outside the progression) does not match any branch,
+so `next_task` is left as it was. The complete protocol is in
+[training_protocol.py](../examples/training_protocol.md).
 
 ---
 
-#### `gui_tabs()` *(optional)*
+#### `define_gui_tabs()` *(optional)*
 
 If your protocol has many variables, this method lets you organize them into named tabs
 in the GUI panel that appears when launching a task manually. Variables not assigned to
 any tab are placed in a default **General** tab. You can also use the reserved `"Hide"`
 tab name to suppress a variable from the GUI entirely.
 
-You can additionally restrict the allowed values for any variable, which causes a
-dropdown menu to appear instead of a free-text field.
+```{literalinclude} ../examples/files/training_protocol.py
+:language: python
+:pyobject: TrainingProtocol.define_gui_tabs
+:dedent: 4
+```
+
+You can additionally restrict the allowed values of a variable in
+`self.gui_tabs_restricted`, which shows a dropdown menu instead of a free-text field.
+The example protocol doesn't need it; it would look like this:
 
 ```python
-    def gui_tabs(self) -> None:
-
-        self.gui_tabs = {
-            "Port_variables": ["reward_amount_ml",
-                               "light_intensity_high",
-                               "light_intensity_low"],
-            "Other_variables": ["stage",
-                                "trial_types",
-                                "punishment_time",
-                                "iti_time",
-                                "response_time"],
-        }
-
-        # Restrict allowed values — renders as a dropdown in the GUI
-        self.gui_tabs_restricted = {
-            "trial_types": ["left_easy", "right_easy", "left_hard", "right_hard"],
-        }
+self.gui_tabs_restricted = {
+    "reward_side": ["left", "right", "both"],  # illustrative, not a real setting
+}
 ```
 
 ---
 
 ### Summary
 
-Every `TrainingProtocol` class must implement three methods:
+Every `TrainingProtocol` class implements these methods:
 
 | Method | When it runs | Purpose |
 | :--- | :--- | :--- |
 | `__init__` | At import | Initialize the class |
 | `default_training_settings` | When a new subject is created | Define initial parameter values |
 | `update_training_settings` | After every session ends | Update parameters based on performance |
-
-The optional `gui_tabs` method controls how parameters are displayed when launching a
-task manually from the GUI.
+| `define_gui_tabs` *(optional)* | When the settings are shown in the GUI | Organize the settings into tabs |

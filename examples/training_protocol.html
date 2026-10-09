@@ -506,180 +506,222 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="training-protocol-py">
 <h1>training_protocol.py</h1>
-<p>The training protocol that moves each subject through the six stages of the Bpod and Arduino task families (habituation → delay), deciding the next task and its settings after every session.</p>
+<p>The training protocol that moves each subject through the six Bpod training stages (habituation → delay), deciding the next task after every session. A practically identical one works for the Arduino tasks, changing only the task names.</p>
 <p><a class="reference download internal" download="" href="../_downloads/266244346494823cbbc51fcb57090f33/training_protocol.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">training_protocol.py</span></code></a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.training_protocol_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingProtocolBase</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="c1"># Stage number -&gt; task-name suffix, shared by both families (BpodNXxx /</span>
-</span><span data-line="4"><span class="c1"># ArduinoNXxx name the exact same stage the exact same way).</span>
-</span><span data-line="5"><span class="n">STAGE_NAMES</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="6">    <span class="mi">1</span><span class="p">:</span> <span class="s2">"Habituation"</span><span class="p">,</span>
-</span><span data-line="7">    <span class="mi">2</span><span class="p">:</span> <span class="s2">"Passive"</span><span class="p">,</span>
-</span><span data-line="8">    <span class="mi">3</span><span class="p">:</span> <span class="s2">"Active"</span><span class="p">,</span>
-</span><span data-line="9">    <span class="mi">4</span><span class="p">:</span> <span class="s2">"CenterInitiated"</span><span class="p">,</span>
-</span><span data-line="10">    <span class="mi">5</span><span class="p">:</span> <span class="s2">"IntroducePenalty"</span><span class="p">,</span>
-</span><span data-line="11">    <span class="mi">6</span><span class="p">:</span> <span class="s2">"Delay"</span><span class="p">,</span>
-</span><span data-line="12"><span class="p">}</span>
-</span><span data-line="13"><span class="n">LAST_STAGE</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">STAGE_NAMES</span><span class="p">)</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">TrainingProtocol</span><span class="p">(</span><span class="n">TrainingProtocolBase</span><span class="p">):</span>
+</span><span data-line="5"><span class="w">    </span><span class="sd">"""Moves each subject through the 6 Bpod training stages, one after another:</span>
+</span><span data-line="6"><span class="sd">    Bpod1Habituation -&gt; Bpod2Passive -&gt; Bpod3Active -&gt; Bpod4CenterInitiated -&gt;</span>
+</span><span data-line="7"><span class="sd">    Bpod5IntroducePenalty -&gt; Bpod6Delay (bpod_1_habituation.py ..</span>
+</span><span data-line="8"><span class="sd">    bpod_6_delay.py).</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="sd">    A practically identical protocol works for the Arduino versions of the</span>
+</span><span data-line="11"><span class="sd">    same tasks (arduino_1_habituation.py .. arduino_6_delay.py): they read the</span>
+</span><span data-line="12"><span class="sd">    same settings and register the same values, so it is enough to change the</span>
+</span><span data-line="13"><span class="sd">    task names (Arduino1Habituation, Arduino2Passive...).</span>
 </span><span data-line="14">
-</span><span data-line="15">
-</span><span data-line="16"><span class="k">class</span><span class="w"> </span><span class="nc">TrainingProtocol</span><span class="p">(</span><span class="n">TrainingProtocolBase</span><span class="p">):</span>
-</span><span data-line="17"><span class="w">    </span><span class="sd">"""Drives the 6-stage progression shared by the Bpod and Arduino task</span>
-</span><span data-line="18"><span class="sd">    families (bpod_1_habituation.py .. bpod_6_delay.py and their</span>
-</span><span data-line="19"><span class="sd">    arduino_1_habituation.py .. arduino_6_delay.py twins).</span>
+</span><span data-line="15"><span class="sd">    The other example tasks (bpod_example_*.py, bpod_purge_ports.py,</span>
+</span><span data-line="16"><span class="sd">    bpod_area2_sound.py, bpod_touchscreen.py, raspberry_*.py) are not part of</span>
+</span><span data-line="17"><span class="sd">    the progression: they are run manually, and this protocol leaves next_task</span>
+</span><span data-line="18"><span class="sd">    alone after them.</span>
+</span><span data-line="19"><span class="sd">    """</span>
 </span><span data-line="20">
-</span><span data-line="21"><span class="sd">    Both families read the exact same settings, use the exact same stage</span>
-</span><span data-line="22"><span class="sd">    numbering/names, and register the exact same after_trial() values</span>
-</span><span data-line="23"><span class="sd">    (outcome, water, response_side, ...) -- so one training protocol works</span>
-</span><span data-line="24"><span class="sd">    for either, without needing to know which one is actually running.</span>
-</span><span data-line="25"><span class="sd">    Whichever family next_task currently names (see default_training_settings</span>
-</span><span data-line="26"><span class="sd">    below) is the one that keeps running: update_training_settings only</span>
-</span><span data-line="27"><span class="sd">    ever advances the stage number, never switches family on its own.</span>
+</span><span data-line="21">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="22">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="23">
+</span><span data-line="24">    <span class="k">def</span><span class="w"> </span><span class="nf">default_training_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="25"><span class="w">        </span><span class="sd">"""Called once, when a new subject is created. These are the settings of</span>
+</span><span data-line="26"><span class="sd">        the first stage; update_training_settings changes some of them when the</span>
+</span><span data-line="27"><span class="sd">        subject moves to the next stage.</span>
 </span><span data-line="28">
-</span><span data-line="29"><span class="sd">    The reference/demo tasks in this project (bpod_example_*.py,</span>
-</span><span data-line="30"><span class="sd">    bpod_purge_ports.py, bpod_area2_sound.py, bpod_touchscreen.py,</span>
-</span><span data-line="31"><span class="sd">    raspberry_area1_sound.py, raspberry_touchscreen.py) aren't part of this</span>
-</span><span data-line="32"><span class="sd">    progression -- they're meant to be selected and run manually, and this</span>
-</span><span data-line="33"><span class="sd">    protocol leaves next_task alone whenever last_task isn't one of the 12</span>
-</span><span data-line="34"><span class="sd">    stage tasks.</span>
-</span><span data-line="35"><span class="sd">    """</span>
-</span><span data-line="36">
-</span><span data-line="37">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="38">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="39">
-</span><span data-line="40">    <span class="k">def</span><span class="w"> </span><span class="nf">default_training_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="41"><span class="w">        </span><span class="sd">"""Called once, when a new subject is created.</span>
-</span><span data-line="42">
-</span><span data-line="43"><span class="sd">        Required parameters:</span>
-</span><span data-line="44"><span class="sd">        - next_task, refractory_period, minimum_duration, maximum_duration.</span>
-</span><span data-line="45">
-</span><span data-line="46"><span class="sd">        Task-specific parameters (read across bpod_1..6 / arduino_1..6):</span>
-</span><span data-line="47"><span class="sd">        - reward_volume / reward_volume_large: normal and occasional-large</span>
-</span><span data-line="48"><span class="sd">          reward volumes, in microliters.</span>
-</span><span data-line="49"><span class="sd">        - led_intensity: side port LED brightness (0-255), used by the</span>
-</span><span data-line="50"><span class="sd">          Bpod tasks (the Arduino ones drive their LEDs directly).</span>
-</span><span data-line="51"><span class="sd">        - led_on_time / c_led_on_time: max duration of the side/center LED</span>
-</span><span data-line="52"><span class="sd">          response windows, seconds.</span>
-</span><span data-line="53"><span class="sd">        - iti_time: inter-trial interval, seconds.</span>
-</span><span data-line="54"><span class="sd">        - timeout: punishment timeout after an incorrect response</span>
-</span><span data-line="55"><span class="sd">          (introduce_penalty), seconds.</span>
-</span><span data-line="56"><span class="sd">        - noise_time: white-noise punishment duration (introduce_penalty),</span>
-</span><span data-line="57"><span class="sd">          seconds.</span>
-</span><span data-line="58"><span class="sd">        - p / curve_power: delay-task (6) psychometric parameters -- p is</span>
-</span><span data-line="59"><span class="sd">          the probability of the harder (longer-delay) trial types,</span>
-</span><span data-line="60"><span class="sd">          curve_power shapes how per-delay difficulty scales with p.</span>
-</span><span data-line="61"><span class="sd">        - N_trials: soft cap on trials per session for the delay task.</span>
-</span><span data-line="62"><span class="sd">        - trials_to_advance: minimum trials in the last session of a stage</span>
-</span><span data-line="63"><span class="sd">          before update_training_settings promotes the subject to the next</span>
-</span><span data-line="64"><span class="sd">          one (see below).</span>
-</span><span data-line="65">
-</span><span data-line="66"><span class="sd">        Not part of the 1-6 progression, but read by the reference tasks in</span>
-</span><span data-line="67"><span class="sd">        this project that get selected and run manually rather than chained</span>
-</span><span data-line="68"><span class="sd">        by update_training_settings:</span>
-</span><span data-line="69"><span class="sd">        - long_duration / short_duration: how long each of the two</span>
-</span><span data-line="70"><span class="sd">          rectangles stays on screen in bpod_touchscreen.py, seconds.</span>
-</span><span data-line="71"><span class="sd">        """</span>
-</span><span data-line="72">
-</span><span data-line="73">        <span class="c1"># Required parameters</span>
-</span><span data-line="74">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">"Bpod1Habituation"</span>
-</span><span data-line="75">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span> <span class="o">=</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mi">4</span>  <span class="c1"># 4 hours between sessions</span>
-</span><span data-line="76">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">600</span>  <span class="c1"># 10 min minimum session length</span>
-</span><span data-line="77">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">2700</span>  <span class="c1"># 45 min maximum session length</span>
-</span><span data-line="78">
-</span><span data-line="79">        <span class="c1"># Task-specific parameters</span>
-</span><span data-line="80">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># microliters</span>
-</span><span data-line="81">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># microliters</span>
-</span><span data-line="82">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span> <span class="o">=</span> <span class="mi">255</span>  <span class="c1"># 0-255</span>
-</span><span data-line="83">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_on_time</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># seconds</span>
-</span><span data-line="84">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># seconds</span>
-</span><span data-line="85">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># seconds</span>
-</span><span data-line="86">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># seconds</span>
-</span><span data-line="87">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># seconds</span>
-</span><span data-line="88">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="89">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">curve_power</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span data-line="90">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">N_trials</span> <span class="o">=</span> <span class="mi">1000</span>
+</span><span data-line="29"><span class="sd">        Required parameters:</span>
+</span><span data-line="30"><span class="sd">        - next_task, refractory_period, minimum_duration, maximum_duration.</span>
+</span><span data-line="31">
+</span><span data-line="32"><span class="sd">        Task-specific parameters (read by bpod_1..6):</span>
+</span><span data-line="33"><span class="sd">        - reward_volume / reward_volume_large: normal and occasional-large</span>
+</span><span data-line="34"><span class="sd">          reward volumes, in microliters.</span>
+</span><span data-line="35"><span class="sd">        - led_intensity: port LED brightness (0-255).</span>
+</span><span data-line="36"><span class="sd">        - led_on_time / c_led_on_time: max duration of the side/center LED</span>
+</span><span data-line="37"><span class="sd">          response windows, seconds.</span>
+</span><span data-line="38"><span class="sd">        - iti_time: inter-trial interval, seconds.</span>
+</span><span data-line="39"><span class="sd">        - timeout: punishment timeout after an incorrect response</span>
+</span><span data-line="40"><span class="sd">          (introduce_penalty and delay), seconds.</span>
+</span><span data-line="41"><span class="sd">        - noise_time: white-noise punishment duration (introduce_penalty and</span>
+</span><span data-line="42"><span class="sd">          delay), seconds.</span>
+</span><span data-line="43"><span class="sd">        - p: difficulty of the delay task (0-1), carried over from session to</span>
+</span><span data-line="44"><span class="sd">          session (see update_training_settings).</span>
+</span><span data-line="45"><span class="sd">        - delay_thresholds: possible delays between the two side LEDs (seconds;</span>
+</span><span data-line="46"><span class="sd">          the longer, the easier) and, for each one, the p from which it</span>
+</span><span data-line="47"><span class="sd">          starts to appear.</span>
+</span><span data-line="48"><span class="sd">        - curve_power: how strictly the harder delays are held back while p is</span>
+</span><span data-line="49"><span class="sd">          below their threshold.</span>
+</span><span data-line="50">
+</span><span data-line="51"><span class="sd">        Not part of the progression, but read by bpod_touchscreen.py, which</span>
+</span><span data-line="52"><span class="sd">        is run manually:</span>
+</span><span data-line="53"><span class="sd">        - long_duration / short_duration: how long each of the two</span>
+</span><span data-line="54"><span class="sd">          rectangles stays on screen, seconds.</span>
+</span><span data-line="55"><span class="sd">        """</span>
+</span><span data-line="56">
+</span><span data-line="57">        <span class="c1"># Required parameters</span>
+</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">"Bpod1Habituation"</span>
+</span><span data-line="59">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">refractory_period</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>  <span class="c1"># 4 hours between sessions</span>
+</span><span data-line="60">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="61">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">15</span> <span class="o">*</span> <span class="mi">60</span>  <span class="c1"># habituation lasts 15 min</span>
+</span><span data-line="62">
+</span><span data-line="63">        <span class="c1"># Task-specific parameters (for bpod_1..6 or arduino 1..6, read the respective</span>
+</span><span data-line="64">        <span class="c1"># task code to understand their usage)</span>
+</span><span data-line="65">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># microliters</span>
+</span><span data-line="66">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># microliters</span>
+</span><span data-line="67">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span> <span class="o">=</span> <span class="mi">255</span>  <span class="c1"># 0-255</span>
+</span><span data-line="68">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_on_time</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">60</span>  <span class="c1"># seconds</span>
+</span><span data-line="69">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">60</span>  <span class="c1"># seconds</span>
+</span><span data-line="70">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># seconds</span>
+</span><span data-line="71">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># seconds</span>
+</span><span data-line="72">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># seconds</span>
+</span><span data-line="73">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="74">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">curve_power</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="75">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">delay_thresholds</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="76">            <span class="mi">0</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
+</span><span data-line="77">            <span class="mf">0.1</span><span class="p">:</span> <span class="mf">0.65</span><span class="p">,</span>
+</span><span data-line="78">            <span class="mf">0.25</span><span class="p">:</span> <span class="mf">0.50</span><span class="p">,</span>
+</span><span data-line="79">            <span class="mf">0.5</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+</span><span data-line="80">            <span class="mi">1</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+</span><span data-line="81">            <span class="mi">40</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span data-line="82">        <span class="p">}</span>
+</span><span data-line="83">
+</span><span data-line="84">        <span class="c1"># Task-specific parameters for other tasks (e.g., bpod_touchscreen.py)</span>
+</span><span data-line="85">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">long_duration</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># seconds</span>
+</span><span data-line="86">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">short_duration</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># seconds</span>
+</span><span data-line="87">
+</span><span data-line="88">    <span class="k">def</span><span class="w"> </span><span class="nf">update_training_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="89"><span class="w">        </span><span class="sd">"""Called every time a session finishes. Decides the next task (and</span>
+</span><span data-line="90"><span class="sd">        changes some settings when the subject moves to the next stage).</span>
 </span><span data-line="91">
-</span><span data-line="92">        <span class="c1"># Progression</span>
-</span><span data-line="93">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">trials_to_advance</span> <span class="o">=</span> <span class="mi">50</span>
-</span><span data-line="94">
-</span><span data-line="95">        <span class="c1"># bpod_touchscreen.py only</span>
-</span><span data-line="96">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">long_duration</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># seconds</span>
-</span><span data-line="97">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">short_duration</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># seconds</span>
-</span><span data-line="98">
-</span><span data-line="99">    <span class="k">def</span><span class="w"> </span><span class="nf">_current_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="100"><span class="w">        </span><span class="sd">"""Splits self.last_task into (family, stage), e.g.</span>
-</span><span data-line="101"><span class="sd">        ("Bpod", 3) from "Bpod3Active" -- or None if it isn't one of the 12</span>
-</span><span data-line="102"><span class="sd">        stage task names (a fresh subject, or a reference/demo task was run</span>
-</span><span data-line="103"><span class="sd">        manually), in which case next_task is left untouched.</span>
-</span><span data-line="104"><span class="sd">        """</span>
-</span><span data-line="105">
-</span><span data-line="106">        <span class="k">for</span> <span class="n">family</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"Bpod"</span><span class="p">,</span> <span class="s2">"Arduino"</span><span class="p">):</span>
-</span><span data-line="107">            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">family</span><span class="p">):</span>
-</span><span data-line="108">                <span class="k">continue</span>
-</span><span data-line="109">            <span class="n">rest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">family</span><span class="p">)</span> <span class="p">:]</span>
-</span><span data-line="110">            <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">STAGE_NAMES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="111">                <span class="k">if</span> <span class="n">rest</span> <span class="o">==</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stage</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span>
-</span><span data-line="112">                    <span class="k">return</span> <span class="n">family</span><span class="p">,</span> <span class="n">stage</span>
-</span><span data-line="113">        <span class="k">return</span> <span class="kc">None</span>
-</span><span data-line="114">
-</span><span data-line="115">    <span class="k">def</span><span class="w"> </span><span class="nf">update_training_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="116"><span class="w">        </span><span class="sd">"""Called every time a session finishes. Advances one stage, in the</span>
-</span><span data-line="117"><span class="sd">        same family, once the last session of the current stage reached</span>
-</span><span data-line="118"><span class="sd">        trials_to_advance trials -- otherwise repeats the same stage.</span>
-</span><span data-line="119"><span class="sd">        Stays on the last stage once reached.</span>
-</span><span data-line="120">
-</span><span data-line="121"><span class="sd">        self.df is per-trial (one row per trial across every session this</span>
-</span><span data-line="122"><span class="sd">        subject has ever run, see TaskBase.subject_df), so "trials in the</span>
-</span><span data-line="123"><span class="sd">        last session" is however many of this task's rows share the most</span>
-</span><span data-line="124"><span class="sd">        recent session number -- not simply the last row's trial number.</span>
-</span><span data-line="125"><span class="sd">        """</span>
-</span><span data-line="126">
-</span><span data-line="127">        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_stage</span><span class="p">()</span>
-</span><span data-line="128">        <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="129">            <span class="k">return</span>
-</span><span data-line="130">
-</span><span data-line="131">        <span class="n">family</span><span class="p">,</span> <span class="n">stage</span> <span class="o">=</span> <span class="n">current</span>
-</span><span data-line="132">        <span class="n">df_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">"task"</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span><span class="p">]</span>
-</span><span data-line="133">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_task</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span data-line="134">            <span class="k">return</span>
-</span><span data-line="135">        <span class="n">last_session</span> <span class="o">=</span> <span class="n">df_task</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span><span data-line="136">        <span class="n">trials_last_session</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_task</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span> <span class="o">==</span> <span class="n">last_session</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</span><span data-line="137">
-</span><span data-line="138">        <span class="k">if</span> <span class="p">(</span>
-</span><span data-line="139">            <span class="n">stage</span> <span class="o">&lt;</span> <span class="n">LAST_STAGE</span>
-</span><span data-line="140">            <span class="ow">and</span> <span class="n">trials_last_session</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">trials_to_advance</span>
-</span><span data-line="141">        <span class="p">):</span>
-</span><span data-line="142">            <span class="n">stage</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span data-line="143">        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">family</span><span class="si">}{</span><span class="n">stage</span><span class="si">}{</span><span class="n">STAGE_NAMES</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+</span><span data-line="92"><span class="sd">        self.df is per-trial (one row per trial across every session this</span>
+</span><span data-line="93"><span class="sd">        subject has ever run, see TaskBase.subject_df), so sessions are told</span>
+</span><span data-line="94"><span class="sd">        apart by the "session" column.</span>
+</span><span data-line="95"><span class="sd">        """</span>
+</span><span data-line="96">
+</span><span data-line="97">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">"Bpod1Habituation"</span><span class="p">:</span>
+</span><span data-line="98">            <span class="c1"># If the session we just completed is habituation, move to the next task.</span>
+</span><span data-line="99">            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">"Bpod2Passive"</span>
+</span><span data-line="100">            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">25</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="101">            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">45</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="102">
+</span><span data-line="103">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">"Bpod2Passive"</span><span class="p">:</span>
+</span><span data-line="104">            <span class="c1"># At least 2 passive sessions, and 100 trials in the last two.</span>
+</span><span data-line="105">            <span class="n">df2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">"task"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Bpod2Passive"</span><span class="p">]</span>
+</span><span data-line="106">            <span class="n">n_sessions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df2</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</span><span data-line="107">            <span class="n">last_2_sessions</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+</span><span data-line="108">            <span class="n">df2_last_2</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="n">df2</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">last_2_sessions</span><span class="p">)]</span>
+</span><span data-line="109">            <span class="n">trials_last_2_sessions</span> <span class="o">=</span> <span class="n">df2_last_2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="110">
+</span><span data-line="111">            <span class="k">if</span> <span class="n">n_sessions</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">trials_last_2_sessions</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+</span><span data-line="112">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">"Bpod3Active"</span>
+</span><span data-line="113">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">25</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="114">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">45</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="115">
+</span><span data-line="116">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">"Bpod3Active"</span><span class="p">:</span>
+</span><span data-line="117">            <span class="c1"># At least 2 active sessions, and in the last two: 100 trials and</span>
+</span><span data-line="118">            <span class="c1"># 70% of them correct.</span>
+</span><span data-line="119">            <span class="n">df3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">"task"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Bpod3Active"</span><span class="p">]</span>
+</span><span data-line="120">            <span class="n">n_sessions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df3</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</span><span data-line="121">            <span class="n">last_2_sessions</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+</span><span data-line="122">            <span class="n">df3_last_2</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="n">df3</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">last_2_sessions</span><span class="p">)]</span>
+</span><span data-line="123">            <span class="n">trials_last_2_sessions</span> <span class="o">=</span> <span class="n">df3_last_2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="124">            <span class="n">correct_last_2_sessions</span> <span class="o">=</span> <span class="p">(</span><span class="n">df3_last_2</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span><span data-line="125">
+</span><span data-line="126">            <span class="k">if</span> <span class="p">(</span>
+</span><span data-line="127">                <span class="n">n_sessions</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+</span><span data-line="128">                <span class="ow">and</span> <span class="n">trials_last_2_sessions</span> <span class="o">&gt;=</span> <span class="mi">100</span>
+</span><span data-line="129">                <span class="ow">and</span> <span class="n">correct_last_2_sessions</span> <span class="o">&gt;=</span> <span class="mf">0.70</span>
+</span><span data-line="130">            <span class="p">):</span>
+</span><span data-line="131">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">"Bpod4CenterInitiated"</span>
+</span><span data-line="132">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="133">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">45</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="134">
+</span><span data-line="135">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">"Bpod4CenterInitiated"</span><span class="p">:</span>
+</span><span data-line="136">            <span class="c1"># At least 2 center-initiated sessions, and in the last two: 200</span>
+</span><span data-line="137">            <span class="c1"># trials and 70% of them correct.</span>
+</span><span data-line="138">            <span class="n">df4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">"task"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Bpod4CenterInitiated"</span><span class="p">]</span>
+</span><span data-line="139">            <span class="n">n_sessions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df4</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</span><span data-line="140">            <span class="n">last_2_sessions</span> <span class="o">=</span> <span class="n">df4</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+</span><span data-line="141">            <span class="n">df4_last_2</span> <span class="o">=</span> <span class="n">df4</span><span class="p">[</span><span class="n">df4</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">last_2_sessions</span><span class="p">)]</span>
+</span><span data-line="142">            <span class="n">trials_last_2_sessions</span> <span class="o">=</span> <span class="n">df4_last_2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="143">            <span class="n">correct_last_2_sessions</span> <span class="o">=</span> <span class="p">(</span><span class="n">df4_last_2</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </span><span data-line="144">
-</span><span data-line="145">    <span class="k">def</span><span class="w"> </span><span class="nf">define_gui_tabs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="146">        <span class="bp">self</span><span class="o">.</span><span class="n">gui_tabs</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="147">            <span class="s2">"Reward"</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="148">                <span class="s2">"reward_volume"</span><span class="p">,</span>
-</span><span data-line="149">                <span class="s2">"reward_volume_large"</span><span class="p">,</span>
-</span><span data-line="150">            <span class="p">],</span>
-</span><span data-line="151">            <span class="s2">"Timing"</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="152">                <span class="s2">"led_intensity"</span><span class="p">,</span>
-</span><span data-line="153">                <span class="s2">"led_on_time"</span><span class="p">,</span>
-</span><span data-line="154">                <span class="s2">"c_led_on_time"</span><span class="p">,</span>
-</span><span data-line="155">                <span class="s2">"iti_time"</span><span class="p">,</span>
-</span><span data-line="156">                <span class="s2">"timeout"</span><span class="p">,</span>
-</span><span data-line="157">                <span class="s2">"noise_time"</span><span class="p">,</span>
-</span><span data-line="158">            <span class="p">],</span>
-</span><span data-line="159">            <span class="s2">"Delay task (stage 6)"</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="160">                <span class="s2">"p"</span><span class="p">,</span>
-</span><span data-line="161">                <span class="s2">"curve_power"</span><span class="p">,</span>
-</span><span data-line="162">                <span class="s2">"N_trials"</span><span class="p">,</span>
-</span><span data-line="163">            <span class="p">],</span>
-</span><span data-line="164">            <span class="s2">"Progression"</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="165">                <span class="s2">"trials_to_advance"</span><span class="p">,</span>
-</span><span data-line="166">            <span class="p">],</span>
-</span><span data-line="167">            <span class="s2">"Touchscreen demo"</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="168">                <span class="s2">"long_duration"</span><span class="p">,</span>
-</span><span data-line="169">                <span class="s2">"short_duration"</span><span class="p">,</span>
-</span><span data-line="170">            <span class="p">],</span>
-</span><span data-line="171">        <span class="p">}</span>
-</span><span data-line="172">        <span class="bp">self</span><span class="o">.</span><span class="n">gui_tabs_restricted</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span data-line="145">            <span class="k">if</span> <span class="p">(</span>
+</span><span data-line="146">                <span class="n">n_sessions</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+</span><span data-line="147">                <span class="ow">and</span> <span class="n">trials_last_2_sessions</span> <span class="o">&gt;=</span> <span class="mi">200</span>
+</span><span data-line="148">                <span class="ow">and</span> <span class="n">correct_last_2_sessions</span> <span class="o">&gt;=</span> <span class="mf">0.70</span>
+</span><span data-line="149">            <span class="p">):</span>
+</span><span data-line="150">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">"Bpod5IntroducePenalty"</span>
+</span><span data-line="151">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="152">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">45</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="153">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">5</span>
+</span><span data-line="154">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="155">
+</span><span data-line="156">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">"Bpod5IntroducePenalty"</span><span class="p">:</span>
+</span><span data-line="157">            <span class="c1"># At least 2 introduce-penalty sessions, and in the last two: 200</span>
+</span><span data-line="158">            <span class="c1"># trials and 70% of them correct.</span>
+</span><span data-line="159">            <span class="n">df5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">"task"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Bpod5IntroducePenalty"</span><span class="p">]</span>
+</span><span data-line="160">            <span class="n">n_sessions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df5</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</span><span data-line="161">            <span class="n">last_2_sessions</span> <span class="o">=</span> <span class="n">df5</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+</span><span data-line="162">            <span class="n">df5_last_2</span> <span class="o">=</span> <span class="n">df5</span><span class="p">[</span><span class="n">df5</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">last_2_sessions</span><span class="p">)]</span>
+</span><span data-line="163">            <span class="n">trials_last_2_sessions</span> <span class="o">=</span> <span class="n">df5_last_2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="164">            <span class="n">correct_last_2_sessions</span> <span class="o">=</span> <span class="p">(</span><span class="n">df5_last_2</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span><span data-line="165">
+</span><span data-line="166">            <span class="k">if</span> <span class="p">(</span>
+</span><span data-line="167">                <span class="n">n_sessions</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+</span><span data-line="168">                <span class="ow">and</span> <span class="n">trials_last_2_sessions</span> <span class="o">&gt;=</span> <span class="mi">200</span>
+</span><span data-line="169">                <span class="ow">and</span> <span class="n">correct_last_2_sessions</span> <span class="o">&gt;=</span> <span class="mf">0.70</span>
+</span><span data-line="170">            <span class="p">):</span>
+</span><span data-line="171">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">next_task</span> <span class="o">=</span> <span class="s2">"Bpod6Delay"</span>
+</span><span data-line="172">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">minimum_duration</span> <span class="o">=</span> <span class="mi">45</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="173">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">maximum_duration</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+</span><span data-line="174">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">5</span>
+</span><span data-line="175">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="176">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">curve_power</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="177">
+</span><span data-line="178">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_task</span> <span class="o">==</span> <span class="s2">"Bpod6Delay"</span><span class="p">:</span>
+</span><span data-line="179">            <span class="c1"># Last stage: the subject stays here. The next session starts from</span>
+</span><span data-line="180">            <span class="c1"># the difficulty p reached in this one, minus 0.05.</span>
+</span><span data-line="181">            <span class="n">last_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+</span><span data-line="182">            <span class="n">df_last_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">"session"</span><span class="p">]</span> <span class="o">==</span> <span class="n">last_session</span><span class="p">]</span>
+</span><span data-line="183">            <span class="n">p_values</span> <span class="o">=</span> <span class="n">df_last_session</span><span class="p">[</span><span class="s2">"p"</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+</span><span data-line="184">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span data-line="185">                <span class="n">p_next</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">p_values</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="186">                <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">p_next</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span data-line="187">
+</span><span data-line="188">        <span class="c1"># Any other task was run manually: next_task is left as it was.</span>
+</span><span data-line="189">
+</span><span data-line="190">    <span class="k">def</span><span class="w"> </span><span class="nf">define_gui_tabs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="191">        <span class="bp">self</span><span class="o">.</span><span class="n">gui_tabs</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="192">            <span class="s2">"Reward"</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="193">                <span class="s2">"reward_volume"</span><span class="p">,</span>
+</span><span data-line="194">                <span class="s2">"reward_volume_large"</span><span class="p">,</span>
+</span><span data-line="195">            <span class="p">],</span>
+</span><span data-line="196">            <span class="s2">"Timing"</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="197">                <span class="s2">"led_intensity"</span><span class="p">,</span>
+</span><span data-line="198">                <span class="s2">"led_on_time"</span><span class="p">,</span>
+</span><span data-line="199">                <span class="s2">"c_led_on_time"</span><span class="p">,</span>
+</span><span data-line="200">                <span class="s2">"iti_time"</span><span class="p">,</span>
+</span><span data-line="201">                <span class="s2">"timeout"</span><span class="p">,</span>
+</span><span data-line="202">                <span class="s2">"noise_time"</span><span class="p">,</span>
+</span><span data-line="203">            <span class="p">],</span>
+</span><span data-line="204">            <span class="s2">"Delay task (stage 6)"</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="205">                <span class="s2">"p"</span><span class="p">,</span>
+</span><span data-line="206">                <span class="s2">"curve_power"</span><span class="p">,</span>
+</span><span data-line="207">                <span class="s2">"delay_thresholds"</span><span class="p">,</span>
+</span><span data-line="208">            <span class="p">],</span>
+</span><span data-line="209">            <span class="s2">"Touchscreen demo"</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="210">                <span class="s2">"long_duration"</span><span class="p">,</span>
+</span><span data-line="211">                <span class="s2">"short_duration"</span><span class="p">,</span>
+</span><span data-line="212">            <span class="p">],</span>
+</span><span data-line="213">        <span class="p">}</span>
+</span><span data-line="214">        <span class="bp">self</span><span class="o">.</span><span class="n">gui_tabs_restricted</span> <span class="o">=</span> <span class="p">{}</span>
 </span></pre></div>
 </div>
 </section>
@@ -721,7 +763,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ce4f1c03"></script>
+      <script src="../_static/documentation_options.js?v=9ef4031c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
