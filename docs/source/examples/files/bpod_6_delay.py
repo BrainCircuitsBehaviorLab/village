@@ -7,31 +7,36 @@ import numpy as np
 from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
 
 # Curriculum-based probability distribution over delay values, used by
-# create_trial() to pick each trial's delay. As learning progress p goes
-# from 0 to 1, longer delays are introduced gradually instead of all at
-# once: at p=0 only the easiest (shortest) delays are likely, at p=1 every
-# delay is equally likely. thresholds[d] is the p value at which delay d
-# starts being seriously considered; tau controls how sharp that
-# introduction is, gamma how strongly the curriculum favors easier delays
-# below their threshold.
-_DELAYS = np.array([0, 0.1, 0.25, 0.5, 1, 40])
-_THRESHOLDS = {1: 0.001, 40: 0.0, 0.5: 0.25, 0.25: 0.50, 0.1: 0.65, 0: 0.75}
+# create_trial() to pick each trial's delay. The longer the delay between the
+# two side LEDs, the easier the trial. As the difficulty p goes from 0 to 1,
+# the shorter (harder) delays are introduced gradually instead of all at
+# once: at p=0 only the easiest (longest) delays are likely, at p=1 every
+# delay is equally likely. The delays and the p value at which each one
+# starts being seriously considered come from settings.delay_thresholds (see
+# training_protocol.py). tau controls how sharp that introduction is, gamma
+# how strongly the curriculum favors easier delays below their threshold.
 
 
 def get_delay_probabilities(
-    p: float, tau: float = 0.08, gamma: float = 3
+    p: float, delay_thresholds: dict, tau: float = 0.08, gamma: float = 3
 ) -> tuple[np.ndarray, np.ndarray]:
     """Returns (delays, probabilities) -- probabilities sums to 1, same
-    order as _DELAYS -- for np.random.choice(delays, p=probabilities)."""
+    order as delays -- for np.random.choice(delays, p=probabilities).
+
+    delay_thresholds maps each delay (seconds) to its threshold. Its keys may
+    be strings (settings are saved as JSON, whose keys are always strings),
+    so they are converted to numbers here.
+    """
+    delays = np.array([float(d) for d in delay_thresholds])
     weights = []
-    for d in _DELAYS:
-        t = _THRESHOLDS[float(d)]
-        # t == 0 (the easiest delay) never fades out, it just slowly loses
-        # dominance to the others as p grows.
+    for t in delay_thresholds.values():
+        t = float(t)
+        # t == 0 (the easiest, longest delays) never fades out, it just
+        # slowly loses dominance to the others as p grows.
         a = 1.0 if t == 0 else 1.0 / (1.0 + np.exp(-(p - t) / tau))
         weights.append(a**gamma)
     weights = np.array(weights)
-    return _DELAYS, weights / weights.sum()
+    return delays, weights / weights.sum()
 
 
 class Bpod6Delay(TaskBase):
@@ -63,8 +68,7 @@ class Bpod6Delay(TaskBase):
     def start(self):
         """Use the calibration to get the valve opening times (in seconds) for
         ports 1 (left) and 3 (right), for both the normal and large reward
-        volumes. Also pre-generates the first-cued side for every trial in
-        the session, and initializes the rolling-accuracy bookkeeping used to
+        volumes. Also initializes the rolling-accuracy bookkeeping used to
         adapt the task's difficulty (self.p).
 
         Required settings (defined in training_protocol.py):
@@ -79,11 +83,12 @@ class Bpod6Delay(TaskBase):
         - self.settings.noise_time: buzzer duration after a wrong poke, seconds
         - self.settings.timeout: total penalty duration (buzzer + silence),
           seconds
-        - self.settings.N_trials: size of the pre-generated first-cued-side
-          sequence -- must be at least the number of trials the session can run
         - self.settings.p (optional, default 0.0): initial difficulty, 0-1
         - self.settings.curve_power (optional, default 3.0): shape parameter
           for the delay distribution, see get_delay_probabilities
+        - self.settings.delay_thresholds: the possible delays between the two
+          side cues (seconds) and, for each one, the p from which it starts
+          to appear (0: always)
         """
 
         self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
@@ -100,12 +105,6 @@ class Bpod6Delay(TaskBase):
             port=3, volume=self.settings.reward_volume_large
         )
 
-        # The side of the first cue is decided once per session, not per
-        # trial, so the whole sequence is reproducible/inspectable up front.
-        self.first_led_side_vec = np.random.choice(
-            [0, 1], size=int(self.settings.N_trials)
-        )
-
         self.p = getattr(self.settings, "p", 0.0)
 
         # Rolling-window accuracy, used to adapt self.p after every trial.
@@ -113,10 +112,11 @@ class Bpod6Delay(TaskBase):
         self.adaptation_window: deque[int] = deque(maxlen=20)
 
     def create_trial(self):
-        # current_trial starts at 1, the side vector at 0.
-        first_side = self.first_led_side_vec[self.current_trial - 1]
+        first_side = random.choice([0, 1])  # first-cued side: 0 left, 1 right
         curve_power = getattr(self.settings, "curve_power", 3.0)
-        delay_values, delay_probs = get_delay_probabilities(p=self.p, gamma=curve_power)
+        delay_values, delay_probs = get_delay_probabilities(
+            p=self.p, delay_thresholds=self.settings.delay_thresholds, gamma=curve_power
+        )
         self.delay = np.random.choice(delay_values, p=delay_probs)
         self.signed_delay = -self.delay if first_side == 0 else self.delay
 

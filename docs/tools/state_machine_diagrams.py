@@ -451,7 +451,7 @@ SPECS["bpod_6_delay"] = dict(
     ],
     footer=[
         "first side = left (Port1In · PWM1 · Valve1) or right (Port3In · PWM3 · "
-        "Valve3), from a pre-drawn random sequence",
+        "Valve3), chosen at random every trial",
         "after_trial(): no center poke → omission (not used to adapt p);  first poke → "
         "correct / incorrect;  none → miss;  water only if correct",
     ],
