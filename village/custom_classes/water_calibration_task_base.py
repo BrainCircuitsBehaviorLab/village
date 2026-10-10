@@ -1,7 +1,8 @@
-from village.custom_classes.task_base import BpodEvent, TaskBase
+from village.custom_classes.calibration_task_base import CalibrationTaskBase
+from village.custom_classes.task_base import BpodEvent
 
 
-class WaterCalibrationTaskBase(TaskBase):
+class WaterCalibrationTaskBase(CalibrationTaskBase):
     """Task that runs the sequence behind the Water Calibration panel
     (village/calibration/water_calibration.py): open each of a set of
     valves for its own given time, repeated a number of times, so the
@@ -17,6 +18,9 @@ class WaterCalibrationTaskBase(TaskBase):
     (indices, times, maximum_number_of_trials) must stay the same, since
     the calibration panel constructs your class with exactly these
     keyword arguments.
+
+    Like any CalibrationTaskBase, it is not listed in the TASKS tab, and
+    without Bpod create_trial does not need to call register_start_trial.
 
     Args:
         indices (list[int]): 0-based indices of the ports being
@@ -59,9 +63,3 @@ class WaterCalibrationTaskBase(TaskBase):
                 state_change_conditions={BpodEvent.Tup: self.states[i + 1]},
                 output_actions=[],
             )
-
-    def after_trial(self) -> None:
-        pass
-
-    def close(self) -> None:
-        pass

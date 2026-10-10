@@ -18,6 +18,7 @@ from village.calibration.water_calibration import WaterCalibration
 from village.custom_classes.after_session_base import AfterSessionBase
 from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase
 from village.custom_classes.calibration_base import CalibrationBase
+from village.custom_classes.calibration_task_base import CalibrationTaskBase
 from village.custom_classes.camera_area_base import CameraAreaBase
 from village.custom_classes.camera_draw_base import CameraDrawBase
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
@@ -125,7 +126,7 @@ def import_all(manager) -> None:
                 if (
                     issubclass(cls, TaskBase)
                     and cls != TaskBase
-                    and not issubclass(cls, WaterCalibrationTaskBase)
+                    and not issubclass(cls, CalibrationTaskBase)
                 ):
                     name = cls.__name__
                     _ = cls()
@@ -258,16 +259,23 @@ def import_all(manager) -> None:
                     OptoGridCalibration,
                     CorridorThresholdCalibration,
                 ):
-                    if hasattr(manager.calibrations, cls.name):
+                    instance = cls()
+                    cal_name = getattr(instance, "name", "")
+                    if not cal_name:
                         log.error(
-                            "Multiple custom calibrations named '"
-                            + cls.name
+                            "Custom calibration '"
+                            + cls.__name__
+                            + "' has no name; not registered."
+                        )
+                    elif hasattr(manager.calibrations, cal_name):
+                        log.error(
+                            "Multiple calibrations named '"
+                            + cal_name
                             + "'; only the first one found is used."
                         )
                     else:
-                        instance = cls()
                         cls._instance = instance
-                        setattr(manager.calibrations, cls.name, instance)
+                        setattr(manager.calibrations, cal_name, instance)
                 elif (
                     issubclass(cls, DirectFunctionsBase) and cls != DirectFunctionsBase
                 ):

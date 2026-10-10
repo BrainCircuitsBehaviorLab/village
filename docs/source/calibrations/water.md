@@ -13,6 +13,8 @@ any other controller, the project's code directory must define a class inheritin
 implementing the same sequence on that controller's own hardware -- if a project
 provides one, it's used instead of the Bpod default even when the controller is Bpod.
 Without either, clicking CALIBRATE or TEST shows a message explaining what's missing.
+`WaterCalibrationTaskBase` is a `CalibrationTaskBase`: it doesn't appear in the TASKS
+tab, and without Bpod `create_trial` doesn't need to call `register_start_trial`.
 ```
 
 ### Calibrating
