@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tasks (Raspberry Only) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Task Examples (Raspberry Pi only)" href="../examples/tasks_raspberry.html" /><link rel="prev" title="arduino_6_delay.py" href="../examples/arduino_6_delay.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/tasks_raspberry.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/tasks_raspberry.html"/>
+  <meta property="og:title" content="Tasks (Raspberry Only)"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/logo_light.svg" alt="village" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/logo_dark.svg" alt="village" height="28" loading="lazy" />
+      <strong>village</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../overview/system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/BrainCircuitsBehaviorLab/village" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../preparation_index.html">PREPARATION &amp; SETUP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/initial.html">Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/launching.html">Launching the TV Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/access.html">Remote Access Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/telegram.html">Telegram Bot Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/backup.html">Data Persistence &amp; Backups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/heartbeat.html">Remote Heartbeat Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/animal.html">Animal Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creating.html">The Training Protocol</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/training_protocol.html">Training Protocol Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tasks_bpod.html">Tasks (Bpod)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tasks_arduino.html">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Tasks (Raspberry Only)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct Sound &amp; Video Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="camera.html">Camera Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Touchscreen Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">GPIO Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scale_trigger.html">Scale Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plots.html">Create Custom Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/after_session.html">After Session Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/change_cycle.html">Change Cycle Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/telegram_commands.html">Custom Telegram Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/auto_follow_the_light.html">AutoNoMouse Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/homecage_camera_control.html">Homecage Camera Control</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; ALARMS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.html">corridor_threshold_detection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.area_count.html">area_count</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.scan_video.html">scan_video</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.select_from_grays.html">select_from_grays</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.enums.html">enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ControllerEnum.html">ControllerEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.CycleDay.html">CycleDay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.null_classes.html">null_classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCalibrationBase.html">NullCalibrationBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullGpio.html">NullGpio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullLEDStrip.html">NullLEDStrip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoundDevice.html">NullSoundDevice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTouch.html">NullTouch</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.settings_class.html">settings_class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.custom_classes.html">custom_classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouseBase.html">AutoNoMouseBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_task_base.html">calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_task_base.CalibrationTaskBase.html">CalibrationTaskBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.html">camera_area_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html">CameraAreaBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.html">gpio_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html">GpioTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.html">scale_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.ScaleTriggerBase.html">ScaleTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.SessionPlotBase.html">SessionPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.html">telegram_command_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.TelegramCommandBase.html">TelegramCommandBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_if_active.html">get_motor_if_active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.parse_motor_values.html">parse_motor_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.gpio.html">gpio</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.gpio.Gpio.html">Gpio</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.og_connect.html">og_connect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.match_sound_device_setting.html">match_sound_device_setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.weights_plot.html">weights_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.scripts.html">scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.playground.html">playground</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hardware.html">HARDWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../resources/list_of_parts.html">List of Parts &amp; Design Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware.html">Assembly Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware_large.html">Assembly Guide (with Eco-HAB)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware_rats.html">Assembly Guide (Rat Version)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Custom Bpod Firmware</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../faq_index2.html">FAQ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#a-minimal-task">A minimal task</a></li>
+<li><a class="reference internal" href="#the-start-method">The <code class="docutils literal notranslate"><span class="pre">start()</span></code> method</a></li>
+<li><a class="reference internal" href="#the-create-trial-method">The <code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> method</a></li>
+<li><a class="reference internal" href="#the-trigger">The trigger</a></li>
+<li><a class="reference internal" href="#the-after-trial-and-close-methods">The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> and <code class="docutils literal notranslate"><span class="pre">close()</span></code> methods</a></li>
+<li><a class="reference internal" href="#another-example">Another example</a></li>
+<li><a class="reference internal" href="#methods-you-must-override">Methods you must override</a></li>
+<li><a class="reference internal" href="#methods-you-can-call">Methods you can call</a><ul>
+<li><a class="reference internal" href="#registering-the-trial-states-and-events">Registering the trial, states and events</a></li>
+<li><a class="reference internal" href="#registering-a-raspberry-side-event">Registering a Raspberry-side event</a></li>
+<li><a class="reference internal" href="#registering-a-value">Registering a value</a></li>
+<li><a class="reference internal" href="#executing-a-direct-function">Executing a direct function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#attributes-you-can-read">Attributes you can read</a><ul>
+<li><a class="reference internal" href="#self-info"><code class="docutils literal notranslate"><span class="pre">self.info</span></code></a></li>
+<li><a class="reference internal" href="#self-calibrations"><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></a></li>
+<li><a class="reference internal" href="#self-should-stop-read-only-property"><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</a></li>
+<li><a class="reference internal" href="#self-trial-data-dict"><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">village</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../documentation_index.html"><span itemprop="name">DOCUMENTATION</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../protocol_index.html"><span itemprop="name">PROTOCOL &amp; TASK DESIGN</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Tasks (Raspberry Only)</strong>
+        <meta itemprop="position" content="4" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <div class="copy-page-wrapper relative pb-4 lg:absolute lg:top-8 lg:right-6 xl:right-12">
+  <div id="copy-page-trigger">
+    <button
+      type="button"
+      class="js-copy px-3 py-1 inline-flex items-center gap-1"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_raspberry.md.txt"
+    >
+      <i class="i-lucide" data-icon="copy"></i>
+      <span>Copy page</span>
+    </button>
+    <button class="js-menu px-2 py-1" type="button" aria-label="More actions"
+      aria-haspopup="menu" aria-expanded="false" aria-controls="copy-page-content">
+      <i class="i-lucide chevron-down"></i>
+    </button>
+  </div>
+  <div id="copy-page-content" role="menu" aria-orientation="vertical" aria-hidden="true">
+    <div role="presentation">
+      <div class="flex flex-col" role="group">
+        <button class="js-copy" type="button" role="menuitem"
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_raspberry.md.txt">
+          <span class="iconify-icon">
+            <i class="i-lucide" data-icon="copy"></i>
+          </span>
+          <span>Copy page</span>
+        </button>
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_raspberry.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_raspberry.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:openai"></iconify-icon>
+          <span>Open in ChatGPT</span>
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_raspberry.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:claude"></iconify-icon>
+          <span>Open in Claude</span>
+        </a></div>
+    </div>
+  </div>
+</div><article class="yue" role="main">
+          <section id="tasks-raspberry-only">
+<h1>Tasks (Raspberry Only)</h1>
+<p>With <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> and no microcontroller, the
+Raspberry Pi runs the trial itself: it reacts to what it detects (the box camera
+areas, the touchscreen, the GPIO input pin, the box scale) and produces the
+stimuli (sounds, the screen, the LED strip, the GPIO output pin). Its timing is
+less precise than a microcontroller’s: for fast and precise timing, use Bpod or a
+microcontroller.</p>
+<p>The detections arrive through the triggers (camera, touchscreen, GPIO, scale), which
+run in their own threads and call your code while the task is running. The usual
+pattern is: the trigger reacts and signals the task, and the task’s <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>
+waits for that signal (or a timeout) to end the trial.</p>
+<p>To create a task, create a Python file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory, and
+within it, a class named after the task, inheriting from the generic <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code>
+class. Naming conventions follow Python standards: CamelCase for class names,
+lower_case for filenames and function/variable names. Let’s look at an example.</p>
+<!-- The code on this page is included from docs/source/examples/files/raspberry_area1_sound.py and camera_trigger.py,
+selected by method name (pyobject) and by some lines of text (start-at / end-before).
+If those lines change there, update them here too, and check the page: a block whose
+text is not found can come out empty. -->
+<section id="a-minimal-task">
+<h2>A minimal task</h2>
+<p><a class="reference internal" href="../examples/raspberry_area1_sound.html"><span class="std std-doc">raspberry_area1_sound.py</span></a>: every trial
+waits for the animal to enter area 1 of the box camera; when it does, a sound is
+played and an LED of the LED strip turns on. Its top part:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">sound_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">whitenoise_generator</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="n">TRIAL_TIMEOUT</span> <span class="o">=</span> <span class="mi">60</span>  <span class="c1"># seconds to wait for the animal to enter area 1</span>
+</span><span data-line="10">
+</span><span data-line="11">
+</span></pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">class</span><span class="w"> </span><span class="nc">RaspberryArea1Sound</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
+</span><span data-line="2"><span class="w">    </span><span class="sd">"""No Bpod, no Arduino (BEHAVIOR_CONTROLLER = OTHER): area 1 entry is</span>
+</span><span data-line="3"><span class="sd">    reacted to by a custom CameraTriggerBase (camera_trigger.py, in this</span>
+</span><span data-line="4"><span class="sd">    same code directory), which plays the sound and lights an LED strip LED</span>
+</span><span data-line="5"><span class="sd">    the moment the animal enters. create_trial just waits for that to</span>
+</span><span data-line="6"><span class="sd">    happen (or times out), then ends the trial.</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="sd">    Required setup (in SETTINGS, not in this file):</span>
+</span><span data-line="9"><span class="sd">    - CAM_BOX_TRACKING_POSITION must be ON.</span>
+</span><span data-line="10"><span class="sd">    - BOX area 1 must be set to TRIGGER status (and positioned/sized as</span>
+</span><span data-line="11"><span class="sd">      wanted) in the box area settings.</span>
+</span><span data-line="12"><span class="sd">    Without both, area1_is_triggered never becomes True and every trial</span>
+</span><span data-line="13"><span class="sd">    will just time out.</span>
+</span><span data-line="14"><span class="sd">    """</span>
+</span><span data-line="15">
+</span><span data-line="16">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="17">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="18">
+</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
+</span><span data-line="20"><span class="s2">        Area 1 Sound Task</span>
+</span><span data-line="21"><span class="s2">        ----------------------------------------------------------------</span>
+</span><span data-line="22"><span class="s2">        No controller involved -- driven entirely by camera position</span>
+</span><span data-line="23"><span class="s2">        tracking, reacted to in camera_trigger.py. Each trial:</span>
+</span><span data-line="24"><span class="s2">        - If the animal enters BOX area 1, camera_trigger.py plays a sound</span>
+</span><span data-line="25"><span class="s2">          and lights an LED on the strip; the trial ends right after.</span>
+</span><span data-line="26"><span class="s2">        - Otherwise, the trial ends anyway after </span><span class="si">{</span><span class="n">TRIAL_TIMEOUT</span><span class="si">}</span><span class="s2"> seconds.</span>
+</span><span data-line="27">
+</span><span data-line="28"><span class="s2">        Requires CAM_BOX_TRACKING_POSITION ON and BOX area 1 set to TRIGGER</span>
+</span><span data-line="29"><span class="s2">        (see SETTINGS).</span>
+</span><span data-line="30"><span class="s2">        """</span>
+</span><span data-line="31">
+</span></pre></div>
+</div>
+<p>The task is initialized with <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, where it acquires all the properties of the
+generic <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code> class with <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>. <code class="docutils literal notranslate"><span class="pre">self.info</span></code> is shown to the user
+when the task is selected in the GUI to run manually.</p>
+<p>Four methods must be implemented in your class: <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>,
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code>, and <code class="docutils literal notranslate"><span class="pre">close</span></code>.</p>
+</section>
+<section id="the-start-method">
+<h2>The <code class="docutils literal notranslate"><span class="pre">start()</span></code> method</h2>
+<p>Called once, when the task starts. Here it loads the sound (with the gain for 70 dB
+from the sound calibration), warns if the camera isn’t set up for the task, and
+creates the signal (<code class="docutils literal notranslate"><span class="pre">threading.Event</span></code>) that the trigger will use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2"><span class="w">    </span><span class="sd">"""Loads the sound once -- camera_trigger.py's function4 call</span>
+</span><span data-line="3"><span class="sd">    replays this same loaded sound every time area 1 is entered, no</span>
+</span><span data-line="4"><span class="sd">    reload needed.</span>
+</span><span data-line="5"><span class="sd">    """</span>
+</span><span data-line="6">
+</span><span data-line="7">    <span class="n">gain_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="8">        <span class="n">speaker</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"whitenoise"</span>
+</span><span data-line="9">    <span class="p">)</span>
+</span><span data-line="10">    <span class="n">gain_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="11">        <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"whitenoise"</span>
+</span><span data-line="12">    <span class="p">)</span>
+</span><span data-line="13">    <span class="n">sound_left</span> <span class="o">=</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain_left</span><span class="p">)</span>
+</span><span data-line="14">    <span class="n">sound_right</span> <span class="o">=</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain_right</span><span class="p">)</span>
+</span><span data-line="15">    <span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">sound_left</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">sound_right</span><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17">    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">tracking</span><span class="p">:</span>
+</span><span data-line="18">        <span class="nb">print</span><span class="p">(</span>
+</span><span data-line="19">            <span class="s2">"Warning: CAM_BOX_TRACKING_POSITION is OFF -- "</span>
+</span><span data-line="20">            <span class="s2">"area1 will never trigger."</span>
+</span><span data-line="21">        <span class="p">)</span>
+</span><span data-line="22">    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">areas_trigger</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+</span><span data-line="23">        <span class="nb">print</span><span class="p">(</span>
+</span><span data-line="24">            <span class="s2">"Warning: BOX area 1 is not set to TRIGGER -- "</span>
+</span><span data-line="25">            <span class="s2">"area1 will never trigger."</span>
+</span><span data-line="26">        <span class="p">)</span>
+</span><span data-line="27">
+</span><span data-line="28">    <span class="c1"># Set by camera_trigger.py's CameraTrigger.trigger() the moment</span>
+</span><span data-line="29">    <span class="c1"># area 1 is entered; create_trial just waits on it.</span>
+</span><span data-line="30">    <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>The most commonly used attributes available by default inside any task method
+(see <a class="reference internal" href="#attributes-you-can-read"><span class="std std-ref">Attributes you can read</span></a> below) are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code> — the session’s parameters, as defined in <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>
+(e.g. <code class="docutils literal notranslate"><span class="pre">self.settings.reward_volume</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code> — convert hardware values to real-world units, e.g.
+<code class="docutils literal notranslate"><span class="pre">self.calibrations.sound_calibration.get_sound_gain(speaker,</span> <span class="pre">dB,</span> <span class="pre">sound_name)</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.cam_box</span></code>, <code class="docutils literal notranslate"><span class="pre">self.gpio</span></code>, <code class="docutils literal notranslate"><span class="pre">self.custom_areas</span></code> — the box camera, GPIO output
+control, and any custom-shaped detection areas the project defines.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.name</span></code>, <code class="docutils literal notranslate"><span class="pre">self.subject</span></code>, <code class="docutils literal notranslate"><span class="pre">self.current_trial</span></code>, <code class="docutils literal notranslate"><span class="pre">self.system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">self.date</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> — populated automatically after each trial, available inside
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> (see below).</p></li>
+</ul>
+</section>
+<section id="the-create-trial-method">
+<h2>The <code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> method</h2>
+<p>Called once per trial. Without Bpod, <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> <em>is</em> the trial: it returns when
+the trial is over.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2"><span class="w">    </span><span class="sd">"""Waits for camera_trigger.py to react to area 1, or for</span>
+</span><span data-line="3"><span class="sd">    TRIAL_TIMEOUT seconds to pass -- then ends the trial either way."""</span>
+</span><span data-line="4">
+</span><span data-line="5">    <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="6">
+</span><span data-line="7">    <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="8">    <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">)</span>
+</span><span data-line="9">
+</span><span data-line="10">    <span class="n">deadline</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="n">TRIAL_TIMEOUT</span>
+</span><span data-line="11">    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+</span><span data-line="12">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+</span><span data-line="13">            <span class="k">break</span>
+</span><span data-line="14">
+</span><span data-line="15">    <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple">
+<li><p><strong>It registers the start of the trial</strong> with <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>. This call
+is <strong>required</strong> without Bpod. Here the Raspberry Pi is the controller, so both
+clocks are the same and the same time is passed as both.</p></li>
+<li><p><strong>It waits</strong> for the trigger’s signal, up to <code class="docutils literal notranslate"><span class="pre">TRIAL_TIMEOUT</span></code> seconds, checking
+<code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> so the task can stop at any moment.</p></li>
+<li><p><strong>It registers the end of the trial</strong> with <code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>. This one is
+optional: if <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns without calling it, the trial is ended at
+that moment.</p></li>
+</ol>
+</section>
+<section id="the-trigger">
+<h2>The trigger</h2>
+<p>The part of <a class="reference internal" href="../examples/camera_trigger.html"><span class="std std-doc">camera_trigger.py</span></a> that reacts to area 1.
+It runs on every frame of the box camera; when the animal is in area 1 and the
+task’s signal isn’t set yet, it registers the entry, plays the sound loaded in
+<code class="docutils literal notranslate"><span class="pre">start</span></code>, lights the LED, and sets the signal:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">area1_event</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="s2">"area1_event"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="2"><span class="k">if</span> <span class="p">(</span>
+</span><span data-line="3">    <span class="n">cam</span><span class="o">.</span><span class="n">area1_is_triggered</span>
+</span><span data-line="4">    <span class="ow">and</span> <span class="n">area1_event</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span><span data-line="5">    <span class="ow">and</span> <span class="ow">not</span> <span class="n">area1_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
+</span><span data-line="6"><span class="p">):</span>
+</span><span data-line="7">    <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">register_raspberry_event</span><span class="p">(</span>
+</span><span data-line="8">        <span class="s2">"area1_entered"</span><span class="p">,</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="9">    <span class="p">)</span>
+</span><span data-line="10">    <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># "Play Loaded Sound"</span>
+</span><span data-line="11">
+</span><span data-line="12">    <span class="n">led_strip</span><span class="o">.</span><span class="n">set_led_color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+</span><span data-line="13">    <span class="n">led_strip</span><span class="o">.</span><span class="n">update_strip</span><span class="p">()</span>
+</span><span data-line="14">
+</span><span data-line="15">    <span class="n">area1_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</span><span data-line="16">
+</span></pre></div>
+</div>
+<p>The entry is registered with <code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code>, since it is the Raspberry
+Pi that detected it.</p>
+</section>
+<section id="the-after-trial-and-close-methods">
+<h2>The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> and <code class="docutils literal notranslate"><span class="pre">close()</span></code> methods</h2>
+<p><code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called once after each trial ends, to register whatever values you
+want saved to the session’s data file. <code class="docutils literal notranslate"><span class="pre">close</span></code> is called once when the task
+finishes; here there’s nothing to clean up:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"entered_area1"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">())</span>
+</span><span data-line="3">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="k">pass</span>
+</span></pre></div>
+</div>
+</section>
+<section id="another-example">
+<h2>Another example</h2>
+<p><a class="reference internal" href="../examples/raspberry_touchscreen.html"><span class="std std-doc">raspberry_touchscreen.py</span></a> follows the same
+pattern with the touchscreen: it shows 6 rectangles, and
+<a class="reference internal" href="../examples/touch_trigger.html"><span class="std std-doc">touch_trigger.py</span></a> runs a different visual stimulus
+for each one and signals the task when one is touched.</p>
+</section>
+<hr class="docutils" />
+<section id="methods-you-must-override">
+<h2>Methods you must override</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Called</p></th>
+<th class="head"><p>Use it to</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">start(self)</span></code></p></td>
+<td><p>Once, before the trial loop begins.</p></td>
+<td><p>Configure hardware, pre-compute stimuli, open files, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">create_trial(self)</span></code></p></td>
+<td><p>Once at the start of every trial.</p></td>
+<td><p>Run the trial: register its start, wait for what has to happen, and register what happened.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">after_trial(self)</span></code></p></td>
+<td><p>Immediately after each trial finishes.</p></td>
+<td><p>Score performance, update adaptive parameters, call <code class="docutils literal notranslate"><span class="pre">register_value</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close(self)</span></code></p></td>
+<td><p>Once after the trial loop ends (session finished, forced stop, or error).</p></td>
+<td><p>Close files, stop hardware, release resources.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">after_trial must register “water”</p>
+<p>Always call <code class="docutils literal notranslate"><span class="pre">self.register_value(&quot;water&quot;,</span> <span class="pre">...)</span></code> with the amount of water consumed
+during the trial. The system sums it across the session to get total water
+consumption — if that total falls below a configurable threshold, an alarm is
+triggered (adjustable in the Settings tab of the GUI).</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">What is saved when a session stops</p>
+<p>Each session saves two files:</p>
+<ul class="simple">
+<li><p>The <strong>raw</strong> file (<code class="docutils literal notranslate"><span class="pre">&lt;session&gt;_RAW.csv</span></code>) has one line per event, written as it
+happens, so it keeps everything — including the trial that was still running
+when the session stopped.</p></li>
+<li><p>The <strong>clean</strong> file (<code class="docutils literal notranslate"><span class="pre">&lt;session&gt;.csv</span></code>) is a table with one row per trial, and a
+trial’s row is only created when the trial finishes (after <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>). So
+the trial that was still running when the session stopped never gets its row.</p></li>
+</ul>
+<p>The session is saved if at least one trial was completed. If none was, nothing
+is saved (neither file) and the “No trials were recorded” alarm is raised (if
+<code class="docutils literal notranslate"><span class="pre">NO_TRIALS_PERFORMED</span></code> is on).</p>
+<p>Because the trial in progress is always lost from the clean file, design your
+tasks so that trials keep advancing as time passes: a trial should end after a
+reasonable time even if the animal does nothing (e.g. with a timeout), instead
+of waiting indefinitely. A task that runs the whole session as a single trial
+would never be saved.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="methods-you-can-call">
+<h2>Methods you can call</h2>
+<p>Do not override these — call them from inside your task’s own methods.</p>
+<section id="registering-the-trial-states-and-events">
+<h3>Registering the trial, states and events</h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Args</p></th>
+<th class="head"><p>When to call it</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp:</span> <span class="pre">float,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>At the beginning of each trial. <strong>Required.</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>At the end of each trial. Optional (see below).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">state_name:</span> <span class="pre">str,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>Whenever you enter a state (closes the previous one).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">name:</span> <span class="pre">str,</span> <span class="pre">controller_timestamp:</span> <span class="pre">float</span></code></p></td>
+<td><p>To register an event.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Here the Raspberry Pi is the controller: pass <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as every
+timestamp, and the same time as both in <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>.</p>
+<div class="warning admonition">
+<p class="admonition-title">register_start_trial is required</p>
+<p>Call <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> at the beginning of <strong>every</strong> trial, in
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code>. Without it <strong>the task stops with an error</strong>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code> is optional: if <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns without calling it,
+the trial is ended at that moment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="3">    <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">)</span>
+</span><span data-line="4">    <span class="o">...</span>  <span class="c1"># the trial: register_enter_state / register_raspberry_event</span>
+</span></pre></div>
+</div>
+</div>
+</section>
+<section id="registering-a-raspberry-side-event">
+<h3>Registering a Raspberry-side event</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_raspberry_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raspberry_timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>For events generated by the Raspberry Pi itself, asynchronously from the trial
+— e.g. executing a direct function, or a camera/touchscreen detection. Pass
+<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p>
+<p>With no external controller both clocks are the same, so <code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code>
+and <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> do exactly the same.</p>
+</section>
+<section id="registering-a-value">
+<h3>Registering a value</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>Saves a custom value to the current trial row in the CSV — call it inside
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="2"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_time"</span><span class="p">,</span> <span class="mf">0.432</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="executing-a-direct-function">
+<h3>Executing a direct function</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">execute_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>Runs the direct function registered at index <code class="docutils literal notranslate"><span class="pre">i</span></code> (1-99). See
+<a class="reference internal" href="functions.html"><span class="std std-doc">Direct, Audio &amp; Video Functions</span></a> for how those get registered and
+the other ways they can be triggered.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># executes the function registered at index 1</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="attributes-you-can-read">
+<h2>Attributes you can read</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the task (the class name).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.subject</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the subject running the session.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.system_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the system, as defined in the Settings tab.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Settings</span></code></p></td>
+<td><p>Session parameters defined in the training protocol. Read and write its attributes to implement adaptive training.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.cam_box</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera</span> <span class="pre">|</span> <span class="pre">NullCamera</span></code></p></td>
+<td><p>Camera attached to the operant box (<code class="docutils literal notranslate"><span class="pre">NullCamera</span></code> if not configured).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.gpio</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Gpio</span> <span class="pre">|</span> <span class="pre">NullGpio</span></code></p></td>
+<td><p>Output pin control (<code class="docutils literal notranslate"><span class="pre">set_on()</span></code> / <code class="docutils literal notranslate"><span class="pre">set_off()</span></code>). See <a class="reference internal" href="gpio_trigger.html"><span class="std std-doc">Custom GPIO Interaction</span></a> for the input-pin trigger hook.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.current_trial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>The current trial number, starting from 1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.date</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Date string of the current session, set once when it starts.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.run_mode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.force_stop</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> from your own task logic (e.g. in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>) to make the task stop.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.stop_button_pressed</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> once something external (e.g. the STOP TASK button) has asked the task to stop. Read-only — react to it, don’t set it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.chrono</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Chrono</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.chrono.get_seconds()</span></code> gives the time in seconds since the task started.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="self-info">
+<h3><code class="docutils literal notranslate"><span class="pre">self.info</span></code></h3>
+<p>Human-readable description of the task, set once (usually in <code class="docutils literal notranslate"><span class="pre">__init__</span></code>). Shown to
+the user when selecting the task in the GUI.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
+</span><span data-line="2"><span class="s2">My Task</span>
+</span><span data-line="3"><span class="s2">-------</span>
+</span><span data-line="4"><span class="s2">Describe what the task does and how it progresses here.</span>
+</span><span data-line="5"><span class="s2">"""</span>
+</span></pre></div>
+</div>
+</section>
+<section id="self-calibrations">
+<h3><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></h3>
+<p>Holds the task’s calibrations — call its methods to convert between hardware
+values and real-world units (see <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"white_noise"</span>
+</span><span data-line="3"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="self-should-stop-read-only-property">
+<h3><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</h3>
+<p><code class="docutils literal notranslate"><span class="pre">True</span></code> once <em>any</em> stopping condition is met: the trial/time limit (Manual mode
+only — Auto mode runs until the subject leaves the corridor, not for a fixed
+number of trials), <code class="docutils literal notranslate"><span class="pre">force_stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">stop_button_pressed</span></code>.</p>
+<div class="warning admonition">
+<p class="admonition-title">Poll it in your own waiting loop</p>
+<p>Trial/time limits and <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> are only checked <em>between</em> trials, by the
+task’s own run loop — they can’t interrupt a <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> that’s blocked inside
+its own waiting loop. Poll <code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> in that loop so it actually exits
+when asked to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
+</span><span data-line="3">        <span class="o">...</span>  <span class="c1"># wait for your own condition</span>
+</span></pre></div>
+</div>
+</div>
+</section>
+<section id="self-trial-data-dict">
+<h3><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</h3>
+<p>Populated automatically at the end of each trial — available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<p><strong>Keys always present:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;date&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;trial&quot;</span></code> (int), <code class="docutils literal notranslate"><span class="pre">&quot;subject&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;system_name&quot;</span></code> (str)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_END&quot;</span></code> (float): absolute timestamps (UNIX epoch seconds)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ordered_list_of_events&quot;</span></code> (list[str]): event names in the order they occurred (e.g. <code class="docutils literal notranslate"><span class="pre">[&quot;Port1In&quot;,</span> <span class="pre">&quot;Port1Out&quot;,</span> <span class="pre">&quot;Port1In&quot;]</span></code>)</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> comes from your call to <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>, and <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code> from
+<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code> (or it is set automatically when <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns if you
+didn’t call it). The rest are filled automatically.</p>
+<p><strong>Keys added per state visited:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code> (list[float]): timestamps of every
+entry/exit for that state — a list because the same state can be visited more
+than once per trial.</p></li>
+</ul>
+<p>If your trial is organized in states, call <code class="docutils literal notranslate"><span class="pre">register_enter_state(name,</span> <span class="pre">timestamp)</span></code>
+every time you enter one: it closes the previous state (its end time is the new
+state’s start) and opens the new one, exactly as Bpod does. The trial’s end
+(<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>, or the automatic one) closes the last one. A state that was
+not visited simply does not appear: to check whether a state was visited, look at
+its first start time with a <code class="docutils literal notranslate"><span class="pre">nan</span></code> default (see the example below).</p>
+<p><strong>Keys added per event type:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;EventName&gt;&quot;</span></code> (list[float]): timestamps of every occurrence of that event
+(e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>).</p></li>
+</ul>
+<p>Register them yourself, between <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> and the end of
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code> (anything registered outside that window is ignored). Use <code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code> (or
+<code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code>, which here is the same) with
+<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>. Events registered from a trigger, while the trial is
+running, are added too.</p>
+<p><strong>Keys added by you:</strong> any name passed to <code class="docutils literal notranslate"><span class="pre">register_value</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<section id="example">
+<h4>Example</h4>
+<p>A short trial with four states: the animal pokes the right port (3) while
+waiting, starts the trial in the center port (2), and then pokes the left port
+(1), which is rewarded:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
+</span><span data-line="2">    <span class="s2">"date"</span><span class="p">:</span> <span class="s2">"2026-10-08 10:15:02"</span><span class="p">,</span>
+</span><span data-line="3">    <span class="s2">"trial"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+</span><span data-line="4">    <span class="s2">"subject"</span><span class="p">:</span> <span class="s2">"mouse1"</span><span class="p">,</span>
+</span><span data-line="5">    <span class="s2">"task"</span><span class="p">:</span> <span class="s2">"MyTask"</span><span class="p">,</span>
+</span><span data-line="6">    <span class="s2">"system_name"</span><span class="p">:</span> <span class="s2">"village01"</span><span class="p">,</span>
+</span><span data-line="7">    <span class="s2">"TRIAL_START"</span><span class="p">:</span> <span class="mf">1791454502.10</span><span class="p">,</span>
+</span><span data-line="8">    <span class="s2">"TRIAL_END"</span><span class="p">:</span> <span class="mf">1791454506.35</span><span class="p">,</span>
+</span><span data-line="9">    <span class="s2">"STATE_WAIT_POKE_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454502.10</span><span class="p">],</span>
+</span><span data-line="10">    <span class="s2">"STATE_WAIT_POKE_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.20</span><span class="p">],</span>
+</span><span data-line="11">    <span class="s2">"STATE_RESPONSE_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.20</span><span class="p">],</span>
+</span><span data-line="12">    <span class="s2">"STATE_RESPONSE_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.90</span><span class="p">],</span>
+</span><span data-line="13">    <span class="s2">"STATE_REWARD_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.90</span><span class="p">],</span>
+</span><span data-line="14">    <span class="s2">"STATE_REWARD_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.95</span><span class="p">],</span>
+</span><span data-line="15">    <span class="s2">"STATE_ITI_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.95</span><span class="p">],</span>
+</span><span data-line="16">    <span class="s2">"STATE_ITI_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454506.35</span><span class="p">],</span>
+</span><span data-line="17">    <span class="s2">"Port3In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454502.60</span><span class="p">],</span>
+</span><span data-line="18">    <span class="s2">"Port3Out"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454502.75</span><span class="p">],</span>
+</span><span data-line="19">    <span class="s2">"Port2In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.20</span><span class="p">],</span>
+</span><span data-line="20">    <span class="s2">"Port2Out"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.41</span><span class="p">],</span>
+</span><span data-line="21">    <span class="s2">"Port1In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.90</span><span class="p">],</span>
+</span><span data-line="22">    <span class="s2">"ordered_list_of_events"</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="23">        <span class="s2">"Port3In"</span><span class="p">,</span> <span class="s2">"Port3Out"</span><span class="p">,</span> <span class="s2">"Port2In"</span><span class="p">,</span> <span class="s2">"Port2Out"</span><span class="p">,</span> <span class="s2">"Port1In"</span>
+</span><span data-line="24">    <span class="p">],</span>
+</span><span data-line="25"><span class="p">}</span>
+</span></pre></div>
+</div>
+<p>Getting information out of it in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="4">    <span class="c1"># 1. Did the animal reach the REWARD state? A state that was not visited does not appear,</span>
+</span><span data-line="5">    <span class="c1"># so look it up with a nan default.</span>
+</span><span data-line="6">    <span class="n">t_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"STATE_REWARD_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="7">    <span class="n">rewarded</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_reward</span><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="c1"># 2. First poke from the RESPONSE state onwards. Strictly after its start:</span>
+</span><span data-line="10">    <span class="c1"># the center poke that started RESPONSE has exactly that timestamp.</span>
+</span><span data-line="11">    <span class="n">first_response_poke</span> <span class="o">=</span> <span class="s2">"none"</span>
+</span><span data-line="12">    <span class="n">t_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"STATE_RESPONSE_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="13">    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_response</span><span class="p">):</span>
+</span><span data-line="14">        <span class="n">pokes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="15">            <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+</span><span data-line="16">            <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"Port1In"</span><span class="p">,</span> <span class="s2">"Port2In"</span><span class="p">,</span> <span class="s2">"Port3In"</span><span class="p">)</span>
+</span><span data-line="17">            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="p">[])</span>
+</span><span data-line="18">            <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="n">t_response</span>
+</span><span data-line="19">        <span class="p">]</span>
+</span><span data-line="20">        <span class="k">if</span> <span class="n">pokes</span><span class="p">:</span>
+</span><span data-line="21">            <span class="n">first_response_poke</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">pokes</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># the earliest one</span>
+</span><span data-line="22">
+</span><span data-line="23">    <span class="c1"># 3. Register the results (and, as always, the water).</span>
+</span><span data-line="24">    <span class="k">if</span> <span class="n">rewarded</span><span class="p">:</span>
+</span><span data-line="25">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"correct"</span>
+</span><span data-line="26">    <span class="k">elif</span> <span class="n">first_response_poke</span> <span class="o">==</span> <span class="s2">"none"</span><span class="p">:</span>
+</span><span data-line="27">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"miss"</span>
+</span><span data-line="28">    <span class="k">else</span><span class="p">:</span>
+</span><span data-line="29">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"incorrect"</span>
+</span><span data-line="30">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"first_response_poke"</span><span class="p">,</span> <span class="n">first_response_poke</span><span class="p">)</span>
+</span><span data-line="31">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
+</span><span data-line="32">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span> <span class="k">if</span> <span class="n">rewarded</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>With the example above: <code class="docutils literal notranslate"><span class="pre">rewarded</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">first_response_poke</span></code> is
+<code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code> (the <code class="docutils literal notranslate"><span class="pre">Port3In</span></code> came before RESPONSE and the <code class="docutils literal notranslate"><span class="pre">Port2In</span></code> is the one that
+started it), and <code class="docutils literal notranslate"><span class="pre">outcome</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;correct&quot;</span></code>.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="../examples/arduino_6_delay.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">arduino_6_delay.py</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="../examples/tasks_raspberry.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Task Examples (Raspberry Pi only)</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright">
+        <p>© <a href="https://braincircuitsbehavior.org">Brain Circuits and Behavior Lab</a></p>
+        <p>Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://shibuya.lepture.com">Shibuya theme</a>.</p>
+      </div>
+      <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
+        <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
+</html>

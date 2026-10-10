@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Methods &amp; Attributes - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Task Examples (Bpod)" href="../examples/tasks_bpod.html" /><link rel="prev" title="Task Development Guide" href="task.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task_methods.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tasks (Arduino or other microcontroller) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Task Examples (Arduino)" href="../examples/tasks_arduino.html" /><link rel="prev" title="bpod_purge_ports.py" href="../examples/bpod_purge_ports.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/tasks_arduino.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -22,8 +22,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task_methods.html"/>
-  <meta property="og:title" content="Task Methods &amp; Attributes"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/tasks_arduino.html"/>
+  <meta property="og:title" content="Tasks (Arduino or other microcontroller)"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -107,43 +107,43 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="creating.html">Training Protocol Creation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creating.html">The Training Protocol</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/training_protocol.html">Training Protocol Example</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="task.html">Task Creation</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Task Methods &amp; Attributes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples (Bpod)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tasks_bpod.html">Tasks (Bpod)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples (Arduino or other microcontroller)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples (Raspberry Only)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct Sound &amp; Video Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
@@ -166,12 +166,13 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="plots.html">Plots</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plots.html">Create Custom Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
@@ -474,9 +475,17 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#a-minimal-task">A minimal task</a></li>
+<li><a class="reference internal" href="#the-start-method">The <code class="docutils literal notranslate"><span class="pre">start()</span></code> method</a></li>
+<li><a class="reference internal" href="#the-create-trial-method">The <code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> method</a></li>
+<li><a class="reference internal" href="#the-firmware">The firmware</a></li>
+<li><a class="reference internal" href="#the-after-trial-method">The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> method</a></li>
+<li><a class="reference internal" href="#the-close-method">The <code class="docutils literal notranslate"><span class="pre">close()</span></code> method</a></li>
+<li><a class="reference internal" href="#a-more-complete-example">A more complete example</a></li>
+<li><a class="reference internal" href="#water-calibration">Water calibration</a></li>
 <li><a class="reference internal" href="#methods-you-must-override">Methods you must override</a></li>
 <li><a class="reference internal" href="#methods-you-can-call">Methods you can call</a><ul>
-<li><a class="reference internal" href="#registering-controller-events">Registering controller events</a></li>
+<li><a class="reference internal" href="#registering-the-trial-and-controller-events">Registering the trial and controller events</a></li>
 <li><a class="reference internal" href="#registering-a-raspberry-side-event">Registering a Raspberry-side event</a></li>
 <li><a class="reference internal" href="#registering-a-value">Registering a value</a></li>
 <li><a class="reference internal" href="#executing-a-direct-function">Executing a direct function</a></li>
@@ -517,12 +526,8 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="task.html"><span itemprop="name">Task Development Guide</span></a>
-        <span>/</span>
+        <strong itemprop="name">Tasks (Arduino or other microcontroller)</strong>
         <meta itemprop="position" content="4" />
-      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Task Methods &amp; Attributes</strong>
-        <meta itemprop="position" content="5" />
       </li></ol>
     <div class="xl:hidden ml-1">
       <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
@@ -538,7 +543,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_arduino.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -552,28 +557,361 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_arduino.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_arduino.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_arduino.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task_methods.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_arduino.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="task-methods-attributes">
-<h1>Task Methods &amp; Attributes</h1>
-<p>Full reference for <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code> — every method you can override or call, and every
-attribute you can read, from inside your own task. For a walkthrough of building a
-task from scratch, see the <a class="reference internal" href="task.html"><span class="std std-doc">Task Development Guide</span></a>.</p>
+          <section id="tasks-arduino-or-other-microcontroller">
+<h1>Tasks (Arduino or other microcontroller)</h1>
+<p>With <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>, a microcontroller (an
+Arduino, or any other board that talks over a serial port) can run the
+time-critical part of every trial: reading the pokes, turning the LEDs on, opening
+the valves. The task, on the Raspberry Pi, tells it what to do at the start of every
+trial and registers everything it reports. So there are two pieces of code:</p>
+<ul class="simple">
+<li><p><strong>The task</strong> (<code class="docutils literal notranslate"><span class="pre">.py</span></code>), in your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory, like any other task.</p></li>
+<li><p><strong>The firmware</strong> (<code class="docutils literal notranslate"><span class="pre">.ino</span></code> for an Arduino), uploaded to the board with its own
+tools (e.g. the Arduino IDE). Village doesn’t upload it.</p></li>
+</ul>
+<p>They talk through the serial port set in <code class="docutils literal notranslate"><span class="pre">CONTROLLER_PORT</span></code> (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>). What they
+say to each other is up to you: the examples use small binary messages, described
+at the top of each file.</p>
+<p>To create a task, create a Python file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory, and
+within it, a class named after the task, inheriting from the generic <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code>
+class. Naming conventions follow Python standards: CamelCase for class names,
+lower_case for filenames and function/variable names. Let’s look at an example.</p>
+<!-- The code on this page is included from docs/source/examples/files/arduino_1_habituation.py (and its firmware),
+selected by method name (pyobject) and by some lines of text (start-at / end-before).
+If those lines change there, update them here too, and check the page: a block whose
+text is not found can come out empty. -->
+<section id="a-minimal-task">
+<h2>A minimal task</h2>
+<p><a class="reference internal" href="../examples/arduino_1_habituation.html"><span class="std std-doc">arduino_1_habituation.py</span></a> is the Arduino
+version of <a class="reference internal" href="../examples/bpod_1_habituation.html"><span class="std std-doc">bpod_1_habituation.py</span></a>, the simplest
+task of the examples: the mouse is just left alone in the box, pokes are logged,
+no reward is given. Its top part describes the messages and defines their codes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">serial</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="c1"># Protocol (see arduino_1_habituation.ino):</span>
+</span><span data-line="10"><span class="c1">#</span>
+</span><span data-line="11"><span class="c1"># Pi -&gt; Arduino, 3 raw bytes, sent once at the start of each trial:</span>
+</span><span data-line="12"><span class="c1">#   [CMD_START_TRIAL, duration_s (uint16, little-endian)]</span>
+</span><span data-line="13"><span class="c1">#   Tells the Arduino how long this trial lasts. From here the Arduino</span>
+</span><span data-line="14"><span class="c1">#   watches the 3 poke sensors on its own; the Pi just listens.</span>
+</span><span data-line="15"><span class="c1">#</span>
+</span><span data-line="16"><span class="c1"># Arduino -&gt; Pi, 6 raw bytes per message:</span>
+</span><span data-line="17"><span class="c1">#   [EVENT_STATE, state, elapsed_ms (uint32, LE)]</span>
+</span><span data-line="18"><span class="c1">#     -- every time the Arduino enters a new state (see STATE_NAMES), so it</span>
+</span><span data-line="19"><span class="c1">#        can be registered with register_enter_state, as Bpod does.</span>
+</span><span data-line="20"><span class="c1">#   [EVENT_TRIAL_END, port (0 if nobody poked), elapsed_ms (uint32, LE)]</span>
+</span><span data-line="21"><span class="c1">#     -- once, when the trial is over.</span>
+</span><span data-line="22"><span class="c1">#   elapsed_ms is milliseconds since the Arduino received CMD_START_TRIAL</span>
+</span><span data-line="23"><span class="c1">#   for THIS trial (its own timer, reset every trial). It is the controller</span>
+</span><span data-line="24"><span class="c1">#   clock: the trial start is registered as controller time 0 at the moment</span>
+</span><span data-line="25"><span class="c1">#   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller</span>
+</span><span data-line="26"><span class="c1">#   timestamp (register_controller_event / register_enter_state), so the two</span>
+</span><span data-line="27"><span class="c1">#   clocks never need to be synchronized.</span>
+</span><span data-line="28"><span class="n">CMD_START_TRIAL</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="29"><span class="n">EVENT_TRIAL_END</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="30"><span class="n">EVENT_STATE</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="31">
+</span><span data-line="32"><span class="c1"># State ids sent by the Arduino (same names as bpod_1_habituation.py)</span>
+</span><span data-line="33"><span class="n">STATE_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">"ready_to_explore"</span><span class="p">}</span>
+</span><span data-line="34">
+</span><span data-line="35"><span class="n">BAUDRATE</span> <span class="o">=</span> <span class="mi">9600</span>  <span class="c1"># must match the Arduino sketch's Serial.begin(...)</span>
+</span><span data-line="36"><span class="n">READ_TIMEOUT</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># seconds; also how often should_stop gets re-checked</span>
+</span><span data-line="37"><span class="n">MESSAGE_SIZE</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># every Arduino -&gt; Pi message is exactly this many bytes</span>
+</span><span data-line="38"><span class="n">STATE_DURATION</span> <span class="o">=</span> <span class="mi">60</span>  <span class="c1"># seconds</span>
+</span><span data-line="39">
+</span><span data-line="40">
+</span></pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">class</span><span class="w"> </span><span class="nc">Arduino1Habituation</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
+</span><span data-line="2">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="3">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="4">
+</span><span data-line="5">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
+</span><span data-line="6"><span class="s2">        Habituation Task</span>
+</span><span data-line="7"><span class="s2">        ----------------------------------------------------------</span>
+</span><span data-line="8"><span class="s2">        Lets a mouse get used to being in the box on its own. Every trial,</span>
+</span><span data-line="9"><span class="s2">        the Pi tells the Arduino how long to wait (STATE_DURATION), and the</span>
+</span><span data-line="10"><span class="s2">        Arduino watches all 3 ports for that whole window, ending the trial</span>
+</span><span data-line="11"><span class="s2">        early the moment any one of them is poked. No reward is delivered --</span>
+</span><span data-line="12"><span class="s2">        pokes are only recorded, to see the animal is exploring the box.</span>
+</span><span data-line="13"><span class="s2">        """</span>
+</span><span data-line="14">
+</span></pre></div>
+</div>
+<p>The task is initialized with <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, where it acquires all the properties of the
+generic <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code> class with <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>. <code class="docutils literal notranslate"><span class="pre">self.info</span></code> is shown to the user
+when the task is selected in the GUI to run manually.</p>
+<p>Four methods must be implemented in your class: <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>,
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code>, and <code class="docutils literal notranslate"><span class="pre">close</span></code>.</p>
+</section>
+<section id="the-start-method">
+<h2>The <code class="docutils literal notranslate"><span class="pre">start()</span></code> method</h2>
+<p>Called once, when the task starts. Here it opens the serial connection to the
+Arduino. <code class="docutils literal notranslate"><span class="pre">BAUDRATE</span></code> must be the same as in the firmware, and <code class="docutils literal notranslate"><span class="pre">READ_TIMEOUT</span></code> is how
+long each read waits for data — so also how often <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> gets back to check
+whether it has to stop.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2"><span class="w">    </span><span class="sd">"""Opens the serial connection to the Arduino."""</span>
+</span><span data-line="3">
+</span><span data-line="4">    <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span>
+</span><span data-line="5">        <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"CONTROLLER_PORT"</span><span class="p">),</span>
+</span><span data-line="6">        <span class="n">baudrate</span><span class="o">=</span><span class="n">BAUDRATE</span><span class="p">,</span>
+</span><span data-line="7">        <span class="n">timeout</span><span class="o">=</span><span class="n">READ_TIMEOUT</span><span class="p">,</span>
+</span><span data-line="8">    <span class="p">)</span>
+</span><span data-line="9">    <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">reset_input_buffer</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>The most commonly used attributes available by default inside any task method
+(see <a class="reference internal" href="#attributes-you-can-read"><span class="std std-ref">Attributes you can read</span></a> below) are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code> — the session’s parameters, as defined in <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>
+(e.g. <code class="docutils literal notranslate"><span class="pre">self.settings.reward_volume</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code> — convert hardware values to real-world units, e.g.
+<code class="docutils literal notranslate"><span class="pre">self.calibrations.water_calibration.get_valve_time(port,</span> <span class="pre">volume)</span></code>, to tell the
+Arduino how long to open a valve.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.cam_box</span></code>, <code class="docutils literal notranslate"><span class="pre">self.gpio</span></code>, <code class="docutils literal notranslate"><span class="pre">self.custom_areas</span></code> — the box camera, GPIO output
+control, and any custom-shaped detection areas the project defines.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.name</span></code>, <code class="docutils literal notranslate"><span class="pre">self.subject</span></code>, <code class="docutils literal notranslate"><span class="pre">self.current_trial</span></code>, <code class="docutils literal notranslate"><span class="pre">self.system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">self.date</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> — populated automatically after each trial, available inside
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> (see below).</p></li>
+</ul>
+</section>
+<section id="the-create-trial-method">
+<h2>The <code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> method</h2>
+<p>Called once per trial. Without Bpod, <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> <em>is</em> the trial: it returns when
+the trial is over.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2"><span class="w">    </span><span class="sd">"""Tells the Arduino how long this trial should last, then waits for</span>
+</span><span data-line="3"><span class="sd">    its single reply: either a port number (whichever was poked first)</span>
+</span><span data-line="4"><span class="sd">    or 0 if the whole duration passed with no poke at all.</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="sd">    The deadline below is only a safety net for a lost/garbled message</span>
+</span><span data-line="7"><span class="sd">    -- in normal operation the Arduino's own reply always arrives well</span>
+</span><span data-line="8"><span class="sd">    before it.</span>
+</span><span data-line="9"><span class="sd">    """</span>
+</span><span data-line="10">
+</span><span data-line="11">    <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">"&lt;BH"</span><span class="p">,</span> <span class="n">CMD_START_TRIAL</span><span class="p">,</span> <span class="n">STATE_DURATION</span><span class="p">))</span>
+</span><span data-line="12">    <span class="n">t_sent</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="13">    <span class="c1"># The Arduino's clock (elapsed_ms) starts at 0 when it gets the command.</span>
+</span><span data-line="14">    <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t_sent</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="15">
+</span><span data-line="16">    <span class="n">deadline</span> <span class="o">=</span> <span class="n">t_sent</span> <span class="o">+</span> <span class="n">STATE_DURATION</span> <span class="o">+</span> <span class="mf">2.0</span>  <span class="c1"># margin for serial/USB latency</span>
+</span><span data-line="17">    <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+</span><span data-line="18">    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+</span><span data-line="19">        <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">MESSAGE_SIZE</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
+</span><span data-line="20">        <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+</span><span data-line="21">            <span class="k">continue</span>  <span class="c1"># nothing arrived within READ_TIMEOUT; keep waiting</span>
+</span><span data-line="22">        <span class="n">buffer</span> <span class="o">+=</span> <span class="n">chunk</span>
+</span><span data-line="23">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MESSAGE_SIZE</span><span class="p">:</span>
+</span><span data-line="24">            <span class="k">continue</span>
+</span><span data-line="25">
+</span><span data-line="26">        <span class="n">event</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">elapsed_ms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&lt;BBI"</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
+</span><span data-line="27">        <span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="28">        <span class="n">t</span> <span class="o">=</span> <span class="n">elapsed_ms</span> <span class="o">/</span> <span class="mf">1000.0</span>  <span class="c1"># controller clock, seconds</span>
+</span><span data-line="29">
+</span><span data-line="30">        <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_STATE</span><span class="p">:</span>
+</span><span data-line="31">            <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="n">STATE_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"state</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
+</span><span data-line="32">        <span class="k">elif</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_TRIAL_END</span><span class="p">:</span>
+</span><span data-line="33">            <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># the port that was poked</span>
+</span><span data-line="34">                <span class="bp">self</span><span class="o">.</span><span class="n">register_controller_event</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Port</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">In"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</span><span data-line="35">            <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</span><span data-line="36">            <span class="k">break</span>
+</span></pre></div>
+</div>
+<p>Step by step:</p>
+<ol class="arabic simple">
+<li><p><strong>It tells the Arduino to start the trial</strong>, with what it needs to know (here,
+only how long the trial lasts).</p></li>
+<li><p><strong>It registers the start of the trial</strong>, with <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>, in both
+clocks: the Raspberry Pi’s (<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>) and the Arduino’s. The
+Arduino’s clock is the milliseconds since it received the command, so at that
+moment it is 0. This call is <strong>required</strong> without Bpod: every time the Arduino
+reports later is converted to Raspberry Pi time with the difference between the
+two, so the clocks never need to be synchronized.</p></li>
+<li><p><strong>It listens to the Arduino</strong> until the trial is over. The loop also checks
+<code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (the task has to stop) and a deadline (a message lost on the
+way), so it can never wait forever.</p></li>
+<li><p><strong>It registers what the Arduino reports</strong>, with the Arduino’s time:</p>
+<ul class="simple">
+<li><p>every state it enters, with <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> — the same state names as
+the Bpod version, so the trial data are the same;</p></li>
+<li><p>every poke, with <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>…).</p></li>
+</ul>
+</li>
+<li><p><strong>It registers the end of the trial</strong> with <code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>. This one is
+optional: if <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns without calling it (e.g. the task was
+stopped), the trial is ended at that moment.</p></li>
+</ol>
+</section>
+<section id="the-firmware">
+<h2>The firmware</h2>
+<p>The Arduino side waits for the command, runs the trial with its own clock
+(<code class="docutils literal notranslate"><span class="pre">millis()</span></code>), and sends every state and the result with the milliseconds elapsed
+since the command:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1">// Habituation Task firmware.</span>
+</span><span data-line="2"><span class="c1">// Companion sketch for arduino_1_habituation.py.</span>
+</span><span data-line="3"><span class="c1">//</span>
+</span><span data-line="4"><span class="c1">// The Pi tells this sketch how long the trial should last; from there this</span>
+</span><span data-line="5"><span class="c1">// sketch watches all 3 poke sensors on its own and reports back either</span>
+</span><span data-line="6"><span class="c1">// whichever port was poked first, or that nobody poked at all, with its</span>
+</span><span data-line="7"><span class="c1">// own millis()-based timing.</span>
+</span><span data-line="8"><span class="c1">//</span>
+</span><span data-line="9"><span class="c1">// Protocol:</span>
+</span><span data-line="10"><span class="c1">//   Pi -&gt; Arduino, 3 raw bytes, once per trial:</span>
+</span><span data-line="11"><span class="c1">//     [CMD_START_TRIAL, duration_s (uint16, little-endian)]</span>
+</span><span data-line="12"><span class="c1">//   Arduino -&gt; Pi, 6 raw bytes per message:</span>
+</span><span data-line="13"><span class="c1">//     [EVENT_STATE, state, elapsed_ms (uint32, little-endian)]</span>
+</span><span data-line="14"><span class="c1">//       -- every time this sketch enters a new state (see the STATE_*</span>
+</span><span data-line="15"><span class="c1">//          constants), so the Pi can register it with register_enter_state.</span>
+</span><span data-line="16"><span class="c1">//     [EVENT_TRIAL_END, port (0 if nobody poked), elapsed_ms (uint32, LE)]</span>
+</span><span data-line="17"><span class="c1">//       -- once, when the trial is over.</span>
+</span><span data-line="18"><span class="c1">//   elapsed_ms is milliseconds since this sketch received CMD_START_TRIAL</span>
+</span><span data-line="19"><span class="c1">//   for the current trial (its own timer, reset every trial). It is the</span>
+</span><span data-line="20"><span class="c1">//   controller clock: the Pi registers the trial start as controller time 0</span>
+</span><span data-line="21"><span class="c1">//   at the moment it sent that command, and every elapsed_ms as a</span>
+</span><span data-line="22"><span class="c1">//   controller timestamp, so the two clocks never need to be synchronized.</span>
+</span><span data-line="23"><span class="c1">//</span>
+</span><span data-line="24"><span class="c1">// 3 ports are wired: 1 (left), 2 (center), 3 (right). Baud rate must match</span>
+</span><span data-line="25"><span class="c1">// BAUDRATE in arduino_1_habituation.py (9600).</span>
+</span><span data-line="26">
+</span><span data-line="27"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CMD_START_TRIAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span data-line="28"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">EVENT_TRIAL_END</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span data-line="29"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">EVENT_STATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+</span><span data-line="30">
+</span><span data-line="31"><span class="c1">// States (same names as bpod_1_habituation.py)</span>
+</span><span data-line="32"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">STATE_READY_TO_EXPLORE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span data-line="33">
+</span><span data-line="34"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokePinLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span><span class="p">;</span>
+</span><span data-line="35"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokePinCenter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
+</span><span data-line="36"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokePinRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span>
+</span><span data-line="37">
+</span><span data-line="38"><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="39"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+</span><span data-line="40"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pokePinLeft</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT</span><span class="p">);</span>
+</span><span data-line="41"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pokePinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT</span><span class="p">);</span>
+</span><span data-line="42"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pokePinRight</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT</span><span class="p">);</span>
+</span><span data-line="43"><span class="p">}</span>
+</span><span data-line="44">
+</span><span data-line="45"><span class="kt">void</span><span class="w"> </span><span class="nf">sendEvent</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">eventCode</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">elapsedMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="46"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">eventCode</span><span class="p">);</span>
+</span><span data-line="47"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+</span><span data-line="48"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)(</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
+</span><span data-line="49"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
+</span><span data-line="50"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
+</span><span data-line="51"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">24</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
+</span><span data-line="52"><span class="p">}</span>
+</span><span data-line="53">
+</span><span data-line="54"><span class="kt">byte</span><span class="w"> </span><span class="nf">readPoke</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="55"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinLeft</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span data-line="56"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinCenter</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span><span data-line="57"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinRight</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+</span><span data-line="58"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span data-line="59"><span class="p">}</span>
+</span><span data-line="60">
+</span><span data-line="61"><span class="kt">void</span><span class="w"> </span><span class="nf">runTrial</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">durationS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="62"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+</span><span data-line="63"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">durationMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="p">)</span><span class="n">durationS</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000UL</span><span class="p">;</span>
+</span><span data-line="64"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_STATE</span><span class="p">,</span><span class="w"> </span><span class="n">STATE_READY_TO_EXPLORE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</span><span data-line="65">
+</span><span data-line="66"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokedPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span data-line="67"><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">durationMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="68"><span class="w">    </span><span class="n">pokedPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readPoke</span><span class="p">();</span>
+</span><span data-line="69"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pokedPort</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="70"><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+</span><span data-line="71"><span class="w">    </span><span class="p">}</span>
+</span><span data-line="72"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="73">
+</span><span data-line="74"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_TRIAL_END</span><span class="p">,</span><span class="w"> </span><span class="n">pokedPort</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+</span><span data-line="75"><span class="p">}</span>
+</span><span data-line="76">
+</span><span data-line="77"><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="78"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="79"><span class="w">    </span><span class="kt">byte</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+</span><span data-line="80"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">command</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CMD_START_TRIAL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="81"><span class="w">      </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">durationS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+</span><span data-line="82"><span class="w">      </span><span class="n">durationS</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+</span><span data-line="83"><span class="w">      </span><span class="n">runTrial</span><span class="p">(</span><span class="n">durationS</span><span class="p">);</span>
+</span><span data-line="84"><span class="w">    </span><span class="p">}</span>
+</span><span data-line="85"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="86"><span class="p">}</span>
+</span></pre></div>
+</div>
+</section>
+<section id="the-after-trial-method">
+<h2>The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> method</h2>
+<p>Called once after each trial ends, to register whatever values you want saved to
+the session’s data file. <code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> has, by then, everything registered in
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code> — <code class="docutils literal notranslate"><span class="pre">self.trial_data.get(&quot;Port1In&quot;,</span> <span class="pre">[])</span></code> is the list of times at which
+port 1 was poked during the trial (empty if it never was). It’s the same as in the
+Bpod version:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2"><span class="w">    </span><span class="sd">"""Reads back whichever port event create_trial registered, if any,</span>
+</span><span data-line="3"><span class="sd">    to label the trial."""</span>
+</span><span data-line="4">
+</span><span data-line="5">    <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"miss"</span>
+</span><span data-line="6">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port1In"</span><span class="p">):</span>
+</span><span data-line="7">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"left_poke"</span>
+</span><span data-line="8">    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port2In"</span><span class="p">):</span>
+</span><span data-line="9">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"center_poke"</span>
+</span><span data-line="10">    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port3In"</span><span class="p">):</span>
+</span><span data-line="11">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"right_poke"</span>
+</span><span data-line="12">
+</span><span data-line="13">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
+</span><span data-line="14">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="the-close-method">
+<h2>The <code class="docutils literal notranslate"><span class="pre">close()</span></code> method</h2>
+<p>Called once when the task finishes (session ends, or manually stopped). Here it
+closes the serial connection:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2"><span class="w">    </span><span class="sd">"""Closes the serial connection to the Arduino."""</span>
+</span><span data-line="3">
+</span><span data-line="4">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">is_open</span><span class="p">:</span>
+</span><span data-line="5">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></pre></div>
+</div>
+</section>
+<section id="a-more-complete-example">
+<h2>A more complete example</h2>
+<p><a class="reference internal" href="../examples/arduino_4_center_initiated.html"><span class="std std-doc">arduino_4_center_initiated.py</span></a> is the
+Arduino version of a 2-choice task: the Pi picks the correct side and sends it to
+the Arduino with the timings and the valve time; the Arduino runs the center poke,
+the side LED, the response and the valve, and reports every state and poke. The
+inter-trial interval is timed by the Pi after the Arduino has finished
+(<code class="docutils literal notranslate"><span class="pre">register_enter_state(&quot;iti&quot;,</span> <span class="pre">...)</span></code> and a wait). The other <code class="docutils literal notranslate"><span class="pre">arduino_*</span></code> examples
+follow the same pattern, each with its firmware.</p>
+</section>
+<section id="water-calibration">
+<h2>Water calibration</h2>
+<p>The built-in water calibration opens the valves through Bpod. With an Arduino,
+write a subclass of <code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> that opens them through your board:
+see <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a>.</p>
+</section>
 <hr class="docutils" />
 <section id="methods-you-must-override">
 <h2>Methods you must override</h2>
@@ -592,7 +930,7 @@ task from scratch, see the <a class="reference internal" href="task.html"><span 
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">create_trial(self)</span></code></p></td>
 <td><p>Once at the start of every trial.</p></td>
-<td><p>Build and run the trial.</p></td>
+<td><p>Run the trial: tell the controller what to do, and register the start of the trial and everything it reports.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">after_trial(self)</span></code></p></td>
 <td><p>Immediately after each trial finishes.</p></td>
@@ -604,13 +942,6 @@ task from scratch, see the <a class="reference internal" href="task.html"><span 
 </tr>
 </tbody>
 </table>
-</div>
-<div class="note admonition">
-<p class="admonition-title">create_trial with Bpod</p>
-<p>Each call starts with an empty state machine. Add states with <code class="docutils literal notranslate"><span class="pre">self.bpod.add_state</span></code>
-— when the method returns, the state machine is sent and run automatically, and
-<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called once it finishes. Without Bpod, you’re responsible for
-creating and running the trial logic yourself.</p>
 </div>
 <div class="warning admonition">
 <p class="admonition-title">after_trial must register “water”</p>
@@ -644,18 +975,14 @@ would never be saved.</p>
 <section id="methods-you-can-call">
 <h2>Methods you can call</h2>
 <p>Do not override these — call them from inside your task’s own methods.</p>
-<section id="registering-controller-events">
-<h3>Registering controller events</h3>
-<p>If you’re using Bpod, all four of these are called automatically — you never need
-to call them yourself, and you can skip this section. With <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code>
-set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>, call them with the right timestamps to populate <code class="docutils literal notranslate"><span class="pre">trial_data</span></code> (see
-below).</p>
+<section id="registering-the-trial-and-controller-events">
+<h3>Registering the trial and controller events</h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Method</p></th>
 <th class="head"><p>Args</p></th>
-<th class="head"><p>When to call it (<code class="docutils literal notranslate"><span class="pre">OTHER</span></code>)</p></th>
+<th class="head"><p>When to call it</p></th>
 </tr>
 </thead>
 <tbody>
@@ -680,27 +1007,22 @@ below).</p>
 </div>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>: the Raspberry Pi’s own clock — get it with <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code>: read from the microcontroller’s own clock (e.g. an Arduino’s <code class="docutils literal notranslate"><span class="pre">millis()</span></code>, converted to seconds), if you’re talking to one and it reports its own timing.</p></li>
-<li><p>If you’re not syncing against an external clock (no microcontroller, or one that doesn’t report its own timing), <code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code> is exactly the same as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code>: the microcontroller’s own clock (e.g. an Arduino’s <code class="docutils literal notranslate"><span class="pre">millis()</span></code>, converted to seconds).</p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> uses the two timestamps together to compute a clock offset
 (<code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span> <span class="pre">-</span> <span class="pre">controller_timestamp</span></code>), used to convert every later
 <code class="docutils literal notranslate"><span class="pre">controller_timestamp</span></code> back to Raspberry Pi absolute time.</p>
 <div class="warning admonition">
-<p class="admonition-title">Without Bpod, register_start_trial is required</p>
+<p class="admonition-title">register_start_trial is required</p>
 <p>Call <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> at the beginning of <strong>every</strong> trial, in
 <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>. Without it <strong>the task stops with an error</strong>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code> is optional: if <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns without calling it,
 the trial is ended at that moment (Raspberry time, converted to the controller
 clock with the offset above). Call it yourself if you want the controller’s own
 end time instead.</p>
-<p>With a controller that has its own clock (e.g. an Arduino), register the trial
-start in both clocks, and everything the controller reports in its own clock
-(<code class="docutils literal notranslate"><span class="pre">read_controller_time()</span></code> stands for your own way of getting it — the <code class="docutils literal notranslate"><span class="pre">arduino_*</span></code>
-example tasks use the milliseconds since the Arduino received the start command):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span data-line="2">    <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
-</span><span data-line="3">    <span class="n">c0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_controller_time</span><span class="p">()</span>
+</span><span data-line="3">    <span class="n">c0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_controller_time</span><span class="p">()</span>  <span class="c1"># your own way of getting it</span>
 </span><span data-line="4">    <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">c0</span><span class="p">)</span>
 </span><span data-line="5">    <span class="o">...</span>  <span class="c1"># the trial: register_enter_state / register_controller_event with</span>
 </span><span data-line="6">         <span class="c1"># the controller's times</span>
@@ -708,14 +1030,8 @@ example tasks use the milliseconds since the Arduino received the start command)
 </span><span data-line="8">    <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">controller_timestamp</span><span class="o">=</span><span class="n">c1</span><span class="p">)</span>  <span class="c1"># optional</span>
 </span></pre></div>
 </div>
-<p>Without an external clock (the Raspberry Pi is the controller), pass the same
-time as both, and leave the end to the automatic one:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="2">    <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
-</span><span data-line="3">    <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">)</span>
-</span><span data-line="4">    <span class="o">...</span>  <span class="c1"># the trial: register_enter_state / register_raspberry_event</span>
-</span></pre></div>
-</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">arduino_*</span></code> examples don’t need to read the Arduino’s clock at the start:
+their Arduino counts from 0 when it receives the command, so <code class="docutils literal notranslate"><span class="pre">c0</span></code> is <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 </div>
 </section>
 <section id="registering-a-raspberry-side-event">
@@ -723,7 +1039,7 @@ time as both, and leave the end to the automatic one:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_raspberry_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raspberry_timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></pre></div>
 </div>
-<p>For events generated by the Raspberry Pi itself, asynchronously from the controller
+<p>For events generated by the Raspberry Pi itself, asynchronously from the trial
 — e.g. executing a direct function, or a camera/touchscreen detection. Pass
 <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p>
 </section>
@@ -775,14 +1091,6 @@ the other ways they can be triggered.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.system_name</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of the system, as defined in the Settings tab.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.bpod</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">BpodController</span></code></p></td>
-<td><p>Bpod interface — state machine construction, sending, etc. Mainly used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.arduino</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ArduinoController</span></code></p></td>
-<td><p>Arduino interface, for tasks using an Arduino instead of Bpod.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Settings</span></code></p></td>
@@ -850,13 +1158,12 @@ values and real-world units (see <a class="reference internal" href="../advanced
 <p><code class="docutils literal notranslate"><span class="pre">True</span></code> once <em>any</em> stopping condition is met: the trial/time limit (Manual mode
 only — Auto mode runs until the subject leaves the corridor, not for a fixed
 number of trials), <code class="docutils literal notranslate"><span class="pre">force_stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">stop_button_pressed</span></code>.</p>
-<div class="tip admonition">
-<p class="admonition-title">Needed for a task with its own waiting loop</p>
+<div class="warning admonition">
+<p class="admonition-title">Poll it in your own waiting loop</p>
 <p>Trial/time limits and <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> are only checked <em>between</em> trials, by the
 task’s own run loop — they can’t interrupt a <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> that’s blocked inside
-its own waiting loop. If your task doesn’t use Bpod and waits on its own
-condition inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>, poll <code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> so the loop actually
-exits when asked to:</p>
+its own waiting loop. Poll <code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> in that loop so it actually exits
+when asked to:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span data-line="2">    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span><span class="p">:</span>
 </span><span data-line="3">        <span class="o">...</span>  <span class="c1"># wait for your own condition</span>
@@ -873,46 +1180,38 @@ exits when asked to:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_END&quot;</span></code> (float): absolute timestamps (UNIX epoch seconds)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;ordered_list_of_events&quot;</span></code> (list[str]): event names in the order they occurred (e.g. <code class="docutils literal notranslate"><span class="pre">[&quot;Port1In&quot;,</span> <span class="pre">&quot;Port1Out&quot;,</span> <span class="pre">&quot;Port1In&quot;]</span></code>)</p></li>
 </ul>
-<p>You don’t have to do anything for these, with or without Bpod — with one
-exception: without Bpod, <code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> comes from your call to
-<code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>, which is required (see above). <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code> comes from
-<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>, or is set automatically when <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns if you
-didn’t call it.</p>
-<p><strong>Keys added per state visited</strong> (Bpod or manual):</p>
+<p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> comes from your call to <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>, and <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code> from
+<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code> (or it is set automatically when <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns if you
+didn’t call it). The rest are filled automatically.</p>
+<p><strong>Keys added per state visited:</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code> (list[float]): timestamps of every
 entry/exit for that state — a list because the same state can be visited more
 than once per trial.</p></li>
 </ul>
-<p>With Bpod they are added automatically, and a state that was <strong>not visited</strong> still
-appears, with <code class="docutils literal notranslate"><span class="pre">[nan]</span></code>. Without Bpod, if your trial is organized in states, call
-<code class="docutils literal notranslate"><span class="pre">register_enter_state(name,</span> <span class="pre">timestamp)</span></code> every time you enter one: it closes the
-previous state (its end time is the new state’s start) and opens the new one,
-exactly as Bpod does. The trial’s end (<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>, or the automatic
-one) closes the last one. Here a state that was not visited simply does not
-appear.</p>
-<p>To check whether a state was visited in both cases, look at its first start time
-with a <code class="docutils literal notranslate"><span class="pre">nan</span></code> default (see the example below).</p>
+<p>If your trial is organized in states, call <code class="docutils literal notranslate"><span class="pre">register_enter_state(name,</span> <span class="pre">timestamp)</span></code>
+every time you enter one: it closes the previous state (its end time is the new
+state’s start) and opens the new one, exactly as Bpod does. The trial’s end
+(<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>, or the automatic one) closes the last one. A state that was
+not visited simply does not appear: to check whether a state was visited, look at
+its first start time with a <code class="docutils literal notranslate"><span class="pre">nan</span></code> default (see the example below).</p>
 <p><strong>Keys added per event type:</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;EventName&gt;&quot;</span></code> (list[float]): timestamps of every occurrence of that event
-(e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Tup&quot;</span></code>).</p></li>
+(e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>).</p></li>
 </ul>
-<p>With Bpod they are added automatically. Without Bpod, register them yourself,
-between <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> and the end of <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> (anything registered
-outside that window is ignored). Which method to use depends on <strong>which clock
+<p>Register them yourself, between <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> and the end of
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code> (anything registered outside that window is ignored). Which method to use depends on <strong>which clock
 timed the event</strong> — there are two:</p>
 <ul class="simple">
-<li><p><strong>The Raspberry Pi’s clock</strong> (<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>): for events the Pi
-itself detects or produces — a camera or touchscreen detection, a direct
-function, a sound. Use <code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code>.</p></li>
 <li><p><strong>The controller’s own clock</strong> (e.g. an Arduino’s <code class="docutils literal notranslate"><span class="pre">millis()</span></code>, in seconds): for
 events the controller detects and timestamps itself — a poke on a port wired to
 the Arduino. Use <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code>; it is converted to Raspberry Pi
 time with the offset computed in <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>.</p></li>
+<li><p><strong>The Raspberry Pi’s clock</strong> (<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>): for events the Pi
+itself detects or produces — a camera or touchscreen detection, a direct
+function, a sound. Use <code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code>.</p></li>
 </ul>
-<p>If there is no external controller (the Raspberry Pi is the controller), both
-clocks are the same and both methods do the same.</p>
 <p><strong>Keys added by you:</strong> any name passed to <code class="docutils literal notranslate"><span class="pre">register_value</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
 <section id="example">
 <h4>Example</h4>
@@ -940,19 +1239,18 @@ waiting, starts the trial in the center port (2), and then pokes the left port
 </span><span data-line="19">    <span class="s2">"Port2In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.20</span><span class="p">],</span>
 </span><span data-line="20">    <span class="s2">"Port2Out"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.41</span><span class="p">],</span>
 </span><span data-line="21">    <span class="s2">"Port1In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.90</span><span class="p">],</span>
-</span><span data-line="22">    <span class="s2">"Tup"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.95</span><span class="p">,</span> <span class="mf">1791454506.35</span><span class="p">],</span>
-</span><span data-line="23">    <span class="s2">"ordered_list_of_events"</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="24">        <span class="s2">"Port3In"</span><span class="p">,</span> <span class="s2">"Port3Out"</span><span class="p">,</span> <span class="s2">"Port2In"</span><span class="p">,</span> <span class="s2">"Port2Out"</span><span class="p">,</span> <span class="s2">"Port1In"</span><span class="p">,</span> <span class="s2">"Tup"</span><span class="p">,</span> <span class="s2">"Tup"</span>
-</span><span data-line="25">    <span class="p">],</span>
-</span><span data-line="26"><span class="p">}</span>
+</span><span data-line="22">    <span class="s2">"ordered_list_of_events"</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="23">        <span class="s2">"Port3In"</span><span class="p">,</span> <span class="s2">"Port3Out"</span><span class="p">,</span> <span class="s2">"Port2In"</span><span class="p">,</span> <span class="s2">"Port2Out"</span><span class="p">,</span> <span class="s2">"Port1In"</span>
+</span><span data-line="24">    <span class="p">],</span>
+</span><span data-line="25"><span class="p">}</span>
 </span></pre></div>
 </div>
 <p>Getting information out of it in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="4">    <span class="c1"># 1. Did the animal reach the REWARD state? With Bpod a state that was not</span>
-</span><span data-line="5">    <span class="c1"># visited is [nan]; without Bpod it is missing. This works in both cases.</span>
+</span><span data-line="4">    <span class="c1"># 1. Did the animal reach the REWARD state? A state that was not visited does not appear,</span>
+</span><span data-line="5">    <span class="c1"># so look it up with a nan default.</span>
 </span><span data-line="6">    <span class="n">t_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"STATE_REWARD_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
 </span><span data-line="7">    <span class="n">rewarded</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_reward</span><span class="p">)</span>
 </span><span data-line="8">
@@ -985,6 +1283,8 @@ waiting, starts the trial in the center port (2), and then pokes the left port
 <p>With the example above: <code class="docutils literal notranslate"><span class="pre">rewarded</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">first_response_poke</span></code> is
 <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code> (the <code class="docutils literal notranslate"><span class="pre">Port3In</span></code> came before RESPONSE and the <code class="docutils literal notranslate"><span class="pre">Port2In</span></code> is the one that
 started it), and <code class="docutils literal notranslate"><span class="pre">outcome</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;correct&quot;</span></code>.</p>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 </section>
 </section>
@@ -996,16 +1296,16 @@ started it), and <code class="docutils literal notranslate"><span class="pre">ou
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="task.html">
+    <a href="../examples/bpod_purge_ports.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Task Development Guide</div></div>
+        <span>Previous</span><div class="title">bpod_purge_ports.py</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="../examples/tasks_bpod.html">
+    <a href="../examples/tasks_arduino.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Task Examples (Bpod)</div>
+        <div class="title">Task Examples (Arduino)</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -1027,7 +1327,7 @@ started it), and <code class="docutils literal notranslate"><span class="pre">ou
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=645421aa"></script>
+      <script src="../_static/documentation_options.js?v=412e1041"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

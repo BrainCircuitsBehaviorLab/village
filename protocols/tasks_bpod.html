@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Development Guide - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Task Methods &amp; Attributes" href="task_methods.html" /><link rel="prev" title="training_protocol.py" href="../examples/training_protocol.html" />
-      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tasks (Bpod) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Task Examples (Bpod)" href="../examples/tasks_bpod.html" /><link rel="prev" title="training_protocol.py" href="../examples/training_protocol.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/tasks_bpod.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -22,8 +22,8 @@
 </style>
     
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/task.html"/>
-  <meta property="og:title" content="Task Development Guide"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/tasks_bpod.html"/>
+  <meta property="og:title" content="Tasks (Bpod)"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -107,43 +107,43 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="creating.html">Training Protocol Creation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_structure.html">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creating.html">The Training Protocol</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/training_protocol.html">Training Protocol Example</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Task Creation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="task_methods.html">Task Methods &amp; Attributes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples (Bpod)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Tasks (Bpod)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples (Arduino or other microcontroller)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tasks_arduino.html">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples (Raspberry Only)</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct Sound &amp; Video Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
@@ -166,12 +166,13 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="plots.html">Plots</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="plots.html">Create Custom Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
@@ -481,6 +482,24 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#the-close-method">The <code class="docutils literal notranslate"><span class="pre">close()</span></code> method</a></li>
 <li><a class="reference internal" href="#a-more-complete-example-followthelight">A more complete example: FollowTheLight</a></li>
 <li><a class="reference internal" href="#more-bpod-primitives">More Bpod primitives</a></li>
+<li><a class="reference internal" href="#methods-you-must-override">Methods you must override</a></li>
+<li><a class="reference internal" href="#methods-you-can-call">Methods you can call</a><ul>
+<li><a class="reference internal" href="#trial-states-and-controller-events">Trial, states and controller events</a></li>
+<li><a class="reference internal" href="#registering-a-raspberry-side-event">Registering a Raspberry-side event</a></li>
+<li><a class="reference internal" href="#registering-a-value">Registering a value</a></li>
+<li><a class="reference internal" href="#executing-a-direct-function">Executing a direct function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#attributes-you-can-read">Attributes you can read</a><ul>
+<li><a class="reference internal" href="#self-info"><code class="docutils literal notranslate"><span class="pre">self.info</span></code></a></li>
+<li><a class="reference internal" href="#self-calibrations"><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></a></li>
+<li><a class="reference internal" href="#self-should-stop-read-only-property"><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</a></li>
+<li><a class="reference internal" href="#self-trial-data-dict"><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div></div>
   </aside>
@@ -506,7 +525,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Task Development Guide</strong>
+        <strong itemprop="name">Tasks (Bpod)</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -523,7 +542,7 @@ data-aria-dark="Switch to auto color mode">
     <button
       type="button"
       class="js-copy px-3 py-1 inline-flex items-center gap-1"
-      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task.md.txt"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_bpod.md.txt"
     >
       <i class="i-lucide" data-icon="copy"></i>
       <span>Copy page</span>
@@ -537,32 +556,36 @@ data-aria-dark="Switch to auto color mode">
     <div role="presentation">
       <div class="flex flex-col" role="group">
         <button class="js-copy" type="button" role="menuitem"
-          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task.md.txt">
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_bpod.md.txt">
           <span class="iconify-icon">
             <i class="i-lucide" data-icon="copy"></i>
           </span>
           <span>Copy page</span>
         </button>
-        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
-            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_bpod.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_bpod.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:openai"></iconify-icon>
           <span>Open in ChatGPT</span>
-        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/task.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/protocols/tasks_bpod.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
           <iconify-icon icon="bi:claude"></iconify-icon>
           <span>Open in Claude</span>
         </a></div>
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="task-development-guide">
-<h1>Task Development Guide</h1>
+          <section id="tasks-bpod">
+<h1>Tasks (Bpod)</h1>
+<p>With Bpod (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">BPOD</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>), every trial is a
+Bpod state machine: the task builds it in <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>, Bpod runs it with its own
+precise timing, and everything that happened (states, pokes, timers…) is recorded
+automatically in the trial data.</p>
 <p>To create a task, create a Python file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory, and
 within it, a class named after the task, inheriting from the generic <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code>
 class. Naming conventions follow Python standards: CamelCase for class names,
 lower_case for filenames and function/variable names. Let’s look at an example.</p>
 <section id="a-minimal-task">
 <h2>A minimal task</h2>
-<p><code class="docutils literal notranslate"><span class="pre">village/code/bpod_1_habituation.py</span></code> is the simplest real task in this project — the
+<p><a class="reference internal" href="../examples/bpod_1_habituation.html"><span class="std std-doc">bpod_1_habituation.py</span></a> is the simplest real task of the examples — the
 mouse is just left alone in the box, pokes are logged, no reward is given:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BpodEvent</span><span class="p">,</span> <span class="n">BpodOutput</span><span class="p">,</span> <span class="n">TaskBase</span>
 </span><span data-line="2">
@@ -708,8 +731,9 @@ generating a plot, etc.</p>
 <section id="a-more-complete-example-followthelight">
 <h2>A more complete example: FollowTheLight</h2>
 <p>Now let’s look at a task closer to a real 2-choice discrimination protocol —
-<code class="docutils literal notranslate"><span class="pre">village/code/bpod_4_center_initiated.py</span></code> and <code class="docutils literal notranslate"><span class="pre">bpod_5_introduce_penalty.py</span></code> are
-the real versions of this in the project (respectively without and with a
+<a class="reference internal" href="../examples/bpod_4_center_initiated.html"><span class="std std-doc">bpod_4_center_initiated.py</span></a> and
+<a class="reference internal" href="../examples/bpod_5_introduce_penalty.html"><span class="std std-doc">bpod_5_introduce_penalty.py</span></a> are
+the real versions of this in the examples (respectively without and with a
 penalty for the wrong side); this walkthrough merges both into one task that
 switches behavior based on <code class="docutils literal notranslate"><span class="pre">self.settings.stage</span></code>:</p>
 <ul class="simple">
@@ -888,12 +912,11 @@ In stage 2, it triggers a penalty (noise + timeout) instead.</p></li>
 <section id="more-bpod-primitives">
 <h2>More Bpod primitives</h2>
 <p>For a runnable walkthrough of the Bpod building blocks, see two reference
-tasks in this project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (neither is a real behavioral
-protocol):</p>
+tasks of the examples (neither is a real behavioral protocol):</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">bpod_example_outputs_and_events.py</span></code> — LEDs, a valve, poke in/out,
+<li><p><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html"><span class="std std-doc">bpod_example_outputs_and_events.py</span></a> — LEDs, a valve, poke in/out,
 softcodes in both directions, and TTL pulses in both directions.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bpod_example_global_timer.py</span></code> — a global timer: a deadline that ticks in
+<li><p><a class="reference internal" href="../examples/bpod_example_global_timer.html"><span class="std std-doc">bpod_example_global_timer.py</span></a> — a global timer: a deadline that ticks in
 the background across every state, independently of each state’s own
 timer, until it ends or is cancelled.</p></li>
 </ul>
@@ -903,8 +926,314 @@ counts occurrences of an event and fires once a threshold is reached) and
 conditions (<code class="docutils literal notranslate"><span class="pre">self.bpod.set_condition(condition_number,</span> <span class="pre">condition_channel,</span> <span class="pre">channel_value)</span></code>, checks a channel’s current level at the moment of a
 transition rather than reacting to an edge). For both, see the official Bpod
 documentation: <a class="reference external" href="https://sanworks.github.io/Bpod_Wiki/">sanworks.github.io/Bpod_Wiki</a>.</p>
+</section>
+<hr class="docutils" />
+<section id="methods-you-must-override">
+<h2>Methods you must override</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Called</p></th>
+<th class="head"><p>Use it to</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">start(self)</span></code></p></td>
+<td><p>Once, before the trial loop begins.</p></td>
+<td><p>Configure hardware, pre-compute stimuli, open files, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">create_trial(self)</span></code></p></td>
+<td><p>Once at the start of every trial.</p></td>
+<td><p>Build the trial’s state machine with <code class="docutils literal notranslate"><span class="pre">self.bpod.add_state</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">after_trial(self)</span></code></p></td>
+<td><p>Immediately after each trial finishes.</p></td>
+<td><p>Score performance, update adaptive parameters, call <code class="docutils literal notranslate"><span class="pre">register_value</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close(self)</span></code></p></td>
+<td><p>Once after the trial loop ends (session finished, forced stop, or error).</p></td>
+<td><p>Close files, stop hardware, release resources.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="note admonition">
+<p class="admonition-title">create_trial with Bpod</p>
+<p>Each call starts with an empty state machine. Add states with <code class="docutils literal notranslate"><span class="pre">self.bpod.add_state</span></code>
+— when the method returns, the state machine is sent and run automatically, and
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code> is called once it finishes.</p>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">after_trial must register “water”</p>
+<p>Always call <code class="docutils literal notranslate"><span class="pre">self.register_value(&quot;water&quot;,</span> <span class="pre">...)</span></code> with the amount of water consumed
+during the trial. The system sums it across the session to get total water
+consumption — if that total falls below a configurable threshold, an alarm is
+triggered (adjustable in the Settings tab of the GUI).</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">What is saved when a session stops</p>
+<p>Each session saves two files:</p>
+<ul class="simple">
+<li><p>The <strong>raw</strong> file (<code class="docutils literal notranslate"><span class="pre">&lt;session&gt;_RAW.csv</span></code>) has one line per event, written as it
+happens, so it keeps everything — including the trial that was still running
+when the session stopped.</p></li>
+<li><p>The <strong>clean</strong> file (<code class="docutils literal notranslate"><span class="pre">&lt;session&gt;.csv</span></code>) is a table with one row per trial, and a
+trial’s row is only created when the trial finishes (after <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>). So
+the trial that was still running when the session stopped never gets its row.</p></li>
+</ul>
+<p>The session is saved if at least one trial was completed. If none was, nothing
+is saved (neither file) and the “No trials were recorded” alarm is raised (if
+<code class="docutils literal notranslate"><span class="pre">NO_TRIALS_PERFORMED</span></code> is on).</p>
+<p>Because the trial in progress is always lost from the clean file, design your
+tasks so that trials keep advancing as time passes: a trial should end after a
+reasonable time even if the animal does nothing (e.g. with a timeout), instead
+of waiting indefinitely. A task that runs the whole session as a single trial
+would never be saved.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="methods-you-can-call">
+<h2>Methods you can call</h2>
+<p>Do not override these — call them from inside your task’s own methods.</p>
+<section id="trial-states-and-controller-events">
+<h3>Trial, states and controller events</h3>
+<p>With Bpod, the start and end of every trial, every state and every Bpod event are
+registered automatically: you never need to call <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>,
+<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>, <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> or <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code>.</p>
+</section>
+<section id="registering-a-raspberry-side-event">
+<h3>Registering a Raspberry-side event</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_raspberry_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raspberry_timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>For events generated by the Raspberry Pi itself, asynchronously from the trial
+— e.g. executing a direct function, or a camera/touchscreen detection. Pass
+<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as <code class="docutils literal notranslate"><span class="pre">raspberry_timestamp</span></code>.</p>
+</section>
+<section id="registering-a-value">
+<h3>Registering a value</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">register_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>Saves a custom value to the current trial row in the CSV — call it inside
+<code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="2"><span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_time"</span><span class="p">,</span> <span class="mf">0.432</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="executing-a-direct-function">
+<h3>Executing a direct function</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">execute_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></pre></div>
+</div>
+<p>Runs the direct function registered at index <code class="docutils literal notranslate"><span class="pre">i</span></code> (1-99). See
+<a class="reference internal" href="functions.html"><span class="std std-doc">Direct, Audio &amp; Video Functions</span></a> for how those get registered and
+the other ways they can be triggered.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># executes the function registered at index 1</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="attributes-you-can-read">
+<h2>Attributes you can read</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the task (the class name).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.subject</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the subject running the session.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.system_name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the system, as defined in the Settings tab.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.bpod</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">BpodController</span></code></p></td>
+<td><p>Bpod interface — state machine construction, sending, etc. Mainly used inside <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Settings</span></code></p></td>
+<td><p>Session parameters defined in the training protocol. Read and write its attributes to implement adaptive training.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.cam_box</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera</span> <span class="pre">|</span> <span class="pre">NullCamera</span></code></p></td>
+<td><p>Camera attached to the operant box (<code class="docutils literal notranslate"><span class="pre">NullCamera</span></code> if not configured).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.gpio</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Gpio</span> <span class="pre">|</span> <span class="pre">NullGpio</span></code></p></td>
+<td><p>Output pin control (<code class="docutils literal notranslate"><span class="pre">set_on()</span></code> / <code class="docutils literal notranslate"><span class="pre">set_off()</span></code>). See <a class="reference internal" href="gpio_trigger.html"><span class="std std-doc">Custom GPIO Interaction</span></a> for the input-pin trigger hook.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.current_trial</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>The current trial number, starting from 1.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.date</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Date string of the current session, set once when it starts.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.run_mode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.force_stop</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> from your own task logic (e.g. in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>) to make the task stop.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">self.stop_button_pressed</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> once something external (e.g. the STOP TASK button) has asked the task to stop. Read-only — react to it, don’t set it.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self.chrono</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Chrono</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.chrono.get_seconds()</span></code> gives the time in seconds since the task started.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="self-info">
+<h3><code class="docutils literal notranslate"><span class="pre">self.info</span></code></h3>
+<p>Human-readable description of the task, set once (usually in <code class="docutils literal notranslate"><span class="pre">__init__</span></code>). Shown to
+the user when selecting the task in the GUI.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
+</span><span data-line="2"><span class="s2">My Task</span>
+</span><span data-line="3"><span class="s2">-------</span>
+</span><span data-line="4"><span class="s2">Describe what the task does and how it progresses here.</span>
+</span><span data-line="5"><span class="s2">"""</span>
+</span></pre></div>
+</div>
+</section>
+<section id="self-calibrations">
+<h3><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></h3>
+<p>Holds the task’s calibrations — call its methods to convert between hardware
+values and real-world units (see <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"white_noise"</span>
+</span><span data-line="3"><span class="p">)</span>
+</span></pre></div>
+</div>
+</section>
+<section id="self-should-stop-read-only-property">
+<h3><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</h3>
+<p><code class="docutils literal notranslate"><span class="pre">True</span></code> once <em>any</em> stopping condition is met: the trial/time limit (Manual mode
+only — Auto mode runs until the subject leaves the corridor, not for a fixed
+number of trials), <code class="docutils literal notranslate"><span class="pre">force_stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">stop_button_pressed</span></code>.</p>
+</section>
+<section id="self-trial-data-dict">
+<h3><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</h3>
+<p>Populated automatically at the end of each trial — available inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<p><strong>Keys always present:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;date&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;trial&quot;</span></code> (int), <code class="docutils literal notranslate"><span class="pre">&quot;subject&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;task&quot;</span></code> (str), <code class="docutils literal notranslate"><span class="pre">&quot;system_name&quot;</span></code> (str)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;TRIAL_END&quot;</span></code> (float): absolute timestamps (UNIX epoch seconds)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;ordered_list_of_events&quot;</span></code> (list[str]): event names in the order they occurred (e.g. <code class="docutils literal notranslate"><span class="pre">[&quot;Port1In&quot;,</span> <span class="pre">&quot;Port1Out&quot;,</span> <span class="pre">&quot;Port1In&quot;]</span></code>)</p></li>
+</ul>
+<p>With Bpod all of them are filled automatically.</p>
+<p><strong>Keys added per state</strong> (Bpod states):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code> (list[float]): timestamps of every
+entry/exit for that state — a list because the same state can be visited more
+than once per trial.</p></li>
+</ul>
+<p>They are added automatically for every state of the state machine. A state that
+was <strong>not visited</strong> still appears, with <code class="docutils literal notranslate"><span class="pre">[nan]</span></code>: to check whether a state was
+visited, look at its first start time (see the example below).</p>
+<p><strong>Keys added per event type:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;EventName&gt;&quot;</span></code> (list[float]): timestamps of every occurrence of that event
+(e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Port1Out&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;Tup&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;SoftCode1&quot;</span></code>).</p></li>
+</ul>
+<p>Bpod events are added automatically. Events you register yourself with
+<code class="docutils literal notranslate"><span class="pre">register_raspberry_event</span></code> (only those registered while the trial is running) are
+added the same way, in the same absolute time as the Bpod events.</p>
+<p><strong>Keys added by you:</strong> any name passed to <code class="docutils literal notranslate"><span class="pre">register_value</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p>
+<section id="example">
+<h4>Example</h4>
+<p>A short trial with four states: the animal pokes the right port (3) while
+waiting, starts the trial in the center port (2), and then pokes the left port
+(1), which is rewarded:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
+</span><span data-line="2">    <span class="s2">"date"</span><span class="p">:</span> <span class="s2">"2026-10-08 10:15:02"</span><span class="p">,</span>
+</span><span data-line="3">    <span class="s2">"trial"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+</span><span data-line="4">    <span class="s2">"subject"</span><span class="p">:</span> <span class="s2">"mouse1"</span><span class="p">,</span>
+</span><span data-line="5">    <span class="s2">"task"</span><span class="p">:</span> <span class="s2">"MyTask"</span><span class="p">,</span>
+</span><span data-line="6">    <span class="s2">"system_name"</span><span class="p">:</span> <span class="s2">"village01"</span><span class="p">,</span>
+</span><span data-line="7">    <span class="s2">"TRIAL_START"</span><span class="p">:</span> <span class="mf">1791454502.10</span><span class="p">,</span>
+</span><span data-line="8">    <span class="s2">"TRIAL_END"</span><span class="p">:</span> <span class="mf">1791454506.35</span><span class="p">,</span>
+</span><span data-line="9">    <span class="s2">"STATE_WAIT_POKE_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454502.10</span><span class="p">],</span>
+</span><span data-line="10">    <span class="s2">"STATE_WAIT_POKE_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.20</span><span class="p">],</span>
+</span><span data-line="11">    <span class="s2">"STATE_RESPONSE_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.20</span><span class="p">],</span>
+</span><span data-line="12">    <span class="s2">"STATE_RESPONSE_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.90</span><span class="p">],</span>
+</span><span data-line="13">    <span class="s2">"STATE_REWARD_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.90</span><span class="p">],</span>
+</span><span data-line="14">    <span class="s2">"STATE_REWARD_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.95</span><span class="p">],</span>
+</span><span data-line="15">    <span class="s2">"STATE_ITI_START"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.95</span><span class="p">],</span>
+</span><span data-line="16">    <span class="s2">"STATE_ITI_END"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454506.35</span><span class="p">],</span>
+</span><span data-line="17">    <span class="s2">"Port3In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454502.60</span><span class="p">],</span>
+</span><span data-line="18">    <span class="s2">"Port3Out"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454502.75</span><span class="p">],</span>
+</span><span data-line="19">    <span class="s2">"Port2In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.20</span><span class="p">],</span>
+</span><span data-line="20">    <span class="s2">"Port2Out"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454503.41</span><span class="p">],</span>
+</span><span data-line="21">    <span class="s2">"Port1In"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.90</span><span class="p">],</span>
+</span><span data-line="22">    <span class="s2">"Tup"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1791454504.95</span><span class="p">,</span> <span class="mf">1791454506.35</span><span class="p">],</span>
+</span><span data-line="23">    <span class="s2">"ordered_list_of_events"</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="24">        <span class="s2">"Port3In"</span><span class="p">,</span> <span class="s2">"Port3Out"</span><span class="p">,</span> <span class="s2">"Port2In"</span><span class="p">,</span> <span class="s2">"Port2Out"</span><span class="p">,</span> <span class="s2">"Port1In"</span><span class="p">,</span> <span class="s2">"Tup"</span><span class="p">,</span> <span class="s2">"Tup"</span>
+</span><span data-line="25">    <span class="p">],</span>
+</span><span data-line="26"><span class="p">}</span>
+</span></pre></div>
+</div>
+<p>Getting information out of it in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="4">    <span class="c1"># 1. Did the animal reach the REWARD state? With Bpod a state that was not visited is [nan].</span>
+</span><span data-line="5">    <span class="c1"># The default makes it work as well if the key is missing.</span>
+</span><span data-line="6">    <span class="n">t_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"STATE_REWARD_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="7">    <span class="n">rewarded</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_reward</span><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="c1"># 2. First poke from the RESPONSE state onwards. Strictly after its start:</span>
+</span><span data-line="10">    <span class="c1"># the center poke that started RESPONSE has exactly that timestamp.</span>
+</span><span data-line="11">    <span class="n">first_response_poke</span> <span class="o">=</span> <span class="s2">"none"</span>
+</span><span data-line="12">    <span class="n">t_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"STATE_RESPONSE_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="13">    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_response</span><span class="p">):</span>
+</span><span data-line="14">        <span class="n">pokes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="15">            <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+</span><span data-line="16">            <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"Port1In"</span><span class="p">,</span> <span class="s2">"Port2In"</span><span class="p">,</span> <span class="s2">"Port3In"</span><span class="p">)</span>
+</span><span data-line="17">            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="p">[])</span>
+</span><span data-line="18">            <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="n">t_response</span>
+</span><span data-line="19">        <span class="p">]</span>
+</span><span data-line="20">        <span class="k">if</span> <span class="n">pokes</span><span class="p">:</span>
+</span><span data-line="21">            <span class="n">first_response_poke</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">pokes</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># the earliest one</span>
+</span><span data-line="22">
+</span><span data-line="23">    <span class="c1"># 3. Register the results (and, as always, the water).</span>
+</span><span data-line="24">    <span class="k">if</span> <span class="n">rewarded</span><span class="p">:</span>
+</span><span data-line="25">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"correct"</span>
+</span><span data-line="26">    <span class="k">elif</span> <span class="n">first_response_poke</span> <span class="o">==</span> <span class="s2">"none"</span><span class="p">:</span>
+</span><span data-line="27">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"miss"</span>
+</span><span data-line="28">    <span class="k">else</span><span class="p">:</span>
+</span><span data-line="29">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"incorrect"</span>
+</span><span data-line="30">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"first_response_poke"</span><span class="p">,</span> <span class="n">first_response_poke</span><span class="p">)</span>
+</span><span data-line="31">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
+</span><span data-line="32">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span> <span class="k">if</span> <span class="n">rewarded</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>With the example above: <code class="docutils literal notranslate"><span class="pre">rewarded</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">first_response_poke</span></code> is
+<code class="docutils literal notranslate"><span class="pre">&quot;Port1In&quot;</span></code> (the <code class="docutils literal notranslate"><span class="pre">Port3In</span></code> came before RESPONSE and the <code class="docutils literal notranslate"><span class="pre">Port2In</span></code> is the one that
+started it), and <code class="docutils literal notranslate"><span class="pre">outcome</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;correct&quot;</span></code>.</p>
 <div class="toctree-wrapper compound">
 </div>
+</section>
+</section>
 </section>
 </section>
 
@@ -920,10 +1249,10 @@ documentation: <a class="reference external" href="https://sanworks.github.io/Bp
         <span>Previous</span><div class="title">training_protocol.py</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="task_methods.html">
+    <a href="../examples/tasks_bpod.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Task Methods &amp; Attributes</div>
+        <div class="title">Task Examples (Bpod)</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -945,7 +1274,7 @@ documentation: <a class="reference external" href="https://sanworks.github.io/Bp
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=645421aa"></script>
+      <script src="../_static/documentation_options.js?v=412e1041"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

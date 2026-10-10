@@ -26,20 +26,3 @@ Not part of the training progression: they are run manually.
 | [bpod_example_global_timer.py](bpod_example_global_timer.md) | Demo, not a training task: a Bpod global timer bounding the whole trial. |
 | [bpod_example_outputs_and_events.py](bpod_example_outputs_and_events.md) | Demo, not a training task: the Bpod primitives step by step — LEDs, valves, softcodes, TTL outputs and inputs. |
 | [bpod_purge_ports.py](bpod_purge_ports.md) | Maintenance tool, not a training task: each valve stays open while its port is poked, to flush the water lines. |
-
-```{toctree}
-:hidden:
-:maxdepth: 1
-
-bpod_1_habituation.md
-bpod_2_passive.md
-bpod_3_active.md
-bpod_4_center_initiated.md
-bpod_5_introduce_penalty.md
-bpod_6_delay.md
-bpod_area2_sound.md
-bpod_touchscreen.md
-bpod_example_global_timer.md
-bpod_example_outputs_and_events.md
-bpod_purge_ports.md
-```
