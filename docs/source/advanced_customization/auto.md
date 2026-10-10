@@ -39,3 +39,9 @@ Override or call these methods in your subclass:
 - **`poke(port, duration)`**: Simulates a nose-poke in and out on the given Bpod port.
 - **`set_position(x, y)`**: Updates the virtual animal's position and trace, as seen by the camera tracking system.
 - **`wait(seconds)`**: Pauses execution for the given duration, stopping early if the session is halted.
+
+```{toctree}
+:hidden:
+
+AutoNoMouse Example <../examples/auto_follow_the_light.md>
+```

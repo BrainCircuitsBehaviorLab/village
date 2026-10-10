@@ -45,10 +45,6 @@ class SoundCalibrationTask(CalibrationTaskBase):
         self.gain = gain
         self.sound_index = sound_index
         self.duration = duration
-        self.maximum_number_of_trials = 1
-
-    def start(self) -> None:
-        pass
 
     def create_trial(self) -> None:
         try:
@@ -74,12 +70,6 @@ class SoundCalibrationTask(CalibrationTaskBase):
         except Exception:
             log.error("Error calibrating sound", exception=traceback.format_exc())
             self.calibrations.sound_calibration_error = True
-
-    def after_trial(self) -> None:
-        pass
-
-    def close(self) -> None:
-        pass
 
 
 # ── Calibration panel ──────────────────────────────────────────────────────────
@@ -478,7 +468,7 @@ class SoundCalibration(CalibrationBase):
         self.layout.addLayout(self.plot_layout, 0, 121, 36, 51)
 
     def change_layout(self) -> bool:
-        if manager.state.manual_task_in_progress():
+        if self.task_running():
             QMessageBox.information(
                 self.window, "WARNING", "Wait until the task finishes."
             )
@@ -591,13 +581,14 @@ class SoundCalibration(CalibrationBase):
         self.test_denied = True
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
-        manager.task = SoundCalibrationTask(
+        task = SoundCalibrationTask(
             speaker=self.speaker,
             gain=self.gain,
             sound_index=self.sound_index,
             duration=self.duration,
         )
-        manager.state = State.RUN_MANUAL
+        if not self.run_task(task):
+            return
         self.calibration_initiated = True
         self.speaker_combo.setDisabled(True)
         self.gain_line_edit.setDisabled(True)
@@ -605,7 +596,6 @@ class SoundCalibration(CalibrationBase):
         self.dB_expected_line_edit2.setDisabled(True)
         self.duration_line_edit2.setDisabled(True)
         self.speaker_combo2.setDisabled(True)
-        manager.launch_task_calibration()
 
     def test_button_clicked(self) -> None:
         if self.test_denied:
@@ -640,14 +630,14 @@ class SoundCalibration(CalibrationBase):
             self.dB_expected_line_edit2.setStyleSheet("")
             self.duration_line_edit2.setStyleSheet("")
         if ok:
-
-            manager.task = SoundCalibrationTask(
+            task = SoundCalibrationTask(
                 speaker=self.speaker2,
                 gain=self.gain2,
                 sound_index=self.sound_index2,
                 duration=self.duration2,
             )
-            manager.state = State.RUN_MANUAL
+            if not self.run_task(task):
+                return
             self.test_initiated = True
             self.speaker_combo.setDisabled(True)
             self.gain_line_edit.setDisabled(True)
@@ -655,7 +645,6 @@ class SoundCalibration(CalibrationBase):
             self.dB_expected_line_edit2.setDisabled(True)
             self.duration_line_edit2.setDisabled(True)
             self.speaker_combo2.setDisabled(True)
-            manager.launch_task_calibration()
 
     def save_button_clicked(self) -> None:
         removed_list: list[str] = []
@@ -700,7 +689,7 @@ class SoundCalibration(CalibrationBase):
 
     def update_gui(self) -> None:
         self.update_status_label_buttons()
-        if manager.state == State.WAIT and self.calibration_initiated:
+        if self.calibration_initiated and not self.task_running():
             self.calibration_initiated = False
             if not manager.calibrations.sound_calibration_error:
                 self.calibrate_button.setDisabled(True)
@@ -723,7 +712,7 @@ class SoundCalibration(CalibrationBase):
                 self.dB_obtained_line_edit.setDisabled(True)
                 self.dB_obtained_line_edit.setStyleSheet("")
 
-        if manager.state == State.WAIT and self.test_initiated:
+        if self.test_initiated and not self.task_running():
             self.test_initiated = False
             if not manager.calibrations.sound_calibration_error:
                 self.calibrate_button.setDisabled(True)
@@ -904,11 +893,7 @@ class SoundCalibration(CalibrationBase):
         self.reset_values_after_ok_or_add2(delete_df=False)
 
     def stop_button_clicked(self) -> None:
-        if manager.state.task_is_running():
-            log.info("Task manually stopped.", subject=manager.subject.name)
-            manager.state = State.SAVE_MANUAL
-        elif manager.state.can_go_to_wait():
-            manager.state = State.WAIT
+        self.stop_task()
         self.gain_line_edit.setEnabled(True)
         self.gain_line_edit.setStyleSheet("")
         self.gain_line_edit.setText("0")

@@ -48,3 +48,9 @@ class WaterCommand(TelegramCommandBase):
 
 A complete example with two commands, one of them reading an argument:
 [telegram_commands.py](../examples/telegram_commands.md).
+
+```{toctree}
+:hidden:
+
+Custom Telegram Example <../examples/telegram_commands.md>
+```

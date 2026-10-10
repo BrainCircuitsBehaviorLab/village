@@ -258,3 +258,9 @@ Every `TrainingProtocol` class implements these methods:
 | `default_training_settings` | When a new subject is created | Define initial parameter values |
 | `update_training_settings` | After every session ends | Update parameters based on performance |
 | `define_gui_tabs` *(optional)* | When the settings are shown in the GUI | Organize the settings into tabs |
+
+```{toctree}
+:hidden:
+
+Training Protocol Example <../examples/training_protocol.md>
+```

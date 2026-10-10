@@ -122,3 +122,9 @@ sma.add_state(
 method fast and avoid blocking calls. Writing to `cam_box` and sending a
 softcode are both non-blocking and safe to call from here.
 ```
+
+```{toctree}
+:hidden:
+
+Touchscreen Trigger Example <../examples/touch_trigger.md>
+```

@@ -68,3 +68,10 @@ class ChangeCycle(ChangeCycleBase):
 
 A complete example, which logs how many videos are left after the cleanup:
 [change_cycle.py](../examples/change_cycle.md).
+
+```{toctree}
+:hidden:
+
+After Session Example <../examples/after_session.md>
+Change Cycle Example <../examples/change_cycle.md>
+```

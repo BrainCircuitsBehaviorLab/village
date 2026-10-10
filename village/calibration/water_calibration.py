@@ -510,7 +510,7 @@ class WaterCalibration(CalibrationBase):
         self.layout.addLayout(self.plot_layout, 0, 121, 36, 51)
 
     def change_layout(self) -> bool:
-        if manager.state.manual_task_in_progress():
+        if self.task_running():
             QMessageBox.information(
                 self.window, "WARNING", "Wait until the task finishes."
             )
@@ -625,12 +625,13 @@ class WaterCalibration(CalibrationBase):
         self.calibrate_button.setDisabled(True)
         self.test_button.setDisabled(True)
         self.indices = [i for i, val in enumerate(self.times) if val != 0]
-        manager.task = task_class(
+        task = task_class(
             indices=self.indices,
             times=[self.times[i] for i in self.indices],
             maximum_number_of_trials=self.iterations,
         )
-        manager.state = State.RUN_MANUAL
+        if not self.run_task(task):
+            return
         self.calibration_initiated = True
         for line_edit in self.time_line_edits:
             if line_edit is not None:
@@ -640,7 +641,6 @@ class WaterCalibration(CalibrationBase):
             if line_edit is not None:
                 line_edit.setDisabled(True)
         self.iterations_line_edit2.setDisabled(True)
-        manager.launch_task_calibration()
 
     def test_button_clicked(self) -> None:
         if self.test_denied:
@@ -686,12 +686,13 @@ class WaterCalibration(CalibrationBase):
             QMessageBox.information(self.window, "Warning", text)
 
         if ok > 0:
-            manager.task = task_class(
+            task = task_class(
                 indices=self.indices2,
                 times=[self.times2[i] for i in self.indices2],
                 maximum_number_of_trials=self.iterations2,
             )
-            manager.state = State.RUN_MANUAL
+            if not self.run_task(task):
+                return
             self.test_initiated = True
             for line_edit in self.time_line_edits:
                 if line_edit is not None:
@@ -701,7 +702,6 @@ class WaterCalibration(CalibrationBase):
                 if line_edit is not None:
                     line_edit.setDisabled(True)
             self.iterations_line_edit2.setDisabled(True)
-            manager.launch_task_calibration()
         else:
             self.iterations_line_edit2.setStyleSheet("")
 
@@ -741,7 +741,7 @@ class WaterCalibration(CalibrationBase):
 
     def update_gui(self) -> None:
         self.update_status_label_buttons()
-        if manager.state == State.WAIT and self.calibration_initiated:
+        if self.calibration_initiated and not self.task_running():
             self.calibration_initiated = False
             self.calibrate_button.setDisabled(True)
             self.test_button.setDisabled(True)
@@ -755,7 +755,7 @@ class WaterCalibration(CalibrationBase):
                 else:
                     line_edit.setStyleSheet("")
 
-        if manager.state == State.WAIT and self.test_initiated:
+        if self.test_initiated and not self.task_running():
             self.test_initiated = False
             self.calibrate_button.setDisabled(True)
             self.test_button.setDisabled(True)
@@ -1007,11 +1007,7 @@ class WaterCalibration(CalibrationBase):
         self.test_row_dicts.append(row_dict)
 
     def stop_button_clicked(self) -> None:
-        if manager.state.task_is_running():
-            log.info("Task manually stopped.", subject=manager.subject.name)
-            manager.state = State.SAVE_MANUAL
-        elif manager.state.can_go_to_wait():
-            manager.state = State.WAIT
+        self.stop_task()
         for line_edit in self.time_line_edits:
             if line_edit is not None:
                 line_edit.setEnabled(True)

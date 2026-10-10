@@ -68,3 +68,9 @@ same value. The minimum accepted is 0.02 s.
 
 The last weight read is also available as `scale_box.last_weight`
 (`from village.devices.scale import scale_box`), without making a new reading.
+
+```{toctree}
+:hidden:
+
+Scale Trigger Example <../examples/scale_trigger.md>
+```

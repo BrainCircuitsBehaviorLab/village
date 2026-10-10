@@ -62,3 +62,9 @@ thread. Keep them fast and avoid blocking calls.
 
 A complete example, which records the pin in the trial data of any task:
 [gpio_trigger.py](../examples/gpio_trigger.md).
+
+```{toctree}
+:hidden:
+
+GPIO Trigger Example <../examples/gpio_trigger.md>
+```

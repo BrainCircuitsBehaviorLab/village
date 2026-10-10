@@ -154,3 +154,9 @@ Any method defined in your calibration class is accessible from any task via the
 ```python
 self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)
 ```
+
+```{toctree}
+:hidden:
+
+LED Calibration Example <../examples/led_calibration.md>
+```

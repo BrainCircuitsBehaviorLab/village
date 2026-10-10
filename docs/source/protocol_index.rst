@@ -9,11 +9,11 @@ PROTOCOL & TASK DESIGN
 .. toctree::
     :maxdepth: 1
 
-    protocols/protocol.md
-    protocols/tasks.md
-    examples/tasks_bpod.md
-    examples/tasks_arduino.md
-    examples/tasks_raspberry.md
-    examples/functions.md
-    examples/triggers.md
-    examples/plots.md
+    Training Protocol Creation <protocols/creating.md>
+    Task Creation <protocols/task.md>
+    Direct Functions <protocols/functions.md>
+    Camera Interaction <protocols/camera.md>
+    Touchscreen Interaction <protocols/touchscreen.md>
+    GPIO Interaction <protocols/gpio_trigger.md>
+    Scale Interaction <protocols/scale_trigger.md>
+    Plots <protocols/plots.md>

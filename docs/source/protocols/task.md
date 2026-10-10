@@ -360,3 +360,12 @@ conditions (`self.bpod.set_condition(condition_number, condition_channel,
 channel_value)`, checks a channel's current level at the moment of a
 transition rather than reacting to an edge). For both, see the official Bpod
 documentation: [sanworks.github.io/Bpod_Wiki](https://sanworks.github.io/Bpod_Wiki/).
+
+```{toctree}
+:hidden:
+
+task_methods.md
+Tasks Examples (Bpod) <../examples/tasks_bpod.md>
+Tasks Examples (Arduino or other microcontroller) <../examples/tasks_arduino.md>
+Tasks Examples (Raspberry Only) <../examples/tasks_raspberry.md>
+```
