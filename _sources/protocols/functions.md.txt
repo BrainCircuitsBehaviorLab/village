@@ -181,3 +181,11 @@ directly wherever you need it, the same way `direct_functions.py` already does:
 from sound_functions import tone_generator, whitenoise_generator
 from video_functions import draw_circle_generator, draw_rectangle_generator
 ```
+
+```{toctree}
+:hidden:
+
+Direct Functions Example <../examples/direct_functions.md>
+Sound Functions Example <../examples/sound_functions.md>
+Video Functions Example <../examples/video_functions.md>
+```

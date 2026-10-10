@@ -269,6 +269,10 @@ cam_box.items_to_draw["reward_zone"] = None                  # remove
 ````
 
 
+A complete example, which draws circles requested by the task (saved in the
+video) and the animal's recent trail (on screen only):
+[camera_draw.py](../examples/camera_draw.md).
+
 Both methods `draw` and `draw_preview` receive these attributes on `cam`
 (updated every frame):
 
@@ -317,3 +321,10 @@ Both methods `draw` and `draw_preview` receive these attributes on `cam`
 **Task access**
 
 - `self.task` — the current task instance.
+
+```{toctree}
+:hidden:
+
+Camera Draw Example <../examples/camera_draw.md>
+Camera Trigger Example <../examples/camera_trigger.md>
+```

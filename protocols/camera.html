@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Camera Interaction - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Custom Touchscreen Interaction" href="touchscreen.html" /><link rel="prev" title="Camera, Touchscreen, GPIO &amp; Scale" href="../examples/triggers.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Custom Camera Interaction - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="camera_draw.py" href="../examples/camera_draw.html" /><link rel="prev" title="video_functions.py" href="../examples/video_functions.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/camera.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -107,81 +107,91 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="protocol.html">Protocol</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="creating.html">Protocol Creation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/training_protocol.html">training_protocol.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creating.html">Training Protocol Creation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/training_protocol.html">Training Protocol Example</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="tasks.html">Tasks</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="task.html">Task Development Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="task.html">Task Creation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="task_methods.html">Task Methods &amp; Attributes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples (Bpod)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/tasks_bpod.html">Task Examples (Bpod)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/tasks_arduino.html">Task Examples (Arduino)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples (Raspberry Only)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/tasks_raspberry.html">Task Examples (Raspberry Pi only)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/functions.html">Functions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="functions.html">Direct, Audio &amp; Video Functions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">direct_functions.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">sound_functions.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">video_functions.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html">Direct Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="../examples/triggers.html">Camera, Touchscreen, GPIO &amp; Scale</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Custom Camera Interaction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="touchscreen.html">Custom Touchscreen Interaction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="gpio_trigger.html">Custom GPIO Interaction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scale_trigger.html">Custom Scale Interaction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">camera_trigger.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">touch_trigger.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">gpio_trigger.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">scale_trigger.py</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Camera Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/plots.html">Plots</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="plots.html">Custom Plotting</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/online_plot.html">online_plot.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/session_plot.html">session_plot.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/subject_plot.html">subject_plot.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Touchscreen Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">GPIO Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scale_trigger.html">Scale Interaction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="plots.html">Plots</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/after_session.html">after_session.py</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/change_cycle.html">change_cycle.py</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/telegram_commands.html">telegram_commands.py</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/led_calibration.html">led_calibration.py</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../examples/auto_follow_the_light.html">auto_follow_the_light.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/after_session.html">After Session Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/change_cycle.html">Change Cycle Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/telegram_commands.html">Custom Telegram Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/auto_follow_the_light.html">AutoNoMouse Example</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/homecage_camera_control.html">Homecage Camera Control</a></li>
 </ul>
 </li>
@@ -499,12 +509,8 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../examples/triggers.html"><span itemprop="name">Camera, Touchscreen, GPIO &amp; Scale</span></a>
-        <span>/</span>
-        <meta itemprop="position" content="4" />
-      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
         <strong itemprop="name">Custom Camera Interaction</strong>
-        <meta itemprop="position" content="5" />
+        <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
       <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
@@ -807,6 +813,9 @@ coordinates, labels, or any other data (like <code class="docutils literal notra
 </span></pre></div>
 </div>
 </div>
+<p>A complete example, which draws circles requested by the task (saved in the
+video) and the animal’s recent trail (on screen only):
+<a class="reference internal" href="../examples/camera_draw.html"><span class="std std-doc">camera_draw.py</span></a>.</p>
 <p>Both methods <code class="docutils literal notranslate"><span class="pre">draw</span></code> and <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> receive these attributes on <code class="docutils literal notranslate"><span class="pre">cam</span></code>
 (updated every frame):</p>
 <p><strong>Identity &amp; state</strong></p>
@@ -855,6 +864,8 @@ the <code class="docutils literal notranslate"><span class="pre">CameraAreaBase<
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">self.task</span></code> — the current task instance.</p></li>
 </ul>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 </section>
 </section>
@@ -865,16 +876,16 @@ the <code class="docutils literal notranslate"><span class="pre">CameraAreaBase<
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../examples/triggers.html">
+    <a href="../examples/video_functions.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Camera, Touchscreen, GPIO &amp; Scale</div></div>
+        <span>Previous</span><div class="title">video_functions.py</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="touchscreen.html">
+    <a href="../examples/camera_draw.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Custom Touchscreen Interaction</div>
+        <div class="title">camera_draw.py</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -896,7 +907,7 @@ the <code class="docutils literal notranslate"><span class="pre">CameraAreaBase<
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8323b05a"></script>
+      <script src="../_static/documentation_options.js?v=645421aa"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
