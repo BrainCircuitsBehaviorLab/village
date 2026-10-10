@@ -192,11 +192,3 @@ class SubjectPlot(SubjectPlotBase):
         fig.tight_layout()
         return fig
 ```
-
-```{toctree}
-:hidden:
-
-Online Plot Example <../examples/online_plot.md>
-Session Plot Example <../examples/session_plot.md>
-Subject Plot Example <../examples/subject_plot.md>
-```

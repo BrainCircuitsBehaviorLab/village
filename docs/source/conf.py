@@ -271,10 +271,6 @@ html_theme_options = {
     "dark_logo": "_static/logo_dark.svg",
     "color_mode": "light",
     "github_url": "https://github.com/BrainCircuitsBehaviorLab/village",
-    # One more level than shibuya's default (4): DOCUMENTATION > section >
-    # guide > group of examples > example (e.g. PROTOCOL & TASK DESIGN >
-    # Task Creation > Tasks Examples (Bpod) > bpod_1_habituation.py).
-    "toctree_maxdepth": 5,
     "nav_links": [
         {"title": "Documentation", "url": "overview/system"},
         {"title": "API", "url": "api_index"},
