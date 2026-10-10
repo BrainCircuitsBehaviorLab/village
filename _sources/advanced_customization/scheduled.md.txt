@@ -34,6 +34,9 @@ class AfterSession(AfterSessionBase):
         print("Performing custom after-session actions")
 ```
 
+A complete example, which sends an alarm when the sync is too slow:
+[after_session.py](../examples/after_session.md).
+
 ---
 
 ### Change Cycle Actions
@@ -62,3 +65,6 @@ class ChangeCycle(ChangeCycleBase):
         # Add your custom actions here
         print("Performing custom cycle change actions")
 ```
+
+A complete example, which logs how many videos are left after the cleanup:
+[change_cycle.py](../examples/change_cycle.md).

@@ -1,0 +1,52 @@
+CalibrationTaskBase
+===================
+
+.. currentmodule:: village.custom_classes.calibration_task_base
+
+.. autoclass:: CalibrationTaskBase
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~CalibrationTaskBase.__init__
+      ~CalibrationTaskBase.after_trial
+      ~CalibrationTaskBase.close
+      ~CalibrationTaskBase.close_trial_without_bpod
+      ~CalibrationTaskBase.concatenate_trial_data
+      ~CalibrationTaskBase.create_paths
+      ~CalibrationTaskBase.create_trial
+      ~CalibrationTaskBase.disconnect_and_save
+      ~CalibrationTaskBase.do_trial
+      ~CalibrationTaskBase.execute_function
+      ~CalibrationTaskBase.get_name
+      ~CalibrationTaskBase.register_controller_event
+      ~CalibrationTaskBase.register_end_trial
+      ~CalibrationTaskBase.register_enter_state
+      ~CalibrationTaskBase.register_raspberry_event
+      ~CalibrationTaskBase.register_start_trial
+      ~CalibrationTaskBase.register_value
+      ~CalibrationTaskBase.run
+      ~CalibrationTaskBase.save_csv
+      ~CalibrationTaskBase.save_json
+      ~CalibrationTaskBase.start
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~CalibrationTaskBase.should_stop
+   
+   

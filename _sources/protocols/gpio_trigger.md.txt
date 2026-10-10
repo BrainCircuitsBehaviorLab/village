@@ -59,3 +59,6 @@ class GpioTrigger(GpioTriggerBase):
 `trigger_on`/`trigger_off` run in the GPIO reader thread, not in the task
 thread. Keep them fast and avoid blocking calls.
 ```
+
+A complete example, which records the pin in the trial data of any task:
+[gpio_trigger.py](../examples/gpio_trigger.md).

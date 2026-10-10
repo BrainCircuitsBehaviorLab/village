@@ -45,3 +45,6 @@ class WaterCommand(TelegramCommandBase):
         except Exception:
             await update.message.reply_text("Usage: /water <amount>")
 ```
+
+A complete example with two commands, one of them reading an argument:
+[telegram_commands.py](../examples/telegram_commands.md).

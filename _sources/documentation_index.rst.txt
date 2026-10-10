@@ -14,6 +14,5 @@ DOCUMENTATION
     system_operation_index.rst
     calibrations_index.rst
     protocol_index.rst
-    examples_index.rst
     advanced_customization_index.rst
     troubleshooting_index.rst

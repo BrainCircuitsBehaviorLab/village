@@ -56,6 +56,9 @@ class ScaleTrigger(ScaleTriggerBase):
 fast and avoid blocking calls: the next reading waits until it returns.
 ```
 
+A complete example, which records when the animal steps on and off the scale
+in the trial data of any task: [scale_trigger.py](../examples/scale_trigger.md).
+
 ### Choosing the period
 
 A reading takes a few milliseconds and the thread sleeps between readings, so
