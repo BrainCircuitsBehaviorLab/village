@@ -619,10 +619,11 @@ hardware logs.</p></li>
 </span><span data-line="5">├── events.csv
 </span><span data-line="6">├── subjects.csv
 </span><span data-line="7">├── sessions_summary.csv
-</span><span data-line="8">├── water_calibration.csv
-</span><span data-line="9">├── sound_calibration.csv
-</span><span data-line="10">├── temperatures.csv
-</span><span data-line="11">└── deleted_sessions.csv
+</span><span data-line="8">├── temperatures.csv
+</span><span data-line="9">├── active_history.csv
+</span><span data-line="10">├── deleted_sessions.csv
+</span><span data-line="11">├── water_calibration.csv
+</span><span data-line="12">└── sound_calibration.csv
 </span></pre></div>
 </div>
 <section id="core-data-files">
@@ -654,10 +655,13 @@ the task definition (see <a class="reference internal" href="../protocols/projec
 <ul>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">temperatures.csv</span></code></strong>: Hourly temperature and humidity log, recorded automatically.
 Columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">humidity</span></code>.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">calibration_files.csv</span></code></strong>: Registry of saved calibration files. Different calibration
-types can be created and customized (e.g. <code class="docutils literal notranslate"><span class="pre">sound_calibration</span></code>, <code class="docutils literal notranslate"><span class="pre">camera_calibration</span></code>,
-<code class="docutils literal notranslate"><span class="pre">water_calibration</span></code>), and their stored values can be retrieved and used within
-tasks.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">active_history.csv</span></code></strong>: Log of every change to a subject’s <code class="docutils literal notranslate"><span class="pre">active</span></code> schedule
+(ON/OFF/hours), so that past activity plots use the schedule each subject actually had
+at each moment.</p></li>
+<li><p><strong>Calibration files</strong> (<code class="docutils literal notranslate"><span class="pre">water_calibration.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">sound_calibration.csv</span></code>, and one per
+custom calibration, e.g. <code class="docutils literal notranslate"><span class="pre">led_calibration.csv</span></code>): every measurement saved by each
+calibration. Their values can be retrieved and used within tasks (see
+<a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>).</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">deleted_sessions.csv</span></code></strong>: List of manually deleted sessions.</p>
 <div class="warning admonition">
 <p class="admonition-title">Important</p>
@@ -687,6 +691,9 @@ created once a line threshold is exceeded. Older event records are archived here
 <li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/videos/{subject}/</span></code></p></li>
 <li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code></p></li>
 </ul>
+<p>The corridor camera records continuously, starting a new file every
+<code class="docutils literal notranslate"><span class="pre">CORRIDOR_VIDEO_DURATION</span></code> seconds (30 minutes by default): these videos are saved directly in <code class="docutils literal notranslate"><span class="pre">data/videos/</span></code>, named
+<code class="docutils literal notranslate"><span class="pre">CORRIDOR_{timestamp}</span></code>, with the same two files described below.</p>
 <p>Each recording session produces two files:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">{filename}.mp4</span></code></strong>: H.264-encoded video. Default resolution is 640×480 at 30 FPS
@@ -828,8 +835,8 @@ with the following fixed columns: <code class="docutils literal notranslate"><sp
 <code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>.</p>
 <div class="admonition-run-mode admonition">
 <p class="admonition-title">run_mode</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">manual</span></code> if the session was launched manually from the
-GUI, or <code class="docutils literal notranslate"><span class="pre">auto</span></code> if it was triggered automatically upon detecting an animal in the corridor.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">Manual</span></code> if the session was launched manually from the
+GUI, or <code class="docutils literal notranslate"><span class="pre">Auto</span></code> if it was triggered automatically upon detecting an animal in the corridor.</p>
 </div>
 </section>
 <section id="session-settings-metadata-filename-json">
@@ -927,11 +934,11 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

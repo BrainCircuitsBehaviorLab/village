@@ -76,13 +76,6 @@ Measured latencies: **mean = 26.1 ms, SD = 7.5 ms**.
 
 ### Using the screen in tasks
 
-Import the module-level instance, provide a drawing function y una imangen o video
-si la drawing function los necesita: `load_draw_function()` only sets the function
-to call each frame — load any media separately with `load_image()` / `load_video()`,
-before or after it.
-
-`start_drawing()` / `stop_drawing()` to control when the stimulus appears.
-
 Import the module-level instance and provide a drawing function along with any required
 image or video. Note that `load_draw_function()` only sets the callback executed on
 each frame; media assets must be loaded separately using `load_image()` or
@@ -147,8 +140,8 @@ attributes are updated automatically before each call:
 - `screen.frame` — number of frames rendered since `start_drawing()`.
 - `screen.elapsed_time` — seconds elapsed since `start_drawing()`.
 
-Files passed to `image=` and `video=` are looked up inside `MEDIA_DIRECTORY`
-(`/village_projects/<project_name>/media`). Reference them by filename only.
+Files passed to `load_image()` and `load_video()` are looked up inside `MEDIA_DIRECTORY`
+(`~/village_projects/<project_name>/media`). Reference them by filename only.
 
 ### Method reference
 

@@ -477,7 +477,7 @@ data-aria-dark="Switch to auto color mode">
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#voltage">Voltage</a></li>
 <li><a class="reference internal" href="#where-to-connect">Where to connect</a></li>
-<li><a class="reference internal" href="#default-pins">Default pins</a></li>
+<li><a class="reference internal" href="#pins">Pins</a></li>
 <li><a class="reference internal" href="#using-the-output-pin">Using the output pin</a></li>
 </ul>
 </div></div>
@@ -585,18 +585,17 @@ the Pi using pass-through GPIO header extensions (see
 which is usually easier to reach once the Pi is mounted in its enclosure.</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> uses <strong>BCM numbering</strong> for <code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code>/<code class="docutils literal notranslate"><span class="pre">GPIO_OUT</span></code> (the Broadcom
-channel number), not the physical pin position on the 40-pin header — see the
-pinout below.</p>
+<p>The pins are given in <strong>BCM numbering</strong> (the Broadcom channel number), not the
+physical pin position on the 40-pin header — see the pinout below.</p>
 </div>
-<a class="reference internal image-reference" href="../_images/pinout.png"><img alt="Raspberry Pi GPIO pinout (BCM numbering)" src="../_images/pinout.png" style="width: 100%;" />
+<a class="reference internal image-reference" href="../_images/pinout.webp"><img alt="Raspberry Pi GPIO pinout (BCM numbering)" src="../_images/pinout.webp" style="width: 100%;" />
 </a>
 </section>
-<section id="default-pins">
-<h2>Default pins</h2>
-<p>By default <code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code> is BCM 26 and <code class="docutils literal notranslate"><span class="pre">GPIO_OUT</span></code> is BCM 27 (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> →
-<code class="docutils literal notranslate"><span class="pre">DEVICE</span> <span class="pre">ADDRESSES</span></code>). Both are free — neither the Main HAT nor the Audio HAT
-uses them — so they are safe to use as-is.</p>
+<section id="pins">
+<h2>Pins</h2>
+<p><code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code> is BCM 26 and <code class="docutils literal notranslate"><span class="pre">GPIO_OUT</span></code> is BCM 27. They are fixed (they cannot be
+changed from <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>), and both are free — neither the Main HAT nor the Audio HAT
+uses them.</p>
 <p><code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code> (BCM 26) is already wired, at the PCB level, to the <strong>Switch
 Connector</strong> on the Box Board: it lets a mechanical switch drive the pin
 directly, going HIGH when the switch is activated and LOW when it is
@@ -616,7 +615,7 @@ anywhere: a task, a trigger, a direct function, the screen sync, and so on.</p>
 </span></pre></div>
 </div>
 <hr class="docutils" />
-<p>See <a class="reference internal" href="../protocols/gpio_trigger.html"><span class="std std-doc">GPIO Trigger</span></a> for how to react to the input
+<p>See <a class="reference internal" href="../protocols/gpio_trigger.html"><span class="std std-doc">GPIO Interaction</span></a> for how to react to the input
 pin from your task code.</p>
 </section>
 </section>
@@ -658,11 +657,11 @@ pin from your task code.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

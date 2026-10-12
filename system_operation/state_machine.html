@@ -556,7 +556,7 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="system-logic-state-machine">
 <h1>System Logic (State Machine)</h1>
-<img alt="entrances" class="zoomable" src="../_images/states.png" />
+<img alt="System states diagram" class="zoomable" src="../_images/states.webp" />
 <p>This is the state diagram of all possible system states and their descriptions.</p>
 <p>Black arrows represent events that trigger a state transition, while red arrows indicate possible alarms, which may or may not cause a state change.</p>
 <p>States in green represent a normal cycle in automatic mode. States in blue indicate manual manipulation of the system by a user. The orange state is reached after an error that the system cannot resolve on its own, requiring remote intervention.</p>
@@ -578,7 +578,7 @@ data-aria-dark="Switch to auto color mode">
 <section id="option-a-the-subject-leaves-before-the-tasks-maximum-time">
 <h3>Option A: The Subject Leaves Before the Task’s Maximum Time</h3>
 <p>If the scale detects that the animal is returning to the home cage, the system transitions to:</p>
-<ol class="arabic simple" start="9">
+<ol class="arabic simple" start="10">
 <li><p><code class="docutils literal notranslate"><span class="pre">EXIT_UNSAVED</span></code>: Door 2 is closed, and Door 1 is opened to allow the subject to return home.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SAVE_OUTSIDE</span></code>: After the subject has returned to the home cage, the task is closed, and all data is saved.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
@@ -587,10 +587,10 @@ data-aria-dark="Switch to auto color mode">
 <section id="option-b-the-subject-stays-in-the-box-until-the-maximum-time">
 <h3>Option B: The Subject Stays in the Box Until the Maximum Time</h3>
 <p>If the subject does not leave the operant box before the task’s maximum time is reached, the system transitions to:</p>
-<ol class="arabic simple" start="9">
+<ol class="arabic simple" start="10">
 <li><p><code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>: The task is closed, and all data is saved while the subject is still inside the operant box.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">WAIT_SUBJECT_EXIT</span></code>: Until the subject attempts to leave and is detected by the scale.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_SAVE</span></code>: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXIT_SAVED</span></code>: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code>: The system synchronizes the new data with a remote server or hard drive.</p></li>
 </ol>
 </section>
@@ -638,11 +638,11 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

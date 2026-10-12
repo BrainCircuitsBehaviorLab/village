@@ -1,6 +1,6 @@
 ## Sound Integration
 
-The Training Village uses the **Raspberry DAC Pro** HAT for audio output. Connect it
+The Training Village uses the **Raspberry Pi DAC Pro** HAT for audio output. Connect it
 directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio
 playback from within tasks is handled by the Python `pyalsaaudio` library, which talks to
 ALSA directly, without going through PortAudio.
@@ -42,8 +42,8 @@ restarts.
 
 Sounds can be numpy arrays or audio files (WAV files). Audio files
 are read from the project's **media directory**:
-`/village_projects/<project_name>/media`. This path is configured in
-`SETTINGS` → `DIRECTORY SETTINGS` as `MEDIA_DIRECTORY`. Place WAV files there and
+`~/village_projects/<project_name>/media`. This path is shown in
+`SETTINGS` → `MAIN SETTINGS` → `PROJECT` as `MEDIA_DIRECTORY`. Place WAV files there and
 reference them by filename only (no path needed).
 
 Load a sound once, then play it as many times as you want — `load` only needs to
@@ -86,7 +86,7 @@ sound_device.play()
 # Option 2 — generate a tone with numpy and play it
 import numpy as np
 
-samplerate = 192000          # must match SAMPLERATE setting
+samplerate = 96000           # must match the SAMPLERATE setting (96000 by default)
 duration   = 0.5             # seconds
 frequency  = 4000            # Hz
 

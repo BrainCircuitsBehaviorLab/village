@@ -621,11 +621,6 @@ Measured latencies: <strong>mean = 26.1 ms, SD = 7.5 ms</strong>.</p>
 </section>
 <section id="using-the-screen-in-tasks">
 <h2>Using the screen in tasks</h2>
-<p>Import the module-level instance, provide a drawing function y una imangen o video
-si la drawing function los necesita: <code class="docutils literal notranslate"><span class="pre">load_draw_function()</span></code> only sets the function
-to call each frame — load any media separately with <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> / <code class="docutils literal notranslate"><span class="pre">load_video()</span></code>,
-before or after it.</p>
-<p><code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> / <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.</p>
 <p>Import the module-level instance and provide a drawing function along with any required
 image or video. Note that <code class="docutils literal notranslate"><span class="pre">load_draw_function()</span></code> only sets the callback executed on
 each frame; media assets must be loaded separately using <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> or
@@ -682,8 +677,8 @@ attributes are updated automatically before each call:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">screen.frame</span></code> — number of frames rendered since <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">screen.elapsed_time</span></code> — seconds elapsed since <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>.</p></li>
 </ul>
-<p>Files passed to <code class="docutils literal notranslate"><span class="pre">image=</span></code> and <code class="docutils literal notranslate"><span class="pre">video=</span></code> are looked up inside <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>
-(<code class="docutils literal notranslate"><span class="pre">/village_projects/&lt;project_name&gt;/media</span></code>). Reference them by filename only.</p>
+<p>Files passed to <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> and <code class="docutils literal notranslate"><span class="pre">load_video()</span></code> are looked up inside <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>
+(<code class="docutils literal notranslate"><span class="pre">~/village_projects/&lt;project_name&gt;/media</span></code>). Reference them by filename only.</p>
 </section>
 <section id="method-reference">
 <h2>Method reference</h2>
@@ -864,11 +859,11 @@ will never treat it as a pointer device.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

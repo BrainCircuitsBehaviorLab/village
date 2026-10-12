@@ -2,9 +2,9 @@
 
 ```{admonition} Note
 :class: note
-GPIO_IN and GPIO_OUT (BCM pin numbers, in `SETTINGS`) must be configured before
-using GPIO in tasks. See [GPIO](../system_operation/gpio.md) for what a GPIO
-pin is, the voltage it works at, and how to wire one.
+The input pin is `GPIO_IN` (BCM 26) and the output pin is `GPIO_OUT` (BCM 27); they
+are fixed. See [GPIO](../system_operation/gpio.md) for what a GPIO pin is, the voltage
+it works at, and how to wire one.
 ```
 
 The system watches an input pin (`GPIO_IN`) while a task is running. Every time

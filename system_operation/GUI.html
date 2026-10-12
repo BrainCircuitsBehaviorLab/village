@@ -570,13 +570,13 @@ data-aria-dark="Switch to auto color mode">
 <hr class="docutils" />
 <section id="main">
 <h2>MAIN</h2>
-<p><img alt="Main Training village screen" src="../_images/main_screen.png" /></p>
-<p>The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If there is no user activity for 5 minutes, the system automatically returns to this screen.</p>
+<p><img alt="Main Training village screen" src="../_images/main_screen.webp" /></p>
+<p>The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If there is no user activity for 5 minutes (<code class="docutils literal notranslate"><span class="pre">SCREENSAVE_TIME</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>), the system automatically returns to this screen.</p>
 </section>
 <hr class="docutils" />
 <section id="monitor">
 <h2>MONITOR</h2>
-<p><img alt="Monitor Training village screen" src="../_images/monitor_screen.png" /></p>
+<p><img alt="Monitor Training village screen" src="../_images/monitor_screen.webp" /></p>
 <p>The <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the operant box. Here, you can view images captured by the two system cameras: one positioned above the corridor and another focused inside the operant box.</p>
 <section id="primary-control-tabs">
 <h3>Primary Control Tabs</h3>
@@ -593,7 +593,7 @@ buttons to manually trigger the port LEDs or deliver water rewards (1-second dur
 <p><em>If a motor stops responding to <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> after being physically disconnected and reconnected, restart Village rather than assuming it’s broken — see <a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a>.</em></p>
 </li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
-for writing and deploying these scripts can be found in the <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">Protocol Creation</span></a> section.</p></li>
+for writing and deploying these functions can be found in the <a class="reference internal" href="../protocols/functions.html"><span class="std std-doc">Direct Sound &amp; Video Functions</span></a> section.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness.</p>
 <ul class="simple">
 <li><p><strong>Bpod Integration:</strong> Simulate a nose-poke in any behavior port with a single click.</p></li>
@@ -616,13 +616,13 @@ for writing and deploying these scripts can be found in the <a class="reference 
 <hr class="docutils" />
 <section id="subjects">
 <h2>SUBJECTS</h2>
-<p><img alt="Tasks Training Village screen" src="../_images/subjects_screen.png" />
-In this section you can create new subjects. Check the <a class="reference internal" href="subject.html"><span class="std std-doc">Subject Management Section</span></a>.</p>
+<p><img alt="Subjects Training Village screen" src="../_images/subjects_screen.webp" /></p>
+<p>In this section you can create new subjects and edit their settings. Check the <a class="reference internal" href="subject.html"><span class="std std-doc">Subject Management Section</span></a>.</p>
 </section>
 <hr class="docutils" />
 <section id="tasks">
 <h2>TASKS</h2>
-<p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.png" /></p>
+<p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.webp" /></p>
 <p>From this screen, tasks can be launched manually at any time.</p>
 <p>The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the <a class="reference internal" href="manual.html"><span class="std std-doc">Manual Task Execution</span></a> section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:</p>
 <ul class="simple">
@@ -634,7 +634,7 @@ In this section you can create new subjects. Check the <a class="reference inter
 </section>
 <section id="data">
 <h2>DATA</h2>
-<p><img alt="Main Training village screen" src="../_images/data_screen.png" /></p>
+<p><img alt="Data Training village screen" src="../_images/data_screen.webp" /></p>
 <p>On this screen, saved data is displayed. The following tables are accessible:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>:</strong> A comprehensive system log that records animal entries, exits, and denied entry attempts. Selecting any specific event and clicking <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> opens the corresponding video recording of that moment.</p></li>
@@ -642,18 +642,18 @@ In this section you can create new subjects. Check the <a class="reference inter
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURES</span></code>:</strong> A chronological log of all recorded environmental temperature and humidity values within the system.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION_RAW</span></code>:</strong> Displays the session currently in progress or the most recently completed one, rendered in real time (one row per registered hardware/behavioral event). Clicking <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> opens a user-configurable, real-time graphical chart of the session.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SESSION</span></code>:</strong> Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> opens a user-configurable, real-time graphical chart of the session.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code>:</strong> Contains parameter data regarding all currently active system calibrations.</p></li>
+<li><p><strong>Calibrations:</strong> One table for each active calibration that stores data (e.g. <code class="docutils literal notranslate"><span class="pre">WATER</span> <span class="pre">CALIBRATION</span></code>, <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">CALIBRATION</span></code>, and any custom calibration), with all its saved measurements.</p></li>
 </ul>
 <p>A more detailed description of these tables, including their exact database schemas and storage paths, can be found in the <a class="reference internal" href="data.html"><span class="std std-doc">Saved Data</span></a> section.</p>
 </section>
 <hr class="docutils" />
 <section id="calibration">
 <h2>CALIBRATION</h2>
-<p><img alt="Calibration Training village screen" src="../_images/calibration_screen.png" /></p>
+<p><img alt="Calibration Training village screen" src="../_images/calibration_screen.webp" /></p>
 <p>This screen provides a dedicated panel for each calibration tool available on the system. A left-side menu lists every calibration relevant to your current hardware configuration; selecting an entry opens its panel on the right.</p>
 <p>Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> section for details.</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>:</strong> Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller. See <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>:</strong> Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Always available: with Bpod it works out of the box; with any other controller, it needs a water calibration task written for that controller. See <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>:</strong> Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> is <strong>ON</strong>. See <a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">Sound Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CAMERA_CALIBRATION</span></code>:</strong> Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available. See <a class="reference internal" href="../calibrations/camera.html"><span class="std std-doc">Camera Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR_THRESHOLD_CALIBRATION</span></code>:</strong> Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result against a recorded corridor video. Only available when <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is <strong>ON</strong>. See <a class="reference internal" href="../calibrations/thresholds.html"><span class="std std-doc">Corridor Threshold Calibration</span></a>.</p></li>
@@ -663,7 +663,7 @@ In this section you can create new subjects. Check the <a class="reference inter
 <hr class="docutils" />
 <section id="settings">
 <h2>SETTINGS</h2>
-<p><img alt="Main Training village screen" src="../_images/settings_screen.png" /></p>
+<p><img alt="Settings Training village screen" src="../_images/settings_screen.webp" /></p>
 <p>This section displays a comprehensive list of all modifiable system settings, organized into distinct categories for streamlined configuration. You can hover over any individual parameter item to view a tooltip with more detailed information.</p>
 <p>The most critical parameters from this list will be discussed and modified step-by-step in the next section.</p>
 </section>
@@ -706,13 +706,13 @@ In this section you can create new subjects. Check the <a class="reference inter
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

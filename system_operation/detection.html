@@ -553,13 +553,13 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="animal-detection-tracking">
 <h1>Animal Detection &amp; Tracking</h1>
-<p>An automated animal detection algorithm operates continuously on both the corridor camera and the operant box camera. The algorithm processes each image by converting it to black-and-white pixels based on a set luminance threshold (pixels above the threshold are marked white, and those below are marked black). By counting the black pixels, the system determines whether a specific area is empty, contains one mouse, or holds multiple animals.</p>
+<p>An automated animal detection algorithm operates continuously on both the corridor camera and the operant box camera. The algorithm processes each image by converting it to black-and-white pixels based on a set luminance threshold (pixels above the threshold are marked white, and those below are marked black). By counting the pixels of the animal’s color (black by default, see <code class="docutils literal notranslate"><span class="pre">DETECTION_COLOR</span></code> below), the system determines whether a specific area is empty, contains one animal, or holds multiple animals.</p>
 <p>In addition to this pixel-counting baseline, an advanced tracking algorithm runs by default on the operant box camera feed. This module tracks the animal’s absolute position in real time utilizing OpenCV’s contour detection (<code class="docutils literal notranslate"><span class="pre">findContours</span></code>) to compute the exact center of mass (centroid) of the subject.</p>
 <p>While this advanced tracking module increases CPU overhead, its execution time at a resolution of 640x480 is highly optimized, taking only <strong>4 to 5 ms per frame</strong>. Given the standard frame rate of the operant box camera (<strong>30 fps</strong>, or approximately <strong>33 ms per frame</strong>), the system has more than enough computational headroom to execute tracking on every single frame without latency.</p>
 <p>This advanced tracking module can be toggled on or off via <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code>.</p>
 <div class="warning admonition">
 <p class="admonition-title">Important</p>
-<p>As mentioned previously, maintaining uniform and stable illumination—both visible and infrared, across both the corridor and the operant box environments—is absolutely critical for accurate computer vision tracking.</p>
+<p>As mentioned in <a class="reference internal" href="../overview/requirements.html"><span class="std std-doc">System Requirements</span></a>, maintaining uniform and stable illumination—both visible and infrared, across both the corridor and the operant box environments—is absolutely critical for accurate computer vision tracking.</p>
 </div>
 <hr class="docutils" />
 <section id="detection-in-the-corridor">
@@ -570,15 +570,15 @@ data-aria-dark="Switch to auto color mode">
 <p>Toggling the <code class="docutils literal notranslate"><span class="pre">DETECTION_COLOR</span></code> parameter automatically synchronizes the pixel detection logic across both the corridor and the operant box cameras simultaneously.</p>
 </div>
 <p>To set up detection in the corridor, you must configure four distinct bounding boxes (represented by the green, magenta, blue, and red rectangles in the interface):</p>
-<a class="reference internal image-reference" href="../_images/detection_settings.png"><img alt="../_images/detection_settings.png" class="align-center" src="../_images/detection_settings.png" style="width: 70%;" />
+<a class="reference internal image-reference" href="../_images/detection_settings.webp"><img alt="../_images/detection_settings.webp" class="align-center" src="../_images/detection_settings.webp" style="width: 70%;" />
 </a>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">1</span></code>:</strong> Should cover the corridor section before the first door.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">2</span></code>:</strong> Should span from the first door up to the beginning of Area 3.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">3</span></code>:</strong> Starts where Area 2 ends and extends to the second door. It should be large enough to fully contain one mouse but not exceed that size significantly. This is the area where the RFID reader is located.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">3</span></code>:</strong> Starts where Area 2 ends and extends to the second door. It should be large enough to fully contain one animal but not exceed that size significantly. This is the area where the RFID reader is located.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">4</span></code>:</strong> Should cover the corridor section after the second door.</p></li>
 </ul>
-<a class="reference internal image-reference" href="../_images/areas.png"><img alt="../_images/areas.png" class="align-center" src="../_images/areas.png" style="width: 40%;" />
+<a class="reference internal image-reference" href="../_images/areas.webp"><img alt="../_images/areas.webp" class="align-center" src="../_images/areas.webp" style="width: 40%;" />
 </a>
 <div class="tip admonition">
 <p class="admonition-title">Important</p>
@@ -597,9 +597,9 @@ count condition, described below.</p>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">subject_limit</span></code>:</strong> The maximum pixel threshold for a single animal. Exceeding this limit flags the area as potentially containing multiple subjects.</p></li>
 </ul>
 <p>To calibrate the binarization threshold, allow an animal into the corridor and enable the <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION</span></code> overlay. This visual feedback highlights the binarized pixels in real time, letting you tune parameters accurately; remember to calibrate <code class="docutils literal notranslate"><span class="pre">thr_day</span></code> under daytime lighting and <code class="docutils literal notranslate"><span class="pre">thr_night</span></code> under nighttime/IR lighting, since they are independent values:</p>
-<p><img alt="Detection" src="../_images/detection.png" /></p>
+<p><img alt="Detection" src="../_images/detection.webp" /></p>
 <p>To calibrate the remaining two limits (<code class="docutils literal notranslate"><span class="pre">empty_limit</span></code> and <code class="docutils literal notranslate"><span class="pre">subject_limit</span></code>), review the following empirical example:</p>
-<p><img alt="Mice_positionsi" src="../_images/mice_positions.png" /></p>
+<p><img alt="Mice positions" src="../_images/mice_positions.webp" /></p>
 <p>In this scenario, a single animal typically occupies between 1,800 and 2,800 pixels depending on its posture, whereas two overlapping mice occupy between 2,600 and 3,600 pixels. Setting the <code class="docutils literal notranslate"><span class="pre">subject_limit</span></code> to approximately 2,500 pixels establishes a safe operational margin, though there may be cases where a single animal is not allowed to enter if it stretches fully.</p>
 <p>Even with conservative thresholds, two animals can be misdetected as a single subject if they align perfectly by stacking on top of each other. To minimize such errors, the gating algorithm mandates that all camera conditions remain stable for at least <strong>500 ms</strong> following an RFID detection, as it is highly improbable for two animals to maintain such static, perfect alignment for that duration.</p>
 <div class="warning admonition">
@@ -610,20 +610,20 @@ count condition, described below.</p>
 </ul>
 </div>
 <hr class="docutils" />
-<img alt="entrances" class="zoomable" src="../_images/entrances.png" />
-<p>When an animal is detected by the RFID antenna, the system evaluates the real-time pixel status of all four regions. For the system to safely open the gate and permit entry into the behavioral arena, <strong>Areas 1, 2, and 4 must be empty (below empty_limit), and Area 3 must contain only one mouse (below subject_limit)</strong>.</p>
+<img alt="entrances" class="zoomable" src="../_images/entrances.webp" />
+<p>When an animal is detected by the RFID antenna, the system evaluates the real-time pixel status of all four regions. For the system to safely open the gate and permit entry into the behavioral arena, <strong>Areas 1, 2, and 4 must be empty (below empty_limit), and Area 3 must contain only one animal (below subject_limit)</strong>.</p>
 <p>These conditions must remain stable for a minimum hold-duration of <strong>500 ms</strong>, and no other RFID scans must have occurred within the previous 15 seconds. Both timing parameters can be customized under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>.</p>
 </section>
 <hr class="docutils" />
 <section id="detection-in-the-operant-box">
 <h2>Detection in the Operant Box</h2>
-<a class="reference internal image-reference" href="../_images/detection_settings2.png"><img alt="../_images/detection_settings2.png" class="align-center" src="../_images/detection_settings2.png" style="width: 70%;" />
+<a class="reference internal image-reference" href="../_images/detection_settings2.webp"><img alt="../_images/detection_settings2.webp" class="align-center" src="../_images/detection_settings2.webp" style="width: 70%;" />
 </a>
 <p>The system supports the definition of up to four custom zones within the operant chamber. Each configured area can be assigned one of three operational behaviors:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">ALLOWED</span></code>:</strong> A zone where the animal is expected to be. An alarm will trigger if the detected pixels exceed the <code class="docutils literal notranslate"><span class="pre">subject_limit</span></code>, indicating the possibility that two animals may have entered the operant box simultaneously by mistake.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">NOT_ALLOWED</span></code>:</strong> A zone where the animal should not be. If pixel counts exceed the <code class="docutils literal notranslate"><span class="pre">empty_limit</span></code> within these regions, the system immediately sends an alarm via Telegram.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code>:</strong> Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates <span class="math notranslate nohighlight">\((x, y)\)</span> entering a <code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code> zone, it instantly fires a user-defined Python callback function. This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code>:</strong> Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates <span class="math notranslate nohighlight">\((x, y)\)</span> entering a <code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code> zone, it instantly fires a user-defined Python callback function (see <a class="reference internal" href="../protocols/camera.html"><span class="std std-doc">Camera Interaction</span></a>). This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.</p></li>
 </ul>
 <p>In the reference image above, the corridor and the touchscreen area are elevated and represent the zones where animals are expected to be. The blue and red zones, on the floor, should remain free of animals unless one has jumped into them.</p>
 <div class="tip admonition">
@@ -635,7 +635,7 @@ count condition, described below.</p>
 <section id="camera-adjustments-lens-position-sharpness-exposure">
 <h2>Camera Adjustments: Lens Position, Sharpness &amp; Exposure</h2>
 <p>Below the corridor and box detection areas, the <code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code> tab also provides a <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">ADJUSTMENTS</span></code> panel (only shown when <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is <strong>ON</strong>) and a <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">ADJUSTMENTS</span></code> panel, letting you tune each camera’s image quality directly while watching the live preview, without having to go through <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>:</p>
-<a class="reference internal image-reference" href="../_images/detection_settings3.png"><img alt="../_images/detection_settings3.png" class="align-center" src="../_images/detection_settings3.png" style="width: 40%;" />
+<a class="reference internal image-reference" href="../_images/detection_settings3.webp"><img alt="../_images/detection_settings3.webp" class="align-center" src="../_images/detection_settings3.webp" style="width: 40%;" />
 </a>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">lens_position</span></code>:</strong> The focus position of the camera lens (0-10). Increase or decrease it while watching the preview until the image is sharp.</p></li>
@@ -683,13 +683,13 @@ count condition, described below.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

@@ -558,30 +558,47 @@ you will be working within the <code class="docutils literal notranslate"><span 
 several example tasks that cover a range of system functionalities.</p>
 <section id="demo-tasks">
 <h2>Demo Tasks</h2>
-<p>The following tasks are included. Note that some require additional hardware beyond the
-Raspberry Pi itself.</p>
-<p><strong>No external hardware required:</strong></p>
+<p>The following tasks are included; each one links to its code and explanation. Note that
+some require additional hardware beyond the Raspberry Pi itself.</p>
+<p><strong>No external controller required</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>):</p>
 <ul class="simple">
-<li><p>A minimal task that performs no actions — useful as a blank template.</p></li>
-<li><p>A task that plays sounds when the subject enters a defined area.</p></li>
-<li><p>A task that presents stimuli on a touchscreen and waits for the subject’s response.</p></li>
+<li><p><a class="reference internal" href="../examples/raspberry_area1_sound.html"><span class="std std-doc">raspberry_area1_sound.py</span></a>: entering box area 1
+plays a sound and lights an LED of the LED strip.</p></li>
+<li><p><a class="reference internal" href="../examples/raspberry_touchscreen.html"><span class="std std-doc">raspberry_touchscreen.py</span></a>: a menu of 6
+rectangles on the touchscreen, each one showing a different stimulus when touched.</p></li>
 </ul>
-<p><strong>Requires Bpod with 3 behavioral ports:</strong></p>
+<p><strong>Requires a Bpod with 3 behavioral ports</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>):</p>
 <ul class="simple">
-<li><p>A task that delivers water whenever the subject pokes any of the three ports.</p></li>
-<li><p>A task that plays a sound on a center poke and requires the subject to choose one of
-the two side ports.</p></li>
-<li><p>A task that presents a visual stimulus when the subject is detected within a circular
-region around a defined point.</p></li>
+<li><p>The six training stages, from
+<a class="reference internal" href="../examples/bpod_1_habituation.html"><span class="std std-doc">bpod_1_habituation.py</span></a> to
+<a class="reference internal" href="../examples/bpod_6_delay.html"><span class="std std-doc">bpod_6_delay.py</span></a>: habituation, passive and active
+learning, center-initiated trials, penalty for the wrong side, and a delay task whose
+difficulty adapts to the animal.</p></li>
+<li><p><a class="reference internal" href="../examples/bpod_area2_sound.html"><span class="std std-doc">bpod_area2_sound.py</span></a>: entering box area 2 plays a
+sound and delivers water.</p></li>
+<li><p><a class="reference internal" href="../examples/bpod_touchscreen.html"><span class="std std-doc">bpod_touchscreen.py</span></a>: touching the rectangle that
+stays on screen gives water.</p></li>
+<li><p>Demos and tools, not training tasks:
+<a class="reference internal" href="../examples/bpod_example_global_timer.html"><span class="std std-doc">bpod_example_global_timer.py</span></a>,
+<a class="reference internal" href="../examples/bpod_example_outputs_and_events.html"><span class="std std-doc">bpod_example_outputs_and_events.py</span></a>
+and <a class="reference internal" href="../examples/bpod_purge_ports.html"><span class="std std-doc">bpod_purge_ports.py</span></a> (to flush the water lines).</p></li>
 </ul>
-<p><strong>Requires Arduino:</strong></p>
+<p><strong>Requires an Arduino</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>):</p>
 <ul class="simple">
-<li><p>A task that switches an LED on and off using Arduino.</p></li>
+<li><p>The same six training stages, run by an Arduino, from
+<a class="reference internal" href="../examples/arduino_1_habituation.html"><span class="std std-doc">arduino_1_habituation.py</span></a> to
+<a class="reference internal" href="../examples/arduino_6_delay.html"><span class="std std-doc">arduino_6_delay.py</span></a>, each with its Arduino firmware.</p></li>
 </ul>
-<p><strong>Training protocol</strong> (<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>):</p>
+<p><strong>Training protocol</strong> (<a class="reference internal" href="../examples/training_protocol.html"><span class="std std-doc">training_protocol.py</span></a>):</p>
 <ul class="simple">
-<li><p>The training protocol contains the following logic: TODO</p></li>
+<li><p>Moves each subject through the six Bpod training stages, one after another, deciding
+the next task after every session from the subject’s performance. The other tasks are
+run manually and don’t change the subject’s next task.</p></li>
 </ul>
+<p>See <a class="reference internal" href="../examples/tasks_bpod.html"><span class="std std-doc">Task Examples (Bpod)</span></a>,
+<a class="reference internal" href="../examples/tasks_arduino.html"><span class="std std-doc">Task Examples (Arduino)</span></a> and
+<a class="reference internal" href="../examples/tasks_raspberry.html"><span class="std std-doc">Task Examples (Raspberry Pi only)</span></a> for a summary of
+each one.</p>
 </section>
 <hr class="docutils" />
 <section id="launching-a-task">
@@ -646,11 +663,11 @@ without making any actual changes. The settings displayed are never saved or app
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

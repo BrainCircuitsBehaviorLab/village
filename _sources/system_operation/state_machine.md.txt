@@ -1,6 +1,6 @@
 ## System Logic (State Machine)
 
-<img src="/_static/states.png" class="zoomable" alt="entrances" />
+<img src="/_static/states.webp" class="zoomable" alt="System states diagram" />
 
 
 This is the state diagram of all possible system states and their descriptions.
@@ -29,19 +29,19 @@ A typical session of an animal performing a task follows this sequence:
 
 If the scale detects that the animal is returning to the home cage, the system transitions to:
 
-9. `EXIT_UNSAVED`: Door 2 is closed, and Door 1 is opened to allow the subject to return home.
-10. `SAVE_OUTSIDE`: After the subject has returned to the home cage, the task is closed, and all data is saved.
-11. `SYNC`: The system synchronizes the new data with a remote server or hard drive.
+10. `EXIT_UNSAVED`: Door 2 is closed, and Door 1 is opened to allow the subject to return home.
+11. `SAVE_OUTSIDE`: After the subject has returned to the home cage, the task is closed, and all data is saved.
+12. `SYNC`: The system synchronizes the new data with a remote server or hard drive.
 
 
 #### Option B: The Subject Stays in the Box Until the Maximum Time
 
 If the subject does not leave the operant box before the task’s maximum time is reached, the system transitions to:
 
-9. `SAVE_INSIDE`: The task is closed, and all data is saved while the subject is still inside the operant box.
-10. `WAIT_SUBJECT_EXIT`: Until the subject attempts to leave and is detected by the scale.
-11. `EXIT_SAVE`: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.
-12. `SYNC`: The system synchronizes the new data with a remote server or hard drive.
+10. `SAVE_INSIDE`: The task is closed, and all data is saved while the subject is still inside the operant box.
+11. `WAIT_SUBJECT_EXIT`: Until the subject attempts to leave and is detected by the scale.
+12. `EXIT_SAVED`: Once detected by the scale, Door 2 is closed, and Door 1 is opened, allowing the subject to return to the home cage.
+13. `SYNC`: The system synchronizes the new data with a remote server or hard drive.
 
 #### In Both Cases
 

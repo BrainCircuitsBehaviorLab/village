@@ -583,7 +583,7 @@ exposed through <code class="docutils literal notranslate"><span class="pre">tim
 <li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code> — returns a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object (replaces <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>).</p></li>
 </ul>
 <div class="warning admonition">
-<p class="admonition-title">Important:</p>
+<p class="admonition-title">Important</p>
 <p>Do not use <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>. Always use <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> and <code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code>.</p>
 </div>
 <div class="tip admonition">
@@ -635,7 +635,7 @@ every single trial:</p>
 <p>This approach preserves the sub-millisecond precision of the external hardware
 controller while writing all data in master Unix Epoch time.</p>
 <div class="warning admonition">
-<p class="admonition-title">Precision Limits &amp; Clock Drift:</p>
+<p class="admonition-title">Precision Limits &amp; Clock Drift</p>
 <p>This mechanism assumes the clock offset remains constant within the duration of a trial. However, physical hardware oscillators run at slightly different speeds, causing a small drift of roughly <strong>~1 ms per minute</strong> between the microcontroller and the Raspberry Pi.</p>
 <ul class="simple">
 <li><p><strong>Short trials (&lt; 1–2 minutes):</strong> drift is negligible (&lt; 2ms) and can be safely ignored for
@@ -686,7 +686,7 @@ link introduces additional latency:</p>
 <p class="admonition-title">Latency Warning for Bpod 2.0 to 2.4 (Teensy 3.6 Hardware)</p>
 <p><strong>The issue:</strong> By default, unmodified firmware flushes outgoing USB serial data with a <strong>5 ms</strong> timeout. This adds <strong>4 ms of latency to every single Bpod-&gt;Raspberry Pi communication</strong> compared to the 1 ms performance benchmark shown above.</p>
 <p><strong>Affected models:</strong> This only applies to Bpods built on a <strong>Teensy 3.6</strong> (state machine hardware <strong>r2.0 to r2.4</strong>). Older models (Bpod 0.5 – 1.0) and newer Teensy 4.x boards (Bpod 2.5 / 2+) are not affected.</p>
-<p><strong>The fix:</strong> To reduce this timeout to <strong>1 ms</strong>, you need to edit a Teensy 3.6 USB driver file and flash the modified firmware. Follow the step-by-step guide in <a class="reference internal" href="../resources/bpod_firmware.html"><span class="std std-doc">Speeding Up Bpod Communication</span></a>.</p>
+<p><strong>The fix:</strong> To reduce this timeout to <strong>1 ms</strong>, you need to edit a Teensy 3.6 USB driver file and flash the modified firmware. Follow the step-by-step guide in <a class="reference internal" href="../resources/bpod_firmware.html"><span class="std std-doc">Custom Bpod Firmware</span></a>.</p>
 </div>
 </section>
 <section id="actions">
@@ -710,7 +710,7 @@ is preloaded in the buffer while the current one is displayed, the latency from 
 a display command to the frame appearing on screen spans approximately one full frame
 plus the remaining portion of the current frame: <strong>mean = 24.9 ms, SD = 7.5 ms</strong>.</p>
 <div class="tip admonition">
-<p class="admonition-title">CPU Load and Latency:</p>
+<p class="admonition-title">CPU Load and Latency</p>
 <p>Communication and action latencies are both sensitive to CPU load. The platform
 implements several measures to keep CPU usage low during sessions:</p>
 <ul class="simple">
@@ -794,7 +794,7 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
 </table>
 </div>
 <div class="tip admonition">
-<p class="admonition-title">Note on Latency Measurements:</p>
+<p class="admonition-title">Note on Latency Measurements</p>
 <p>All latency values reported here were obtained experimentally using an oscilloscope. Visual stimulus latencies were measured with a photodiode placed on the display, while auditory stimulus latencies were measured using a direct electrical connection to the audio signal. These measurements correspond to the default system configuration described above. Any modifications to camera settings, display resolution, or other relevant hardware or software parameters may affect latency and should therefore be validated with new measurements. For experiments requiring precise temporal control, we strongly recommend measuring latencies directly within the specific experimental setup rather than relying solely on the reference values provided here.</p>
 </div>
 </section>
@@ -838,13 +838,13 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

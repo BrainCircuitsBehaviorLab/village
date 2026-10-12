@@ -480,7 +480,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#stop-task"><code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">TASK</span></code></a></li>
 <li><a class="reference internal" href="#online-plots"><code class="docutils literal notranslate"><span class="pre">ONLINE</span> <span class="pre">PLOTS</span></code></a></li>
 <li><a class="reference internal" href="#check-mice"><code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code></a></li>
-<li><a class="reference internal" href="#alarms"><code class="docutils literal notranslate"><span class="pre">ALARMS</span></code></a></li>
+<li><a class="reference internal" href="#alarm"><code class="docutils literal notranslate"><span class="pre">ALARM</span></code></a></li>
 <li><a class="reference internal" href="#exit"><code class="docutils literal notranslate"><span class="pre">EXIT</span></code></a></li>
 </ul>
 </div></div>
@@ -580,11 +580,11 @@ data-aria-dark="Switch to auto color mode">
 </section>
 <section id="check-mice">
 <h2><code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code></h2>
-<p>Confirms that the mice have been checked today. Turns orange until confirmed, either by clicking it or via the <code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code> Telegram command; once confirmed, it shows <code class="docutils literal notranslate"><span class="pre">MICE</span> <span class="pre">OK</span></code> and stays disabled until the next reset, which happens at midnight. If the mice have not been checked by the time set in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CHECK_MICE_TIME</span></code>, an alarm is triggered to remind you via Telegram.</p>
+<p>Confirms that the mice have been checked today. Shows <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> and turns orange until confirmed, either by clicking it or via the <code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code> Telegram command; once confirmed, it shows <code class="docutils literal notranslate"><span class="pre">MICE</span> <span class="pre">OK</span></code> and stays disabled until the next reset, which happens at midnight. If the mice have not been checked by the time set in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CHECK_MICE_TIME</span></code>, an alarm is triggered to remind you via Telegram.</p>
 </section>
-<section id="alarms">
-<h2><code class="docutils literal notranslate"><span class="pre">ALARMS</span></code></h2>
-<p>Shows the number of pending alarms and turns orange while any are pending. Clicking it acknowledges every pending alarm and stops their Telegram reminders.</p>
+<section id="alarm">
+<h2><code class="docutils literal notranslate"><span class="pre">ALARM</span></code></h2>
+<p>Shows the number of pending alarms and turns orange while any are pending (<code class="docutils literal notranslate"><span class="pre">NO</span> <span class="pre">ALARMS</span></code> when there are none). Clicking it acknowledges every pending alarm and stops their Telegram reminders.</p>
 </section>
 <section id="exit">
 <h2><code class="docutils literal notranslate"><span class="pre">EXIT</span></code></h2>
@@ -629,11 +629,11 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

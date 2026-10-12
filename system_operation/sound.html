@@ -556,7 +556,7 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="sound-integration">
 <h1>Sound Integration</h1>
-<p>The Training Village uses the <strong>Raspberry DAC Pro</strong> HAT for audio output. Connect it
+<p>The Training Village uses the <strong>Raspberry Pi DAC Pro</strong> HAT for audio output. Connect it
 directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio
 playback from within tasks is handled by the Python <code class="docutils literal notranslate"><span class="pre">pyalsaaudio</span></code> library, which talks to
 ALSA directly, without going through PortAudio.</p>
@@ -592,8 +592,8 @@ restarts.</p>
 <h2>Using the sound device in tasks</h2>
 <p>Sounds can be numpy arrays or audio files (WAV files). Audio files
 are read from the project’s <strong>media directory</strong>:
-<code class="docutils literal notranslate"><span class="pre">/village_projects/&lt;project_name&gt;/media</span></code>. This path is configured in
-<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DIRECTORY</span> <span class="pre">SETTINGS</span></code> as <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>. Place WAV files there and
+<code class="docutils literal notranslate"><span class="pre">~/village_projects/&lt;project_name&gt;/media</span></code>. This path is shown in
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">MAIN</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">PROJECT</span></code> as <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>. Place WAV files there and
 reference them by filename only (no path needed).</p>
 <p>Load a sound once, then play it as many times as you want — <code class="docutils literal notranslate"><span class="pre">load</span></code> only needs to
 be called again to change the sound. Calling <code class="docutils literal notranslate"><span class="pre">play</span></code> before anything has ever been
@@ -632,7 +632,7 @@ disables the ramp entirely.</p>
 </span><span data-line="12"><span class="c1"># Option 2 — generate a tone with numpy and play it</span>
 </span><span data-line="13"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </span><span data-line="14">
-</span><span data-line="15"><span class="n">samplerate</span> <span class="o">=</span> <span class="mi">192000</span>          <span class="c1"># must match SAMPLERATE setting</span>
+</span><span data-line="15"><span class="n">samplerate</span> <span class="o">=</span> <span class="mi">96000</span>           <span class="c1"># must match the SAMPLERATE setting (96000 by default)</span>
 </span><span data-line="16"><span class="n">duration</span>   <span class="o">=</span> <span class="mf">0.5</span>             <span class="c1"># seconds</span>
 </span><span data-line="17"><span class="n">frequency</span>  <span class="o">=</span> <span class="mi">4000</span>            <span class="c1"># Hz</span>
 </span><span data-line="18">
@@ -729,11 +729,11 @@ WAV files at the same sample rate as the <code class="docutils literal notransla
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

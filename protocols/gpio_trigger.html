@@ -553,9 +553,9 @@ data-aria-dark="Switch to auto color mode">
 <h1>Custom GPIO Interaction</h1>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
-<p>GPIO_IN and GPIO_OUT (BCM pin numbers, in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>) must be configured before
-using GPIO in tasks. See <a class="reference internal" href="../system_operation/gpio.html"><span class="std std-doc">GPIO</span></a> for what a GPIO
-pin is, the voltage it works at, and how to wire one.</p>
+<p>The input pin is <code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code> (BCM 26) and the output pin is <code class="docutils literal notranslate"><span class="pre">GPIO_OUT</span></code> (BCM 27); they
+are fixed. See <a class="reference internal" href="../system_operation/gpio.html"><span class="std std-doc">GPIO</span></a> for what a GPIO pin is, the voltage
+it works at, and how to wire one.</p>
 </div>
 <p>The system watches an input pin (<code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code>) while a task is running. Every time
 it goes from OFF (low) to ON (high) the <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> method of <code class="docutils literal notranslate"><span class="pre">GpioTriggerBase</span></code>
@@ -648,11 +648,11 @@ thread. Keep them fast and avoid blocking calls.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=cd181044"></script>
+      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script src="../_static/lightbox.js?v=bcb7134f"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

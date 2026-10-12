@@ -37,10 +37,10 @@ Some initial settings must be configured before the system can be used.  Navigat
 
     ```{admonition} Security Alert
     :class: warning
-    Never share or publish your TELEGRAM_TOKEN. To prevent accidental exposure on public GitHub repositories, all local configuration parameters are automatically stored in a private .INI file located strictly outside of the main repository directory.
+    Never share or publish your TELEGRAM_TOKEN. To prevent accidental exposure on public GitHub repositories, all settings are stored in the user's configuration on the Raspberry Pi, outside of the repository directory.
     ```
 
-*   **`ADVANCED SETTINGS`:** Advanced settings and gui colors.
+*   **`ADVANCED SETTINGS`:** Settings that rarely need to be changed, such as the days of video storage (`DAYS_OF_VIDEO_STORAGE`) or the time before the GUI returns to the `MAIN` screen (`SCREENSAVE_TIME`), and the `VISUAL SETTINGS` (colors used in the GUI and on the camera images).
 
 
 [BACKUP]: /preparation/backup.md
