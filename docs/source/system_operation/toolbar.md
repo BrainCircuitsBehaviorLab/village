@@ -23,11 +23,11 @@ Shows live plots while a task is running. The plots displayed are configurable b
 
 ### `CHECK MICE`
 
-Confirms that the mice have been checked today. Turns orange until confirmed, either by clicking it or via the `/mice_checked` Telegram command; once confirmed, it shows `MICE OK` and stays disabled until the next reset, which happens at midnight. If the mice have not been checked by the time set in `SETTINGS` → `TELEGRAM SETTINGS` → `CHECK_MICE_TIME`, an alarm is triggered to remind you via Telegram.
+Confirms that the mice have been checked today. Shows `CHECK MICE` and turns orange until confirmed, either by clicking it or via the `/mice_checked` Telegram command; once confirmed, it shows `MICE OK` and stays disabled until the next reset, which happens at midnight. If the mice have not been checked by the time set in `SETTINGS` → `TELEGRAM SETTINGS` → `CHECK_MICE_TIME`, an alarm is triggered to remind you via Telegram.
 
-### `ALARMS`
+### `ALARM`
 
-Shows the number of pending alarms and turns orange while any are pending. Clicking it acknowledges every pending alarm and stops their Telegram reminders.
+Shows the number of pending alarms and turns orange while any are pending (`NO ALARMS` when there are none). Clicking it acknowledges every pending alarm and stops their Telegram reminders.
 
 ### `EXIT`
 

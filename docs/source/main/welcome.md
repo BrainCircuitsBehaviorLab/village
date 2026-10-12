@@ -97,8 +97,8 @@ BRAIN CIRCUITS AND BEHAVIOR LAB
 </a>
 <p style="margin-top: 1.5rem;">Funding was provided by the Spanish State Research Agency (AEI), the European Research Council (ERC), and the Cellex Foundation.</p>
 <div style="display: flex; justify-content: center; align-items: center; gap: 40px; max-width: 600px; margin: 20px auto 20px auto;">
-  <img src="_static/AEI.png" alt="AEI logo" style="height: 70px;">
-  <img src="_static/ERC.png" alt="ERC logo" style="height: 70px;">
-  <img src="_static/CELLEX.png" alt="Cellex logo" style="height: 70px;">
+  <img class="no-zoom" src="_static/AEI.png" alt="AEI logo" style="height: 70px;">
+  <img class="no-zoom" src="_static/ERC.png" alt="ERC logo" style="height: 70px;">
+  <img class="no-zoom" src="_static/CELLEX.png" alt="Cellex logo" style="height: 70px;">
 </div>
 </div>

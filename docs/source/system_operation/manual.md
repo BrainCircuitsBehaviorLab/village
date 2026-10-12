@@ -6,26 +6,44 @@ several example tasks that cover a range of system functionalities.
 
 ### Demo Tasks
 
-The following tasks are included. Note that some require additional hardware beyond the
-Raspberry Pi itself.
+The following tasks are included; each one links to its code and explanation. Note that
+some require additional hardware beyond the Raspberry Pi itself.
 
-**No external hardware required:**
-- A minimal task that performs no actions — useful as a blank template.
-- A task that plays sounds when the subject enters a defined area.
-- A task that presents stimuli on a touchscreen and waits for the subject's response.
+**No external controller required** (`BEHAVIOR_CONTROLLER` set to `OTHER`):
+- [raspberry_area1_sound.py](../examples/raspberry_area1_sound.md): entering box area 1
+  plays a sound and lights an LED of the LED strip.
+- [raspberry_touchscreen.py](../examples/raspberry_touchscreen.md): a menu of 6
+  rectangles on the touchscreen, each one showing a different stimulus when touched.
 
-**Requires Bpod with 3 behavioral ports:**
-- A task that delivers water whenever the subject pokes any of the three ports.
-- A task that plays a sound on a center poke and requires the subject to choose one of
-  the two side ports.
-- A task that presents a visual stimulus when the subject is detected within a circular
-  region around a defined point.
+**Requires a Bpod with 3 behavioral ports** (`BEHAVIOR_CONTROLLER` set to `BPOD`):
+- The six training stages, from
+  [bpod_1_habituation.py](../examples/bpod_1_habituation.md) to
+  [bpod_6_delay.py](../examples/bpod_6_delay.md): habituation, passive and active
+  learning, center-initiated trials, penalty for the wrong side, and a delay task whose
+  difficulty adapts to the animal.
+- [bpod_area2_sound.py](../examples/bpod_area2_sound.md): entering box area 2 plays a
+  sound and delivers water.
+- [bpod_touchscreen.py](../examples/bpod_touchscreen.md): touching the rectangle that
+  stays on screen gives water.
+- Demos and tools, not training tasks:
+  [bpod_example_global_timer.py](../examples/bpod_example_global_timer.md),
+  [bpod_example_outputs_and_events.py](../examples/bpod_example_outputs_and_events.md)
+  and [bpod_purge_ports.py](../examples/bpod_purge_ports.md) (to flush the water lines).
 
-**Requires Arduino:**
-- A task that switches an LED on and off using Arduino.
+**Requires an Arduino** (`BEHAVIOR_CONTROLLER` set to `OTHER`):
+- The same six training stages, run by an Arduino, from
+  [arduino_1_habituation.py](../examples/arduino_1_habituation.md) to
+  [arduino_6_delay.py](../examples/arduino_6_delay.md), each with its Arduino firmware.
 
-**Training protocol** (`training_protocol.py`):
-- The training protocol contains the following logic: TODO
+**Training protocol** ([training_protocol.py](../examples/training_protocol.md)):
+- Moves each subject through the six Bpod training stages, one after another, deciding
+  the next task after every session from the subject's performance. The other tasks are
+  run manually and don't change the subject's next task.
+
+See [Task Examples (Bpod)](../examples/tasks_bpod.md),
+[Task Examples (Arduino)](../examples/tasks_arduino.md) and
+[Task Examples (Raspberry Pi only)](../examples/tasks_raspberry.md) for a summary of
+each one.
 
 ---
 

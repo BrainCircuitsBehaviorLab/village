@@ -1,6 +1,6 @@
 ## Animal Detection & Tracking
 
-An automated animal detection algorithm operates continuously on both the corridor camera and the operant box camera. The algorithm processes each image by converting it to black-and-white pixels based on a set luminance threshold (pixels above the threshold are marked white, and those below are marked black). By counting the black pixels, the system determines whether a specific area is empty, contains one mouse, or holds multiple animals.
+An automated animal detection algorithm operates continuously on both the corridor camera and the operant box camera. The algorithm processes each image by converting it to black-and-white pixels based on a set luminance threshold (pixels above the threshold are marked white, and those below are marked black). By counting the pixels of the animal's color (black by default, see `DETECTION_COLOR` below), the system determines whether a specific area is empty, contains one animal, or holds multiple animals.
 
 In addition to this pixel-counting baseline, an advanced tracking algorithm runs by default on the operant box camera feed. This module tracks the animal’s absolute position in real time utilizing OpenCV’s contour detection (`findContours`) to compute the exact center of mass (centroid) of the subject.
 
@@ -10,7 +10,7 @@ This advanced tracking module can be toggled on or off via `SETTINGS` -> `CAMERA
 
 ```{admonition} Important
 :class: warning
-As mentioned previously, maintaining uniform and stable illumination—both visible and infrared, across both the corridor and the operant box environments—is absolutely critical for accurate computer vision tracking.
+As mentioned in [System Requirements](../overview/requirements.md), maintaining uniform and stable illumination—both visible and infrared, across both the corridor and the operant box environments—is absolutely critical for accurate computer vision tracking.
 ```
 
 ---
@@ -27,17 +27,17 @@ Toggling the `DETECTION_COLOR` parameter automatically synchronizes the pixel de
 
 To set up detection in the corridor, you must configure four distinct bounding boxes (represented by the green, magenta, blue, and red rectangles in the interface):
 
-```{image} /_static/detection_settings.png
+```{image} /_static/detection_settings.webp
 :width: 70%
 :align: center
 ```
 
 *   **`Area 1`:** Should cover the corridor section before the first door.
 *   **`Area 2`:** Should span from the first door up to the beginning of Area 3.
-*   **`Area 3`:** Starts where Area 2 ends and extends to the second door. It should be large enough to fully contain one mouse but not exceed that size significantly. This is the area where the RFID reader is located.
+*   **`Area 3`:** Starts where Area 2 ends and extends to the second door. It should be large enough to fully contain one animal but not exceed that size significantly. This is the area where the RFID reader is located.
 *   **`Area 4`:** Should cover the corridor section after the second door.
 
-```{image} /_static/areas.png
+```{image} /_static/areas.webp
 :width: 40%
 :align: center
 ```
@@ -60,13 +60,13 @@ The system classifies the occupancy of each area based on three key parameters:
 
 To calibrate the binarization threshold, allow an animal into the corridor and enable the `VIEW_DETECTION` overlay. This visual feedback highlights the binarized pixels in real time, letting you tune parameters accurately; remember to calibrate `thr_day` under daytime lighting and `thr_night` under nighttime/IR lighting, since they are independent values:
 
-![Detection](/_static/detection.png)
+![Detection](/_static/detection.webp)
 
 
 To calibrate the remaining two limits (`empty_limit` and `subject_limit`), review the following empirical example:
 
 
-![Mice_positionsi](/_static/mice_positions.png)
+![Mice positions](/_static/mice_positions.webp)
 
 In this scenario, a single animal typically occupies between 1,800 and 2,800 pixels depending on its posture, whereas two overlapping mice occupy between 2,600 and 3,600 pixels. Setting the `subject_limit` to approximately 2,500 pixels establishes a safe operational margin, though there may be cases where a single animal is not allowed to enter if it stretches fully.
 
@@ -81,9 +81,9 @@ Even with conservative thresholds, two animals can be misdetected as a single su
 
 ---
 
-<img src="/_static/entrances.png" class="zoomable" alt="entrances" />
+<img src="/_static/entrances.webp" class="zoomable" alt="entrances" />
 
-When an animal is detected by the RFID antenna, the system evaluates the real-time pixel status of all four regions. For the system to safely open the gate and permit entry into the behavioral arena, **Areas 1, 2, and 4 must be empty (below empty_limit), and Area 3 must contain only one mouse (below subject_limit)**.
+When an animal is detected by the RFID antenna, the system evaluates the real-time pixel status of all four regions. For the system to safely open the gate and permit entry into the behavioral arena, **Areas 1, 2, and 4 must be empty (below empty_limit), and Area 3 must contain only one animal (below subject_limit)**.
 
 These conditions must remain stable for a minimum hold-duration of **500 ms**, and no other RFID scans must have occurred within the previous 15 seconds. Both timing parameters can be customized under `SETTINGS` -> `CORRIDOR SETTINGS`.
 
@@ -93,7 +93,7 @@ These conditions must remain stable for a minimum hold-duration of **500 ms**, a
 
 ### Detection in the Operant Box
 
-```{image} /_static/detection_settings2.png
+```{image} /_static/detection_settings2.webp
 :width: 70%
 :align: center
 ```
@@ -103,7 +103,7 @@ The system supports the definition of up to four custom zones within the operant
 
 *   **`ALLOWED`:** A zone where the animal is expected to be. An alarm will trigger if the detected pixels exceed the `subject_limit`, indicating the possibility that two animals may have entered the operant box simultaneously by mistake.
 *   **`NOT_ALLOWED`:** A zone where the animal should not be. If pixel counts exceed the `empty_limit` within these regions, the system immediately sends an alarm via Telegram.
-*   **`TRIGGER`:** Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates $(x, y)$ entering a `TRIGGER` zone, it instantly fires a user-defined Python callback function. This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.
+*   **`TRIGGER`:** Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates $(x, y)$ entering a `TRIGGER` zone, it instantly fires a user-defined Python callback function (see [Camera Interaction](../protocols/camera.md)). This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.
 
 In the reference image above, the corridor and the touchscreen area are elevated and represent the zones where animals are expected to be. The blue and red zones, on the floor, should remain free of animals unless one has jumped into them.
 
@@ -119,7 +119,7 @@ Every time the detection algorithm processes a frame and extracts the animal's $
 
 Below the corridor and box detection areas, the `DETECTION SETTINGS` tab also provides a `CORRIDOR ADJUSTMENTS` panel (only shown when `USE_CORRIDOR` is **ON**) and a `BOX ADJUSTMENTS` panel, letting you tune each camera's image quality directly while watching the live preview, without having to go through `SETTINGS`:
 
-```{image} /_static/detection_settings3.png
+```{image} /_static/detection_settings3.webp
 :width: 40%
 :align: center
 ```
@@ -130,5 +130,4 @@ Below the corridor and box detection areas, the `DETECTION SETTINGS` tab also pr
 
 For the corridor camera, `exposure` is split into `exposure_day` and `exposure_night`, following the same `Corridor Cycle` logic as the area thresholds: the value that is not currently effective is shown greyed out, and switching between `DAY`/`NIGHT`/`AUTO` (in `AUTO`, at the `DAYTIME`/`NIGHTTIME` boundaries) applies the corresponding stored value automatically. The box camera, which has no automated day/night cycle, has a single `exposure` control instead.
 
-[TRIGGERS]: /protocols/triggers.md
 [GUI]: /system_operation/GUI.md

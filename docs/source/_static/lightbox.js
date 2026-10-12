@@ -54,8 +54,21 @@ document.addEventListener("DOMContentLoaded", function () {
   overlay.appendChild(img);
   document.body.appendChild(overlay);
 
+  // Every image in the page content can be enlarged, except those with the
+  // no-zoom class and those inside a real link (one that doesn't just point to
+  // the image file itself, which Sphinx adds to images with a set width).
+  document.querySelectorAll("article.yue img").forEach(function (el) {
+    if (el.classList.contains("no-zoom")) return;
+    var link = el.closest("a");
+    if (link && !link.classList.contains("image-reference")) return;
+    el.classList.add("zoomable");
+  });
+
   document.querySelectorAll("img.zoomable").forEach(function (el) {
-    el.addEventListener("click", function () {
+    el.addEventListener("click", function (e) {
+      // Images with a set width are wrapped by Sphinx in a link to the image
+      // file: open the lightbox instead of following it.
+      e.preventDefault();
       img.src = el.src;
       overlay.classList.add("lb-active");
     });

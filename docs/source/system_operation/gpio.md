@@ -32,21 +32,20 @@ which is usually easier to reach once the Pi is mounted in its enclosure.
 
 ```{admonition} Note
 :class: note
-`SETTINGS` uses **BCM numbering** for `GPIO_IN`/`GPIO_OUT` (the Broadcom
-channel number), not the physical pin position on the 40-pin header — see the
-pinout below.
+The pins are given in **BCM numbering** (the Broadcom channel number), not the
+physical pin position on the 40-pin header — see the pinout below.
 ```
 
-```{image} /_static/pinout.png
+```{image} /_static/pinout.webp
 :width: 100%
 :alt: Raspberry Pi GPIO pinout (BCM numbering)
 ```
 
-### Default pins
+### Pins
 
-By default `GPIO_IN` is BCM 26 and `GPIO_OUT` is BCM 27 (`SETTINGS` →
-`DEVICE ADDRESSES`). Both are free — neither the Main HAT nor the Audio HAT
-uses them — so they are safe to use as-is.
+`GPIO_IN` is BCM 26 and `GPIO_OUT` is BCM 27. They are fixed (they cannot be
+changed from `SETTINGS`), and both are free — neither the Main HAT nor the Audio HAT
+uses them.
 
 `GPIO_IN` (BCM 26) is already wired, at the PCB level, to the **Switch
 Connector** on the Box Board: it lets a mechanical switch drive the pin
@@ -70,5 +69,5 @@ gpio.set_off()  # drives GPIO_OUT LOW
 
 ---
 
-See [GPIO Trigger](../protocols/gpio_trigger.md) for how to react to the input
+See [GPIO Interaction](../protocols/gpio_trigger.md) for how to react to the input
 pin from your task code.

@@ -17,7 +17,7 @@ exposed through `time_utils`:
 - `time_utils.now()` — returns a `datetime.datetime` object (replaces `datetime.now()`).
 
 
-```{admonition} Important:
+```{admonition} Important
 :class: warning
 Do not use `time.time()` or `datetime.now()`. Always use `time_utils.now_timestamp()` and `time_utils.now()`.
 ```
@@ -66,7 +66,7 @@ This approach preserves the sub-millisecond precision of the external hardware
 controller while writing all data in master Unix Epoch time.
 
 
-```{admonition} Precision Limits & Clock Drift:
+```{admonition} Precision Limits & Clock Drift
 :class: warning
 This mechanism assumes the clock offset remains constant within the duration of a trial. However, physical hardware oscillators run at slightly different speeds, causing a small drift of roughly **~1 ms per minute** between the microcontroller and the Raspberry Pi.
 
@@ -124,7 +124,7 @@ link introduces additional latency:
 
 **Affected models:** This only applies to Bpods built on a **Teensy 3.6** (state machine hardware **r2.0 to r2.4**). Older models (Bpod 0.5 – 1.0) and newer Teensy 4.x boards (Bpod 2.5 / 2+) are not affected.
 
-**The fix:** To reduce this timeout to **1 ms**, you need to edit a Teensy 3.6 USB driver file and flash the modified firmware. Follow the step-by-step guide in [Speeding Up Bpod Communication][BPOD_FW].
+**The fix:** To reduce this timeout to **1 ms**, you need to edit a Teensy 3.6 USB driver file and flash the modified firmware. Follow the step-by-step guide in [Custom Bpod Firmware][BPOD_FW].
 ```
 
 #### Actions
@@ -152,7 +152,7 @@ a display command to the frame appearing on screen spans approximately one full 
 plus the remaining portion of the current frame: **mean = 24.9 ms, SD = 7.5 ms**.
 
 
-```{admonition} CPU Load and Latency:
+```{admonition} CPU Load and Latency
 :class: tip
 Communication and action latencies are both sensitive to CPU load. The platform
 implements several measures to keep CPU usage low during sessions:
@@ -196,7 +196,7 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).
 | Controller | 0 ± 0 | 11.0 ± 0.4 | 8.4 ± 0.9 | 30.1 ± 7.5 |
 
 
-```{admonition} Note on Latency Measurements:
+```{admonition} Note on Latency Measurements
 :class: tip
 All latency values reported here were obtained experimentally using an oscilloscope. Visual stimulus latencies were measured with a photodiode placed on the display, while auditory stimulus latencies were measured using a direct electrical connection to the audio signal. These measurements correspond to the default system configuration described above. Any modifications to camera settings, display resolution, or other relevant hardware or software parameters may affect latency and should therefore be validated with new measurements. For experiments requiring precise temporal control, we strongly recommend measuring latencies directly within the specific experimental setup rather than relying solely on the reference values provided here.
 ```

@@ -56,10 +56,11 @@ systemName/
 ├── events.csv
 ├── subjects.csv
 ├── sessions_summary.csv
-├── water_calibration.csv
-├── sound_calibration.csv
 ├── temperatures.csv
-└── deleted_sessions.csv
+├── active_history.csv
+├── deleted_sessions.csv
+├── water_calibration.csv
+└── sound_calibration.csv
 ```
 
 #### Core Data Files
@@ -91,10 +92,14 @@ systemName/
 - **`temperatures.csv`**: Hourly temperature and humidity log, recorded automatically.
   Columns: `date`, `temperature`, `humidity`.
 
-- **`calibration_files.csv`**: Registry of saved calibration files. Different calibration
-  types can be created and customized (e.g. `sound_calibration`, `camera_calibration`,
-  `water_calibration`), and their stored values can be retrieved and used within
-  tasks.
+- **`active_history.csv`**: Log of every change to a subject's `active` schedule
+  (ON/OFF/hours), so that past activity plots use the schedule each subject actually had
+  at each moment.
+
+- **Calibration files** (`water_calibration.csv`, `sound_calibration.csv`, and one per
+  custom calibration, e.g. `led_calibration.csv`): every measurement saved by each
+  calibration. Their values can be retrieved and used within tasks (see
+  [Custom Calibrations](../advanced_customization/calibrations.md)).
 
 - **`deleted_sessions.csv`**: List of manually deleted sessions.
 
@@ -120,6 +125,10 @@ systemName/
 
 - **Storage path:** `data/videos/{subject}/`
 - **Filename format:** `{subject}_{task}_{timestamp}`
+
+The corridor camera records continuously, starting a new file every
+`CORRIDOR_VIDEO_DURATION` seconds (30 minutes by default): these videos are saved directly in `data/videos/`, named
+`CORRIDOR_{timestamp}`, with the same two files described below.
 
 Each recording session produces two files:
 
@@ -228,8 +237,8 @@ with the following fixed columns: `session`, `date`, `trial`, `subject`, `task`,
 `system_name`, `run_mode`.
 
 ```{admonition} run_mode
-The `run_mode` field is set to `manual` if the session was launched manually from the
-GUI, or `auto` if it was triggered automatically upon detecting an animal in the corridor.
+The `run_mode` field is set to `Manual` if the session was launched manually from the
+GUI, or `Auto` if it was triggered automatically upon detecting an animal in the corridor.
 ```
 
 #### 3. Session Settings Metadata (`{filename}.json`)

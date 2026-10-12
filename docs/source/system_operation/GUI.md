@@ -14,14 +14,14 @@ Once the GUI is active, a menu will appear at the top with the following options
 ---
 
 ### MAIN
-![Main Training village screen](/_static/main_screen.png)
+![Main Training village screen](/_static/main_screen.webp)
 
-The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If there is no user activity for 5 minutes, the system automatically returns to this screen.
+The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If there is no user activity for 5 minutes (`SCREENSAVE_TIME` in `SETTINGS` → `ADVANCED SETTINGS`), the system automatically returns to this screen.
 
 ---
 
 ### MONITOR
-![Monitor Training village screen](/_static/monitor_screen.png)
+![Monitor Training village screen](/_static/monitor_screen.webp)
 
 The `MONITOR` screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the operant box. Here, you can view images captured by the two system cameras: one positioned above the corridor and another focused inside the operant box.
 
@@ -43,7 +43,7 @@ Depending on your active configuration, several control tabs are available at th
     *If a motor stops responding to `OPEN`/`CLOSE` after being physically disconnected and reconnected, restart Village rather than assuming it's broken — see [Troubleshooting][TROUBLE].*
 
 *   **`FUNCTIONS`:** Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
-    for writing and deploying these scripts can be found in the [Protocol Creation][CREATE] section.
+    for writing and deploying these functions can be found in the [Direct Sound & Video Functions][FUNCTIONS] section.
 
 *   **`VIRTUAL MOUSE`:** Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness.
     *   **Bpod Integration:** Simulate a nose-poke in any behavior port with a single click.
@@ -62,14 +62,15 @@ A secondary group of tabs is located at the bottom of the screen to monitor syst
 
 
 ### SUBJECTS
-![Tasks Training Village screen](/_static/subjects_screen.png)
-In this section you can create new subjects. Check the [Subject Management Section][SUBJECT].
+![Subjects Training Village screen](/_static/subjects_screen.webp)
+
+In this section you can create new subjects and edit their settings. Check the [Subject Management Section][SUBJECT].
 
 ---
 
 
 ### TASKS
-![Tasks Training Village screen](/_static/tasks_screen.png)
+![Tasks Training Village screen](/_static/tasks_screen.webp)
 
 From this screen, tasks can be launched manually at any time.
 
@@ -83,7 +84,7 @@ In addition to these settings, a list of all variables defined for this specific
 Next to the `RUN TASK` button, which starts the task, the `Subject` selector opens a list of all available subjects, as well as the option "None." Selecting "None" runs the task without saving any data.
 
 ### DATA
-![Main Training village screen](/_static/data_screen.png)
+![Data Training village screen](/_static/data_screen.webp)
 
 On this screen, saved data is displayed. The following tables are accessible:
 
@@ -97,7 +98,7 @@ On this screen, saved data is displayed. The following tables are accessible:
 
 *   **`SESSION`:** Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking `PLOT` opens a user-configurable, real-time graphical chart of the session.
 
-*   **`CALIBRATION`:** Contains parameter data regarding all currently active system calibrations.
+*   **Calibrations:** One table for each active calibration that stores data (e.g. `WATER CALIBRATION`, `SOUND CALIBRATION`, and any custom calibration), with all its saved measurements.
 
 
 A more detailed description of these tables, including their exact database schemas and storage paths, can be found in the [Saved Data][DATA] section.
@@ -105,13 +106,13 @@ A more detailed description of these tables, including their exact database sche
 ---
 
 ### CALIBRATION
-![Calibration Training village screen](/_static/calibration_screen.png)
+![Calibration Training village screen](/_static/calibration_screen.webp)
 
 This screen provides a dedicated panel for each calibration tool available on the system. A left-side menu lists every calibration relevant to your current hardware configuration; selecting an entry opens its panel on the right.
 
 Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the [Custom Calibrations][CALIBRATIONS] section for details.
 
-*   **`WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Only available when the Bpod is the configured behavior controller. See [Water Calibration](/calibrations/water.md).
+*   **`WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Always available: with Bpod it works out of the box; with any other controller, it needs a water calibration task written for that controller. See [Water Calibration](/calibrations/water.md).
 
 *   **`SOUND_CALIBRATION`:** Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when `USE_SOUNDCARD` is **ON**. See [Sound Calibration](/calibrations/sound.md).
 
@@ -124,7 +125,7 @@ Besides the calibration tools installed by default, you can create your own and 
 ---
 
 ### SETTINGS
-![Main Training village screen](/_static/settings_screen.png)
+![Settings Training village screen](/_static/settings_screen.webp)
 
 This section displays a comprehensive list of all modifiable system settings, organized into distinct categories for streamlined configuration. You can hover over any individual parameter item to view a tooltip with more detailed information.
 
@@ -133,10 +134,10 @@ The most critical parameters from this list will be discussed and modified step-
 
 
 [TROUBLE]: /troubleshooting/troubleshooting.md
-[STATES]: /system_operation/system.md
 [DETECTION]: /system_operation/detection.md
 [SUBJECT]: /system_operation/subject.md
 [MANUAL]: /system_operation/manual.md
 [CREATE]: /protocols/creating.md
 [DATA]: /system_operation/data.md
 [CALIBRATIONS]: /advanced_customization/calibrations.md
+[FUNCTIONS]: /protocols/functions.md
