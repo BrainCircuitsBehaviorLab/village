@@ -3,10 +3,11 @@
 ### Simple Overview
 Integrating Telegram into the Training Village (TV) system allows you to receive automated, real-time safety alarms and query the live status of your system directly from your mobile phone.
 
-To set this up, we will perform three simple phases:
+To set this up, we will perform four simple steps:
 1. Create a dedicated Telegram bot using the official account (**@BotFather**) to obtain an access token.
-2. Set up a laboratory group chat containing the team and the bot, then use an identification bot to retrieve the unique **Group Chat ID**.
-3. Save these credentials locally inside your Training Village configuration file on the Raspberry Pi.
+2. Set up a laboratory group chat containing the team and the bot.
+3. Use an identification bot to retrieve the unique **Group Chat ID**.
+4. Save these credentials in the Training Village settings on the Raspberry Pi.
 
 ---
 
@@ -18,7 +19,7 @@ To set this up, we will perform three simple phases:
 2. In the search bar, type **@BotFather** and select it.
 
 ```{admonition} Important
-:class: tip
+:class: important
 Ensure you choose the official account featuring the **blue verification checkmark** to avoid fake clone bots.
 ```
 3. Send the command `/newbot`.
@@ -49,14 +50,12 @@ Anyone added to this group will receive automated alarms and can send text comma
 
 1. Open a terminal on your Raspberry Pi and launch the application interface by typing `village`.
 2. Within the Training Village menu, navigate to **SETTINGS** and select the **TELEGRAM SETTINGS** subsection. Update the fields with your newly acquired credentials:
-
-TELEGRAM_TOKEN
-
-TELEGRAM_CHAT
+   - `TELEGRAM_TOKEN`: the token from Step 1.
+   - `TELEGRAM_CHAT`: the Group Chat ID from Step 3.
 
 ```{admonition} Security Note
 :class: warning
-These configuration settings are saved strictly on your local Raspberry Pi storage. Your credentials never leave your hardware and are never uploaded or shared externally.
+These configuration settings are saved only on your local Raspberry Pi storage. The token is only sent to Telegram, to connect the bot; it is never uploaded or shared anywhere else.
 ```
 
 
@@ -66,7 +65,7 @@ These configuration settings are saved strictly on your local Raspberry Pi stora
 ### Managing Alarms & Commands
 Once your bot is fully linked to the system, you can send `/help` to the bot at any time to get a full list of the available commands along with a short description of what each one does.
 
-For more detail, refer to the [Alarm system overview](https://braincircuitsbehaviorlab.github.io/village/troubleshooting/alarm.html) section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.
+For more detail, refer to the [Alarm System Overview][ALARM] section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.
 
 To verify that everything is working correctly, go to your Telegram group chat and send one of the following commands (ensuring the TV system is powered on and running). You should receive an immediate response from the bot:
 - `/cam`

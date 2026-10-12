@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -562,11 +562,12 @@ data-aria-dark="Switch to auto color mode">
 <section id="simple-overview">
 <h2>Simple Overview</h2>
 <p>Integrating Telegram into the Training Village (TV) system allows you to receive automated, real-time safety alarms and query the live status of your system directly from your mobile phone.</p>
-<p>To set this up, we will perform three simple phases:</p>
+<p>To set this up, we will perform four simple steps:</p>
 <ol class="arabic simple">
 <li><p>Create a dedicated Telegram bot using the official account (<strong>&#64;BotFather</strong>) to obtain an access token.</p></li>
-<li><p>Set up a laboratory group chat containing the team and the bot, then use an identification bot to retrieve the unique <strong>Group Chat ID</strong>.</p></li>
-<li><p>Save these credentials locally inside your Training Village configuration file on the Raspberry Pi.</p></li>
+<li><p>Set up a laboratory group chat containing the team and the bot.</p></li>
+<li><p>Use an identification bot to retrieve the unique <strong>Group Chat ID</strong>.</p></li>
+<li><p>Save these credentials in the Training Village settings on the Raspberry Pi.</p></li>
 </ol>
 </section>
 <hr class="docutils" />
@@ -578,7 +579,7 @@ data-aria-dark="Switch to auto color mode">
 <li><p>Open the <strong>Telegram</strong> app on your phone or computer.</p></li>
 <li><p>In the search bar, type <strong>&#64;BotFather</strong> and select it.</p></li>
 </ol>
-<div class="tip admonition">
+<div class="important admonition">
 <p class="admonition-title">Important</p>
 <p>Ensure you choose the official account featuring the <strong>blue verification checkmark</strong> to avoid fake clone bots.</p>
 </div>
@@ -617,13 +618,16 @@ data-aria-dark="Switch to auto color mode">
 <h3>Step 4: Update Your Village Settings</h3>
 <ol class="arabic simple">
 <li><p>Open a terminal on your Raspberry Pi and launch the application interface by typing <code class="docutils literal notranslate"><span class="pre">village</span></code>.</p></li>
-<li><p>Within the Training Village menu, navigate to <strong>SETTINGS</strong> and select the <strong>TELEGRAM SETTINGS</strong> subsection. Update the fields with your newly acquired credentials:</p></li>
+<li><p>Within the Training Village menu, navigate to <strong>SETTINGS</strong> and select the <strong>TELEGRAM SETTINGS</strong> subsection. Update the fields with your newly acquired credentials:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TELEGRAM_TOKEN</span></code>: the token from Step 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TELEGRAM_CHAT</span></code>: the Group Chat ID from Step 3.</p></li>
+</ul>
+</li>
 </ol>
-<p>TELEGRAM_TOKEN</p>
-<p>TELEGRAM_CHAT</p>
 <div class="warning admonition">
 <p class="admonition-title">Security Note</p>
-<p>These configuration settings are saved strictly on your local Raspberry Pi storage. Your credentials never leave your hardware and are never uploaded or shared externally.</p>
+<p>These configuration settings are saved only on your local Raspberry Pi storage. The token is only sent to Telegram, to connect the bot; it is never uploaded or shared anywhere else.</p>
 </div>
 </section>
 </section>
@@ -631,7 +635,7 @@ data-aria-dark="Switch to auto color mode">
 <section id="managing-alarms-commands">
 <h2>Managing Alarms &amp; Commands</h2>
 <p>Once your bot is fully linked to the system, you can send <code class="docutils literal notranslate"><span class="pre">/help</span></code> to the bot at any time to get a full list of the available commands along with a short description of what each one does.</p>
-<p>For more detail, refer to the <a class="reference external" href="https://braincircuitsbehaviorlab.github.io/village/troubleshooting/alarm.html">Alarm system overview</a> section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.</p>
+<p>For more detail, refer to the <a class="reference internal" href="../troubleshooting/alarm.html"><span class="std std-doc">Alarm System Overview</span></a> section of the documentation. There you will find a complete reference list of interactive commands you can text to the bot to check system health, alongside a detailed breakdown of the automated alarm types the Training Village can trigger.</p>
 <p>To verify that everything is working correctly, go to your Telegram group chat and send one of the following commands (ensuring the TV system is powered on and running). You should receive an immediate response from the bot:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">/cam</span></code></p></li>
@@ -678,7 +682,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

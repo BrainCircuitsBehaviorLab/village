@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -483,7 +483,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#corridor-board">Corridor Board</a></li>
 <li><a class="reference internal" href="#corridor-parts">Corridor Parts</a></li>
 <li><a class="reference internal" href="#acrylic-cover">Acrylic Cover</a></li>
-<li><a class="reference internal" href="#homecages">Homecages</a></li>
+<li><a class="reference internal" href="#home-cages">Home Cages</a></li>
 <li><a class="reference internal" href="#raspberry-pi-assembly">Raspberry Pi Assembly</a></li>
 <li><a class="reference internal" href="#corridor-camera">Corridor Camera</a></li>
 </ul>
@@ -561,73 +561,77 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="assembly-guide">
 <h1>Assembly Guide</h1>
-<p>This is a guide for assembling the standard 2-homecage version (without Eco-HAB).
+<p>This is a guide for assembling the standard 2-home-cage version (without Eco-HAB).
 For the assembly of the system, you will only need a few basic tools: Allen key,
-screwdriver, scissors, double-sided tape, and glue.</p>
+screwdriver, scissors, double-sided tape, glue, a soldering iron (for the RFID
+connector), and a 3 cm hole saw (for the home cages). Click any picture to enlarge it.</p>
+<p>It covers the home cages, the corridor and the Raspberry Pi. The operant box (and its
+behavioral controller, e.g. Bpod) is not covered here. Once assembled, the boards are
+connected to the Main HAT as explained in <a class="reference internal" href="../preparation/initial.html"><span class="std std-doc">Initial Setup</span></a>.</p>
 <section id="frame-construction">
 <h2>Frame Construction</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Components</strong>: Parts required for the standard 2-homecage version (without Eco-HAB). The frame is built using 20×20 V-slot aluminum profiles.</p>
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components</strong>: Parts required for the standard 2-home-cage version (without Eco-HAB). The frame is built using 20×20 V-slot aluminum profiles.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/frame1.png"><img alt="../_images/frame1.png" src="../_images/frame1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/frame1.webp"><img alt="../_images/frame1.webp" class="zoomable" src="../_images/frame1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Connections</strong>: Pieces are connected using corner couplings and set screws.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/frame2.png"><img alt="../_images/frame2.png" src="../_images/frame2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/frame2.webp"><img alt="../_images/frame2.webp" class="zoomable" src="../_images/frame2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Base</strong>: Build the base first.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/frame3.png"><img alt="../_images/frame3.png" src="../_images/frame3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/frame3.webp"><img alt="../_images/frame3.webp" class="zoomable" src="../_images/frame3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Vertical Pieces</strong>: Add the vertical pieces.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/frame4.png"><img alt="../_images/frame4.png" src="../_images/frame4.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/frame4.webp"><img alt="../_images/frame4.webp" class="zoomable" src="../_images/frame4.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Camera Mount</strong>: Slide the 3D-printed camera mount base onto an aluminum profile.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/frame5.png"><img alt="../_images/frame5.png" src="../_images/frame5.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/frame5.webp"><img alt="../_images/frame5.webp" class="zoomable" src="../_images/frame5.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Enclosure</strong>: Place the 3D-printed Raspberry Pi enclosure and complete the aluminum structure.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/frame6.png"><img alt="../_images/frame6.png" src="../_images/frame6.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/frame6.webp"><img alt="../_images/frame6.webp" class="zoomable" src="../_images/frame6.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -637,60 +641,60 @@ screwdriver, scissors, double-sided tape, and glue.</p>
 <section id="base-assembly">
 <h2>Base Assembly</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Components</strong>: 3D-printed parts and a 3 mm matte white acrylic base. The matte finish is important to avoid reflections.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/base1.png"><img alt="../_images/base1.png" src="../_images/base1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/base1.webp"><img alt="../_images/base1.webp" class="zoomable" src="../_images/base1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>RFID Antenna Slot</strong>: This piece includes a slot designed to hold an external antenna
 between its two parts. The RFID module used in this build has a built-in antenna, so
 this slot is not needed in the standard setup. However, if you use a different RFID
 module — or an Eco-HAB to manage multiple antennas — you can insert an external
 antenna here.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/base2.png"><img alt="../_images/base2.png" src="../_images/base2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/base2.webp"><img alt="../_images/base2.webp" class="zoomable" src="../_images/base2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Bonding</strong>: Glue the two pieces together.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/base3.png"><img alt="../_images/base3.png" src="../_images/base3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/base3.webp"><img alt="../_images/base3.webp" class="zoomable" src="../_images/base3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Parts Mounting</strong>: Secure the 3D-printed parts onto the acrylic base using M4 screws, tightening from below.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/base4.png"><img alt="../_images/base4.png" src="../_images/base4.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/base4.webp"><img alt="../_images/base4.webp" class="zoomable" src="../_images/base4.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Frame Installation</strong>: Place the assembled base onto the aluminum frame structure. You can now slide the camera mount along the profile to align it roughly above the corridor pieces, so the camera records the corridor from directly overhead. Once in position, secure the camera mount with an M4 screw.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/base5.png"><img alt="../_images/base5.png" src="../_images/base5.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/base5.webp"><img alt="../_images/base5.webp" class="zoomable" src="../_images/base5.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -700,67 +704,67 @@ antenna here.</p>
 <section id="rfid-load-cell">
 <h2>RFID &amp; Load Cell</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Components</strong>: Scale module (load cell with 3D-printed part) and RFID module.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/rfid1.png"><img alt="../_images/rfid1.png" src="../_images/rfid1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/rfid1.webp"><img alt="../_images/rfid1.webp" class="zoomable" src="../_images/rfid1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Load Cell Assembly</strong>: Attach the 3D-printed part on top of the load cell using M4 screws.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/rfid2.png"><img alt="../_images/rfid2.png" src="../_images/rfid2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/rfid2.webp"><img alt="../_images/rfid2.webp" class="zoomable" src="../_images/rfid2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Scale Positioning</strong>: Mount the scale onto the base using M5 screws. It must sit straight and centered, without touching any of the surrounding parts.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/rfid3.png"><img alt="../_images/rfid3.png" src="../_images/rfid3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/rfid3.webp"><img alt="../_images/rfid3.webp" class="zoomable" src="../_images/rfid3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>RFID Wiring</strong>: This build uses the ID-20LA RFID reader (125 kHz). Solder a 5-pin JST-PH connector following the pin order shown in the diagram. See the <a class="reference external" href="https://www.id-innovations.com/ID-3%2612%2620LA(en)%20V2.01%2020200526.pdf">specifications</a> for the full pinout.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/rfid4.png"><img alt="../_images/rfid4.png" src="../_images/rfid4.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/rfid4.webp"><img alt="../_images/rfid4.webp" class="zoomable" src="../_images/rfid4.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>RFID Installation</strong>: Slide the RFID module into its designated slot. Secure it with a small piece of tape to prevent movement.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/rfid5.png"><img alt="../_images/rfid5.png" src="../_images/rfid5.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/rfid5.webp"><img alt="../_images/rfid5.webp" class="zoomable" src="../_images/rfid5.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Cable Management</strong>: Attach the two plastic cable guides to the base using double-sided tape, as shown in the image. This completes the assembly with both sensors in place.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/rfid6.png"><img alt="../_images/rfid6.png" src="../_images/rfid6.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/rfid6.webp"><img alt="../_images/rfid6.webp" class="zoomable" src="../_images/rfid6.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -770,45 +774,45 @@ antenna here.</p>
 <section id="servo-motors">
 <h2>Servo Motors</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Components</strong>: Servo motors and doors.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/servos1.png"><img alt="../_images/servos1.png" src="../_images/servos1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/servos1.webp"><img alt="../_images/servos1.webp" class="zoomable" src="../_images/servos1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Horn Bonding</strong>: Glue the servo horns onto the servos.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/servos2.png"><img alt="../_images/servos2.png" src="../_images/servos2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/servos2.webp"><img alt="../_images/servos2.webp" class="zoomable" src="../_images/servos2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Servo Mounting</strong>: Secure each servo in position using at least 2 M4 screws.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/servos3.png"><img alt="../_images/servos3.png" src="../_images/servos3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/servos3.webp"><img alt="../_images/servos3.webp" class="zoomable" src="../_images/servos3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Door Attachment</strong>: Connect the doors to the servo motors.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/servos4.png"><img alt="../_images/servos4.png" src="../_images/servos4.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/servos4.webp"><img alt="../_images/servos4.webp" class="zoomable" src="../_images/servos4.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -818,56 +822,56 @@ antenna here.</p>
 <section id="illumination">
 <h2>Illumination</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Components</strong>: White LED strip and IR LEDs. In both cases, the connection requires only two bare wires (ground and power), with no connector.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/leds1.png"><img alt="../_images/leds1.png" src="../_images/leds1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/leds1.webp"><img alt="../_images/leds1.webp" class="zoomable" src="../_images/leds1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>LED Strip Placement</strong>: Mount the LED strip on the frame, starting from the vertical profile furthest from the corridor and continuing along the horizontal ceiling profile. Leave approximately 20 cm from the floor to the start of the strip so that the light always stays above the animals’ heads. Along the horizontal profile, extend the strip to approximately the position of the camera mount (which should sit roughly above the corridor pieces).</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/leds2.png"><img alt="../_images/leds2.png" src="../_images/leds2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/leds2.webp"><img alt="../_images/leds2.webp" class="zoomable" src="../_images/leds2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Diffusers</strong>: Place the plastic diffusers over the LED strip using adhesive tape.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/leds3.png"><img alt="../_images/leds3.png" src="../_images/leds3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/leds3.webp"><img alt="../_images/leds3.webp" class="zoomable" src="../_images/leds3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>IR LED Assembly</strong>: Insert the IR LEDs into their plastic holders — they snap into place.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/leds4.png"><img alt="../_images/leds4.png" src="../_images/leds4.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/leds4.webp"><img alt="../_images/leds4.webp" class="zoomable" src="../_images/leds4.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>IR LED Mounting</strong>: Attach the plastic holders with the IR LEDs to the vertical profile opposite the white LED strip — the vertical aluminum profile closest to the corridor. The two 3D-printed mounting parts allow for some adjustment, enabling the IR LEDs to be oriented for optimal illumination of the corridor while minimizing reflections.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/leds5.png"><img alt="../_images/leds5.png" src="../_images/leds5.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/leds5.webp"><img alt="../_images/leds5.webp" class="zoomable" src="../_images/leds5.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -877,19 +881,19 @@ antenna here.</p>
 <section id="corridor-board">
 <h2>Corridor Board</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Components</strong>: Corridor Board and an Ethernet cable.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/corridor_connections1.png"><img alt="../_images/corridor_connections1.png" src="../_images/corridor_connections1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/corridor_connections1.webp"><img alt="../_images/corridor_connections1.webp" class="zoomable" src="../_images/corridor_connections1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Peripheral Connections</strong>: Mount the Corridor Board in its fixed position on the physical
 corridor frame. Connect its local peripherals: servo motors, RFID reader, weighing scale
 (load cell), white LED strips, and IR illumination LEDs. Always verify wiring polarities
@@ -897,19 +901,19 @@ against the board’s silk-screen labels before insertion. Finally, connect an E
 (data) and a DC cable with barrel jack connectors on both ends (5 V power) to this board.
 The other ends will be connected to the main Raspberry Pi HAT board in a later step.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/corridor_connections2.png"><img alt="../_images/corridor_connections2.png" src="../_images/corridor_connections2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/corridor_connections2.webp"><img alt="../_images/corridor_connections2.webp" class="zoomable" src="../_images/corridor_connections2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Enclosure Closure</strong>: Once all connections are made, place the cover to close the enclosure housing the Corridor Board, and cover the cable guides as well.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/corridor_connections3.png"><img alt="../_images/corridor_connections3.png" src="../_images/corridor_connections3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/corridor_connections3.webp"><img alt="../_images/corridor_connections3.webp" class="zoomable" src="../_images/corridor_connections3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -919,34 +923,34 @@ The other ends will be connected to the main Raspberry Pi HAT board in a later s
 <section id="corridor-parts">
 <h2>Corridor Parts</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Components</strong>: The corridor is made up of 5 3D-printed parts.</p>
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components</strong>: The corridor is made up of five 3D-printed parts.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/corridor_parts1.png"><img alt="../_images/corridor_parts1.png" src="../_images/corridor_parts1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/corridor_parts1.webp"><img alt="../_images/corridor_parts1.webp" class="zoomable" src="../_images/corridor_parts1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Scale Cover</strong>: Start by fitting the piece that covers the scale — it simply clicks onto the base.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/corridor_parts2.png"><img alt="../_images/corridor_parts2.png" src="../_images/corridor_parts2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/corridor_parts2.webp"><img alt="../_images/corridor_parts2.webp" class="zoomable" src="../_images/corridor_parts2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Remaining Parts</strong>: Place the remaining corridor pieces onto their bases.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/corridor_parts3.png"><img alt="../_images/corridor_parts3.png" src="../_images/corridor_parts3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/corridor_parts3.webp"><img alt="../_images/corridor_parts3.webp" class="zoomable" src="../_images/corridor_parts3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -956,82 +960,82 @@ The other ends will be connected to the main Raspberry Pi HAT board in a later s
 <section id="acrylic-cover">
 <h2>Acrylic Cover</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Components</strong>: A transparent acrylic cover and 4 transparent acrylic stoppers.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/cover1.png"><img alt="../_images/cover1.png" src="../_images/cover1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/cover1.webp"><img alt="../_images/cover1.webp" class="zoomable" src="../_images/cover1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Cover Installation</strong>: Slide the cover in from one side until it clicks into position.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/cover2.png"><img alt="../_images/cover2.png" src="../_images/cover2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/cover2.webp"><img alt="../_images/cover2.webp" class="zoomable" src="../_images/cover2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Stoppers</strong>: Place all 4 stoppers in their designated positions on top of the cover. This is important — they prevent an animal from pushing the cover up and lifting it off.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/cover3.png"><img alt="../_images/cover3.png" src="../_images/cover3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/cover3.webp"><img alt="../_images/cover3.webp" class="zoomable" src="../_images/cover3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 </section>
 <hr class="docutils" />
-<section id="homecages">
-<h2>Homecages</h2>
+<section id="home-cages">
+<h2>Home Cages</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Components &amp; Drilling</strong>: 2 homecages, an acrylic tube, and 5 3D-printed connectors. Use a hole saw to drill 3 cm diameter circular openings in the positions shown. Both homecages need a centered hole on one side to connect them to each other. The homecage that connects to the corridor needs an additional hole on another side, offset slightly so that the assembly sits correctly on the base when connected.</p>
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Components &amp; Drilling</strong>: Two home cages, an acrylic tube, and five 3D-printed connectors. Use a hole saw to drill 3 cm diameter circular openings in the positions shown. Both home cages need a centered hole on one side to connect them to each other. The home cage that connects to the corridor needs an additional hole on another side, offset slightly so that the assembly sits correctly on the base when connected.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/homecages1.png"><img alt="../_images/homecages1.png" src="../_images/homecages1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/homecages1.webp"><img alt="../_images/homecages1.webp" class="zoomable" src="../_images/homecages1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Connector Bonding</strong>: Glue the 3D-printed connectors onto the homecages.</p>
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Connector Bonding</strong>: Glue the 3D-printed connectors onto the home cages.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/homecages2.png"><img alt="../_images/homecages2.png" src="../_images/homecages2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/homecages2.webp"><img alt="../_images/homecages2.webp" class="zoomable" src="../_images/homecages2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Tube Assembly</strong>: Attach the pieces that support the acrylic tube to the homecage connectors, then insert the tube between them.</p>
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Tube Assembly</strong>: Attach the pieces that support the acrylic tube to the home cage connectors, then insert the tube between them.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/homecages3.png"><img alt="../_images/homecages3.png" src="../_images/homecages3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/homecages3.webp"><img alt="../_images/homecages3.webp" class="zoomable" src="../_images/homecages3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Final Placement</strong>: Place the homecages onto the base and connect them to the corridor.</p>
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Final Placement</strong>: Place the home cages onto the base and connect them to the corridor.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/homecages4.png"><img alt="../_images/homecages4.png" src="../_images/homecages4.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/homecages4.webp"><img alt="../_images/homecages4.webp" class="zoomable" src="../_images/homecages4.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -1042,83 +1046,83 @@ The other ends will be connected to the main Raspberry Pi HAT board in a later s
 <h2>Raspberry Pi Assembly</h2>
 <div class="warning admonition">
 <p class="admonition-title">CRITICAL POWER &amp; WIRING WARNING</p>
-<p>Never hot-plug peripherals: ensure the main power supply is completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.</p>
+<p>Never hot-plug peripherals: ensure both power supplies (the Raspberry Pi power supply and the 5V power supply) are completely disconnected before plugging or unplugging any HAT, board, servo, or sensor.</p>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Components</strong>: Boards, cameras and accessories required for the Raspberry Pi assembly.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/boards0.png"><img alt="../_images/boards0.png" src="../_images/boards0.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/boards0.webp"><img alt="../_images/boards0.webp" class="zoomable" src="../_images/boards0.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Storage</strong>: Insert the pre-loaded microSD card into the Raspberry Pi 5 slot.</p>
 <p><strong>Cooling</strong>: Securely mount the <a class="reference external" href="https://pip-assets.raspberrypi.com/categories/993-raspberry-pi-active-cooler/documents/RP-008188-DS-2-raspberry-pi-active-cooler-product-brief.pdf">official Active Cooler</a> onto the processor.</p>
-<p><strong>Camera Integration</strong>: Connect the two camera ribbon cables to the Pi. Keep cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable; use an extension with a dedicated FFC adapter if needed for the box camera. See the <a class="reference external" href="https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera">official camera installation guide</a>.</p>
+<p><strong>Camera Integration</strong>: Connect the two camera ribbon cables to the Pi. Keep cables as short as possible. The corridor camera uses a standard 50 cm ribbon cable; if the box camera is farther away, use a camera cable extension (an FFC cable with an FFC adapter). See the <a class="reference external" href="https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera">official camera installation guide</a>.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/boards1.png"><img alt="../_images/boards1.png" src="../_images/boards1.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/boards1.webp"><img alt="../_images/boards1.webp" class="zoomable" src="../_images/boards1.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Enclosure Mounting</strong>: Place the Raspberry Pi into its dedicated 3D-printed enclosure (Raspberry Box) and secure it with screws.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/boards2.png"><img alt="../_images/boards2.png" src="../_images/boards2.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/boards2.webp"><img alt="../_images/boards2.webp" class="zoomable" src="../_images/boards2.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Main HAT Preparation</strong>: Insert two 5A fuses into their designated slots on the Main HAT. Install a GPIO header extension/spacer alongside plastic standoffs to ensure proper vertical clearance and prevent short circuits.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/boards3.png"><img alt="../_images/boards3.png" src="../_images/boards3.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/boards3.webp"><img alt="../_images/boards3.webp" class="zoomable" src="../_images/boards3.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Main HAT Mounting</strong>: Align and carefully press the Main HAT down onto the Raspberry Pi’s 40-pin GPIO header.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/boards4.png"><img alt="../_images/boards4.png" src="../_images/boards4.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/boards4.webp"><img alt="../_images/boards4.webp" class="zoomable" src="../_images/boards4.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
-<p><strong>Audio HAT Preparation</strong>: Install another GPIO header extension/spacer and plastic standoffs onto the Audio HAT to stack it safely above the previous layer.</p>
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
+<p><strong>Audio HAT Preparation</strong> <em>(optional, only if your tasks use sound — otherwise skip this step and the next one)</em>: Install a GPIO header extension/spacer and plastic standoffs onto the Audio HAT (Raspberry Pi DAC Pro) to stack it safely above the previous layer.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/boards5.png"><img alt="../_images/boards5.png" src="../_images/boards5.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/boards5.webp"><img alt="../_images/boards5.webp" class="zoomable" src="../_images/boards5.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Audio HAT Mounting</strong>: Press the Audio HAT firmly on top of the Main HAT, completing the primary hardware stack.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/boards6.png"><img alt="../_images/boards6.png" src="../_images/boards6.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/boards6.webp"><img alt="../_images/boards6.webp" class="zoomable" src="../_images/boards6.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -1128,12 +1132,12 @@ The other ends will be connected to the main Raspberry Pi HAT board in a later s
 <section id="corridor-camera">
 <h2>Corridor Camera</h2>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
-<div class="sd-col sd-d-flex-column sd-col-4 sd-col-xs-4 sd-col-sm-4 sd-col-md-4 sd-col-lg-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-4 sd-col-lg-4 docutils">
 <p><strong>Camera Mounting</strong>: Place the corridor camera onto its mount above the corridor and secure it with the 3D-printed plastic cover.</p>
 </div>
-<div class="sd-col sd-d-flex-column sd-col-8 sd-col-xs-8 sd-col-sm-8 sd-col-md-8 sd-col-lg-8 docutils">
-<a class="reference internal image-reference" href="../_images/final.png"><img alt="../_images/final.png" src="../_images/final.png" style="width: 100%;" />
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-8 sd-col-lg-8 docutils">
+<a class="zoomable reference internal image-reference" href="../_images/final.webp"><img alt="../_images/final.webp" class="zoomable" src="../_images/final.webp" style="width: 100%;" />
 </a>
 </div>
 </div>
@@ -1178,7 +1182,7 @@ The other ends will be connected to the main Raspberry Pi HAT board in a later s
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

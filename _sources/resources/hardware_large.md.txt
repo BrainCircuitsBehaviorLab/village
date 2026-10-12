@@ -13,6 +13,7 @@ The [Eco-HAB](https://elifesciences.org/articles/19532) is a system of interconn
 - **Tube antennas**: Two Eco-HAB antennas are installed in each tube connecting the home cages. All these antennas, along with the corridor antenna, connect to the Eco-HAB RFID reader.
 - **USB connection**: The Eco-HAB RFID reader connects to the Raspberry Pi via USB.
 
-```{image} /_static/ecohab_version.png
+```{image} /_static/ecohab_version.webp
+:class: zoomable
 :width: 100%
 ```

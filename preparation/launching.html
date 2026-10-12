@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -562,8 +562,10 @@ data-aria-dark="Switch to auto color mode">
 </span></pre></div>
 </div>
 <div class="tip admonition">
-<p class="admonition-title">Behind the Scenes:</p>
-<p>When you run the village command, the system automatically executes a shortcut script that handles the background environment setup. Specifically, it activates your Python virtual environment by running source <code class="docutils literal notranslate"><span class="pre">~/.env/bin/activate</span></code> and then executes the core script located at <code class="docutils literal notranslate"><span class="pre">/home/pi/village/village/main.py</span></code> to start the program and display the GUI.</p>
+<p class="admonition-title">Behind the Scenes</p>
+<p><code class="docutils literal notranslate"><span class="pre">village</span></code> is a shortcut (an alias defined in <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code>) that runs the core script
+<code class="docutils literal notranslate"><span class="pre">/home/pi/village/village/main.py</span></code> with the Python of the virtual environment
+(<code class="docutils literal notranslate"><span class="pre">/home/pi/.env/bin/python</span></code>), which starts the program and displays the GUI.</p>
 </div>
 <hr class="docutils" />
 <section id="default-project">
@@ -574,10 +576,10 @@ data-aria-dark="Switch to auto color mode">
 <hr class="docutils" />
 <section id="automatic-component-check">
 <h2>Automatic Component Check</h2>
-<p>When the GUI launches, the system immediately performs an automated self-diagnostic check on all essential hardware connections (such as cameras, temperature sensors, scales, etc.). If a connection to a critical component cannot be established, a warning message will appear, and the Training Village will enter Debug Mode.</p>
+<p>When the GUI launches, the system immediately performs an automated self-diagnostic check on all essential hardware connections (such as cameras, temperature sensors, scales, etc.). If a connection to a critical component cannot be established, a warning message will appear (“System running in debug mode”).</p>
 <div class="tip admonition">
-<p class="admonition-title">Note:</p>
-<p>Upon your very first boot, you will likely receive warnings stating that telegram_bot and box_chip are not functioning. This is perfectly normal if you have not configured Telegram yet or if you haven’t connected the physical Box Board satallite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.</p>
+<p class="admonition-title">Note</p>
+<p>Upon your very first boot, you will likely receive warnings stating that telegram_bot and box_chip are not functioning. This is perfectly normal if you have not configured Telegram yet or if you haven’t connected the physical Box Board satellite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.</p>
 </div>
 </section>
 </section>
@@ -619,7 +621,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

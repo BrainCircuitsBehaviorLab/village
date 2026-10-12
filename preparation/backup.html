@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -476,6 +476,7 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#key-configuration-fields">Key Configuration Fields</a></li>
+<li><a class="reference internal" href="#syncing-to-a-server-ssh-access-without-a-password">Syncing to a Server: SSH Access Without a Password</a></li>
 </ul>
 </div></div>
   </aside>
@@ -562,16 +563,31 @@ under <code class="docutils literal notranslate"><span class="pre">SETTINGS</spa
 synchronization routine. To specify your backup destination, configure the fields under
 <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>, where you can choose between syncing to a remote network
 server or to an external hard drive connected directly to the Raspberry Pi.</p>
-<div class="admonition-warning admonition">
+<div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Corridor videos, which are recorded continuously 24/7, are <strong>not</strong> synchronized to any
-backup destination and are automatically deleted after one week — the same retention
-policy that applies to task videos. This is intentional, as continuous recordings would
+backup destination and are automatically deleted after <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days —
+the same retention policy that applies to task videos. This is intentional, as continuous recordings would
 otherwise consume an impractical amount of storage space.</p>
 </div>
 <section id="key-configuration-fields">
 <h2>Key Configuration Fields</h2>
-<p>Two parameters govern the backup and deletion behavior:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code>:</strong> where to sync the data.</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">HD</span></code>:</strong> to an external hard drive connected to the Raspberry Pi.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SERVER</span></code>:</strong> to a remote server, over SSH (see below).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OFF</span></code>:</strong> no synchronization (not recommended).</p></li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SYNC_DESTINATION</span></code>:</strong> the base path of the backup: the path where the hard drive is
+mounted (e.g. <code class="docutils literal notranslate"><span class="pre">/media/pi/my_disk</span></code>), or a path on the server. The data are copied
+into <code class="docutils literal notranslate"><span class="pre">SYNC_DIRECTORY</span></code>, which is created automatically inside it with the project name
+followed by <code class="docutils literal notranslate"><span class="pre">_data</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SERVER_USER</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_HOST</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code>:</strong> only for <code class="docutils literal notranslate"><span class="pre">SERVER</span></code>: the user and
+hostname (or IP address) of the server, and the SSH port.</p></li>
+</ul>
+<p>Two more parameters govern the backup and deletion behavior:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code></strong></p>
 <ul>
@@ -581,8 +597,8 @@ successfully backed up to the remote server or external hard drive.</p></li>
 regardless of whether a backup exists.</p></li>
 </ul>
 </li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">MAXIMUM_SYNC_TIME</span></code>:</strong> Maximum duration (in seconds) allowed for a synchronization
-session to complete. If the process exceeds this threshold, it is terminated
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MAXIMUM_SYNC_TIME</span></code>:</strong> Maximum duration (in seconds, 1200 by default) allowed for a
+synchronization session to complete. If the process exceeds this threshold, it is terminated
 automatically. This prevents a slow network connection or a stalled transfer from
 blocking other animals from accessing the operant box.</p></li>
 </ul>
@@ -591,6 +607,15 @@ blocking other animals from accessing the operant box.</p></li>
 <p>When synchronizing to a remote server, the <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code> field can be left blank if no
 specific port needs to be defined for the SSH connection.</p>
 </div>
+</section>
+<section id="syncing-to-a-server-ssh-access-without-a-password">
+<h2>Syncing to a Server: SSH Access Without a Password</h2>
+<p>The Raspberry Pi connects to the server over SSH with no one there to type a password,
+so it must be able to log in without one. The usual way to do this is with an SSH key.
+How to set it up depends on the server, so ask its administrator. Before enabling the
+synchronization, check from a terminal on the Raspberry Pi that
+<code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">&lt;SERVER_USER&gt;&#64;&lt;SERVER_HOST&gt;</span></code> (with <code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">&lt;SERVER_PORT&gt;</span></code> if you set a port) logs in
+without asking for a password: if it asks for one, the synchronization will fail.</p>
 </section>
 </section>
 
@@ -631,7 +656,7 @@ specific port needs to be defined for the SSH connection.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

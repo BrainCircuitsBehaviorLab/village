@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -474,7 +474,20 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#network-internet">1. Network &amp; Internet</a></li>
+<li><a class="reference internal" href="#remote-access">2. Remote Access</a></li>
+<li><a class="reference internal" href="#data-storage">3. Data Storage</a></li>
+<li><a class="reference internal" href="#notifications">4. Notifications</a></li>
+<li><a class="reference internal" href="#system-health-monitoring">5. System Health Monitoring</a></li>
+<li><a class="reference internal" href="#animals">6. Animals</a></li>
+<li><a class="reference internal" href="#lighting">7. Lighting</a></li>
+<li><a class="reference internal" href="#calibrations">8. Calibrations</a></li>
+<li><a class="reference internal" href="#data-format">9. Data Format</a></li>
+<li><a class="reference internal" href="#initial-adjustment-period">10. Initial Adjustment Period</a></li>
+<li><a class="reference internal" href="#alarm-monitoring">11. Alarm Monitoring</a></li>
+</ul>
+</div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -548,30 +561,98 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="system-requirements">
 <h1>System Requirements</h1>
-<p><strong>1. Remote Access:</strong>
-The institution must allow the use of a remote desktop system (e.g., VNC, X2Go, AnyDesk, or TeamViewer) as the system needs to be controlled remotely.</p>
-<p><strong>2. Data Storage:</strong>
-An external server or an external hard drive must be configured to store the data, since the SD card only supports up to 256 GB (approximately one week of video).</p>
-<p><strong>3. Notifications:</strong>
-A Telegram bot and channel must be created and configured to receive automatic system messages.</p>
-<p><strong>4. System Health Monitoring:</strong>
-A health-check web page is required to continuously verify that the system is active and connected to the internet.</p>
-<p><strong>5. Lighting:</strong>
-Stable, uniform, and glare-free lighting is required in both the corridor and the operant box. Illumination must be consistent to prevent video-tracking errors.</p>
+<p>Before installing a Training Village, make sure the following requirements can be
+met.</p>
+<section id="network-internet">
+<h2>1. Network &amp; Internet</h2>
+<p>The Raspberry Pi must be connected to the internet: remote access, the Telegram
+alarms, the heartbeat monitoring and the data synchronization with a server all
+depend on it.</p>
+</section>
+<section id="remote-access">
+<h2>2. Remote Access</h2>
+<p>The institution must allow the use of a
+<a class="reference internal" href="../preparation/access.html"><span class="std std-doc">remote desktop system</span></a> (e.g., VNC, X2Go, AnyDesk, or
+TeamViewer), since the system needs to be controlled remotely.</p>
+</section>
+<section id="data-storage">
+<h2>3. Data Storage</h2>
+<p>An <a class="reference internal" href="../preparation/backup.html"><span class="std std-doc">external server or an external hard drive</span></a> must be
+configured to store the data, since the SD card only supports up to 256 GB
+(approximately one week of video).</p>
+</section>
+<section id="notifications">
+<h2>4. Notifications</h2>
+<p>A <a class="reference internal" href="../preparation/telegram.html"><span class="std std-doc">Telegram bot and a group chat</span></a> (with the bot and the
+lab members who must receive the alarms) must be created to receive automatic system
+messages and alarms.</p>
+</section>
+<section id="system-health-monitoring">
+<h2>5. System Health Monitoring</h2>
+<p>A free account on <a class="reference external" href="https://healthchecks.io/">healthchecks.io</a> is required: the system
+sends it a signal every hour, and if the signals stop (power cut, no internet…) the
+team is alerted (<a class="reference internal" href="../preparation/heartbeat.html"><span class="std std-doc">how to set it up</span></a>).</p>
+</section>
+<section id="animals">
+<h2>6. Animals</h2>
+<p>Every animal must be implanted with an RFID microchip, which the corridor reader uses
+to identify it.</p>
+</section>
+<section id="lighting">
+<h2>7. Lighting</h2>
+<p>Stable, uniform, and glare-free lighting is required in both the corridor and the
+operant box. Illumination must be consistent to prevent video-tracking errors.</p>
 <ul class="simple">
 <li><p><strong>Corridor:</strong> The system includes integrated visible and infrared (IR) lighting.</p></li>
-<li><p><strong>Operant Box:</strong> Requires either visible or IR light depending on the experimental paradigm. The box hardware includes dedicated connectors for white LED strips and individual IR LEDs.</p></li>
+<li><p><strong>Operant Box:</strong> Requires either visible or IR light depending on the experimental
+paradigm. The Box Board includes dedicated connectors for internal visible and IR
+lighting.</p></li>
 </ul>
-<p><strong>6. Data Format:</strong>
-The system uses a standardized data format. Existing analysis scripts may require updates to maintain compatibility.</p>
+</section>
+<section id="calibrations">
+<h2>8. Calibrations</h2>
+<p>The <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">water valves</span></a> (and the
+<a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">speakers</span></a>, if the tasks use sound) must be calibrated before
+the first task is run: tasks ask for volumes in microliters and sound levels in dB,
+and the calibrations convert them into valve times and gains.</p>
+</section>
+<section id="data-format">
+<h2>9. Data Format</h2>
+<p>The system uses a standardized data format. Existing analysis scripts may require
+updates to maintain compatibility.</p>
 <ul class="simple">
-<li><p><strong>Behavioral Data:</strong> Generated as one CSV file per session, structured with one row per trial. The system automatically appends these session logs into a master <strong>Global Subject CSV</strong>, maintaining a continuous, complete longitudinal history of the animal’s performance.</p></li>
-<li><p><strong>Tracking Data:</strong> Generated as one CSV file per session. It logs precise camera frame numbers and timestamps alongside the subject’s spatial detection coordinates (X and Y positions) for detailed trajectory and position analysis.</p></li>
+<li><p><strong>Behavioral Data:</strong> Generated as one CSV file per session, structured with one row
+per trial, plus a raw CSV file with one row per event. The system automatically
+appends the sessions into a master <strong>Global Subject CSV</strong>, maintaining a continuous,
+complete longitudinal history of the animal’s performance.</p></li>
+<li><p><strong>Tracking Data:</strong> Generated as one CSV file per video. It logs precise camera frame
+numbers and timestamps alongside the subject’s spatial detection coordinates (X and
+Y positions) for detailed trajectory and position analysis.</p></li>
+<li><p><strong>System Data:</strong> Events, temperature and humidity, and a summary of all sessions,
+among others.</p></li>
 </ul>
-<p><strong>7. Initial Adjustment Period:</strong>
-During the first days, problems often arise: misconfigured detection areas, poorly calibrated sensors, lighting issues, or animals reluctant to enter the box. For this reason, it is essential to monitor the system every few hours until everything is confirmed to be working correctly.</p>
-<p><strong>8. Alarm Monitoring:</strong>
-Telegram alarms must always be checked while the system is running (including weekends if the animals are allowed to train on weekends). Some rare errors may cause an animal to remain inside the operant box without access to water. Therefore, any alarm must be addressed within 24 hours or less.</p>
+<p>All the files are described in <a class="reference internal" href="../system_operation/data.html"><span class="std std-doc">Saved Data and Video</span></a>.</p>
+</section>
+<section id="initial-adjustment-period">
+<h2>10. Initial Adjustment Period</h2>
+<div class="warning admonition">
+<p class="admonition-title">Monitor the system closely during the first days</p>
+<p>During the first days, problems often arise: misconfigured detection areas, poorly
+calibrated sensors, lighting issues, or animals reluctant to enter the box. For this
+reason, it is essential to monitor the system every few hours until everything is
+confirmed to be working correctly.</p>
+</div>
+</section>
+<section id="alarm-monitoring">
+<h2>11. Alarm Monitoring</h2>
+<div class="warning admonition">
+<p class="admonition-title">Alarms must be addressed within 24 hours</p>
+<p>Telegram alarms must always be checked while the system is running (including
+weekends if the animals are allowed to train on weekends). Some rare errors may cause
+an animal to remain inside the operant box without access to water. Therefore, any
+alarm must be addressed within 24 hours or less.</p>
+</div>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -611,7 +692,7 @@ Telegram alarms must always be checked while the system is running (including we
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

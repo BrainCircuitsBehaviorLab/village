@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -557,6 +557,7 @@ data-aria-dark="Switch to auto color mode">
 <h2>Requirements</h2>
 <ul class="simple">
 <li><p>SD card of 32GB or larger (256 GB recommended)</p></li>
+<li><p><a class="reference external" href="https://drive.google.com/file/d/1_GPpJvMfvM43qBDeu-I1vmESrCpsJoe1/view?usp=sharing">Training Village Disk Image</a></p></li>
 <li><p><a class="reference external" href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a></p></li>
 </ul>
 </section>
@@ -564,6 +565,7 @@ data-aria-dark="Switch to auto color mode">
 <h2>Steps</h2>
 <ol class="arabic simple">
 <li><p>Download the <a class="reference external" href="https://drive.google.com/file/d/1_GPpJvMfvM43qBDeu-I1vmESrCpsJoe1/view?usp=sharing">Training Village Disk Image</a></p></li>
+<li><p>Download the <a class="reference external" href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a></p></li>
 <li><p>Open Raspberry Pi Imager</p></li>
 <li><p>Select Raspberry Pi 5.</p></li>
 <li><p>Click Choose OS → scroll down → Use custom image → select the downloaded file</p></li>
@@ -571,12 +573,15 @@ data-aria-dark="Switch to auto color mode">
 <li><p>Click Write and wait for it to finish (Raspberry Pi Imager will verify the image automatically)</p></li>
 <li><p>Insert the SD card into your Raspberry Pi and power it on.</p></li>
 </ol>
+<div class="warning admonition">
+<p class="admonition-title">Expand the partition</p>
 <p>This is a custom image, cloned from an already-configured Raspberry Pi, so the
 automatic first-boot partition expansion may not run again on your SD card. The
 following steps expand the partition by hand, so the full capacity of your card
 is available instead of being limited to the size of the card the image was
 originally created on.</p>
-<ol class="arabic simple" start="8">
+</div>
+<ol class="arabic simple" start="9">
 <li><p>Open a terminal and run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">raspi-config</span></code></p></li>
 <li><p>Go to <code class="docutils literal notranslate"><span class="pre">Advanced</span> <span class="pre">Options</span></code> → <code class="docutils literal notranslate"><span class="pre">Expand</span> <span class="pre">Filesystem</span></code></p></li>
 <li><p>Reboot when prompted</p></li>
@@ -621,7 +626,7 @@ originally created on.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

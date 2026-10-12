@@ -4,6 +4,11 @@ Below are the detailed component lists required to print, source, and assemble t
 
 The estimated total cost of materials ranges between **€1,200 and €1,500** (or equivalent currency). This estimate varies depending on the local cost of 3D printing and custom laser-cutting or CNC machining services for the acrylic components.
 
+```{admonition} Not included
+:class: note
+These lists cover the home cages, the corridor and the Raspberry Pi. The operant box itself and its behavioral controller (e.g. Bpod) are not included: the Training Village works with any operant box, so these depend on your experiment. The Box Board, which connects the operant box peripherals to the system, is listed below.
+```
+
 ---
 
 ### Raspberry Pi Components
@@ -14,6 +19,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 *   1 x High-Speed microSD Card (256 GB)
 *   2 x [Raspberry Pi Camera Module 3 (NoIR, Wide-Angle)](https://www.raspberrypi.com/products/camera-module-3/?variant=camera-module-3-noir-wide)
 *   2 x [Official Raspberry Pi Camera Cable (50 cm, Standard-to-Mini)](https://www.raspberrypi.com/products/camera-cable/?variant=camera-cable-std-mini-500)
+*   *(Optional — only if the box camera is farther than the 50 cm cable reaches):* 1 x Camera cable extension (an FFC cable of the required length with an FFC adapter)
 *   *(Optional — required only for acoustic stimuli tasks):* 1 x [Raspberry Pi DAC Pro](https://www.raspberrypi.com/products/dac-pro/)
 
 ---
@@ -43,7 +49,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
     *   6 x 34 cm length
 *   15 x corner couplings for the aluminum profiles
 
-#### Large Setup Configuration (4 Home Cages / EcoHab Compatible)
+#### Large Setup Configuration (4 Home Cages / Eco-HAB Compatible)
 *   4 x Standard Home Cages (modified with custom cutouts to host the connecting tubes)
 *   3 x Transparent Acrylic Connection Tubes (30 mm internal diameter, 34 mm external diameter, 26 cm length)
 *   1 x Transparent Acrylic Connection Tube (30 mm internal diameter, 34 mm external diameter, 10 cm length)
@@ -55,7 +61,7 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 
 ---
 
-###  Boards & Electronics
+### Boards & Electronics
 
 *   1 x Custom Main HAT Board
 *   1 x Custom Corridor Board
@@ -63,16 +69,16 @@ The estimated total cost of materials ranges between **€1,200 and €1,500** (
 *   2 x Standard Ethernet Cables (used to interface the Corridor and Box satellite boards to the Main HAT)
 *   2 x DC Barrel Jack Power Cables (5V, used to power the Corridor and Box satellite boards from the Main HAT)
 *   2 x 5x20 mm Fuses (250V, 5A)
-*   1 x Extra-tall GPIO Header Spacer/Extension (for vertical clearance between the Pi and the Main HAT)
+*   2 x Extra-tall GPIO Header Spacer/Extension (for vertical clearance between the Pi and the Main HAT, and between the Main HAT and the optional Raspberry Pi DAC Pro)
 
 ---
 
 ### Illumination & Accessories
 
-*   4 x [OPB100-EZ IR Emitter](https://www.digikey.es/es/products/detail/tt-electronics-optek-technology/OPB100-EZ/1636778?srsltid=AfmBOooF1n3jWZgLVXz4OcnRL9aMCuzfMDHeN47At1cGJwLUa2YQTyzU)
+*   4 x [OPB100-EZ IR Emitter](https://www.digikey.es/es/products/detail/tt-electronics-optek-technology/OPB100-EZ/1636778)
 *   1 x 5V White LED Strip
-*   1 x Home Cage Water Bottle
-*   1 x Automated Food Dispenser Module
+*   1 x Water Bottle
+*   1 x Food Holder
 
 ---
 

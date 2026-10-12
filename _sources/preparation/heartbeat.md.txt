@@ -29,9 +29,10 @@ To ensure all connectivity alerts arrive in the exact same Telegram group chat u
 1. Open a terminal on your Raspberry Pi and launch the application interface by typing `village`.
 2. Navigate to **SETTINGS** → **TELEGRAM SETTINGS**.
 3. Locate the **HEALTHCHECKS_URL** field and paste your unique Ping URL there.
-4. Save your changes and exit.
+4. Save your changes. This setting requires a restart, so the Training Village restarts
+   automatically.
 
 ```{admonition} Uptime Verification
 :class: tip
-Once saved, the Training Village will immediately send its first heartbeat signal. Refresh your healthchecks.io dashboard web page; the status indicator for your check should turn from a grey "New" state into a green "Passed" state.
+When it starts again, the Training Village sends its first heartbeat signal. Refresh your healthchecks.io dashboard web page; the status indicator for your check should turn from a grey "New" state into a green "Passed" state.
 ```

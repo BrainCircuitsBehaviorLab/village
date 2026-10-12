@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -567,14 +567,14 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="manual-software-installation">
 <h1>Manual Software Installation</h1>
-<p>You can download a ready-to-use disk image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed <a class="reference internal" href="image.html"><span class="std std-doc">here</span></a>.</p>
+<p>You can download a ready-to-use disk image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed: see <a class="reference internal" href="image.html"><span class="std std-doc">Raspberry Pi Disk Image</span></a>.</p>
 <p>Follow the instructions on this page if you prefer a manual installation. The process can be challenging, so proceed only if you have a basic understanding of Linux distributions and are comfortable using the terminal.</p>
 <section id="what-you-need">
 <h2>What You Need</h2>
 <ul class="simple">
 <li><p>Raspberry Pi 5 - 8GB</p></li>
-<li><p>Fan</p></li>
-<li><p>Micro SD 128GB</p></li>
+<li><p>Raspberry Pi Active Cooler</p></li>
+<li><p>Micro SD 256GB</p></li>
 <li><p>Keyboard</p></li>
 <li><p>Mouse</p></li>
 <li><p>Screen</p></li>
@@ -582,20 +582,19 @@ data-aria-dark="Switch to auto color mode">
 <li><p>Power supply for Raspberry Pi</p></li>
 <li><p>2 Raspberry Pi Camera Module 3 Wide Noir</p></li>
 <li><p>Ethernet cable (optional)</p></li>
-<li><p>Raspberry Pi Dac Pro (optional)</p></li>
+<li><p>Raspberry Pi DAC Pro (optional)</p></li>
 <li><p>2 servo motors</p></li>
 <li><p>RFID sensor</p></li>
 <li><p>Weight sensor</p></li>
-<li><p>Temperature sensor</p></li>
 </ul>
 </section>
 <section id="launch-raspberry-pi-os-for-the-first-time">
 <h2>Launch Raspberry Pi OS for the First Time</h2>
 <ol class="arabic simple">
 <li><p>Connect a keyboard, mouse, and screen to the Raspberry Pi.</p></li>
-<li><p>Connect the fan.</p></li>
+<li><p>Connect the Active Cooler.</p></li>
 <li><p>Connect the Ethernet cable if you are going to use an Ethernet connection.</p></li>
-<li><p>If your SD card has the OS preinstalled, jump to step 4.</p></li>
+<li><p>If your SD card has the OS preinstalled, jump to step 6.</p></li>
 <li><p>If your SD card is empty, follow these instructions to download the OS and copy it to the SD: <a class="reference external" href="https://www.raspberrypi.com/software/">Raspberry Pi OS</a>. Don’t customize it, we will do it later.</p></li>
 <li><p>Insert the SD card and start the Raspberry Pi.</p></li>
 <li><p>Select your country and keyboard language and choose English as the general language.</p></li>
@@ -617,8 +616,8 @@ data-aria-dark="Switch to auto color mode">
 </section>
 <section id="installing-needed-libraries">
 <h2>Installing Needed Libraries</h2>
-<ol class="arabic simple" start="0">
-<li><p>The OS comes with python 3.13 pre-installed.</p></li>
+<p>The OS comes with Python 3.13 pre-installed.</p>
+<ol class="arabic simple">
 <li><p>Install OpenCV (the library used for video processing).</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">python3</span><span class="o">-</span><span class="n">opencv</span>
@@ -634,7 +633,7 @@ data-aria-dark="Switch to auto color mode">
 <ol class="arabic simple" start="3">
 <li><p>Install PyQT5 multimedia</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">pyqt5</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">pyqt5</span>
 </span><span data-line="2"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">pyqt5</span><span class="o">.</span><span class="n">qtmultimedia</span>
 </span><span data-line="3"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libqt5multimedia5</span><span class="o">-</span><span class="n">plugins</span>
 </span></pre></div>
@@ -664,7 +663,7 @@ data-aria-dark="Switch to auto color mode">
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> environment that includes all the packages installed in the global
 Python environment:</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">--</span><span class="n">system</span><span class="o">-</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> <span class="o">~/.</span><span class="n">env</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">--</span><span class="n">system</span><span class="o">-</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> <span class="o">~/.</span><span class="n">env</span>
 </span></pre></div>
 </div>
 <ol class="arabic simple" start="2">
@@ -719,7 +718,7 @@ Python environment:</p></li>
 <p>Explanation of values: (=1 makes the system operate as if a screen is connected to HDMI 1). (=2 makes the system operate as if a screen is connected to HDMI 2). (=3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2). HDMI-A-1 and HDMI-A-2 are used to specify the desired resolution.</p>
 <ol class="arabic simple" start="5">
 <li><p>After every reboot, the system will recognize two screens at the specified resolution. You can change the screen resolution (or resolutions) at any time in: <code class="docutils literal notranslate"><span class="pre">Preferences</span></code> -&gt;
-<code class="docutils literal notranslate"><span class="pre">Screen</span> <span class="pre">Configuration</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">Centre</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Screens</span></code>.</p></li>
 <li><p>Reboot the system to use X11.</p></li>
 </ol>
 </section>
@@ -775,7 +774,7 @@ Python environment:</p></li>
 <section id="udev-rules-for-consistent-usb-device-naming">
 <h2>Udev Rules for Consistent USB Device Naming</h2>
 <p>When you connect your behavioral controller (e.g., Bpod, Arduino, or compatible boards) to the Raspberry Pi, the operating system assigns it a device path in <code class="docutils literal notranslate"><span class="pre">/dev/</span></code>. Depending on the specific serial chip used by your board, it is typically named <code class="docutils literal notranslate"><span class="pre">ttyACM0</span></code> or <code class="docutils literal notranslate"><span class="pre">ttyUSB0</span></code>.</p>
-<p>However, this designation can change dynamically (<code class="docutils literal notranslate"><span class="pre">ttyACM1</span></code>, <code class="docutils literal notranslate"><span class="pre">ttyUSB1</span></code>, etc.) upon reboot or if other USB peripherals are connected. To guarantee that the Training Village software can always locate the hardware, you can create a persistent symbolic link that maps the physical USB port directly to a static name.</p>
+<p>However, this designation can change dynamically (<code class="docutils literal notranslate"><span class="pre">ttyACM1</span></code>, <code class="docutils literal notranslate"><span class="pre">ttyUSB1</span></code>, etc.) upon reboot or if other USB peripherals are connected. To guarantee that the Training Village software can always locate the hardware, create a persistent symbolic link that maps the physical USB port directly to a static name. <strong>This step is required</strong>: by default, the Training Village looks for the controller at <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> (the <code class="docutils literal notranslate"><span class="pre">CONTROLLER_PORT</span></code> setting).</p>
 <ol class="arabic simple">
 <li><p>Navigate to the system directory where custom hardware rules are stored:</p></li>
 </ol>
@@ -942,7 +941,7 @@ which should include <code class="docutils literal notranslate"><span class="pre
 </span></pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Reload the .bahsrc:</p></li>
+<li><p>Reload the .bashrc:</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
 </span></pre></div>
@@ -993,7 +992,7 @@ which should include <code class="docutils literal notranslate"><span class="pre
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

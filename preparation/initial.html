@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=1fc83a4c" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -477,7 +477,7 @@ data-aria-dark="Switch to auto color mode">
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#preliminary-steps">Preliminary Steps</a></li>
 <li><a class="reference internal" href="#hardware-connections-first-boot">Hardware Connections &amp; First Boot</a></li>
-<li><a class="reference internal" href="#setting-up-the-os">Setting Up the OS:</a></li>
+<li><a class="reference internal" href="#setting-up-the-os">Setting Up the OS</a></li>
 </ul>
 </div></div>
   </aside>
@@ -555,52 +555,47 @@ data-aria-dark="Switch to auto color mode">
 <h1>Initial Setup</h1>
 <section id="preliminary-steps">
 <h2>Preliminary Steps</h2>
-<p>If you purchased a Training Village from us, the system arrives fully pre-assembled. However, should you ever need to assemble or adjust any components yourself, the process is straightforward and only requires an Allen key and a screwdriver. The setup can be easily managed by following these <a class="reference internal" href="../resources/hardware.html"><span class="std std-doc">instructions</span></a>.</p>
-<p>We provide the Raspberry Pi along with an SD card that already contains the operating system (Raspberry Pi OS) and all required software pre-installed. If you ever need to write this image onto a new SD card yourself, you can find the disk image and step-by-step instructions <a class="reference internal" href="../resources/image.html"><span class="std std-doc">here</span></a>.</p>
+<p>If you purchased a Training Village from us, the system arrives fully pre-assembled. However, should you ever need to assemble or adjust any components yourself, the process is straightforward: follow the <a class="reference internal" href="../resources/hardware.html"><span class="std std-doc">Assembly Guide</span></a>.</p>
+<p>We provide the Raspberry Pi along with an SD card that already contains the operating system (Raspberry Pi OS) and all required software pre-installed. If you ever need to write this image onto a new SD card yourself, see <a class="reference internal" href="../resources/image.html"><span class="std std-doc">Raspberry Pi Disk Image</span></a> for the image and step-by-step instructions.</p>
 <div class="tip admonition">
 <p class="admonition-title">Build-It-Yourself</p>
-<p>If you prefer to build the Training Village yourself, start by reviewing the complete list of required parts and the plans for all 3D-printable pieces <a class="reference internal" href="../resources/list_of_parts.html"><span class="std std-doc">here</span></a>. Once you have your own Raspberry Pi, you can either <a class="reference internal" href="../resources/image.html"><span class="std std-doc">download</span></a> an image of the SD card to copy onto your device or <a class="reference internal" href="../resources/software_installation.html"><span class="std std-doc">install everything from scratch</span></a>.</p>
+<p>If you prefer to build the Training Village yourself, start by reviewing the complete list of required parts and the plans for all 3D-printable pieces in <a class="reference internal" href="../resources/list_of_parts.html"><span class="std std-doc">List of Parts &amp; Design Files</span></a>. Once you have your own Raspberry Pi, you can either copy the <a class="reference internal" href="../resources/image.html"><span class="std std-doc">Raspberry Pi Disk Image</span></a> onto its SD card or <a class="reference internal" href="../resources/software_installation.html"><span class="std std-doc">install everything from scratch</span></a>.</p>
 </div>
 </section>
 <hr class="docutils" />
 <section id="hardware-connections-first-boot">
 <h2>Hardware Connections &amp; First Boot</h2>
+<div class="warning admonition">
+<p class="admonition-title">Never hot-plug</p>
+<p>Make all the connections with both power supplies unplugged. Never plug or unplug a board, cable or peripheral while the system is powered.</p>
+</div>
+<p>The system uses two power supplies, both labeled in the picture below:</p>
 <ul class="simple">
-<li><ol class="arabic simple">
-<li><p>Connect the Corridor Board to the Raspberry Pi assembly using a standard Ethernet cable. <strong>It is vital to plug this into the correct port</strong>, as the Main HAT features two distinct Ethernet ports: one labeled <strong>Corridor</strong> and one labeled <strong>Box</strong>. If your configuration utilizes the Box Board (for operant box lighting or other peripherals), connect it to the “Box” port at this time.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple">
-<li><p>Connect the Corridor Board to the Raspberry Pi assembly using the two cables previously connected to the Corridor Board: the Ethernet cable (data) and the DC barrel jack cable (5 V power). It is vital to use the correct ports, as the Main HAT features two sets of connectors: one labeled <strong>Corridor</strong> and one labeled <strong>Box</strong>. If your configuration uses the Box Board (for operant box lighting or other peripherals), connect its cables to the <strong>Box</strong> ports at this time.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="2">
-<li><p>If your experimental paradigm integrates a Bpod (or any other external behavioral controller), connect its USB cable to the bottom USB 3.0 port (the blue port closest to the Raspberry Pi’s native Ethernet jack).</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="3">
-<li><p>Connect your dedicated 5V, 3A power supply directly to the power input barrel jack located on the Main HAT. Using a 3A power source is mandatory to ensure there is enough current to reliably power all visible and IR illumination LEDs simultaneously.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="4">
-<li><p>To complete the initial setup, configure the internet connection, and enable remote management, you will temporarily need <strong>local access</strong> to the system. The easiest way to do this is to connect a keyboard, mouse, monitor (via micro-HDMI), and a local network cable (if using a wired connection) to the Raspberry Pi <strong>before</strong> plugging it into a power outlet.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="5">
-<li><p>Once these peripherals are secure, connect the main power supply to the USB-C connector; the Raspberry Pi 5 will boot up automatically.</p></li>
-</ol>
-</li>
+<li><p>The <strong>Raspberry Pi power supply</strong> (the official 27 W USB-C supply) powers the Raspberry Pi itself.</p></li>
+<li><p>The <strong>5V power supply</strong> (5 V, 3 A, connected to the Main HAT) powers the satellite boards and what is connected to them: servo motors, lighting, LEDs…</p></li>
 </ul>
-<p><img alt="Connections" src="../_images/connections.png" /></p>
+<ol class="arabic simple">
+<li><p>Connect the Corridor Board to the Main HAT with its two cables: the Ethernet cable (data) and the DC barrel jack cable (5 V power). It is vital to use the correct ports, as the Main HAT features two sets of connectors: one labeled <strong>Corridor</strong> and one labeled <strong>Box</strong>. If your configuration uses the Box Board (for operant box lighting or other peripherals), connect its cables to the <strong>Box</strong> ports at this time.</p></li>
+<li><p>If your experimental paradigm integrates a Bpod (or any other external behavioral controller), connect its USB cable to the bottom USB 3.0 port (the blue port closest to the Raspberry Pi’s native Ethernet jack).</p></li>
+<li><p>To complete the initial setup, configure the internet connection, and enable remote management, you will temporarily need <strong>local access</strong> to the system. Connect a keyboard, a mouse, a monitor and, if you use a wired connection, a network cable to the Raspberry Pi. Connect the monitor to the first micro-HDMI port (<strong>screen 1</strong> in the picture); the second one is for the screen inside the operant box, if you use it (see <a class="reference internal" href="../system_operation/screen.html"><span class="std std-doc">Screen Integration</span></a>).</p></li>
+<li><p>Connect the <strong>5V power supply</strong> to the power input barrel jack located on the Main HAT. Using a 3 A power source is mandatory to ensure there is enough current to reliably power all visible and IR illumination LEDs simultaneously.</p></li>
+<li><p>Finally, connect the <strong>Raspberry Pi power supply</strong> to the Raspberry Pi’s USB-C connector; the Raspberry Pi 5 will boot up automatically.</p></li>
+</ol>
+<figure class="align-default" id="id1">
+<img alt="Connections" class="zoomable" src="../_images/connections.webp" />
+<figcaption>
+<p><span class="caption-text">The connectors of the Main HAT (left) and of the Raspberry Pi (right). Click to enlarge.</span></p>
+</figcaption>
+</figure>
 </section>
 <hr class="docutils" />
 <section id="setting-up-the-os">
-<h2>Setting Up the OS:</h2>
+<h2>Setting Up the OS</h2>
 <ol class="arabic simple">
 <li><p>Go to <code class="docutils literal notranslate"><span class="pre">Preferences</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">Centre</span></code> and select the tab <code class="docutils literal notranslate"><span class="pre">Localisation</span></code>.</p></li>
 <li><p>Configure your country, timezone, keyboard layout, and language preferences.</p></li>
-<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Preferences</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">Centre</span></code> and select the tab <code class="docutils literal notranslate"><span class="pre">System</span></code>.</p></li>
-<li><p>Update the system credentials when prompted. By default, the pre-configured system image uses:</p>
+<li><p>Connect to the internet: select your Wi-Fi network from the network icon in the top bar, or check that the network cable is connected.</p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Preferences</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">Centre</span></code> and select the tab <code class="docutils literal notranslate"><span class="pre">System</span></code>. By default, the pre-configured system image uses:</p>
 <ul class="simple">
 <li><p><strong>Username:</strong> <code class="docutils literal notranslate"><span class="pre">pi</span></code></p></li>
 <li><p><strong>Password:</strong> <code class="docutils literal notranslate"><span class="pre">training_village</span></code></p></li>
@@ -648,7 +643,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=412e1041"></script>
+      <script src="../_static/documentation_options.js?v=cd181044"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
