@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Project Structure - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Protocol Creation" href="creating.html" /><link rel="prev" title="PROTOCOL &amp; TASK DESIGN" href="../protocol_index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Project Structure - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="The Training Protocol" href="creating.html" /><link rel="prev" title="PROTOCOL &amp; TASK DESIGN" href="../protocol_index.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/project_structure.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -571,8 +571,9 @@ created automatically when a new project is initialized.</p>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">media/</span></code></strong>: <em>(Optional)</em> Audio, video, or image assets used by behavioral tasks.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">data/</span></code></strong>: All experimental outputs — raw and processed data files and videos.</p></li>
 </ul>
-<p>The first time you run the Training Village, a <code class="docutils literal notranslate"><span class="pre">village-demo-project</span></code> is created
-automatically with working example code you can use as a reference.</p>
+<p>The first time you run the Training Village, a <code class="docutils literal notranslate"><span class="pre">demo-village-project</span></code> is created
+automatically with working example code you can use as a reference (see
+<a class="reference internal" href="../system_operation/manual.html"><span class="std std-doc">Manual Task Execution</span></a> for the list of its tasks).</p>
 </section>
 <hr class="docutils" />
 <section id="code-organization">
@@ -608,21 +609,33 @@ through the training stages — changing tasks, adjusting parameters, or both.</
 <p>In Example 2, a single task is used throughout, but <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code> adjusts its
 parameters after every session to increase difficulty progressively.</p>
 <p>Both approaches can be combined freely. In addition to task scripts and the training
-protocol, a typical <code class="docutils literal notranslate"><span class="pre">code/</span></code> folder contains helper modules for plotting, sound or video
-generation, and direct hardware functions:</p>
+protocol, the <code class="docutils literal notranslate"><span class="pre">code/</span></code> folder can contain files that customize other parts of the system:
+functions that produce sounds and visual stimuli, reactions to the camera, the
+touchscreen or the GPIO pin, plots, actions run after each session… This is, for
+example, the <code class="docutils literal notranslate"><span class="pre">code/</span></code> folder of the demo project (shortened):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">code/
-</span><span data-line="2">├── __init__.py
-</span><span data-line="3">├── habituation.py
-</span><span data-line="4">├── follow_the_light.py
+</span><span data-line="2">├── bpod_1_habituation.py ... bpod_6_delay.py    # tasks
+</span><span data-line="3">├── arduino_1_habituation.py ... arduino_6_delay.py
+</span><span data-line="4">├── raspberry_area1_sound.py, raspberry_touchscreen.py
 </span><span data-line="5">├── training_protocol.py
-</span><span data-line="6">├── session_plot.py
-</span><span data-line="7">├── subject_plot.py
-</span><span data-line="8">├── online_plot.py
-</span><span data-line="9">├── direct_functions.py
-</span><span data-line="10">├── sound_functions.py
-</span><span data-line="11">├── LICENSE
-</span><span data-line="12">└── README.md
+</span><span data-line="6">├── direct_functions.py, sound_functions.py, video_functions.py
+</span><span data-line="7">├── camera_trigger.py, camera_draw.py, touch_trigger.py
+</span><span data-line="8">├── gpio_trigger.py, scale_trigger.py
+</span><span data-line="9">├── online_plot.py, session_plot.py, subject_plot.py
+</span><span data-line="10">├── after_session.py, change_cycle.py, telegram_commands.py
+</span><span data-line="11">├── led_calibration.py, auto_follow_the_light.py
+</span><span data-line="12">└── arduino_firmware/
 </span></pre></div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">File and class names</p>
+<p>Except for tasks, the names of these files and classes are up to you: when Village
+starts, it reads every <code class="docutils literal notranslate"><span class="pre">.py</span></code> file in <code class="docutils literal notranslate"><span class="pre">code/</span></code> and recognizes each class by the base class
+it inherits from (<code class="docutils literal notranslate"><span class="pre">TrainingProtocolBase</span></code>, <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code>, <code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code>…).
+Only one class of each kind is used per project. Tasks are the exception, in the sense
+that the class name is the name of the task. The other exception is
+<code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code>, which must have exactly that name (see
+<a class="reference internal" href="functions.html"><span class="std std-doc">Direct Sound &amp; Video Functions</span></a>).</p>
 </div>
 </section>
 </section>
@@ -643,7 +656,7 @@ generation, and direct hardware functions:</p>
     <a href="creating.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Protocol Creation</div>
+        <div class="title">The Training Protocol</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -665,7 +678,7 @@ generation, and direct hardware functions:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

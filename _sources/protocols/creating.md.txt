@@ -1,10 +1,8 @@
-## Protocol Creation
+## The Training Protocol
 
-### The Training Protocol
-
-The training protocol must live in a file named exactly `training_protocol.py` inside
-your `code/` folder. It defines a class called `TrainingProtocol` that inherits from
-`TrainingProtocolBase`.
+The training protocol is a class that inherits from `TrainingProtocolBase`, usually
+`TrainingProtocol` in a file named `training_protocol.py` inside your `code/` folder
+(the names are up to you; only one training protocol is used per project).
 
 The code on this page is taken from the training protocol of the example tasks
 ([training_protocol.py](../examples/training_protocol.md)), which moves each subject
@@ -25,7 +23,7 @@ Every `TrainingProtocol` must define `default_training_settings` and
 
 ---
 
-#### `default_training_settings()`
+### `default_training_settings()`
 
 This method defines all training variables and their initial values. It is called once
 when a new subject is created. The variables defined here are accessible from within
@@ -68,7 +66,7 @@ tasks (each task lists the ones it needs in its own code).
 
 ---
 
-#### `update_training_settings()`
+### `update_training_settings()`
 
 This method runs automatically at the end of every session. It looks at the subject's
 history and updates whichever settings should change based on performance: typically
@@ -144,7 +142,7 @@ so `next_task` is left as it was. The complete protocol is in
 
 ---
 
-#### `define_gui_tabs()` *(optional)*
+### `define_gui_tabs()` *(optional)*
 
 If your protocol has many variables, this method lets you organize them into named tabs
 in the GUI panel that appears when launching a task manually. Variables not assigned to
@@ -179,6 +177,12 @@ Every `TrainingProtocol` class implements these methods:
 | `default_training_settings` | When a new subject is created | Define initial parameter values |
 | `update_training_settings` | After every session ends | Update parameters based on performance |
 | `define_gui_tabs` *(optional)* | When the settings are shown in the GUI | Organize the settings into tabs |
+
+To check a protocol against real data without changing anything, use the
+`TEST THE TRAINING PROTOCOL` button of the `TASKS` screen (see
+[Manual Task Execution](../system_operation/manual.md#testing-the-training-protocol)): it
+shows the settings the protocol would compute for a subject's next session, without
+saving them.
 
 ```{toctree}
 :hidden:

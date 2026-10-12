@@ -554,7 +554,7 @@ data-aria-dark="Switch to auto color mode">
 <div class="note admonition">
 <p class="admonition-title">Note</p>
 <p>The Telegram bot must be enabled and configured before custom commands can be
-used. See <a class="reference internal" href="../preparation/telegram.html"><span class="std std-doc">Telegram</span></a> for setup.</p>
+used. See <a class="reference internal" href="../preparation/telegram.html"><span class="std std-doc">Telegram Bot Integration</span></a> for setup.</p>
 </div>
 <p>You can add your own <code class="docutils literal notranslate"><span class="pre">/commands</span></code> to the Telegram bot by creating classes that
 inherit from <code class="docutils literal notranslate"><span class="pre">TelegramCommandBase</span></code> in your project. Every matching class found
@@ -576,19 +576,18 @@ to a short one-line explanation shown by <code class="docutils literal notransla
 </span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.telegram_command_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TelegramCommandBase</span>
 </span><span data-line="5">
 </span><span data-line="6">
-</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">WaterCommand</span><span class="p">(</span><span class="n">TelegramCommandBase</span><span class="p">):</span>
-</span><span data-line="8"><span class="w">    </span><span class="sd">"""Custom command: /water &lt;amount&gt; — deliver a manual water reward."""</span>
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">EchoCommand</span><span class="p">(</span><span class="n">TelegramCommandBase</span><span class="p">):</span>
+</span><span data-line="8"><span class="w">    </span><span class="sd">"""Custom command: /echo &lt;text&gt; — replies with the same text."""</span>
 </span><span data-line="9">
-</span><span data-line="10">    <span class="n">command</span> <span class="o">=</span> <span class="s2">"water"</span>
-</span><span data-line="11">    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Deliver a manual water reward, e.g. /water 10"</span>
+</span><span data-line="10">    <span class="n">command</span> <span class="o">=</span> <span class="s2">"echo"</span>
+</span><span data-line="11">    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Replies with the same text, e.g. /echo hello"</span>
 </span><span data-line="12">
 </span><span data-line="13">    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">Update</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ContextTypes</span><span class="o">.</span><span class="n">DEFAULT_TYPE</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="14">        <span class="k">try</span><span class="p">:</span>
-</span><span data-line="15">            <span class="n">amount</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">args</span> <span class="k">else</span> <span class="mf">10.0</span>
-</span><span data-line="16">            <span class="c1"># ... trigger the reward here ...</span>
-</span><span data-line="17">            <span class="k">await</span> <span class="n">update</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">reply_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Delivered </span><span class="si">{</span><span class="n">amount</span><span class="si">}</span><span class="s2"> µl of water."</span><span class="p">)</span>
-</span><span data-line="18">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="19">            <span class="k">await</span> <span class="n">update</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">reply_text</span><span class="p">(</span><span class="s2">"Usage: /water &lt;amount&gt;"</span><span class="p">)</span>
+</span><span data-line="14">        <span class="c1"># The words written after the command arrive in context.args, as strings.</span>
+</span><span data-line="15">        <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+</span><span data-line="16">            <span class="k">await</span> <span class="n">update</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">reply_text</span><span class="p">(</span><span class="s2">"Usage: /echo &lt;text&gt;"</span><span class="p">)</span>
+</span><span data-line="17">            <span class="k">return</span>
+</span><span data-line="18">        <span class="k">await</span> <span class="n">update</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">reply_text</span><span class="p">(</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
 </span></pre></div>
 </div>
 <p>A complete example with two commands, one of them reading an argument:
@@ -635,7 +634,7 @@ to a short one-line explanation shown by <code class="docutils literal notransla
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

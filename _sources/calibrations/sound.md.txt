@@ -4,17 +4,12 @@ Calibrates speaker output so a requested sound level in dB corresponds to an act
 measured volume — per speaker (left/right) and per sound, so tasks can request a
 sound in dB instead of a raw gain value.
 
-```{admonition} Note
-:class: note
 Only available when `USE_SOUNDCARD` is **ON**.
-```
 
-```{admonition} Note
-:class: note
 The `SOUND` dropdown lists the functions in `sound_calibration_functions`, defined in
 your project's `code/sound_functions.py`. Each function takes `gain` and `duration`
-and returns a mono NumPy waveform array; see the demo-village-project for examples.
-```
+and returns a mono NumPy waveform array; see [sound_functions.py](../examples/sound_functions.md)
+in the demo project for examples (`whitenoise`, `tone_600`, `tone_1000`...).
 
 ### Calibrating
 
@@ -59,8 +54,9 @@ shows the resulting error and plots the test point against the existing curve.
 gain = self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)
 ```
 
-Given a speaker (`0` = left, `1` = right), a target dB, and the sound's function name,
-this interpolates the gain from that speaker/sound pair's most recent saved
+Given a speaker (`0` = left, `1` = right), a target dB, and the sound's function name
+(the name of the function in `sound_functions.py`, e.g. `"whitenoise"` or
+`"tone_1000"`), this interpolates the gain from that speaker/sound pair's most recent saved
 calibration curve. `dB=0` always returns a gain of `0.0` without needing a
 calibration. Otherwise, if the pair hasn't been calibrated yet, or `dB` falls outside
 the calibrated range, it raises a `ValueError` explaining the problem so it's easy to
@@ -71,4 +67,4 @@ Data is stored in `sound_calibration.csv` (columns: `date`, `speaker`, `sound_na
 
 ---
 
-Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md).
+Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md) and the [led_calibration.py](../examples/led_calibration.md) example.

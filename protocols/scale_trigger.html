@@ -565,10 +565,10 @@ a lever pressed with a given force, …).</p>
 <hr class="docutils" />
 <section id="creating-a-custom-scaletrigger">
 <h2>Creating a custom ScaleTrigger</h2>
-<p>Create a file named <code class="docutils literal notranslate"><span class="pre">scale_trigger.py</span></code> inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory
-and define a class named <code class="docutils literal notranslate"><span class="pre">ScaleTrigger</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">ScaleTriggerBase</span></code>.
-The system will automatically detect it and use it instead of the default
-base class.</p>
+<p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (e.g. <code class="docutils literal notranslate"><span class="pre">scale_trigger.py</span></code>) and define
+a class (e.g. <code class="docutils literal notranslate"><span class="pre">ScaleTrigger</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">ScaleTriggerBase</span></code>. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.scale_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScaleTriggerBase</span>
 </span><span data-line="2">
 </span><span data-line="3">
@@ -655,7 +655,7 @@ same value. The minimum accepted is 0.02 s.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

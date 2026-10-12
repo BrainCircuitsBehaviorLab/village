@@ -556,18 +556,20 @@ data-aria-dark="Switch to auto color mode">
 <p>Calibrates the relationship between how long a valve (or a pump) is open and how much
 water it actually delivers, per behavior port — so tasks can request a volume in
 microliters instead of a raw opening time.</p>
-<div class="note admonition">
-<p class="admonition-title">Note</p>
-<p>With Bpod as the configured behavior controller (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> → <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>), the
-CALIBRATE/TEST sequence runs through a built-in Bpod state machine automatically. For
-any other controller, the project’s code directory must define a class inheriting from
-<code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> (<code class="docutils literal notranslate"><span class="pre">village.custom_classes.water_calibration_task_base</span></code>)
-implementing the same sequence on that controller’s own hardware – if a project
-provides one, it’s used instead of the Bpod default even when the controller is Bpod.
-Without either, clicking CALIBRATE or TEST shows a message explaining what’s missing.
-<code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> is a <code class="docutils literal notranslate"><span class="pre">CalibrationTaskBase</span></code>: it doesn’t appear in the TASKS
-tab, and without Bpod <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> doesn’t need to call <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>.</p>
-</div>
+<p>Always available in the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen:</p>
+<ul class="simple">
+<li><p><strong>With Bpod</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> → <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>), the CALIBRATE/TEST sequence runs
+through a built-in Bpod state machine, with nothing to set up.</p></li>
+<li><p><strong>With any other controller</strong>, the project’s code directory must define a class
+inheriting from <code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code>
+(<code class="docutils literal notranslate"><span class="pre">village.custom_classes.water_calibration_task_base</span></code>) that runs the same sequence
+on that controller (see <a class="reference internal" href="../protocols/tasks_arduino.html#water-calibration"><span class="std std-ref">Water calibration</span></a>
+in the Arduino tasks page, and
+<a class="reference internal" href="../advanced_customization/calibrations.html#running-a-task-from-the-calibration"><span class="std std-ref">Running a Task from the Calibration</span></a>).
+Without it, clicking CALIBRATE or TEST shows a message explaining what’s missing.</p></li>
+</ul>
+<p>If a project defines such a class, it is used instead of the Bpod default even when the
+controller is Bpod.</p>
 <section id="calibrating">
 <h2>Calibrating</h2>
 <p>You can calibrate one port at a time or several at once. For each active port
@@ -586,7 +588,7 @@ Saved calibrations are never overwritten — every save gets a new <code class="
 and the full history is kept, but tasks and the <code class="docutils literal notranslate"><span class="pre">TESTING</span></code> panel always use the most
 recent one per port. <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">CALIBRATION</span></code> discards the points collected so far (after
 confirmation) without saving them.</p>
-<div class="note admonition">
+<div class="tip admonition">
 <p class="admonition-title">Tip</p>
 <p>If you’re not sure what time to start with, begin with a short opening time (a few
 ms). You can always delete points later that turn out to be far outside the range of
@@ -621,7 +623,7 @@ needs calibrating or the requested volume needs adjusting.</p>
 <code class="docutils literal notranslate"><span class="pre">time(s)</span></code>, <code class="docutils literal notranslate"><span class="pre">water_delivered(ul)</span></code>, <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>, <code class="docutils literal notranslate"><span class="pre">water_expected(ul)</span></code>,
 <code class="docutils literal notranslate"><span class="pre">error(%)</span></code>).</p>
 <hr class="docutils" />
-<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>.</p>
+<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> and the <a class="reference internal" href="../examples/led_calibration.html"><span class="std std-doc">led_calibration.py</span></a> example.</p>
 </section>
 </section>
 
@@ -662,7 +664,7 @@ needs calibrating or the requested volume needs adjusting.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -60,9 +60,10 @@ class Bpod6Delay(TaskBase):
             * No response: trial aborted, sequence restarts.
 
         The delay is drawn from a distribution controlled by self.p (0-1):
-        higher self.p means the second cue tends to come later, making the
-        trial harder. self.p is tuned automatically after every trial based
-        on a rolling accuracy window (see after_trial).
+        higher self.p allows shorter delays between the two cues, which are
+        harder to tell apart, making the trial harder. self.p is tuned
+        automatically after every trial based on a rolling accuracy window
+        (see after_trial).
         """
 
     def start(self):

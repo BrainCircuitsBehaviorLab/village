@@ -570,10 +570,10 @@ times — see <a class="reference internal" href="../system_operation/gpio.html#
 <hr class="docutils" />
 <section id="creating-a-custom-gpiotrigger">
 <h2>Creating a custom GpioTrigger</h2>
-<p>Create a file named <code class="docutils literal notranslate"><span class="pre">gpio_trigger.py</span></code> inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory
-and define a class named <code class="docutils literal notranslate"><span class="pre">GpioTrigger</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">GpioTriggerBase</span></code>.
-The system will automatically detect it and use it instead of the default
-base class.</p>
+<p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (e.g. <code class="docutils literal notranslate"><span class="pre">gpio_trigger.py</span></code>) and define
+a class (e.g. <code class="docutils literal notranslate"><span class="pre">GpioTrigger</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">GpioTriggerBase</span></code>. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.gpio_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">GpioTriggerBase</span>
 </span><span data-line="2">
 </span><span data-line="3">
@@ -648,7 +648,7 @@ thread. Keep them fast and avoid blocking calls.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

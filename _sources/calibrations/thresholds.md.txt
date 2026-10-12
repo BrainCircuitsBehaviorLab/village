@@ -4,10 +4,7 @@ Lets you position the four corridor detection areas and tune their day/night
 pixel-detection thresholds while previewing the result against a recorded corridor
 video, instead of tuning blind or waiting for an animal to be live in the corridor.
 
-```{admonition} Note
-:class: note
 Only available when `USE_CORRIDOR` is **ON**.
-```
 
 ### Workflow
 
@@ -30,4 +27,4 @@ the preview frames but does not change any threshold or position value.
 
 ---
 
-Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md).
+Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md) and the [led_calibration.py](../examples/led_calibration.md) example.

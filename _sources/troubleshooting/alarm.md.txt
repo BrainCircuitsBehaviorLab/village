@@ -5,7 +5,7 @@ You can use various commands to retrieve information from, or act on, the system
 All commands start with the `/` symbol:
 
 - `/help`: Lists every available command, including any custom ones added for your project.
-- `/report ‘hours’`: Provides a summary of the operant box activity for the last specified hours (default = 24h).
+- `/report <hours>`: Provides a summary of the operant box activity for the last specified hours (e.g. `/report 48`; 24 hours by default).
 - `/cam`: Sends a picture from both cameras.
 - `/plot`: Shows a plot of corridor entrances and attempts.
 - `/mice_checked`: Confirms that the mice have been checked today — the same effect as clicking `CHECK MICE` in the GUI toolbar.
@@ -19,7 +19,7 @@ All commands start with the `/` symbol:
 
 Every hour, the system runs an automated background diagnostic.
 
-*   **Temperature Monitoring:** The system checks the current room temperature against safety thresholds.
+*   **Temperature Monitoring:** The system checks the current room temperature against safety thresholds (19 to 27 °C by default).
 *   **Activity Detection:** The system flags if no animal has been detected by the RFID readers or if no behavioral sessions have been initiated for a specified number of consecutive hours (6 hours by default).
 *   **Corridor Occupation:** The system checks whether any corridor area has been occupied for more than 90% of the last hour, which may indicate an animal sleeping in that area, debris in the corridor, or a false detection from a badly tuned threshold. Whatever the cause, an area that is always occupied stops the animals from entering and leaving the operant box normally.
 
@@ -28,12 +28,12 @@ Every hour, the system runs an automated background diagnostic.
 If your project hosts a large cohort of animals, it is highly unusual to have zero RFID detections or sessions for more than 6 consecutive hours. A silent system often points to an accidental physical barrier (e.g., a door stuck closed) or an RFID reader malfunction. If you are working with a small cohort, you may want to increase this window to prevent false alarms.
 ```
 
-You can customize these hourly thresholds in **`SETTINGS` → `TELEGRAM SETTINGS`** using the following variables:
-*   `MINIMUM_TEMPERATURE`
-*   `MAXIMUM_TEMPERATURE`
-*   `NO_DETECTION_HOURS`
-*   `NO_SESSION_HOURS`
-*   `CORRIDOR_OCCUPATION_ALARM`
+You can customize these hourly thresholds in **`SETTINGS` → `TELEGRAM SETTINGS`** using the following variables (default values in brackets):
+*   `MINIMUM_TEMPERATURE` (19 °C)
+*   `MAXIMUM_TEMPERATURE` (27 °C)
+*   `NO_DETECTION_HOURS` (6)
+*   `NO_SESSION_HOURS` (6)
+*   `CORRIDOR_OCCUPATION_ALARM` (ON)
 
 ---
 
@@ -43,12 +43,12 @@ Twice a day, exactly during the programmed day-to-night and night-to-day transit
 
 Alongside the report, the system runs a health-screening algorithm exclusively for **active subjects** and broadcasts targeted warnings if an animal drops below safe behavioral baselines.
 
-You can toggle these specific alarms on/off or adjust the minimum hydration baselines in **`SETTINGS` → `TELEGRAM SETTINGS`** using the variables: `NO_DETECTION_SUBJECT_24H`, `NO_SESSION_SUBJECT_24H`, and `MINIMUM_WATER_SUBJECT_24H`.
+You can toggle these specific alarms on/off or adjust the minimum hydration baselines in **`SETTINGS` → `TELEGRAM SETTINGS`** using the variables: `NO_DETECTION_SUBJECT_24H`, `NO_SESSION_SUBJECT_24H`, and `MINIMUM_WATER_SUBJECT_24H` (400 µl by default).
 
 #### Triggered Warnings (Ordered from Least to Most Critical):
-1.  **`Subjects with low water intake in the last 24h`** → The subject's totalized water consumption has dropped below your minimum threshold.
-2.  **`Subjects with no session in the last 24h`** → The subject has not voluntarily entered the operant box to perform a task for an entire day.
-3.  **`Subjects not detected in the last 24h`** → Critical warning. The subject has not passed by any RFID antenna in 24 hours, suggesting a health issue or an escape.
+1.  **`Subjects with low water intake in the last 24 hours`** → The subject's totalized water consumption has dropped below your minimum threshold.
+2.  **`Subjects with no sessions in the last 24 hours`** → The subject has not voluntarily entered the operant box to perform a task for an entire day.
+3.  **`Subjects not detected in the last 24 hours`** → Critical warning. The subject has not passed by any RFID antenna in 24 hours, suggesting a health issue or an escape.
 
 ---
 
@@ -66,7 +66,7 @@ It validates that **at least one trial was performed** and that **some amount of
 ### Alarms
 The system is designed to cover all potential scenarios, resulting in an extensive list of alarms. While many may never appear, some occur rarely but are critical.
 
-Some of the most important alarms keep repeating in Telegram, at the frequency set in `TELEGRAM_REPEAT_MINUTES` (`SETTINGS` → `TELEGRAM SETTINGS`), until they are acknowledged — either with the "✅ Acknowledge" button on the Telegram message or with the `ALARMS` button in the GUI toolbar.
+Some of the most important alarms keep repeating in Telegram, at the frequency set in `TELEGRAM_REPEAT_MINUTES` (`SETTINGS` → `TELEGRAM SETTINGS`, 60 minutes by default), until they are acknowledged — either with the "✅ Acknowledge" button on the Telegram message or with the `ALARM` button in the GUI toolbar.
 
 When an alarm is received, it is important to always check the events log to determine which error occurred. If the error originates from the code, inspect the traceback to understand what happened.
 When it is not clear what sequence of events produced the alarm, review the video recordings to identify the root cause (e.g., lighting, thresholds, dirt, hardware issues).
@@ -94,6 +94,10 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
 ```
 
 #### Table of Alarms
+
+The first column shows how each alarm begins in Telegram and in the events log, so that
+it can be searched for; "…" marks the variable part (a subject, a task, a value).
+
 ```{list-table}
 :widths: 20 37 37
 :header-rows: 1
@@ -107,36 +111,36 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - Check whether the system is accessible remotely. If you can connect and the Python process is frozen, try stopping it and launching it again (restart the OS if necessary). You may also find that the system is reachable but the code is not running, indicating that the Raspberry Pi has rebooted due to a power interruption. If you cannot connect remotely, there is no way to determine whether the system is functioning normally and only the internet connection is down, or whether the system is actually frozen or powered off. In this case, a physical inspection is required to ensure animal safety, as an animal may be trapped inside the operant box without access to food or water.
 
 
-* - Wrong RFID detection
+* - Wrong RFID detection…
   - This alarm has two possible causes: (1) a different subject was detected in the corridor while the main subject was performing the task, or (2) the correct subject was detected in the corridor even though door 2 was already closed and the subject should not be there. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
   - Review the previous videos to determine the cause (e.g., door malfunction, lighting issues, inaccurate camera thresholding).
 
-* - Maximum time reached and areas 3 or 4 were never empty
+* - Maximum time reached and areas 3 or 4 were never empty.
   - After a subject enters the operant box, door 2 should close once areas 3 and 4 are empty. If the maximum task duration is reached and these areas were never cleared, the alarm is triggered. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
   - Check lighting and remove any dirt or objects in the corridor.
   Check whether there was also a corridor camera alarm. Verify whether the animal fell asleep in the corridor or hesitated to enter the operant box. Review previous videos to check for door malfunction or issues with pixel detection.
 
-* - Error running task
+* - Error running task…
   - A task execution error occurred, likely caused by an exception in the task code.
   - Inspect the event logs to obtain the full traceback and identify the line of code that triggered the error. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
 
-* - Error saving the task
+* - Error saving the task: …
   - The task data could not be saved.
   - Check the events log to inspect the traceback and identify the cause of the error.
 
-* - Error updating the training settings
+* - Error updating the training settings for task: …
   - The training settings could not be updated, so the subject will keep its previous configuration.
   - Check the events log to inspect the traceback. The code that updates the training settings is delicate and may fail if the format of the CSV has changed unexpectedly (e.g., a column that is now a string instead of an integer). After modifying this part of the code, you can test it from the TASKS tab.
 
-* - Detection in area4 when it should be empty
+* - Detection in area4 when it should be empty: …
   - When the operant box is empty and a subject is detected by the RFID reader, pixels are also detected in Area 4, which should be empty.
   - Check corridor illumination and remove any dirt or objects that may cause false detection. If an animal is actually present in Area 4 when it should not be, review the previous videos to determine the cause (e.g., door malfunction, lighting issues, inaccurate camera thresholding).
 
-* - 2 Subjects in Box
+* - 2 subjects in box. Area: …
   - The pixel count suggests that more than one animal has entered the operant box.
   - Connect remotely to verify whether this is a true event or a false alarm. If two animals are indeed inside the box, carefully open and close door 2 and door 1 to allow them to exit safely. Stop the task (this will automatically disable the RFID reader), and once everything is back to normal, ensure that door 2 is closed and door 1 is open, then reactivate the RFID reader. If this was a false alarm, check illumination, cleanliness, and pixel-detection thresholds to prevent future false detections.
 
-* - Subject in Prohibited Area
+* - 1 subject in prohibited area. Area: …
   - Pixels are detected in a region where no animal should be present.
   - Connect remotely to confirm whether the detection is real or a false alarm. If the alarm was false, inspect illumination, cleanliness, and pixel-detection thresholds to reduce the likelihood of recurring false positives.
 
@@ -144,15 +148,15 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - An error occurred while reading subjects.csv. The file may contain malformed rows, inconsistent numbers of columns, or unintended spaces or line breaks.
   - Verify that the CSV structure is correct: all rows must contain the same number of columns, without stray spaces, tabs, or newline characters. Fix or recreate the file if needed.
 
-* - Scale not responding
+* - Scale not responding, please check the connection.
   - The scale is continuously returning a weight of 0.0 grams, indicating that it is not receiving valid readings from the load cell.
   - Inspect the scale wiring and connectors, ensuring all cables are firmly attached. Verify that the external 5V power supply is reaching the board.
 
-* - No detections in the set interval
+* - No detections in the last … hours
   - No animal has been detected by the RFID system during the last X hours (X set by `NO_DETECTION_HOURS`).
   - Ensure that animals have unobstructed access to the corridor (no blockage, door 1 open). Check RFID cabling and confirm that the external 5V power supply is reaching the board.
 
-* - No sessions in the set interval
+* - No sessions in the last … hours
   - No session has been performed within the last X hours (X set by `NO_SESSION_HOURS`).
   - Verify corridor access and correct RFID operation. Ensure the cameras are not falsely detecting pixels when the corridor is empty (check illumination and threshold configuration).
 
@@ -172,15 +176,15 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - An error occurred while reading touch events from the touchscreen.
   - Check the events log to inspect the traceback. Verify the touchscreen's USB connection and, if the error persists, the `TOUCHSCREEN_DEVICE` setting.
 
-* - The session file is very large
+* - The session file is very large…
   - The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.
   - Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.
 
-* - Subjects not detected in the last 24h
+* - Subjects not detected in the last 24 hours: …
   - The subject has not been detected by the RFID system for the last 24 hours. This check can be turned `ON`/`OFF` with `NO_DETECTION_SUBJECT_24H`.
   - Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.
 
-* - The subject has been in the box for too long
+* - The subject has been in the box for too long.
   - More than one hour has passed since the task ended, and the animal remains inside the operant box.
   - Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.
 
@@ -188,23 +192,23 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - The camera automatically restarts if it fails to deliver frames for 10 seconds (a failing camera usually delivers completely black frames, which count as no frames), if its recording process (ffmpeg) dies unexpectedly, or if it fails to start recording in the first place. This usually indicates an intermittent connection or insufficient signal quality along the camera cable. It can also be a box left completely dark: see the box lights in the [GUI](../system_operation/GUI.md) section. A lack of frames while the data is being saved or synced after a session is expected and is ignored.
   - Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts. If it is the box camera, check that the box is not completely dark.
 
-* - Area(s) occupied more than 90% of the last hour
+* - … occupied more than 90% of the last hour
   - One or more corridor areas were continuously occupied for more than 90% of the last hour. This may indicate an animal is sleeping in the corridor, or that a false detection is occurring due to lighting or dirt. This check can be enabled or disabled in the settings using `CORRIDOR_OCCUPATION_ALARM`.
   - Review the corridor video for the last hour to determine whether a real animal is present or whether the detection is a false positive. If an animal is stuck, verify that door 1 and door 2 are operating correctly and that the animal can move freely. If it is a false positive, check corridor illumination, clean the floor, and adjust the detection thresholds.
 
-* - Low/High temperature
+* - Low temperature: … / High temperature: …
   - Temperature has risen above `MAXIMUM_TEMPERATURE` or fallen below `MINIMUM_TEMPERATURE`.
   - Verify the room temperature using an independent sensor and take the appropriate corrective measures.
 
-* - Subjects with low water intake in the last 24h
+* - Subjects with low water intake in the last 24 hours: …
   - The subject consumed less than the threshold set by `MINIMUM_WATER_SUBJECT_24H` during the last 24 hours.
   - Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.
 
-* - Subjects with no session in the last 24h
+* - Subjects with no sessions in the last 24 hours: …
   - The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be turned `ON`/`OFF` with `NO_SESSION_SUBJECT_24H`.
   - Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.
 
-* - No data sync in the last 24h
+* - No data sync in the last 24 hours.
   - No data has been successfully synchronized with the external server or hard drive during the last 24 hours. Only checked while `SYNC_TYPE` is not `OFF`.
   - Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.
 
@@ -212,11 +216,11 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
   - The `CHECK_MICE_TIME` deadline (`SETTINGS` → `TELEGRAM SETTINGS`) has passed and nobody has confirmed the mice check for the day, either by clicking `CHECK MICE` in the GUI toolbar or via the `/mice_checked` Telegram command.
   - Physically check on the mice as soon as possible, then confirm it with the `CHECK MICE` button or `/mice_checked`.
 
-* - No water was drunk
+* - No water was drunk in task: …
   - The subject did not drink any water during the task. This check can be turned `ON`/`OFF` with `NO_WATER_DRUNK`.
   - Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning properly.
 
-* - No trials were recorded
+* - No trials were recorded in task: …
   - The subject did not complete any trials. This check can be turned `ON`/`OFF` with `NO_TRIALS_PERFORMED`.
   - Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.
 

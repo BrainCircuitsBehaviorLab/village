@@ -634,18 +634,19 @@ disables the ramp entirely.</p>
 </span><span data-line="14">
 </span><span data-line="15"><span class="n">samplerate</span> <span class="o">=</span> <span class="mi">96000</span>           <span class="c1"># must match the SAMPLERATE setting (96000 by default)</span>
 </span><span data-line="16"><span class="n">duration</span>   <span class="o">=</span> <span class="mf">0.5</span>             <span class="c1"># seconds</span>
-</span><span data-line="17"><span class="n">frequency</span>  <span class="o">=</span> <span class="mi">4000</span>            <span class="c1"># Hz</span>
+</span><span data-line="17"><span class="n">frequency</span>  <span class="o">=</span> <span class="mi">5000</span>            <span class="c1"># Hz</span>
 </span><span data-line="18">
-</span><span data-line="19"><span class="c1"># volume calibrated so the tone measures 70 dB from speaker 1</span>
-</span><span data-line="20"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
-</span><span data-line="21">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"tone"</span>
-</span><span data-line="22"><span class="p">)</span>
-</span><span data-line="23">
-</span><span data-line="24"><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span data-line="25"><span class="n">tone</span> <span class="o">=</span> <span class="p">(</span><span class="n">gain</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="26">
-</span><span data-line="27"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tone</span><span class="p">,</span> <span class="n">tone</span><span class="p">)</span>   <span class="c1"># identical left and right channels</span>
-</span><span data-line="28"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</span><span data-line="19"><span class="c1"># volume calibrated so the tone measures 70 dB from speaker 1, using the</span>
+</span><span data-line="20"><span class="c1"># calibration of tone_5000 in sound_functions.py (the same 5000 Hz tone)</span>
+</span><span data-line="21"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="22">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"tone_5000"</span>
+</span><span data-line="23"><span class="p">)</span>
+</span><span data-line="24">
+</span><span data-line="25"><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="26"><span class="n">tone</span> <span class="o">=</span> <span class="p">(</span><span class="n">gain</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="27">
+</span><span data-line="28"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tone</span><span class="p">,</span> <span class="n">tone</span><span class="p">)</span>   <span class="c1"># identical left and right channels</span>
+</span><span data-line="29"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </span></pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">get_sound_from_wav</span></code> resamples the audio if the WAV’s sample rate does not match
@@ -729,7 +730,7 @@ WAV files at the same sample rate as the <code class="docutils literal notransla
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

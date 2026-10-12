@@ -787,7 +787,10 @@ downside to leaving it permanently enabled too — it only adds a live visual ai
 </div>
 <section id="raw-session-filename-raw-csv">
 <h3>1. Raw Session (<code class="docutils literal notranslate"><span class="pre">{filename}_RAW.csv</span></code>)</h3>
-<p>Created in real time, one row per event:</p>
+<p>One row per event. During the session, the events are written as they happen to
+<code class="docutils literal notranslate"><span class="pre">data/sessions/session.csv</span></code>; when the session ends, that file is copied here. (That
+real-time file is emptied when the Training Village starts: see
+<a class="reference internal" href="../troubleshooting/troubleshooting.html#after-a-power-cut"><span class="std std-ref">After a Power Cut</span></a>.)</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -934,7 +937,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

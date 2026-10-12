@@ -554,30 +554,31 @@ data-aria-dark="Switch to auto color mode">
 <h1>Custom Scheduled Actions</h1>
 <p>Some actions run automatically at fixed points in the system lifecycle. By default, a data synchronization is triggered after each session ends, and old video files are deleted during each day/night cycle transition (the retention period is configurable in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>).</p>
 <p>You can override or extend this behavior by creating custom classes in your project. For example, you might want to sync data in a different way, or send a notification (email, Telegram, Slack, etc.) after each session.</p>
-<p>If the system detects a class inheriting from <code class="docutils literal notranslate"><span class="pre">AfterSessionBase</span></code> or <code class="docutils literal notranslate"><span class="pre">ChangeCycleBase</span></code> in your project, it will use your custom class instead of the default base class.</p>
+<p>If the system detects a class inheriting from <code class="docutils literal notranslate"><span class="pre">AfterSessionBase</span></code> or <code class="docutils literal notranslate"><span class="pre">ChangeCycleBase</span></code> in your project, it will use your custom class instead of the default base class. The file and class names are up to you (the examples below use the usual ones); only one class of each kind is used per project.</p>
 <hr class="docutils" />
 <section id="after-session-actions">
 <h2>After Session Actions</h2>
-<p>Create a file named <code class="docutils literal notranslate"><span class="pre">after_session.py</span></code> in your <code class="docutils literal notranslate"><span class="pre">project/code</span></code> folder containing a class named <code class="docutils literal notranslate"><span class="pre">AfterSession</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">AfterSessionBase</span></code>. This class will be executed automatically every time a subject’s session ends.</p>
+<p>Create a file in your <code class="docutils literal notranslate"><span class="pre">project/code</span></code> folder (e.g. <code class="docutils literal notranslate"><span class="pre">after_session.py</span></code>) with a class (e.g. <code class="docutils literal notranslate"><span class="pre">AfterSession</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">AfterSessionBase</span></code>. Its <code class="docutils literal notranslate"><span class="pre">run</span></code> method is executed automatically every time a subject’s session ends, in the <code class="docutils literal notranslate"><span class="pre">SYNC</span></code> state, before the system goes back to <code class="docutils literal notranslate"><span class="pre">WAIT</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.after_session_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AfterSessionBase</span>
-</span><span data-line="2">
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
 </span><span data-line="3">
-</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">AfterSession</span><span class="p">(</span><span class="n">AfterSessionBase</span><span class="p">):</span>
-</span><span data-line="5"><span class="w">    </span><span class="sd">"""Operations performed after a session ends.</span>
-</span><span data-line="6">
-</span><span data-line="7"><span class="sd">    The base class handles data synchronization (backup) to either a hard drive</span>
-</span><span data-line="8"><span class="sd">    or a remote server, depending on the current settings.</span>
-</span><span data-line="9"><span class="sd">    """</span>
-</span><span data-line="10">
-</span><span data-line="11">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="12">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="13">
-</span><span data-line="14">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="15"><span class="w">        </span><span class="sd">"""Executes the post-session logic."""</span>
-</span><span data-line="16">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># remove this line if you don't want the default sync</span>
-</span><span data-line="17">
-</span><span data-line="18">        <span class="c1"># Add your custom actions here</span>
-</span><span data-line="19">        <span class="nb">print</span><span class="p">(</span><span class="s2">"Performing custom after-session actions"</span><span class="p">)</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">AfterSession</span><span class="p">(</span><span class="n">AfterSessionBase</span><span class="p">):</span>
+</span><span data-line="6"><span class="w">    </span><span class="sd">"""Operations performed after a session ends.</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="sd">    The base class handles data synchronization (backup) to either a hard drive</span>
+</span><span data-line="9"><span class="sd">    or a remote server, depending on the current settings.</span>
+</span><span data-line="10"><span class="sd">    """</span>
+</span><span data-line="11">
+</span><span data-line="12">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="13">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="14">
+</span><span data-line="15">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="16"><span class="w">        </span><span class="sd">"""Executes the post-session logic."""</span>
+</span><span data-line="17">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># remove this line if you don't want the default sync</span>
+</span><span data-line="18">
+</span><span data-line="19">        <span class="c1"># Add your custom actions here</span>
+</span><span data-line="20">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Performing custom after-session actions"</span><span class="p">)</span>  <span class="c1"># shown in the events</span>
 </span></pre></div>
 </div>
 <p>A complete example, which sends an alarm when the sync is too slow:
@@ -586,27 +587,28 @@ data-aria-dark="Switch to auto color mode">
 <hr class="docutils" />
 <section id="change-cycle-actions">
 <h2>Change Cycle Actions</h2>
-<p>Create a file named <code class="docutils literal notranslate"><span class="pre">change_cycle.py</span></code> in your <code class="docutils literal notranslate"><span class="pre">project/code</span></code> folder containing a class named <code class="docutils literal notranslate"><span class="pre">ChangeCycle</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">ChangeCycleBase</span></code>. This class will be executed automatically on every day/night cycle transition, provided no animal is currently in the operant box.</p>
+<p>Create a file in your <code class="docutils literal notranslate"><span class="pre">project/code</span></code> folder (e.g. <code class="docutils literal notranslate"><span class="pre">change_cycle.py</span></code>) with a class (e.g. <code class="docutils literal notranslate"><span class="pre">ChangeCycle</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">ChangeCycleBase</span></code>. Its <code class="docutils literal notranslate"><span class="pre">run</span></code> method is executed automatically after every day/night cycle transition: the transition marks it as pending, and it runs as soon as the system is in <code class="docutils literal notranslate"><span class="pre">WAIT</span></code> (going through the <code class="docutils literal notranslate"><span class="pre">SYNC</span></code> state). If a session is running at that moment, it waits until the session has finished.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.change_cycle_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChangeCycleBase</span>
-</span><span data-line="2">
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
 </span><span data-line="3">
-</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">ChangeCycle</span><span class="p">(</span><span class="n">ChangeCycleBase</span><span class="p">):</span>
-</span><span data-line="5"><span class="w">    </span><span class="sd">"""Operations performed during the day/night cycle transition.</span>
-</span><span data-line="6">
-</span><span data-line="7"><span class="sd">    The base class handles cleanup tasks such as deleting old video files.</span>
-</span><span data-line="8"><span class="sd">    It can be configured to only delete videos that have already been synced</span>
-</span><span data-line="9"><span class="sd">    to an external location.</span>
-</span><span data-line="10"><span class="sd">    """</span>
-</span><span data-line="11">
-</span><span data-line="12">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="13">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="14">
-</span><span data-line="15">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="16"><span class="w">        </span><span class="sd">"""Executes the cycle change logic."""</span>
-</span><span data-line="17">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># remove this line if you don't want the default cleanup</span>
-</span><span data-line="18">
-</span><span data-line="19">        <span class="c1"># Add your custom actions here</span>
-</span><span data-line="20">        <span class="nb">print</span><span class="p">(</span><span class="s2">"Performing custom cycle change actions"</span><span class="p">)</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">ChangeCycle</span><span class="p">(</span><span class="n">ChangeCycleBase</span><span class="p">):</span>
+</span><span data-line="6"><span class="w">    </span><span class="sd">"""Operations performed during the day/night cycle transition.</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="sd">    The base class handles cleanup tasks such as deleting old video files.</span>
+</span><span data-line="9"><span class="sd">    It can be configured to only delete videos that have already been synced</span>
+</span><span data-line="10"><span class="sd">    to an external location.</span>
+</span><span data-line="11"><span class="sd">    """</span>
+</span><span data-line="12">
+</span><span data-line="13">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="14">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="15">
+</span><span data-line="16">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="17"><span class="w">        </span><span class="sd">"""Executes the cycle change logic."""</span>
+</span><span data-line="18">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># remove this line if you don't want the default cleanup</span>
+</span><span data-line="19">
+</span><span data-line="20">        <span class="c1"># Add your custom actions here</span>
+</span><span data-line="21">        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Performing custom cycle change actions"</span><span class="p">)</span>  <span class="c1"># shown in the events</span>
 </span></pre></div>
 </div>
 <p>A complete example, which logs how many videos are left after the cleanup:
@@ -653,7 +655,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

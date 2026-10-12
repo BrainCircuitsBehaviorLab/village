@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Protocol Creation - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="training_protocol.py" href="../examples/training_protocol.html" /><link rel="prev" title="Project Structure" href="project_structure.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>The Training Protocol - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="training_protocol.py" href="../examples/training_protocol.html" /><link rel="prev" title="Project Structure" href="project_structure.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/protocols/creating.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -23,7 +23,7 @@
     
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/protocols/creating.html"/>
-  <meta property="og:title" content="Protocol Creation"/>
+  <meta property="og:title" content="The Training Protocol"/>
     <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -475,12 +475,9 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#the-training-protocol">The Training Protocol</a><ul>
 <li><a class="reference internal" href="#default-training-settings"><code class="docutils literal notranslate"><span class="pre">default_training_settings()</span></code></a></li>
 <li><a class="reference internal" href="#update-training-settings"><code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code></a></li>
 <li><a class="reference internal" href="#define-gui-tabs-optional"><code class="docutils literal notranslate"><span class="pre">define_gui_tabs()</span></code> <em>(optional)</em></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#summary">Summary</a></li>
 </ul>
 </div></div>
@@ -507,7 +504,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Protocol Creation</strong>
+        <strong itemprop="name">The Training Protocol</strong>
         <meta itemprop="position" content="4" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -555,13 +552,11 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </div><article class="yue" role="main">
-          <section id="protocol-creation">
-<h1>Protocol Creation</h1>
-<section id="the-training-protocol">
-<h2>The Training Protocol</h2>
-<p>The training protocol must live in a file named exactly <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code> inside
-your <code class="docutils literal notranslate"><span class="pre">code/</span></code> folder. It defines a class called <code class="docutils literal notranslate"><span class="pre">TrainingProtocol</span></code> that inherits from
-<code class="docutils literal notranslate"><span class="pre">TrainingProtocolBase</span></code>.</p>
+          <section id="the-training-protocol">
+<h1>The Training Protocol</h1>
+<p>The training protocol is a class that inherits from <code class="docutils literal notranslate"><span class="pre">TrainingProtocolBase</span></code>, usually
+<code class="docutils literal notranslate"><span class="pre">TrainingProtocol</span></code> in a file named <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code> inside your <code class="docutils literal notranslate"><span class="pre">code/</span></code> folder
+(the names are up to you; only one training protocol is used per project).</p>
 <p>The code on this page is taken from the training protocol of the example tasks
 (<a class="reference internal" href="../examples/training_protocol.html"><span class="std std-doc">training_protocol.py</span></a>), which moves each subject
 through six Bpod stages, from habituation to a delay discrimination task:</p>
@@ -598,7 +593,7 @@ text is not found can come out empty. -->
 <code class="docutils literal notranslate"><span class="pre">update_training_settings</span></code>; <code class="docutils literal notranslate"><span class="pre">define_gui_tabs</span></code> is optional.</p>
 <hr class="docutils" />
 <section id="default-training-settings">
-<h3><code class="docutils literal notranslate"><span class="pre">default_training_settings()</span></code></h3>
+<h2><code class="docutils literal notranslate"><span class="pre">default_training_settings()</span></code></h2>
 <p>This method defines all training variables and their initial values. It is called once
 when a new subject is created. The variables defined here are accessible from within
 any task via <code class="docutils literal notranslate"><span class="pre">self.settings.&lt;variable_name&gt;</span></code>.</p>
@@ -660,7 +655,7 @@ tasks (each task lists the ones it needs in its own code).</p>
 </section>
 <hr class="docutils" />
 <section id="update-training-settings">
-<h3><code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code></h3>
+<h2><code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code></h2>
 <p>This method runs automatically at the end of every session. It looks at the subject’s
 history and updates whichever settings should change based on performance: typically
 <code class="docutils literal notranslate"><span class="pre">next_task</span></code>, to move the subject to the next stage, and any setting that changes with
@@ -768,7 +763,7 @@ so <code class="docutils literal notranslate"><span class="pre">next_task</span>
 </section>
 <hr class="docutils" />
 <section id="define-gui-tabs-optional">
-<h3><code class="docutils literal notranslate"><span class="pre">define_gui_tabs()</span></code> <em>(optional)</em></h3>
+<h2><code class="docutils literal notranslate"><span class="pre">define_gui_tabs()</span></code> <em>(optional)</em></h2>
 <p>If your protocol has many variables, this method lets you organize them into named tabs
 in the GUI panel that appears when launching a task manually. Variables not assigned to
 any tab are placed in a default <strong>General</strong> tab. You can also use the reserved <code class="docutils literal notranslate"><span class="pre">&quot;Hide&quot;</span></code>
@@ -809,7 +804,6 @@ The example protocol doesn’t need it; it would look like this:</p>
 </span></pre></div>
 </div>
 </section>
-</section>
 <hr class="docutils" />
 <section id="summary">
 <h2>Summary</h2>
@@ -842,6 +836,11 @@ The example protocol doesn’t need it; it would look like this:</p>
 </tbody>
 </table>
 </div>
+<p>To check a protocol against real data without changing anything, use the
+<code class="docutils literal notranslate"><span class="pre">TEST</span> <span class="pre">THE</span> <span class="pre">TRAINING</span> <span class="pre">PROTOCOL</span></code> button of the <code class="docutils literal notranslate"><span class="pre">TASKS</span></code> screen (see
+<a class="reference internal" href="../system_operation/manual.html#testing-the-training-protocol"><span class="std std-ref">Manual Task Execution</span></a>): it
+shows the settings the protocol would compute for a subject’s next session, without
+saving them.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -884,7 +883,7 @@ The example protocol doesn’t need it; it would look like this:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -475,6 +475,7 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#where-to-look-first">Where to Look First</a></li>
 <li><a class="reference internal" href="#illumination-tracking-issues">Illumination &amp; Tracking Issues</a><ul>
 <li><a class="reference internal" href="#symptom-double-entries-or-wrong-rfid-detections">Symptom: Double Entries or Wrong RFID detections</a></li>
 <li><a class="reference internal" href="#symptom-broken-video-tracking-inside-the-operant-box">Symptom: Broken Video-Tracking inside the Operant Box</a></li>
@@ -483,6 +484,15 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#camera-issues-connection-error-or-malfunctioning">Camera Issues (Connection Error or Malfunctioning)</a></li>
 <li><a class="reference internal" href="#controller-issues-bpod-or-arduino-connection-error">Controller Issues (Bpod or Arduino Connection Error)</a></li>
 <li><a class="reference internal" href="#peripheral-issues-sensors-motors-lights-or-satellite-boards">Peripheral Issues (Sensors, Motors, Lights, or Satellite Boards)</a></li>
+<li><a class="reference internal" href="#an-animal-never-enters-the-box">An Animal Never Enters the Box</a></li>
+<li><a class="reference internal" href="#errors-at-startup-or-when-launching-a-task">Errors at Startup or When Launching a Task</a></li>
+<li><a class="reference internal" href="#the-animal-doesnt-leave-scale-and-exit-detection">The Animal Doesn&#8217;t Leave (Scale and Exit Detection)</a></li>
+<li><a class="reference internal" href="#after-a-power-cut">After a Power Cut</a></li>
+<li><a class="reference internal" href="#no-sound">No Sound</a></li>
+<li><a class="reference internal" href="#screen-or-touchscreen-issues">Screen or Touchscreen Issues</a></li>
+<li><a class="reference internal" href="#the-rfid-reader-doesnt-read">The RFID Reader Doesn&#8217;t Read</a></li>
+<li><a class="reference internal" href="#remote-access-or-telegram-bot-not-responding">Remote Access or Telegram Bot Not Responding</a></li>
+<li><a class="reference internal" href="#after-updating-the-training-village">After Updating the Training Village</a></li>
 <li><a class="reference internal" href="#data-synchronization-issues">Data Synchronization Issues</a></li>
 </ul>
 </div></div>
@@ -562,6 +572,21 @@ data-aria-dark="Switch to auto color mode">
 <p>The Training Village is a multi-component system where hardware, software, and behavior intersect. Minor miscalibrations or component failures can lead to suboptimal performance. Typically, small issues may arise during the first few days of deployment as the animals habituate and the sensors are fine-tuned.</p>
 <p>When a system anomaly is detected, an automated alert is instantly dispatched via Telegram. It is crucial to respond promptly by logging in remotely to investigate the root cause of the error, reviewing the corridor and operant box video recordings. For example: a door that does not close properly or a lighting failure can produce several types of errors: incorrect RFID detection, two animals simultaneously entering the operant box, the system registering an animal as present when the box is empty, or the system failing to detect an animal that is actually inside.</p>
 <hr class="docutils" />
+<section id="where-to-look-first">
+<h2>Where to Look First</h2>
+<ul class="simple">
+<li><p><strong>The events log</strong> (<code class="docutils literal notranslate"><span class="pre">DATA</span></code> → <code class="docutils literal notranslate"><span class="pre">EVENTS</span></code>): every action, refusal and error is written
+there. Double-click a row to see its full description and, for errors, the Python
+traceback with the line of code that failed.</p></li>
+<li><p><strong>The videos</strong>: select an event and click <code class="docutils literal notranslate"><span class="pre">VIDEO</span></code> to see the corridor at that moment,
+or open the session video from <code class="docutils literal notranslate"><span class="pre">DATA</span></code> → <code class="docutils literal notranslate"><span class="pre">SESSIONS_SUMMARY</span></code>.</p></li>
+<li><p><strong>The terminal</strong> where <code class="docutils literal notranslate"><span class="pre">village</span></code> was launched, which also shows the messages printed
+by your own code.</p></li>
+<li><p><strong>The logs of the synchronization and of the video deletion</strong> (<code class="docutils literal notranslate"><span class="pre">rsync_logs/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">data_removal_logs/</span></code>, in <code class="docutils literal notranslate"><span class="pre">data/&lt;SYSTEM_NAME&gt;/</span></code>).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
 <section id="illumination-tracking-issues">
 <h2>Illumination &amp; Tracking Issues</h2>
 <p>Many gating or tracking failures are not caused by software bugs, but by physical lighting conditions.</p>
@@ -569,7 +594,7 @@ data-aria-dark="Switch to auto color mode">
 <h3>Symptom: Double Entries or Wrong RFID detections</h3>
 <p>If you notice that two animals are entering the operant box simultaneously, or that a gate closes while an animal is still in the corridor, the cause is usually <strong>optical reflections</strong>.</p>
 <ul class="simple">
-<li><p><strong>The Cause:</strong> The computer vision algorithm relies on a clean binarized pixel count. If there are glare reflections on the clear acrylic corridor ceiling, the camera can become “blind” to those reflection zones. For example, if a second animal is standing directly under a heavy glare reflection, its pixels will not be counted. The system will assume the corridor is empty and mistakenly open the gate for an RFID-tagged animal, leading to double entries or wrong rfid detections.</p></li>
+<li><p><strong>The Cause:</strong> The computer vision algorithm relies on a clean binarized pixel count. If there are glare reflections on the clear acrylic corridor ceiling, the camera can become “blind” to those reflection zones. For example, if a second animal is standing directly under a heavy glare reflection, its pixels will not be counted. The system will assume the corridor is empty and mistakenly open the gate for an RFID-tagged animal, leading to double entries or wrong RFID detections.</p></li>
 <li><p><strong>The Solution:</strong> Adjust the physical positioning or angles of your external room lights. Ensure the corridor is shielded from direct overhead glare. While the camera automatically adjusts its exposure between day (<code class="docutils literal notranslate"><span class="pre">VISIBLE</span></code>) and night (<code class="docutils literal notranslate"><span class="pre">IR</span></code>) modes to keep images consistent, it cannot filter out localized mirror-like reflections on plastic surfaces.</p></li>
 </ul>
 </section>
@@ -578,7 +603,7 @@ data-aria-dark="Switch to auto color mode">
 <p>If the advanced center-of-mass tracking (<code class="docutils literal notranslate"><span class="pre">findContours</span></code>) is dropping or jumping erratically inside the behavioral arena, inspect the box illumination profile.</p>
 <ul class="simple">
 <li><p><strong>The Cause:</strong> The operant box tracking requires highly uniform illumination (either visible or IR, depending on your paradigm).</p></li>
-<li><p><strong>The Solution:</strong> Ensure the LED strips inside the box are clean and fully functional. <strong>Never open the operant box door while a behavioral session is actively running</strong>, as the sudden influx of external room light will completely disrupt the binarization thresholds and crash the real-time tracking tracking loop.</p></li>
+<li><p><strong>The Solution:</strong> Ensure the LED strips inside the box are clean and fully functional. <strong>Never open the operant box door while a behavioral session is actively running</strong>, as the sudden influx of external room light will completely disrupt the binarization thresholds and crash the real-time tracking loop.</p></li>
 </ul>
 </section>
 </section>
@@ -622,8 +647,8 @@ data-aria-dark="Switch to auto color mode">
 <p>A <strong>symlink</strong> (short for symbolic link) is a software shortcut in Linux that transparently redirects one file path to another.</p>
 <ul class="simple">
 <li><p><strong>Why it is necessary:</strong> When you connect a serial device (like a Bpod or Arduino) to the Raspberry Pi, Linux dynamically assigns it a generic node path like <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM0</span></code> or <code class="docutils literal notranslate"><span class="pre">/dev/ttyUSB0</span></code>. However, if the device is unplugged, if the Pi reboots, or if another USB peripheral is connected, Linux might randomly reassign that hardware to <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM1</span></code>. If the Training Village software were hardcoded to look for a static name like <code class="docutils literal notranslate"><span class="pre">ttyACM0</span></code>, the connection would instantly break.</p></li>
-<li><p><strong>The Automated Solution (<code class="docutils literal notranslate"><span class="pre">udev</span></code> rules):</strong> To prevent this, Linux uses a background device manager called <code class="docutils literal notranslate"><span class="pre">udev</span></code>. The Training Village comes pre-configured with a custom rule file (located at <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-usb.rules</span></code>) containing the following instruction: <code class="docutils literal notranslate"><span class="pre">SUBSYSTEM==&quot;tty&quot;,</span> <span class="pre">KERNELS==&quot;3-1:1.0&quot;,</span> <span class="pre">SYMLINK+=&quot;controller&quot;</span></code></p></li>
-<li><p><strong>How this udev rule works:</strong> <code class="docutils literal notranslate"><span class="pre">SUBSYSTEM==&quot;tty&quot;</span></code>: Filters the incoming hardware events and tells Linux to only trigger this rule if the connected device is a serial/terminal interface (like a USB microcontroller). <code class="docutils literal notranslate"><span class="pre">KERNELS==&quot;3-1:1.0&quot;</span></code>: instead of looking at what device is plugged in, it looks at where it is plugged in. <code class="docutils literal notranslate"><span class="pre">3-1:1.0</span></code> corresponds to the exact physical address of the bottom USB port adjacent to the Raspberry Pi 5 Ethernet jack. <code class="docutils literal notranslate"><span class="pre">SYMLINK+=&quot;controller&quot;</span></code>: If a serial device matches the criteria above, udev automatically creates a permanent, unchangeable symbolic link shortcut named /dev/controller pointing straight to it.</p></li>
+<li><p><strong>The Automated Solution (<code class="docutils literal notranslate"><span class="pre">udev</span></code> rules):</strong> To prevent this, Linux uses a background device manager called <code class="docutils literal notranslate"><span class="pre">udev</span></code>. The Training Village comes pre-configured with a custom rule file (located at <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-usb.rules</span></code>) containing the following instruction: <code class="docutils literal notranslate"><span class="pre">SUBSYSTEM==&quot;tty&quot;,</span> <span class="pre">KERNELS==&quot;1-1:1.0&quot;,</span> <span class="pre">SYMLINK+=&quot;controller&quot;</span></code></p></li>
+<li><p><strong>How this udev rule works:</strong> <code class="docutils literal notranslate"><span class="pre">SUBSYSTEM==&quot;tty&quot;</span></code>: Filters the incoming hardware events and tells Linux to only trigger this rule if the connected device is a serial/terminal interface (like a USB microcontroller). <code class="docutils literal notranslate"><span class="pre">KERNELS==&quot;1-1:1.0&quot;</span></code>: instead of looking at what device is plugged in, it looks at where it is plugged in. <code class="docutils literal notranslate"><span class="pre">1-1:1.0</span></code> corresponds to the exact physical address of the bottom USB port adjacent to the Raspberry Pi 5 Ethernet jack. <code class="docutils literal notranslate"><span class="pre">SYMLINK+=&quot;controller&quot;</span></code>: If a serial device matches the criteria above, udev automatically creates a permanent, unchangeable symbolic link shortcut named /dev/controller pointing straight to it.</p></li>
 </ul>
 <p>Thanks to this rule, no matter what microcontroller you plug into that specific bottom port, and regardless of the generic name Linux gives it internally, the Training Village software can always find your behavioral controller seamlessly.</p>
 </div>
@@ -636,19 +661,174 @@ data-aria-dark="Switch to auto color mode">
 <li><p><strong>Verify Satellite Connections:</strong> Check that the failing component (servo, LED strip, RFID antenna) is securely connected to the correct ports on the Corridor Board or Box Board with the correct wiring polarity.</p></li>
 <li><p><strong>Check Hub-to-Satellite Cables:</strong> Each satellite board is linked by two cables — an Ethernet cable carrying data, and a separate power cable (DC barrel jack on both ends) carrying 5V. Ensure both are firmly plugged into their respective dedicated ports on the Main HAT.</p></li>
 <li><p><strong>Check HAT Seating:</strong> Ensure the Main HAT is fully pressed down and evenly seated onto the Raspberry Pi 5 GPIO header extension pins.</p></li>
-<li><p><strong>Test Power Lines:</strong> Verify that the Main HAT is receiving a stable <strong>5V (3A)</strong> from the main power supply. A drop in voltage can cause I2C chips, scales, or servos to drop off the bus randomly.</p></li>
+<li><p><strong>Test Power Lines:</strong> Verify that the Main HAT is receiving a stable <strong>5V (3A)</strong> from the 5V power supply. A drop in voltage can cause I2C chips, scales, or servos to drop off the bus randomly.</p></li>
 <li><p><strong>Restart Village After Reconnecting a Motor:</strong> Physically unplugging and replugging a servo can momentarily glitch the power rail feeding its PWM driver chip (PCA9685), resetting the chip’s internal PWM frequency configuration. The Raspberry Pi’s I2C connection to the chip keeps working (no error is shown), but the servo stops responding correctly because the pulse timing it’s now receiving no longer matches what it expects. That frequency is only configured once, when Village starts — if a motor stops working after being disconnected and reconnected, <strong>restart Village</strong> to reinitialize it, rather than assuming the servo itself is broken.</p></li>
 </ol>
+</section>
+<hr class="docutils" />
+<section id="an-animal-never-enters-the-box">
+<h2>An Animal Never Enters the Box</h2>
+<p>When an animal is detected by the RFID reader but not let in, the reason is written in
+the events log. Check, in this order:</p>
+<ol class="arabic simple">
+<li><p><strong>The RFID reader is ON</strong> (<code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>), and the tag is being read: every
+reading writes “Tag detected: …” in the events.</p></li>
+<li><p><strong>The subject is registered with that tag.</strong> Otherwise the events show “Subject with
+tag: … not found” (see <a class="reference internal" href="../system_operation/subject.html"><span class="std std-doc">Subject Management</span></a>).</p></li>
+<li><p><strong>The subject is active now.</strong> “Subject not active” means its <code class="docutils literal notranslate"><span class="pre">active</span></code> field is OFF
+or the current hour is outside its schedule.</p></li>
+<li><p><strong>Its refractory period is over.</strong> “Subject not allowed to enter until …” shows its
+<code class="docutils literal notranslate"><span class="pre">next_session_time</span></code>, which is the end of its last session plus <code class="docutils literal notranslate"><span class="pre">refractory_period</span></code>.</p></li>
+<li><p><strong>The corridor looks right to the camera.</strong> “Detection in area1: …”, “Detection in
+area2: …” or “Large detection in area3: …” mean that, for the camera, there is
+something else in the corridor or two animals in area 3. Check the lighting, dirt and
+the thresholds (see <a class="reference internal" href="../system_operation/detection.html"><span class="std std-doc">Animal Detection &amp; Tracking</span></a>).</p></li>
+<li><p><strong>Only one tag was read.</strong> “Multiple tags detected in the last seconds” means another
+animal was detected less than <code class="docutils literal notranslate"><span class="pre">TIME_BETWEEN_DETECTIONS</span></code> seconds before.</p></li>
+</ol>
+<p>The corridor camera must also be giving an image: without it, no animal is let in.</p>
+</section>
+<hr class="docutils" />
+<section id="errors-at-startup-or-when-launching-a-task">
+<h2>Errors at Startup or When Launching a Task</h2>
+<ul class="simple">
+<li><p><strong>“System running in debug mode”</strong> when Village starts: a device could not be
+started. The message lists which ones; see the sections above for cameras, the
+controller and the peripherals.</p></li>
+<li><p><strong>“Couldn’t import <file>”</strong> in the events: a Python file of your <code class="docutils literal notranslate"><span class="pre">code</span></code> folder has an
+error. Double-click the row to see the traceback. Everything in that file (tasks,
+triggers, plots…) is ignored until it is fixed. “No tasks could be imported” and
+“Training protocol not found” usually come from the same cause.</p></li>
+<li><p><strong>“Error running task: … not found”</strong>: the subject’s <code class="docutils literal notranslate"><span class="pre">next_task</span></code> names a task that
+doesn’t exist (renamed or deleted). Fix the training protocol, or the subject’s
+<code class="docutils literal notranslate"><span class="pre">next_settings</span></code> in the <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> screen.</p></li>
+<li><p><strong>“WATER CALIBRATION PROBLEM” / “SOUND CALIBRATION PROBLEM”</strong> when a task starts: the
+task asked for a volume or a sound level that is not calibrated, or out of the
+calibrated range. Calibrate it (see <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a> and
+<a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">Sound Calibration</span></a>), or change the requested value.</p></li>
+<li><p><strong>“Error running task …”</strong> while the task runs: an exception in the task code. The
+traceback shows the line.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="the-animal-doesnt-leave-scale-and-exit-detection">
+<h2>The Animal Doesn’t Leave (Scale and Exit Detection)</h2>
+<p>The system decides that the animal has gone back home by combining the corridor camera
+and the corridor scale. With door 2 open, it waits until areas 3 and 4 are empty, the
+animal is in area 2, and the scale gives a stable weight between
+<code class="docutils literal notranslate"><span class="pre">MIN_WEIGHT_THRESHOLD</span></code> and <code class="docutils literal notranslate"><span class="pre">MAX_WEIGHT_THRESHOLD</span></code> (10 to 40 g by default, in
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>). Only then it closes door 2, opens door 1 and writes
+“Subject back home: … g”.</p>
+<p>If the scale is not working, is badly calibrated, or the thresholds don’t fit your
+animals, the system keeps waiting. Once the task has reached its <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>,
+if the animal is still not detected back home one hour later, it sends “The subject
+has been in the box for too long.” (repeated every hour).</p>
+<ul class="simple">
+<li><p><strong>Check the scale</strong> from <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>: <code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code> with nothing on it, then
+<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code> with a known weight. If it is wrong, <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code> again.</p></li>
+<li><p><strong>Check the thresholds</strong> against the weight of your animals. For rats, or for heavier
+mice, <code class="docutils literal notranslate"><span class="pre">MAX_WEIGHT_THRESHOLD</span></code> must be raised.</p></li>
+<li><p><strong>If an animal is stuck</strong>, help it out and use <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">STATE</span></code> → “All subjects are
+back home, go to WAIT state” (see <a class="reference internal" href="../system_operation/toolbar.html"><span class="std std-doc">Toolbar Controls</span></a>).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="after-a-power-cut">
+<h2>After a Power Cut</h2>
+<p>The Raspberry Pi starts again by itself when the power comes back, but <strong>the Training
+Village does not</strong>: it has to be launched again (<code class="docutils literal notranslate"><span class="pre">village</span></code>, see
+<a class="reference internal" href="../preparation/launching.html"><span class="std std-doc">Launching the TV Application</span></a>). Until then, no animal can
+enter the box, and the <a class="reference external" href="http://healthchecks.io">healthchecks.io</a> heartbeat stays silent, so the team gets the
+heartbeat alarm.</p>
+<ol class="arabic simple">
+<li><p><strong>Before launching it, save the interrupted session if you need it.</strong> While a session
+runs, its events are written as they happen to <code class="docutils literal notranslate"><span class="pre">data/sessions/session.csv</span></code>, and the
+session files are only created when the session ends. That file is emptied when the
+Training Village starts, so copy it somewhere else first. The interrupted session is
+not added to the subject’s data, and its settings are not updated.</p></li>
+<li><p><strong>Launch the Training Village.</strong> It starts in <code class="docutils literal notranslate"><span class="pre">WAIT</span></code>, without moving the doors.</p></li>
+<li><p><strong>Check, with the box camera, whether an animal was left inside.</strong> If so, open door 2
+from <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> so that it can leave, and when it is back home leave door
+1 open and door 2 closed.</p></li>
+<li><p>Check that the cameras, the RFID reader and the Telegram bot work again, as after any
+start.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="no-sound">
+<h2>No Sound</h2>
+<ul class="simple">
+<li><p><strong>The DAC is still used by the operating system.</strong> Its device profile must be set to
+<strong>Off</strong> (see <a class="reference internal" href="../system_operation/sound.html"><span class="std std-doc">Sound Integration</span></a>).</p></li>
+<li><p><strong>The sound device is not selected</strong>: <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code>
+ON, and the right <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code>.</p></li>
+<li><p><strong>The sound card mutes itself</strong> after a silence: disable its auto-mute (see the
+<a class="reference internal" href="../resources/software_installation.html"><span class="std std-doc">manual installation</span></a>).</p></li>
+<li><p><strong>“Error in sound device”</strong> in the events: double-click it to see the cause.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="screen-or-touchscreen-issues">
+<h2>Screen or Touchscreen Issues</h2>
+<ul class="simple">
+<li><p><strong>Nothing is shown on the screen of the box</strong>: the system must be set to always detect
+two screens (<code class="docutils literal notranslate"><span class="pre">vc4.force_hotplug=3</span></code> in <code class="docutils literal notranslate"><span class="pre">/boot/firmware/cmdline.txt</span></code>), and the second
+screen must be connected to the second micro-HDMI port (see
+<a class="reference internal" href="../system_operation/screen.html"><span class="std std-doc">Screen Integration</span></a>).</p></li>
+<li><p><strong>Touches are not registered</strong>: check <code class="docutils literal notranslate"><span class="pre">TOUCHSCREEN_DEVICE</span></code> (the exact name of the
+device) and <code class="docutils literal notranslate"><span class="pre">TOUCH_RESOLUTION</span></code>.</p></li>
+<li><p><strong>Touches move the mouse pointer of the desktop</strong>: the udev rule that tells the desktop
+to ignore the touchscreen is missing (see <a class="reference internal" href="../system_operation/screen.html"><span class="std std-doc">Screen Integration</span></a>).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="the-rfid-reader-doesnt-read">
+<h2>The RFID Reader Doesn’t Read</h2>
+<ul class="simple">
+<li><p><strong>Check the wiring of the reader</strong> (the connector order of the ID-20LA, see the
+<a class="reference internal" href="../resources/hardware.html"><span class="std std-doc">Assembly Guide</span></a>) and that the Corridor Board is powered.</p></li>
+<li><p><strong>The serial port must be enabled</strong> (<code class="docutils literal notranslate"><span class="pre">enable_uart=1</span></code>, see the
+<a class="reference internal" href="../resources/software_installation.html"><span class="std std-doc">manual installation</span></a>; already done in the
+disk image).</p></li>
+<li><p><strong>Check the chip</strong>: hold the animal over the reader. A chip that is too deep or badly
+oriented may only be read from some positions.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="remote-access-or-telegram-bot-not-responding">
+<h2>Remote Access or Telegram Bot Not Responding</h2>
+<ul class="simple">
+<li><p><strong>Remote access is lost but the bot answers</strong>: send <code class="docutils literal notranslate"><span class="pre">/restart_anydesk</span></code> or
+<code class="docutils literal notranslate"><span class="pre">/restart_vnc</span></code> (see <a class="reference internal" href="alarm.html"><span class="std std-doc">Alarm System Overview</span></a>).</p></li>
+<li><p><strong>The bot doesn’t answer anything</strong>: either the Training Village is not running, or
+the Raspberry Pi has no internet connection. This is the same situation as the
+heartbeat alarm.</p></li>
+<li><p><strong>The bot never answered</strong>: check <code class="docutils literal notranslate"><span class="pre">TELEGRAM_TOKEN</span></code> and <code class="docutils literal notranslate"><span class="pre">TELEGRAM_CHAT</span></code> (see
+<a class="reference internal" href="../preparation/telegram.html"><span class="std std-doc">Telegram Bot Integration</span></a>).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="after-updating-the-training-village">
+<h2>After Updating the Training Village</h2>
+<p>If, after a <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code>, the Training Village fails to start because a Python module
+can’t be imported, the new version needs a new dependency. Install it inside the
+Python environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">source</span> <span class="o">~/.</span><span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</span><span data-line="2"><span class="n">cd</span> <span class="o">~/</span><span class="n">village</span>
+</span><span data-line="3"><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span> <span class="o">--</span><span class="n">config</span><span class="o">-</span><span class="n">settings</span> <span class="n">editable_mode</span><span class="o">=</span><span class="n">compat</span>
+</span></pre></div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="data-synchronization-issues">
 <h2>Data Synchronization Issues</h2>
 <p>If you suspect a transfer issue, you can inspect the detailed synchronization logs generated by the system. The log files are stored locally in the following directory:</p>
 <p><code class="docutils literal notranslate"><span class="pre">/home/pi/village_projects/YOUR_PROJECT/data/YOUR_SYSTEM/rsync_logs</span></code></p>
-<p>If the synchronization routine fails repeatedly, the system will broadcast an automated warning to your team’s Telegram channel:</p>
-<p><strong>Alarm</strong>: No data sync in the last 24h</p>
-<p><strong>Meaning</strong>: No data has been successfully backed up to the external server or hard drive during the last 24 hours.</p>
-<p><strong>Action Required</strong>: Review the logs inside the rsync_logs folder to identify the specific transfer error, and verify your network connectivity or remote storage availability.</p>
+<p>If the synchronization fails for 24 hours, the system sends the alarm “No data sync in
+the last 24 hours.” to your team’s Telegram group chat (see
+<a class="reference internal" href="alarm.html"><span class="std std-doc">Alarm System Overview</span></a>). Review the logs inside the <code class="docutils literal notranslate"><span class="pre">rsync_logs</span></code> folder to
+identify the specific transfer error, and verify your network connectivity or remote
+storage availability.</p>
 </section>
 </section>
 
@@ -689,7 +869,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

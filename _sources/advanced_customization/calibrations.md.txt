@@ -10,11 +10,12 @@ This page describes the second approach.
 
 Create a Python file inside your `project/code` folder with a class that inherits from `CalibrationBase`. Inside this class, define a data structure using `create_data_collection`, and a small GUI to interact with calibration parameters. If the hardware has to do something while you measure (open a valve, play a sound, turn on a LED...), you will also need a task that inherits from `CalibrationTaskBase` (see [Running a Task from the Calibration](#running-a-task-from-the-calibration)).
 
-Three built-in calibration examples are included in the Village codebase under `village/calibration/`:
+The built-in calibrations are included in the Village codebase under `village/calibration/`:
 
-- `sound_calibration.py`
-- `water_calibration.py`
+- `sound_calibration.py` and `water_calibration.py` (panels that run a task while measuring)
+- `corridor_threshold_calibration.py` (a panel without a task, that edits settings live)
 - `camera_calibration.py`
+- `optogrid_calibration.py`
 
 These are a good starting point for understanding how calibration classes work.
 A complete custom calibration, small enough to read in one go, is

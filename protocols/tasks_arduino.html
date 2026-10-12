@@ -954,9 +954,10 @@ triggered (adjustable in the Settings tab of the GUI).</p>
 <p class="admonition-title">What is saved when a session stops</p>
 <p>Each session saves two files:</p>
 <ul class="simple">
-<li><p>The <strong>raw</strong> file (<code class="docutils literal notranslate"><span class="pre">&lt;session&gt;_RAW.csv</span></code>) has one line per event, written as it
-happens, so it keeps everything — including the trial that was still running
-when the session stopped.</p></li>
+<li><p>The <strong>raw</strong> file (<code class="docutils literal notranslate"><span class="pre">&lt;session&gt;_RAW.csv</span></code>) has one line per event. During the session
+the events are written as they happen to <code class="docutils literal notranslate"><span class="pre">data/sessions/session.csv</span></code>, which is
+copied to the raw file when the session ends, so it keeps everything — including
+the trial that was still running when the session stopped.</p></li>
 <li><p>The <strong>clean</strong> file (<code class="docutils literal notranslate"><span class="pre">&lt;session&gt;.csv</span></code>) is a table with one row per trial, and a
 trial’s row is only created when the trial finishes (after <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>). So
 the trial that was still running when the session stopped never gets its row.</p></li>
@@ -1060,7 +1061,7 @@ their Arduino counts from 0 when it receives the command, so <code class="docuti
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">execute_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></pre></div>
 </div>
-<p>Runs the direct function registered at index <code class="docutils literal notranslate"><span class="pre">i</span></code> (1-99). See
+<p>Runs the direct function registered at index <code class="docutils literal notranslate"><span class="pre">i</span></code> (1-98). See
 <a class="reference internal" href="functions.html"><span class="std std-doc">Direct, Audio &amp; Video Functions</span></a> for how those get registered and
 the other ways they can be triggered.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># executes the function registered at index 1</span>
@@ -1148,7 +1149,7 @@ the user when selecting the task in the GUI.</p>
 <p>Holds the task’s calibrations — call its methods to convert between hardware
 values and real-world units (see <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"white_noise"</span>
+</span><span data-line="2">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"whitenoise"</span>
 </span><span data-line="3"><span class="p">)</span>
 </span></pre></div>
 </div>
@@ -1327,7 +1328,7 @@ started it), and <code class="docutils literal notranslate"><span class="pre">ou
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

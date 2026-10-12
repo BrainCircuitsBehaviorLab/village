@@ -88,11 +88,12 @@ import numpy as np
 
 samplerate = 96000           # must match the SAMPLERATE setting (96000 by default)
 duration   = 0.5             # seconds
-frequency  = 4000            # Hz
+frequency  = 5000            # Hz
 
-# volume calibrated so the tone measures 70 dB from speaker 1
+# volume calibrated so the tone measures 70 dB from speaker 1, using the
+# calibration of tone_5000 in sound_functions.py (the same 5000 Hz tone)
 gain = self.calibrations.sound_calibration.get_sound_gain(
-    speaker=1, dB=70.0, sound_name="tone"
+    speaker=1, dB=70.0, sound_name="tone_5000"
 )
 
 t = np.linspace(0, duration, int(samplerate * duration), endpoint=False)

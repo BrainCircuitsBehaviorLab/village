@@ -16,8 +16,10 @@ Your project's `code` directory can hold three files that work together:
 
 ### Direct Functions
 
-Create a file named `direct_functions.py` inside your project's `code` directory
-and define a class named `DirectFunctions` that inherits from `DirectFunctionsBase`.
+Create a file inside your project's `code` directory (e.g. `direct_functions.py`) and define
+a class (e.g. `DirectFunctions`) that inherits from `DirectFunctionsBase`. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
 Each method must be named `functionN` (`N` from 1 to 98) and take no arguments other
 than `self`. Its first line, as a docstring, is a short label — it's what shows up
 on the corresponding button in the GUI, so keep it brief.
@@ -33,18 +35,18 @@ class DirectFunctions(DirectFunctionsBase):
         """Camera MSG ON"""
         # self.task gives access to the currently running task, so you can read
         # anything it defines (settings, calibrations, custom attributes, ...)
-        cam_box.annotation = "ON"
+        cam_box.write_text("ON")
 
     def function2(self):
         """Clear Camera MSG"""
-        cam_box.annotation = ""
+        cam_box.write_text("")
 ```
 
 ```{admonition} Note
 :class: note
-The system detects the class automatically — no registration needed. See this
-project's own `direct_functions.py` for a fuller set of examples covering sound
-playback and on-screen stimuli.
+The system detects the class automatically — no registration needed. See the demo
+project's [direct_functions.py](../examples/direct_functions.md) for a fuller set of
+examples covering sound playback and on-screen stimuli.
 ```
 
 #### Ways to trigger a direct function
@@ -170,6 +172,14 @@ automatically:
 ---
 
 ### Adding your own functions
+
+```{admonition} sound_functions.py must have this exact name
+:class: warning
+The [Sound Calibration](../calibrations/sound.md) panel looks for a file named exactly
+`sound_functions.py` in `code/` to fill its `SOUND` dropdown with
+`sound_calibration_functions`. Unlike the classes of the other files, it is found by
+its name.
+```
 
 `sound_functions.py` and `video_functions.py` are plain modules, not subclasses —
 unlike `direct_functions.py` (or `camera_trigger.py`, `gpio_trigger.py`, ...),

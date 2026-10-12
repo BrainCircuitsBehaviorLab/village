@@ -1,6 +1,6 @@
 ## auto_follow_the_light.py
 
-A simulated mouse (`AutoNoMouseBase`) that performs a task by itself, to test it without an animal.
+A virtual animal (`AutoNoMouseBase`) that performs [bpod_6_delay.py](bpod_6_delay.md) by itself, more accurately the longer the delay, to test the task, the training protocol and the plots without an animal.
 
 {download}`Download auto_follow_the_light.py <files/auto_follow_the_light.py>`
 

@@ -564,9 +564,10 @@ responses.</p>
 <hr class="docutils" />
 <section id="creating-a-custom-touchtrigger">
 <h2>Creating a custom TouchTrigger</h2>
-<p>Create a file named <code class="docutils literal notranslate"><span class="pre">touch_trigger</span></code> inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory and
-define a class named <code class="docutils literal notranslate"><span class="pre">TouchTrigger</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">TouchTriggerBase</span></code>. The
-system will automatically detect it and use it instead of the default base class.</p>
+<p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (e.g. <code class="docutils literal notranslate"><span class="pre">touch_trigger.py</span></code>) and define
+a class (e.g. <code class="docutils literal notranslate"><span class="pre">TouchTrigger</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">TouchTriggerBase</span></code>. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.touch_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TouchTriggerBase</span>
 </span><span data-line="2">
 </span><span data-line="3">
@@ -581,16 +582,20 @@ system will automatically detect it and use it instead of the default base class
 </span><span data-line="12"><span class="sd">        Args:</span>
 </span><span data-line="13"><span class="sd">            x (int): Touch x position in screen pixels.</span>
 </span><span data-line="14"><span class="sd">            y (int): Touch y position in screen pixels.</span>
-</span><span data-line="15"><span class="sd">            timestamp (float): Monotonic timestamp of the event (seconds).</span>
-</span><span data-line="16">
-</span><span data-line="17"><span class="sd">        Available via self.task:</span>
-</span><span data-line="18"><span class="sd">        - self.task.cam_box      — box camera (write_text, areas, position, …)</span>
-</span><span data-line="19"><span class="sd">        - self.task.bpod         — Bpod controller (send_softcode_to_bpod, …)</span>
-</span><span data-line="20"><span class="sd">        - any attribute defined in the task class</span>
-</span><span data-line="21"><span class="sd">        """</span>
-</span><span data-line="22">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="15"><span class="sd">            timestamp (float): Raspberry Pi time of the touch (the same clock as</span>
+</span><span data-line="16"><span class="sd">                time_utils.now_timestamp()).</span>
+</span><span data-line="17">
+</span><span data-line="18"><span class="sd">        Available via self.task:</span>
+</span><span data-line="19"><span class="sd">        - self.task.cam_box      — box camera (write_text, areas, position, …)</span>
+</span><span data-line="20"><span class="sd">        - self.task.bpod         — Bpod controller (send_softcode_to_bpod, …)</span>
+</span><span data-line="21"><span class="sd">        - any attribute defined in the task class</span>
+</span><span data-line="22"><span class="sd">        """</span>
+</span><span data-line="23">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></pre></div>
 </div>
+<p>You don’t need to register the touches yourself: every touch that arrives while a trial
+is running is already saved in the trial data as a Raspberry Pi event named
+<code class="docutils literal notranslate"><span class="pre">touch_&lt;x&gt;_&lt;y&gt;</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">touch_640_360</span></code>), with its time.</p>
 </section>
 <hr class="docutils" />
 <section id="example-checking-a-target-area-and-sending-a-softcode-to-bpod">
@@ -601,16 +606,19 @@ it. The result is then sent to Bpod as a softcode so that the state machine can
 branch accordingly.</p>
 <p><strong>In the task</strong>, define the target position and tolerance as instance attributes
 so the <code class="docutils literal notranslate"><span class="pre">TouchTrigger</span></code> can read them via <code class="docutils literal notranslate"><span class="pre">self.task</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">class</span><span class="w"> </span><span class="nc">MyTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BpodEvent</span><span class="p">,</span> <span class="n">TaskBase</span>
 </span><span data-line="2">
-</span><span data-line="3">    <span class="k">def</span><span class="w"> </span><span class="nf">start_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="4">        <span class="c1"># Position and radius of the target on the stimulus screen (pixels)</span>
-</span><span data-line="5">        <span class="bp">self</span><span class="o">.</span><span class="n">target_x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">640</span>
-</span><span data-line="6">        <span class="bp">self</span><span class="o">.</span><span class="n">target_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span>
-</span><span data-line="7">        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span>
-</span><span data-line="8">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_correct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="9">
-</span><span data-line="10">        <span class="c1"># ... build and run the state machine ...</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">MyTask</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
+</span><span data-line="5">
+</span><span data-line="6">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="7">        <span class="c1"># Position and radius of the target on the stimulus screen (pixels)</span>
+</span><span data-line="8">        <span class="bp">self</span><span class="o">.</span><span class="n">target_x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">640</span>
+</span><span data-line="9">        <span class="bp">self</span><span class="o">.</span><span class="n">target_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span>
+</span><span data-line="10">        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span>
+</span><span data-line="11">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_correct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="12">
+</span><span data-line="13">        <span class="c1"># ... build the state machine (see below) ...</span>
 </span></pre></div>
 </div>
 <p><strong>In <code class="docutils literal notranslate"><span class="pre">touch_trigger.py</span></code></strong>, check the distance to the target and send the
@@ -642,14 +650,15 @@ appropriate softcode:</p>
 </span><span data-line="25">            <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># softcode 2 → incorrect</span>
 </span></pre></div>
 </div>
-<p>The Bpod state machine receives the softcode and can use it to branch:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sma</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">state_name</span><span class="o">=</span><span class="s2">"WaitForTouch"</span><span class="p">,</span>
+<p>The Bpod state machine (built in the task’s <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>) receives the softcode
+and can use it to branch:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">state_name</span><span class="o">=</span><span class="s2">"wait_for_touch"</span><span class="p">,</span>
 </span><span data-line="3">    <span class="n">state_timer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
 </span><span data-line="4">    <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="5">        <span class="s2">"Tup"</span><span class="p">:</span> <span class="s2">"Timeout"</span><span class="p">,</span>
-</span><span data-line="6">        <span class="s2">"SoftCode1"</span><span class="p">:</span> <span class="s2">"Reward"</span><span class="p">,</span>
-</span><span data-line="7">        <span class="s2">"SoftCode2"</span><span class="p">:</span> <span class="s2">"Punish"</span><span class="p">,</span>
+</span><span data-line="5">        <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"timeout"</span><span class="p">,</span>
+</span><span data-line="6">        <span class="n">BpodEvent</span><span class="o">.</span><span class="n">SoftCode1</span><span class="p">:</span> <span class="s2">"reward"</span><span class="p">,</span>
+</span><span data-line="7">        <span class="n">BpodEvent</span><span class="o">.</span><span class="n">SoftCode2</span><span class="p">:</span> <span class="s2">"punish"</span><span class="p">,</span>
 </span><span data-line="8">    <span class="p">},</span>
 </span><span data-line="9">    <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
 </span><span data-line="10"><span class="p">)</span>
@@ -703,7 +712,7 @@ softcode are both non-blocking and safe to call from here.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

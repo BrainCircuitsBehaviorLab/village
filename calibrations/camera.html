@@ -555,14 +555,11 @@ data-aria-dark="Switch to auto color mode">
 <p>Generates a printable symmetric circle grid and uses it to calibrate lens distortion
 for the system cameras — the standard OpenCV checkerboard/grid calibration workflow,
 adapted to a circle grid.</p>
-<div class="note admonition">
-<p class="admonition-title">Note</p>
-<p>Always available.</p>
-</div>
+<p>Always available in the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen.</p>
 <section id="calibrating">
 <h2>Calibrating</h2>
 <ol class="arabic simple">
-<li><p>Print the generated circle grid (saved as <code class="docutils literal notranslate"><span class="pre">calibration_grid.pdf</span></code>) and mount it flat.</p></li>
+<li><p>Print the generated circle grid (saved as <code class="docutils literal notranslate"><span class="pre">calibration_grid.pdf</span></code> in the project’s <code class="docutils literal notranslate"><span class="pre">data</span></code> folder) and mount it flat.</p></li>
 <li><p>Hold it in front of the camera at different angles and distances while the panel
 detects the grid live and captures frames.</p></li>
 <li><p>Once enough frames have been captured (at least 4), run the calibration. It
@@ -575,12 +572,13 @@ result, so you can judge whether it’s good enough before saving.</p>
 <section id="result">
 <h2>Result</h2>
 <p>The result — camera matrix, distortion coefficients, reprojection error, image size,
-number of frames used, and the grid spacing in mm — is saved as a JSON file. This
+number of frames used, and the grid spacing in mm — is saved with the panel’s save
+button as <code class="docutils literal notranslate"><span class="pre">camera_calibration.json</span></code>, in the project’s <code class="docutils literal notranslate"><span class="pre">data</span></code> folder. This
 calibration is not applied automatically to the live camera feed; it is meant as a
 reference (or to feed into your own undistortion/measurement code) rather than
 something the core system consumes on its own.</p>
 <hr class="docutils" />
-<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>.</p>
+<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> and the <a class="reference internal" href="../examples/led_calibration.html"><span class="std std-doc">led_calibration.py</span></a> example.</p>
 </section>
 </section>
 
@@ -621,7 +619,7 @@ something the core system consumes on its own.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

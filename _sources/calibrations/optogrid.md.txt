@@ -4,11 +4,7 @@ Provides a visual map of the OptoGrid optogenetic stimulation device (a wireless
 64-LED array) for composing an LED selection and inspecting the device over
 Bluetooth.
 
-```{admonition} Note
-:class: note
-Always available. Requires `bleak` for Bluetooth scanning — if it isn't installed,
-scanning/connecting is unavailable but the rest of the panel still works.
-```
+Always available in the `CALIBRATION` screen.
 
 ### Scanning and connecting
 
@@ -33,4 +29,4 @@ ramp up/down — the same parameters a task sets when driving the device via
 
 ---
 
-Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md).
+Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md) and the [led_calibration.py](../examples/led_calibration.md) example.

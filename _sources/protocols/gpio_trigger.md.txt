@@ -23,10 +23,10 @@ times — see [Using the output pin](../system_operation/gpio.md#using-the-outpu
 
 ### Creating a custom GpioTrigger
 
-Create a file named `gpio_trigger.py` inside your project's `code` directory
-and define a class named `GpioTrigger` that inherits from `GpioTriggerBase`.
-The system will automatically detect it and use it instead of the default
-base class.
+Create a file inside your project's `code` directory (e.g. `gpio_trigger.py`) and define
+a class (e.g. `GpioTrigger`) that inherits from `GpioTriggerBase`. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
 
 ```python
 from village.custom_classes.gpio_trigger_base import GpioTriggerBase

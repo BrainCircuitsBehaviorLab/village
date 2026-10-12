@@ -16,19 +16,29 @@ inside it, the text "Area X triggered" is overlaid on the camera feed.
 Active areas can be set to ALLOWED, NOT_ALLOWED, or TRIGGER.
 ```
 
-You can override this behavior by creating a custom class in your project. Create a
-file named `camera_trigger` inside your project's `code` directory and define a class
-named `CameraTrigger` that inherits from `CameraTriggerBase`.
-If the system detects a class inheriting from `CameraTriggerBase` in your project,
-it will use your custom class instead of the default base class.
+You can override this behavior by creating a custom class in your project.
+Create a file inside your project's `code` directory (e.g. `camera_trigger.py`) and define
+a class (e.g. `CameraTrigger`) that inherits from `CameraTriggerBase`. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
 
 In the following example, a subclass is created that writes a text when the subject
-is detected in Area1, executes direct function number 2 when detected in Area2,
-and triggers function number 6 when detected within a circular region at the center
+is detected in Area1, executes direct function number 2 when it enters Area2,
+and triggers function number 6 when it enters a circular region at the center
 of the image.
+
+```{admonition} trigger runs on every frame
+:class: warning
+`trigger` is called on every frame (30 times per second), and `cam.areaN_is_triggered`
+stays `True` the whole time the animal is inside the area. To act only once when the
+animal **enters**, remember whether it was already inside, as the example below does
+(or as [camera_trigger.py](../examples/camera_trigger.md) does with a signal the task
+resets every trial).
+```
 
 ```python
 from village.custom_classes.camera_trigger_base import CameraTriggerBase
+from village.devices.camera import Camera
 
 class CameraTrigger(CameraTriggerBase):
     """Implement specific actions when an animal enters
@@ -40,6 +50,8 @@ class CameraTrigger(CameraTriggerBase):
 
     def __init__(self) -> None:
         super().__init__()
+        self.in_area2 = False
+        self.in_center = False
 
     def trigger(self, cam: Camera) -> None:
         """Evaluates camera triggers and performs corresponding actions.
@@ -70,14 +82,19 @@ class CameraTrigger(CameraTriggerBase):
         if cam.area1_is_triggered:
             cam.write_text("Area 1 triggered") # write an annotation text to the cam
 
-        if cam.area2_is_triggered:
-            self.task.execute_function(2) # execute the direct function number 2
+        # Execute the direct function number 2 once, when the animal enters Area2
+        if cam.area2_is_triggered and not self.in_area2:
+            self.task.execute_function(2)
+        self.in_area2 = cam.area2_is_triggered
 
-        # Check if the animal is within a 50-pixel radius of the center
+        # Execute the direct function number 6 once, when the animal gets within a
+        # 50-pixel radius of the center
         distance = ((cam.x_position - cam.width / 2) ** 2 +
                     (cam.y_position - cam.height / 2) ** 2) ** 0.5
-        if distance < 50:
-            self.task.execute_function(6) # execute the direct function number 6
+        in_center = distance < 50
+        if in_center and not self.in_center:
+            self.task.execute_function(6)
+        self.in_center = in_center
 ```
 
 ```{admonition} Note
@@ -102,8 +119,8 @@ polygons and/or circles defined in code.
 :class: note
 This replaces the shape of one of the 4 existing areas — it does not add a
 5th area. Its status (`ALLOWED`/`NOT_ALLOWED`/`TRIGGER`/`OFF`) and its
-threshold keep working exactly as before, still set from the GUI (`SETTINGS`
--> box area usage/threshold). Only its position controls are hidden from the
+threshold keep working exactly as before, still set from the GUI (`MONITOR`
+-> `DETECTION SETTINGS`). Only its position controls are hidden from the
 GUI, since the shape is no longer a plain rectangle — a "defined with code"
 label is shown in their place instead, listing the area's `polygons`/
 `circles` coordinates (there's no draggable position control for them).
@@ -173,10 +190,9 @@ the task. The text is rendered on every subsequent frame at a fixed position in 
 status bar and stays visible until it is changed or cleared.
 
 ```python
-from village.devices.camera import cam_box
-
-cam_box.write_text("reward delivered")   # persists across frames until changed
-cam_box.write_text("")                   # clear
+# Inside the task (self.cam_box is the box camera):
+self.cam_box.write_text("reward delivered")   # persists across frames until changed
+self.cam_box.write_text("")                   # clear
 ```
 
 The annotation is also saved frame-by-frame in the session CSV alongside the
@@ -202,9 +218,10 @@ mask and area rectangles (if VIEW_DETECTION is active).
 The default `draw_preview` draws those same overlays for the BOX camera via QPainter
 so they appear on screen but are not encoded into the video file.
 
-Create a file named `camera_draw` inside your project's `code` directory and define
-a class named `CameraDraw` that inherits from `CameraDrawBase`. The system detects
-it automatically and uses it instead of the base class.
+Create a file inside your project's `code` directory (e.g. `camera_draw.py`) and define
+a class (e.g. `CameraDraw`) that inherits from `CameraDrawBase`. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
 
 **Overriding `draw`** — runs on every frame, changes are saved to disk:
 
@@ -261,10 +278,8 @@ coordinates, labels, or any other data (like `"reward_zone"` below).
 
 ```python
 # Inside the task, at any point:
-from village.devices.camera import cam_box
-
-cam_box.items_to_draw["reward_zone"] = (200, 150, 80, 80)   # x, y, w, h
-cam_box.items_to_draw["reward_zone"] = None                  # remove
+self.cam_box.items_to_draw["reward_zone"] = (200, 150, 80, 80)   # x, y, w, h
+self.cam_box.items_to_draw["reward_zone"] = None                  # remove
 ```
 ````
 

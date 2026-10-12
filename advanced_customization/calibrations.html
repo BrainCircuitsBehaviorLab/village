@@ -560,11 +560,12 @@ data-aria-dark="Switch to auto color mode">
 <section id="creating-a-calibration-class">
 <h2>Creating a Calibration Class</h2>
 <p>Create a Python file inside your <code class="docutils literal notranslate"><span class="pre">project/code</span></code> folder with a class that inherits from <code class="docutils literal notranslate"><span class="pre">CalibrationBase</span></code>. Inside this class, define a data structure using <code class="docutils literal notranslate"><span class="pre">create_data_collection</span></code>, and a small GUI to interact with calibration parameters. If the hardware has to do something while you measure (open a valve, play a sound, turn on a LED…), you will also need a task that inherits from <code class="docutils literal notranslate"><span class="pre">CalibrationTaskBase</span></code> (see <a class="reference internal" href="#running-a-task-from-the-calibration"><span class="std std-ref">Running a Task from the Calibration</span></a>).</p>
-<p>Three built-in calibration examples are included in the Village codebase under <code class="docutils literal notranslate"><span class="pre">village/calibration/</span></code>:</p>
+<p>The built-in calibrations are included in the Village codebase under <code class="docutils literal notranslate"><span class="pre">village/calibration/</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sound_calibration.py</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">water_calibration.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sound_calibration.py</span></code> and <code class="docutils literal notranslate"><span class="pre">water_calibration.py</span></code> (panels that run a task while measuring)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">corridor_threshold_calibration.py</span></code> (a panel without a task, that edits settings live)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">camera_calibration.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">optogrid_calibration.py</span></code></p></li>
 </ul>
 <p>These are a good starting point for understanding how calibration classes work.
 A complete custom calibration, small enough to read in one go, is
@@ -735,7 +736,7 @@ measurement can be entered:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

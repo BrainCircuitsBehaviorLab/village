@@ -617,247 +617,248 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="60"><span class="s2">            * No response: trial aborted, sequence restarts.</span>
 </span><span data-line="61">
 </span><span data-line="62"><span class="s2">        The delay is drawn from a distribution controlled by self.p (0-1):</span>
-</span><span data-line="63"><span class="s2">        higher self.p means the second cue tends to come later, making the</span>
-</span><span data-line="64"><span class="s2">        trial harder. self.p is tuned automatically after every trial based</span>
-</span><span data-line="65"><span class="s2">        on a rolling accuracy window (see after_trial).</span>
-</span><span data-line="66"><span class="s2">        """</span>
-</span><span data-line="67">
-</span><span data-line="68">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="69"><span class="w">        </span><span class="sd">"""Use the calibration to get the valve opening times (in seconds) for</span>
-</span><span data-line="70"><span class="sd">        ports 1 (left) and 3 (right), for both the normal and large reward</span>
-</span><span data-line="71"><span class="sd">        volumes. Also initializes the rolling-accuracy bookkeeping used to</span>
-</span><span data-line="72"><span class="sd">        adapt the task's difficulty (self.p).</span>
-</span><span data-line="73">
-</span><span data-line="74"><span class="sd">        Required settings (defined in training_protocol.py):</span>
-</span><span data-line="75"><span class="sd">        - self.settings.reward_volume: normal reward volume delivered on a</span>
-</span><span data-line="76"><span class="sd">          correct poke</span>
-</span><span data-line="77"><span class="sd">        - self.settings.reward_volume_large: larger reward volume, given on</span>
-</span><span data-line="78"><span class="sd">          ~10% of trials</span>
-</span><span data-line="79"><span class="sd">        - self.settings.led_intensity: port LED brightness (0-255)</span>
-</span><span data-line="80"><span class="sd">        - self.settings.c_led_on_time: max wait for the center poke, seconds</span>
-</span><span data-line="81"><span class="sd">        - self.settings.iti_time: inter-trial interval after a correct</span>
-</span><span data-line="82"><span class="sd">          response, seconds</span>
-</span><span data-line="83"><span class="sd">        - self.settings.noise_time: buzzer duration after a wrong poke, seconds</span>
-</span><span data-line="84"><span class="sd">        - self.settings.timeout: total penalty duration (buzzer + silence),</span>
-</span><span data-line="85"><span class="sd">          seconds</span>
-</span><span data-line="86"><span class="sd">        - self.settings.p (optional, default 0.0): initial difficulty, 0-1</span>
-</span><span data-line="87"><span class="sd">        - self.settings.curve_power (optional, default 3.0): shape parameter</span>
-</span><span data-line="88"><span class="sd">          for the delay distribution, see get_delay_probabilities</span>
-</span><span data-line="89"><span class="sd">        - self.settings.delay_thresholds: the possible delays between the two</span>
-</span><span data-line="90"><span class="sd">          side cues (seconds) and, for each one, the p from which it starts</span>
-</span><span data-line="91"><span class="sd">          to appear (0: always)</span>
-</span><span data-line="92"><span class="sd">        """</span>
-</span><span data-line="93">
-</span><span data-line="94">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="95">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
-</span><span data-line="96">        <span class="p">)</span>
-</span><span data-line="97">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="98">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
-</span><span data-line="99">        <span class="p">)</span>
-</span><span data-line="100">
-</span><span data-line="101">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="102">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
-</span><span data-line="103">        <span class="p">)</span>
-</span><span data-line="104">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
-</span><span data-line="105">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
-</span><span data-line="106">        <span class="p">)</span>
-</span><span data-line="107">
-</span><span data-line="108">        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-</span><span data-line="109">
-</span><span data-line="110">        <span class="c1"># Rolling-window accuracy, used to adapt self.p after every trial.</span>
-</span><span data-line="111">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="112">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">:</span> <span class="n">deque</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-</span><span data-line="113">
-</span><span data-line="114">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="115">        <span class="n">first_side</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># first-cued side: 0 left, 1 right</span>
-</span><span data-line="116">        <span class="n">curve_power</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"curve_power"</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
-</span><span data-line="117">        <span class="n">delay_values</span><span class="p">,</span> <span class="n">delay_probs</span> <span class="o">=</span> <span class="n">get_delay_probabilities</span><span class="p">(</span>
-</span><span data-line="118">            <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">delay_thresholds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">delay_thresholds</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">curve_power</span>
-</span><span data-line="119">        <span class="p">)</span>
-</span><span data-line="120">        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">delay_values</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">delay_probs</span><span class="p">)</span>
-</span><span data-line="121">        <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span>
-</span><span data-line="122">
-</span><span data-line="123">        <span class="n">large_reward</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.10</span>
-</span><span data-line="124">        <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="125">            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
-</span><span data-line="126">            <span class="k">if</span> <span class="n">large_reward</span>
-</span><span data-line="127">            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
-</span><span data-line="128">        <span class="p">)</span>
-</span><span data-line="129">
-</span><span data-line="130">        <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># left</span>
-</span><span data-line="131">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"left"</span>
-</span><span data-line="132">            <span class="n">correct_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port1In</span>
-</span><span data-line="133">            <span class="n">wrong_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port3In</span>
-</span><span data-line="134">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span>
-</span><span data-line="135">            <span class="n">valve_action</span> <span class="o">=</span> <span class="n">BpodOutput</span><span class="o">.</span><span class="n">Valve1</span>
-</span><span data-line="136">            <span class="n">first_led</span> <span class="o">=</span> <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">)</span>
-</span><span data-line="137">        <span class="k">else</span><span class="p">:</span>  <span class="c1"># right</span>
-</span><span data-line="138">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"right"</span>
-</span><span data-line="139">            <span class="n">correct_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port3In</span>
-</span><span data-line="140">            <span class="n">wrong_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port1In</span>
-</span><span data-line="141">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span>
-</span><span data-line="142">            <span class="n">valve_action</span> <span class="o">=</span> <span class="n">BpodOutput</span><span class="o">.</span><span class="n">Valve3</span>
-</span><span data-line="143">            <span class="n">first_led</span> <span class="o">=</span> <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">)</span>
-</span><span data-line="144">
-</span><span data-line="145">        <span class="c1"># 'c_led_on': center LED on, waits for the trial-initiating center poke.</span>
-</span><span data-line="146">        <span class="c1"># SoftCode2 loads the penalty sound now (direct_functions.function2),</span>
-</span><span data-line="147">        <span class="c1"># well ahead of when it's actually needed in 'wrong_choice' below.</span>
-</span><span data-line="148">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="149">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"c_led_on"</span><span class="p">,</span>
-</span><span data-line="150">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span><span class="p">,</span>
-</span><span data-line="151">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="152">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">,</span>  <span class="c1"># no center poke -&gt; omission</span>
-</span><span data-line="153">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port2In</span><span class="p">:</span> <span class="s2">"first_side_led"</span><span class="p">,</span>
-</span><span data-line="154">            <span class="p">},</span>
-</span><span data-line="155">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span>
-</span><span data-line="156">                <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">),</span>
-</span><span data-line="157">                <span class="n">BpodOutput</span><span class="o">.</span><span class="n">SoftCode2</span><span class="p">,</span>
-</span><span data-line="158">            <span class="p">],</span>
-</span><span data-line="159">        <span class="p">)</span>
-</span><span data-line="160">
-</span><span data-line="161">        <span class="c1"># 'first_side_led': only the first-cued side is lit, for self.delay seconds</span>
-</span><span data-line="162">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="163">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"first_side_led"</span><span class="p">,</span>
-</span><span data-line="164">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span>
-</span><span data-line="165">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="166">                <span class="n">correct_poke</span><span class="p">:</span> <span class="s2">"correct_choice"</span><span class="p">,</span>
-</span><span data-line="167">                <span class="n">wrong_poke</span><span class="p">:</span> <span class="s2">"wrong_choice"</span><span class="p">,</span>
-</span><span data-line="168">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"both_side_leds"</span><span class="p">,</span>
-</span><span data-line="169">            <span class="p">},</span>
-</span><span data-line="170">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">first_led</span><span class="p">],</span>
-</span><span data-line="171">        <span class="p">)</span>
-</span><span data-line="172">
-</span><span data-line="173">        <span class="c1"># 'both_side_leds': both sides lit, for the remainder of the 40s response window</span>
-</span><span data-line="174">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="175">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"both_side_leds"</span><span class="p">,</span>
-</span><span data-line="176">            <span class="n">state_timer</span><span class="o">=</span><span class="mi">40</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span>
-</span><span data-line="177">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="178">                <span class="n">correct_poke</span><span class="p">:</span> <span class="s2">"correct_choice"</span><span class="p">,</span>
-</span><span data-line="179">                <span class="n">wrong_poke</span><span class="p">:</span> <span class="s2">"wrong_choice"</span><span class="p">,</span>
-</span><span data-line="180">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">,</span>  <span class="c1"># no response -&gt; restart trial</span>
-</span><span data-line="181">            <span class="p">},</span>
-</span><span data-line="182">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span>
-</span><span data-line="183">                <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">),</span>
-</span><span data-line="184">                <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">),</span>
-</span><span data-line="185">            <span class="p">],</span>
-</span><span data-line="186">        <span class="p">)</span>
-</span><span data-line="187">
-</span><span data-line="188">        <span class="c1"># 'correct_choice': reward, then ITI</span>
-</span><span data-line="189">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="190">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"correct_choice"</span><span class="p">,</span>
-</span><span data-line="191">            <span class="n">state_timer</span><span class="o">=</span><span class="n">valvetime</span><span class="p">,</span>
-</span><span data-line="192">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"iti"</span><span class="p">},</span>
-</span><span data-line="193">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">valve_action</span><span class="p">],</span>
-</span><span data-line="194">        <span class="p">)</span>
-</span><span data-line="195">
-</span><span data-line="196">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="197">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"iti"</span><span class="p">,</span>
-</span><span data-line="198">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span><span class="p">,</span>
-</span><span data-line="199">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">},</span>
-</span><span data-line="200">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
-</span><span data-line="201">        <span class="p">)</span>
-</span><span data-line="202">
-</span><span data-line="203">        <span class="c1"># 'wrong_choice': plays the sound loaded back in 'c_led_on'</span>
-</span><span data-line="204">        <span class="c1"># (SoftCode4 -&gt; direct_functions.function4), then silent timeout for</span>
-</span><span data-line="205">        <span class="c1"># the rest of the penalty</span>
-</span><span data-line="206">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="207">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"wrong_choice"</span><span class="p">,</span>
-</span><span data-line="208">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">,</span>
-</span><span data-line="209">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"timeout"</span><span class="p">},</span>
-</span><span data-line="210">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">SoftCode4</span><span class="p">],</span>
-</span><span data-line="211">        <span class="p">)</span>
-</span><span data-line="212">
-</span><span data-line="213">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
-</span><span data-line="214">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"timeout"</span><span class="p">,</span>
-</span><span data-line="215">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">,</span>
-</span><span data-line="216">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">},</span>
-</span><span data-line="217">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
-</span><span data-line="218">        <span class="p">)</span>
-</span><span data-line="219">
-</span><span data-line="220">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="221"><span class="w">        </span><span class="sd">"""Work out response_side and outcome, then adapt self.p based on a</span>
-</span><span data-line="222"><span class="sd">        rolling accuracy window.</span>
-</span><span data-line="223">
-</span><span data-line="224"><span class="sd">        Both correct_poke and wrong_poke are wired as transitions in both</span>
-</span><span data-line="225"><span class="sd">        "first_side_led" and "both_side_leds" (see create_trial), so the</span>
-</span><span data-line="226"><span class="sd">        first poke on either side -- whichever state it happens in -- is the</span>
-</span><span data-line="227"><span class="sd">        animal's response.</span>
-</span><span data-line="228"><span class="sd">        """</span>
-</span><span data-line="229">
-</span><span data-line="230">        <span class="c1"># 1. This is the moment the first cue turned on. If it never did (no</span>
-</span><span data-line="231">        <span class="c1"># center poke; Bpod lists a state not visited as [nan]), it's an</span>
-</span><span data-line="232">        <span class="c1"># omission: the animal didn't choose, so it doesn't count for the</span>
-</span><span data-line="233">        <span class="c1"># accuracy nor for adapting the difficulty.</span>
-</span><span data-line="234">        <span class="n">t_first_side_led</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-</span><span data-line="235">            <span class="s2">"STATE_first_side_led_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span>
-</span><span data-line="236">        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="237">        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_first_side_led</span><span class="p">):</span>
-</span><span data-line="238">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
-</span><span data-line="239">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span><span data-line="240">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="s2">"omission"</span><span class="p">)</span>
-</span><span data-line="241">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="s2">"none"</span><span class="p">)</span>
-</span><span data-line="242">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
-</span><span data-line="243">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
-</span><span data-line="244">            <span class="k">return</span>
-</span><span data-line="245">
-</span><span data-line="246">        <span class="c1"># 2 &amp; 3. Pokes on the correct/wrong port, at or after the first cue.</span>
-</span><span data-line="247">        <span class="n">correct_key</span><span class="p">,</span> <span class="n">wrong_key</span> <span class="o">=</span> <span class="p">(</span>
-</span><span data-line="248">            <span class="p">(</span><span class="s2">"Port1In"</span><span class="p">,</span> <span class="s2">"Port3In"</span><span class="p">)</span>
-</span><span data-line="249">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">==</span> <span class="s2">"left"</span>
-</span><span data-line="250">            <span class="k">else</span> <span class="p">(</span><span class="s2">"Port3In"</span><span class="p">,</span> <span class="s2">"Port1In"</span><span class="p">)</span>
-</span><span data-line="251">        <span class="p">)</span>
-</span><span data-line="252">        <span class="n">correct_pokes</span> <span class="o">=</span> <span class="p">[</span>
-</span><span data-line="253">            <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">correct_key</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">t_first_side_led</span>
-</span><span data-line="254">        <span class="p">]</span>
-</span><span data-line="255">        <span class="n">wrong_pokes</span> <span class="o">=</span> <span class="p">[</span>
-</span><span data-line="256">            <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wrong_key</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">t_first_side_led</span>
-</span><span data-line="257">        <span class="p">]</span>
-</span><span data-line="258">
-</span><span data-line="259">        <span class="c1"># 4 &amp; 5. Whichever port got poked first, if any, decides the outcome.</span>
-</span><span data-line="260">        <span class="k">if</span> <span class="n">correct_pokes</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">wrong_pokes</span> <span class="ow">or</span> <span class="n">correct_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">wrong_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-</span><span data-line="261">            <span class="n">response_side</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span>
-</span><span data-line="262">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"correct"</span>
-</span><span data-line="263">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span data-line="264">            <span class="n">t_choice</span> <span class="o">=</span> <span class="n">correct_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="265">        <span class="k">elif</span> <span class="n">wrong_pokes</span><span class="p">:</span>
-</span><span data-line="266">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"right"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">==</span> <span class="s2">"left"</span> <span class="k">else</span> <span class="s2">"left"</span>
-</span><span data-line="267">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"incorrect"</span>
-</span><span data-line="268">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="269">            <span class="n">t_choice</span> <span class="o">=</span> <span class="n">wrong_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="270">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="271">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"none"</span>
-</span><span data-line="272">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"miss"</span>
-</span><span data-line="273">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span data-line="274">            <span class="n">t_choice</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span data-line="275">
-</span><span data-line="276">        <span class="n">water</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span> <span class="k">else</span> <span class="mi">0</span>
-</span><span data-line="277">
-</span><span data-line="278">        <span class="c1"># Adapt difficulty: raise self.p after a strong window, lower it</span>
-</span><span data-line="279">        <span class="c1"># after a weak one, based on the last 20 trials.</span>
-</span><span data-line="280">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
-</span><span data-line="281">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
-</span><span data-line="282">        <span class="n">running_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">:])</span>
-</span><span data-line="283">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">maxlen</span><span class="p">:</span>
-</span><span data-line="284">            <span class="n">window_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span>
-</span><span data-line="285">            <span class="k">if</span> <span class="n">window_accuracy</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">:</span>
-</span><span data-line="286">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-</span><span data-line="287">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="288">            <span class="k">elif</span> <span class="n">window_accuracy</span> <span class="o">&lt;</span> <span class="mf">0.50</span><span class="p">:</span>
-</span><span data-line="289">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-</span><span data-line="290">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="291">
-</span><span data-line="292">        <span class="k">if</span> <span class="n">t_choice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="293">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"first_trial_response_time"</span><span class="p">,</span> <span class="n">t_choice</span><span class="p">)</span>
-</span><span data-line="294">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"running_accuracy"</span><span class="p">,</span> <span class="n">running_accuracy</span><span class="p">)</span>
-</span><span data-line="295">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
-</span><span data-line="296">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="n">water</span><span class="p">)</span>
-</span><span data-line="297">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
-</span><span data-line="298">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="n">response_side</span><span class="p">)</span>
-</span><span data-line="299">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
-</span><span data-line="300">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
-</span><span data-line="301">
-</span><span data-line="302">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="303">        <span class="k">pass</span>
+</span><span data-line="63"><span class="s2">        higher self.p allows shorter delays between the two cues, which are</span>
+</span><span data-line="64"><span class="s2">        harder to tell apart, making the trial harder. self.p is tuned</span>
+</span><span data-line="65"><span class="s2">        automatically after every trial based on a rolling accuracy window</span>
+</span><span data-line="66"><span class="s2">        (see after_trial).</span>
+</span><span data-line="67"><span class="s2">        """</span>
+</span><span data-line="68">
+</span><span data-line="69">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="70"><span class="w">        </span><span class="sd">"""Use the calibration to get the valve opening times (in seconds) for</span>
+</span><span data-line="71"><span class="sd">        ports 1 (left) and 3 (right), for both the normal and large reward</span>
+</span><span data-line="72"><span class="sd">        volumes. Also initializes the rolling-accuracy bookkeeping used to</span>
+</span><span data-line="73"><span class="sd">        adapt the task's difficulty (self.p).</span>
+</span><span data-line="74">
+</span><span data-line="75"><span class="sd">        Required settings (defined in training_protocol.py):</span>
+</span><span data-line="76"><span class="sd">        - self.settings.reward_volume: normal reward volume delivered on a</span>
+</span><span data-line="77"><span class="sd">          correct poke</span>
+</span><span data-line="78"><span class="sd">        - self.settings.reward_volume_large: larger reward volume, given on</span>
+</span><span data-line="79"><span class="sd">          ~10% of trials</span>
+</span><span data-line="80"><span class="sd">        - self.settings.led_intensity: port LED brightness (0-255)</span>
+</span><span data-line="81"><span class="sd">        - self.settings.c_led_on_time: max wait for the center poke, seconds</span>
+</span><span data-line="82"><span class="sd">        - self.settings.iti_time: inter-trial interval after a correct</span>
+</span><span data-line="83"><span class="sd">          response, seconds</span>
+</span><span data-line="84"><span class="sd">        - self.settings.noise_time: buzzer duration after a wrong poke, seconds</span>
+</span><span data-line="85"><span class="sd">        - self.settings.timeout: total penalty duration (buzzer + silence),</span>
+</span><span data-line="86"><span class="sd">          seconds</span>
+</span><span data-line="87"><span class="sd">        - self.settings.p (optional, default 0.0): initial difficulty, 0-1</span>
+</span><span data-line="88"><span class="sd">        - self.settings.curve_power (optional, default 3.0): shape parameter</span>
+</span><span data-line="89"><span class="sd">          for the delay distribution, see get_delay_probabilities</span>
+</span><span data-line="90"><span class="sd">        - self.settings.delay_thresholds: the possible delays between the two</span>
+</span><span data-line="91"><span class="sd">          side cues (seconds) and, for each one, the p from which it starts</span>
+</span><span data-line="92"><span class="sd">          to appear (0: always)</span>
+</span><span data-line="93"><span class="sd">        """</span>
+</span><span data-line="94">
+</span><span data-line="95">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="96">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
+</span><span data-line="97">        <span class="p">)</span>
+</span><span data-line="98">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="99">            <span class="n">port</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
+</span><span data-line="100">        <span class="p">)</span>
+</span><span data-line="101">
+</span><span data-line="102">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="103">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
+</span><span data-line="104">        <span class="p">)</span>
+</span><span data-line="105">        <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">water_calibration</span><span class="o">.</span><span class="n">get_valve_time</span><span class="p">(</span>
+</span><span data-line="106">            <span class="n">port</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
+</span><span data-line="107">        <span class="p">)</span>
+</span><span data-line="108">
+</span><span data-line="109">        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="110">
+</span><span data-line="111">        <span class="c1"># Rolling-window accuracy, used to adapt self.p after every trial.</span>
+</span><span data-line="112">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="113">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">:</span> <span class="n">deque</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</span><span data-line="114">
+</span><span data-line="115">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="116">        <span class="n">first_side</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># first-cued side: 0 left, 1 right</span>
+</span><span data-line="117">        <span class="n">curve_power</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"curve_power"</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+</span><span data-line="118">        <span class="n">delay_values</span><span class="p">,</span> <span class="n">delay_probs</span> <span class="o">=</span> <span class="n">get_delay_probabilities</span><span class="p">(</span>
+</span><span data-line="119">            <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">delay_thresholds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">delay_thresholds</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">curve_power</span>
+</span><span data-line="120">        <span class="p">)</span>
+</span><span data-line="121">        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">delay_values</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">delay_probs</span><span class="p">)</span>
+</span><span data-line="122">        <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span>
+</span><span data-line="123">
+</span><span data-line="124">        <span class="n">large_reward</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.10</span>
+</span><span data-line="125">        <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="126">            <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume_large</span>
+</span><span data-line="127">            <span class="k">if</span> <span class="n">large_reward</span>
+</span><span data-line="128">            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">reward_volume</span>
+</span><span data-line="129">        <span class="p">)</span>
+</span><span data-line="130">
+</span><span data-line="131">        <span class="k">if</span> <span class="n">first_side</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># left</span>
+</span><span data-line="132">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"left"</span>
+</span><span data-line="133">            <span class="n">correct_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port1In</span>
+</span><span data-line="134">            <span class="n">wrong_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port3In</span>
+</span><span data-line="135">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_l_time</span>
+</span><span data-line="136">            <span class="n">valve_action</span> <span class="o">=</span> <span class="n">BpodOutput</span><span class="o">.</span><span class="n">Valve1</span>
+</span><span data-line="137">            <span class="n">first_led</span> <span class="o">=</span> <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">)</span>
+</span><span data-line="138">        <span class="k">else</span><span class="p">:</span>  <span class="c1"># right</span>
+</span><span data-line="139">            <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">=</span> <span class="s2">"right"</span>
+</span><span data-line="140">            <span class="n">correct_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port3In</span>
+</span><span data-line="141">            <span class="n">wrong_poke</span> <span class="o">=</span> <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port1In</span>
+</span><span data-line="142">            <span class="n">valvetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time_large</span> <span class="k">if</span> <span class="n">large_reward</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">valve_r_time</span>
+</span><span data-line="143">            <span class="n">valve_action</span> <span class="o">=</span> <span class="n">BpodOutput</span><span class="o">.</span><span class="n">Valve3</span>
+</span><span data-line="144">            <span class="n">first_led</span> <span class="o">=</span> <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">)</span>
+</span><span data-line="145">
+</span><span data-line="146">        <span class="c1"># 'c_led_on': center LED on, waits for the trial-initiating center poke.</span>
+</span><span data-line="147">        <span class="c1"># SoftCode2 loads the penalty sound now (direct_functions.function2),</span>
+</span><span data-line="148">        <span class="c1"># well ahead of when it's actually needed in 'wrong_choice' below.</span>
+</span><span data-line="149">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="150">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"c_led_on"</span><span class="p">,</span>
+</span><span data-line="151">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">c_led_on_time</span><span class="p">,</span>
+</span><span data-line="152">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="153">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">,</span>  <span class="c1"># no center poke -&gt; omission</span>
+</span><span data-line="154">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Port2In</span><span class="p">:</span> <span class="s2">"first_side_led"</span><span class="p">,</span>
+</span><span data-line="155">            <span class="p">},</span>
+</span><span data-line="156">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span>
+</span><span data-line="157">                <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">),</span>
+</span><span data-line="158">                <span class="n">BpodOutput</span><span class="o">.</span><span class="n">SoftCode2</span><span class="p">,</span>
+</span><span data-line="159">            <span class="p">],</span>
+</span><span data-line="160">        <span class="p">)</span>
+</span><span data-line="161">
+</span><span data-line="162">        <span class="c1"># 'first_side_led': only the first-cued side is lit, for self.delay seconds</span>
+</span><span data-line="163">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="164">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"first_side_led"</span><span class="p">,</span>
+</span><span data-line="165">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span>
+</span><span data-line="166">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="167">                <span class="n">correct_poke</span><span class="p">:</span> <span class="s2">"correct_choice"</span><span class="p">,</span>
+</span><span data-line="168">                <span class="n">wrong_poke</span><span class="p">:</span> <span class="s2">"wrong_choice"</span><span class="p">,</span>
+</span><span data-line="169">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"both_side_leds"</span><span class="p">,</span>
+</span><span data-line="170">            <span class="p">},</span>
+</span><span data-line="171">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">first_led</span><span class="p">],</span>
+</span><span data-line="172">        <span class="p">)</span>
+</span><span data-line="173">
+</span><span data-line="174">        <span class="c1"># 'both_side_leds': both sides lit, for the remainder of the 40s response window</span>
+</span><span data-line="175">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="176">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"both_side_leds"</span><span class="p">,</span>
+</span><span data-line="177">            <span class="n">state_timer</span><span class="o">=</span><span class="mi">40</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span>
+</span><span data-line="178">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="179">                <span class="n">correct_poke</span><span class="p">:</span> <span class="s2">"correct_choice"</span><span class="p">,</span>
+</span><span data-line="180">                <span class="n">wrong_poke</span><span class="p">:</span> <span class="s2">"wrong_choice"</span><span class="p">,</span>
+</span><span data-line="181">                <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">,</span>  <span class="c1"># no response -&gt; restart trial</span>
+</span><span data-line="182">            <span class="p">},</span>
+</span><span data-line="183">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span>
+</span><span data-line="184">                <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">),</span>
+</span><span data-line="185">                <span class="p">(</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">PWM3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">led_intensity</span><span class="p">),</span>
+</span><span data-line="186">            <span class="p">],</span>
+</span><span data-line="187">        <span class="p">)</span>
+</span><span data-line="188">
+</span><span data-line="189">        <span class="c1"># 'correct_choice': reward, then ITI</span>
+</span><span data-line="190">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="191">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"correct_choice"</span><span class="p">,</span>
+</span><span data-line="192">            <span class="n">state_timer</span><span class="o">=</span><span class="n">valvetime</span><span class="p">,</span>
+</span><span data-line="193">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"iti"</span><span class="p">},</span>
+</span><span data-line="194">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">valve_action</span><span class="p">],</span>
+</span><span data-line="195">        <span class="p">)</span>
+</span><span data-line="196">
+</span><span data-line="197">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="198">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"iti"</span><span class="p">,</span>
+</span><span data-line="199">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span><span class="p">,</span>
+</span><span data-line="200">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">},</span>
+</span><span data-line="201">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
+</span><span data-line="202">        <span class="p">)</span>
+</span><span data-line="203">
+</span><span data-line="204">        <span class="c1"># 'wrong_choice': plays the sound loaded back in 'c_led_on'</span>
+</span><span data-line="205">        <span class="c1"># (SoftCode4 -&gt; direct_functions.function4), then silent timeout for</span>
+</span><span data-line="206">        <span class="c1"># the rest of the penalty</span>
+</span><span data-line="207">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="208">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"wrong_choice"</span><span class="p">,</span>
+</span><span data-line="209">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">,</span>
+</span><span data-line="210">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"timeout"</span><span class="p">},</span>
+</span><span data-line="211">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[</span><span class="n">BpodOutput</span><span class="o">.</span><span class="n">SoftCode4</span><span class="p">],</span>
+</span><span data-line="212">        <span class="p">)</span>
+</span><span data-line="213">
+</span><span data-line="214">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="215">            <span class="n">state_name</span><span class="o">=</span><span class="s2">"timeout"</span><span class="p">,</span>
+</span><span data-line="216">            <span class="n">state_timer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">timeout</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">noise_time</span><span class="p">,</span>
+</span><span data-line="217">            <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span><span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"exit"</span><span class="p">},</span>
+</span><span data-line="218">            <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
+</span><span data-line="219">        <span class="p">)</span>
+</span><span data-line="220">
+</span><span data-line="221">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="222"><span class="w">        </span><span class="sd">"""Work out response_side and outcome, then adapt self.p based on a</span>
+</span><span data-line="223"><span class="sd">        rolling accuracy window.</span>
+</span><span data-line="224">
+</span><span data-line="225"><span class="sd">        Both correct_poke and wrong_poke are wired as transitions in both</span>
+</span><span data-line="226"><span class="sd">        "first_side_led" and "both_side_leds" (see create_trial), so the</span>
+</span><span data-line="227"><span class="sd">        first poke on either side -- whichever state it happens in -- is the</span>
+</span><span data-line="228"><span class="sd">        animal's response.</span>
+</span><span data-line="229"><span class="sd">        """</span>
+</span><span data-line="230">
+</span><span data-line="231">        <span class="c1"># 1. This is the moment the first cue turned on. If it never did (no</span>
+</span><span data-line="232">        <span class="c1"># center poke; Bpod lists a state not visited as [nan]), it's an</span>
+</span><span data-line="233">        <span class="c1"># omission: the animal didn't choose, so it doesn't count for the</span>
+</span><span data-line="234">        <span class="c1"># accuracy nor for adapting the difficulty.</span>
+</span><span data-line="235">        <span class="n">t_first_side_led</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+</span><span data-line="236">            <span class="s2">"STATE_first_side_led_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span>
+</span><span data-line="237">        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="238">        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_first_side_led</span><span class="p">):</span>
+</span><span data-line="239">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+</span><span data-line="240">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="241">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="s2">"omission"</span><span class="p">)</span>
+</span><span data-line="242">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="s2">"none"</span><span class="p">)</span>
+</span><span data-line="243">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
+</span><span data-line="244">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
+</span><span data-line="245">            <span class="k">return</span>
+</span><span data-line="246">
+</span><span data-line="247">        <span class="c1"># 2 &amp; 3. Pokes on the correct/wrong port, at or after the first cue.</span>
+</span><span data-line="248">        <span class="n">correct_key</span><span class="p">,</span> <span class="n">wrong_key</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="249">            <span class="p">(</span><span class="s2">"Port1In"</span><span class="p">,</span> <span class="s2">"Port3In"</span><span class="p">)</span>
+</span><span data-line="250">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">==</span> <span class="s2">"left"</span>
+</span><span data-line="251">            <span class="k">else</span> <span class="p">(</span><span class="s2">"Port3In"</span><span class="p">,</span> <span class="s2">"Port1In"</span><span class="p">)</span>
+</span><span data-line="252">        <span class="p">)</span>
+</span><span data-line="253">        <span class="n">correct_pokes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="254">            <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">correct_key</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">t_first_side_led</span>
+</span><span data-line="255">        <span class="p">]</span>
+</span><span data-line="256">        <span class="n">wrong_pokes</span> <span class="o">=</span> <span class="p">[</span>
+</span><span data-line="257">            <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wrong_key</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">t_first_side_led</span>
+</span><span data-line="258">        <span class="p">]</span>
+</span><span data-line="259">
+</span><span data-line="260">        <span class="c1"># 4 &amp; 5. Whichever port got poked first, if any, decides the outcome.</span>
+</span><span data-line="261">        <span class="k">if</span> <span class="n">correct_pokes</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">wrong_pokes</span> <span class="ow">or</span> <span class="n">correct_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">wrong_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+</span><span data-line="262">            <span class="n">response_side</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span>
+</span><span data-line="263">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"correct"</span>
+</span><span data-line="264">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="265">            <span class="n">t_choice</span> <span class="o">=</span> <span class="n">correct_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="266">        <span class="k">elif</span> <span class="n">wrong_pokes</span><span class="p">:</span>
+</span><span data-line="267">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"right"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span> <span class="o">==</span> <span class="s2">"left"</span> <span class="k">else</span> <span class="s2">"left"</span>
+</span><span data-line="268">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"incorrect"</span>
+</span><span data-line="269">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="270">            <span class="n">t_choice</span> <span class="o">=</span> <span class="n">wrong_pokes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="271">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="272">            <span class="n">response_side</span> <span class="o">=</span> <span class="s2">"none"</span>
+</span><span data-line="273">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"miss"</span>
+</span><span data-line="274">            <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span data-line="275">            <span class="n">t_choice</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span data-line="276">
+</span><span data-line="277">        <span class="n">water</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_volume</span> <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="s2">"correct"</span> <span class="k">else</span> <span class="mi">0</span>
+</span><span data-line="278">
+</span><span data-line="279">        <span class="c1"># Adapt difficulty: raise self.p after a strong window, lower it</span>
+</span><span data-line="280">        <span class="c1"># after a weak one, based on the last 20 trials.</span>
+</span><span data-line="281">        <span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
+</span><span data-line="282">        <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
+</span><span data-line="283">        <span class="n">running_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_history</span><span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">:])</span>
+</span><span data-line="284">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">maxlen</span><span class="p">:</span>
+</span><span data-line="285">            <span class="n">window_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="p">)</span>
+</span><span data-line="286">            <span class="k">if</span> <span class="n">window_accuracy</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">:</span>
+</span><span data-line="287">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span data-line="288">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="289">            <span class="k">elif</span> <span class="n">window_accuracy</span> <span class="o">&lt;</span> <span class="mf">0.50</span><span class="p">:</span>
+</span><span data-line="290">                <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="291">                <span class="bp">self</span><span class="o">.</span><span class="n">adaptation_window</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="292">
+</span><span data-line="293">        <span class="k">if</span> <span class="n">t_choice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="294">            <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"first_trial_response_time"</span><span class="p">,</span> <span class="n">t_choice</span><span class="p">)</span>
+</span><span data-line="295">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"running_accuracy"</span><span class="p">,</span> <span class="n">running_accuracy</span><span class="p">)</span>
+</span><span data-line="296">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+</span><span data-line="297">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="n">water</span><span class="p">)</span>
+</span><span data-line="298">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
+</span><span data-line="299">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="n">response_side</span><span class="p">)</span>
+</span><span data-line="300">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"rewarded_side"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_side</span><span class="p">)</span>
+</span><span data-line="301">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"delay_cues"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">signed_delay</span><span class="p">)</span>
+</span><span data-line="302">
+</span><span data-line="303">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="304">        <span class="k">pass</span>
 </span></pre></div>
 </div>
 </section>
@@ -899,7 +900,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

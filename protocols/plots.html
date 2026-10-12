@@ -565,33 +565,35 @@ Each one is triggered at a different point in the data lifecycle:</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code></p></td>
-<td><p>After every trial, during the session</p></td>
+<td><p>During the session, in the window opened with <code class="docutils literal notranslate"><span class="pre">ONLINE</span> <span class="pre">PLOTS</span></code></p></td>
 <td><p>Current session trials so far</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code></p></td>
-<td><p>When a finished session is selected in the GUI</p></td>
+<td><p>With <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> on a session of <code class="docutils literal notranslate"><span class="pre">DATA</span></code> → <code class="docutils literal notranslate"><span class="pre">SESSIONS_SUMMARY</span></code></p></td>
 <td><p>Full session CSV</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SubjectPlotBase</span></code></p></td>
-<td><p>When a subject is selected in the GUI</p></td>
+<td><p>With <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> on a subject of the <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> screen</p></td>
 <td><p>All sessions for that subject</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Create a file anywhere inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory and define a subclass
-with the exact class name shown below. The system detects it automatically at startup
-and uses it instead of the default.</p>
+<p>Create a file anywhere inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory and define a subclass of
+the base class (e.g. <code class="docutils literal notranslate"><span class="pre">OnlinePlot</span></code> in <code class="docutils literal notranslate"><span class="pre">online_plot.py</span></code>; the file and class names are up to
+you). The system detects it automatically at startup and uses it instead of the
+default. Only one subclass of each base class is used per project.</p>
 <hr class="docutils" />
 <section id="onlineplotbase">
 <h2>OnlinePlotBase</h2>
-<p><code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code> lets you monitor the session in real time. The plot is embedded in
-the GUI and updated after every trial.</p>
+<p><code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code> lets you monitor the session in real time. The plot is shown in a
+separate window, opened with the <code class="docutils literal notranslate"><span class="pre">ONLINE</span> <span class="pre">PLOTS</span></code> button of the toolbar, and updated when
+new trials have finished (at most every <code class="docutils literal notranslate"><span class="pre">UPDATE_TIME_TABLE</span></code> seconds).</p>
 <p>Override two methods:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">create_figure_and_axes()</span></code></strong> — called once when the figure is first needed.
 Create <code class="docutils literal notranslate"><span class="pre">self.fig</span></code> and any axes you need (store them as instance attributes).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">update_plot(df)</span></code></strong> — called after each trial with the growing session DataFrame.
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">update_plot(df)</span></code></strong> — called when the plot is updated, with the growing session DataFrame.
 Clear and redraw your axes here.</p></li>
 </ul>
 <div class="note admonition">
@@ -607,15 +609,19 @@ Always clear the axes at the start of <code class="docutils literal notranslate"
 <li><p><code class="docutils literal notranslate"><span class="pre">subject</span></code> — subject name.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">task</span></code> — task class name.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">system_name</span></code> — name of the Village system.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">run_mode</span></code> — <code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Automatic&quot;</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">session</span></code> — session index within the subject’s history.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> / <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code> — absolute timestamps of the start and end of the trial.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ordered_list_of_events</span></code> — event names in the order they occurred.</p></li>
 </ul>
-<p><em>Bpod event columns (present when using a Bpod controller)</em></p>
+<p><em>State and event columns</em></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> — time (s) when the trial state machine started.</p></li>
-<li><p>One column per Bpod event and state (e.g. <code class="docutils literal notranslate"><span class="pre">Port1In</span></code>, <code class="docutils literal notranslate"><span class="pre">Port1Out</span></code>, <code class="docutils literal notranslate"><span class="pre">Tup</span></code>, …).
-Values are timestamps in seconds; <code class="docutils literal notranslate"><span class="pre">NaN</span></code> if the event did not occur in that trial.</p></li>
+<li><p>One column per state (<code class="docutils literal notranslate"><span class="pre">STATE_&lt;name&gt;_START</span></code> / <code class="docutils literal notranslate"><span class="pre">STATE_&lt;name&gt;_END</span></code>) and per event
+(e.g. <code class="docutils literal notranslate"><span class="pre">Port1In</span></code>, <code class="docutils literal notranslate"><span class="pre">Port1Out</span></code>, <code class="docutils literal notranslate"><span class="pre">Tup</span></code>, …): the ones Bpod records automatically, or the
+ones the task registers itself without Bpod. Each cell is a <strong>list</strong> of the
+timestamps of that trial (see <code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> in <a class="reference internal" href="tasks_bpod.html"><span class="std std-doc">Tasks (Bpod)</span></a>).</p></li>
 </ul>
+<p>The saved session file (and so the <code class="docutils literal notranslate"><span class="pre">df</span></code> of <code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code>) also has <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>
+(<code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>) and <code class="docutils literal notranslate"><span class="pre">session</span></code> (the session index within the subject’s
+history), added when the session is saved; the online <code class="docutils literal notranslate"><span class="pre">df</span></code> doesn’t.</p>
 <p><em>Custom columns</em></p>
 <p>Any value registered with <code class="docutils literal notranslate"><span class="pre">self.register_value(name,</span> <span class="pre">value)</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>
 appears as an additional column.</p>
@@ -658,7 +664,7 @@ a finished session in the Sessions table.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> — the full session CSV as a DataFrame. Same columns as <code class="docutils literal notranslate"><span class="pre">OnlinePlotBase.df</span></code>
-(see above), with all trials already present.</p></li>
+(see above) plus <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> and <code class="docutils literal notranslate"><span class="pre">session</span></code>, with all trials already present.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">weight</span></code> — body weight of the subject at the time of the session (float, grams).
 <code class="docutils literal notranslate"><span class="pre">0.0</span></code> if not recorded.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">height</span></code> — figure size in inches requested by the GUI.</p></li>
@@ -812,7 +818,7 @@ Columns:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -573,8 +573,10 @@ described in <a class="reference internal" href="../system_operation/sound.html"
 <hr class="docutils" />
 <section id="direct-functions">
 <h2>Direct Functions</h2>
-<p>Create a file named <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code> inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory
-and define a class named <code class="docutils literal notranslate"><span class="pre">DirectFunctions</span></code> that inherits from <code class="docutils literal notranslate"><span class="pre">DirectFunctionsBase</span></code>.
+<p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (e.g. <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code>) and define
+a class (e.g. <code class="docutils literal notranslate"><span class="pre">DirectFunctions</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">DirectFunctionsBase</span></code>. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
 Each method must be named <code class="docutils literal notranslate"><span class="pre">functionN</span></code> (<code class="docutils literal notranslate"><span class="pre">N</span></code> from 1 to 98) and take no arguments other
 than <code class="docutils literal notranslate"><span class="pre">self</span></code>. Its first line, as a docstring, is a short label — it’s what shows up
 on the corresponding button in the GUI, so keep it brief.</p>
@@ -588,18 +590,18 @@ on the corresponding button in the GUI, so keep it brief.</p>
 </span><span data-line="8"><span class="w">        </span><span class="sd">"""Camera MSG ON"""</span>
 </span><span data-line="9">        <span class="c1"># self.task gives access to the currently running task, so you can read</span>
 </span><span data-line="10">        <span class="c1"># anything it defines (settings, calibrations, custom attributes, ...)</span>
-</span><span data-line="11">        <span class="n">cam_box</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="s2">"ON"</span>
+</span><span data-line="11">        <span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"ON"</span><span class="p">)</span>
 </span><span data-line="12">
 </span><span data-line="13">    <span class="k">def</span><span class="w"> </span><span class="nf">function2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span data-line="14"><span class="w">        </span><span class="sd">"""Clear Camera MSG"""</span>
-</span><span data-line="15">        <span class="n">cam_box</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="s2">""</span>
+</span><span data-line="15">        <span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
 </span></pre></div>
 </div>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
-<p>The system detects the class automatically — no registration needed. See this
-project’s own <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code> for a fuller set of examples covering sound
-playback and on-screen stimuli.</p>
+<p>The system detects the class automatically — no registration needed. See the demo
+project’s <a class="reference internal" href="../examples/direct_functions.html"><span class="std std-doc">direct_functions.py</span></a> for a fuller set of
+examples covering sound playback and on-screen stimuli.</p>
 </div>
 <section id="ways-to-trigger-a-direct-function">
 <h3>Ways to trigger a direct function</h3>
@@ -721,6 +723,13 @@ the plain background) until a new draw function is loaded.</p></li>
 <hr class="docutils" />
 <section id="adding-your-own-functions">
 <h2>Adding your own functions</h2>
+<div class="warning admonition">
+<p class="admonition-title">sound_functions.py must have this exact name</p>
+<p>The <a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">Sound Calibration</span></a> panel looks for a file named exactly
+<code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code> in <code class="docutils literal notranslate"><span class="pre">code/</span></code> to fill its <code class="docutils literal notranslate"><span class="pre">SOUND</span></code> dropdown with
+<code class="docutils literal notranslate"><span class="pre">sound_calibration_functions</span></code>. Unlike the classes of the other files, it is found by
+its name.</p>
+</div>
 <p><code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code> and <code class="docutils literal notranslate"><span class="pre">video_functions.py</span></code> are plain modules, not subclasses —
 unlike <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code> (or <code class="docutils literal notranslate"><span class="pre">camera_trigger.py</span></code>, <code class="docutils literal notranslate"><span class="pre">gpio_trigger.py</span></code>, …),
 there is only ever one of them per project, so there’s nothing to discover or
@@ -772,7 +781,7 @@ directly wherever you need it, the same way <code class="docutils literal notran
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

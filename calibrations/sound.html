@@ -556,16 +556,11 @@ data-aria-dark="Switch to auto color mode">
 <p>Calibrates speaker output so a requested sound level in dB corresponds to an actual,
 measured volume — per speaker (left/right) and per sound, so tasks can request a
 sound in dB instead of a raw gain value.</p>
-<div class="note admonition">
-<p class="admonition-title">Note</p>
 <p>Only available when <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> is <strong>ON</strong>.</p>
-</div>
-<div class="note admonition">
-<p class="admonition-title">Note</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">SOUND</span></code> dropdown lists the functions in <code class="docutils literal notranslate"><span class="pre">sound_calibration_functions</span></code>, defined in
 your project’s <code class="docutils literal notranslate"><span class="pre">code/sound_functions.py</span></code>. Each function takes <code class="docutils literal notranslate"><span class="pre">gain</span></code> and <code class="docutils literal notranslate"><span class="pre">duration</span></code>
-and returns a mono NumPy waveform array; see the demo-village-project for examples.</p>
-</div>
+and returns a mono NumPy waveform array; see <a class="reference internal" href="../examples/sound_functions.html"><span class="std std-doc">sound_functions.py</span></a>
+in the demo project for examples (<code class="docutils literal notranslate"><span class="pre">whitenoise</span></code>, <code class="docutils literal notranslate"><span class="pre">tone_600</span></code>, <code class="docutils literal notranslate"><span class="pre">tone_1000</span></code>…).</p>
 <section id="calibrating">
 <h2>Calibrating</h2>
 <p>Pick a sound and a speaker, enter a gain (0-1) and a duration in seconds, then click
@@ -608,8 +603,9 @@ Calibrating above) and save a corrected curve.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span><span class="n">speaker</span><span class="p">,</span> <span class="n">dB</span><span class="p">,</span> <span class="n">sound_name</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p>Given a speaker (<code class="docutils literal notranslate"><span class="pre">0</span></code> = left, <code class="docutils literal notranslate"><span class="pre">1</span></code> = right), a target dB, and the sound’s function name,
-this interpolates the gain from that speaker/sound pair’s most recent saved
+<p>Given a speaker (<code class="docutils literal notranslate"><span class="pre">0</span></code> = left, <code class="docutils literal notranslate"><span class="pre">1</span></code> = right), a target dB, and the sound’s function name
+(the name of the function in <code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;whitenoise&quot;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&quot;tone_1000&quot;</span></code>), this interpolates the gain from that speaker/sound pair’s most recent saved
 calibration curve. <code class="docutils literal notranslate"><span class="pre">dB=0</span></code> always returns a gain of <code class="docutils literal notranslate"><span class="pre">0.0</span></code> without needing a
 calibration. Otherwise, if the pair hasn’t been calibrated yet, or <code class="docutils literal notranslate"><span class="pre">dB</span></code> falls outside
 the calibrated range, it raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> explaining the problem so it’s easy to
@@ -617,7 +613,7 @@ tell whether the sound needs calibrating or the requested dB needs adjusting.</p
 <p>Data is stored in <code class="docutils literal notranslate"><span class="pre">sound_calibration.csv</span></code> (columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">speaker</span></code>, <code class="docutils literal notranslate"><span class="pre">sound_name</span></code>,
 <code class="docutils literal notranslate"><span class="pre">gain</span></code>, <code class="docutils literal notranslate"><span class="pre">dB_obtained</span></code>, <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>, <code class="docutils literal notranslate"><span class="pre">dB_expected</span></code>, <code class="docutils literal notranslate"><span class="pre">error(%)</span></code>).</p>
 <hr class="docutils" />
-<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>.</p>
+<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> and the <a class="reference internal" href="../examples/led_calibration.html"><span class="std std-doc">led_calibration.py</span></a> example.</p>
 </section>
 </section>
 
@@ -658,7 +654,7 @@ tell whether the sound needs calibrating or the requested dB needs adjusting.</p
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=9e3a7d9d"></script>
+      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
