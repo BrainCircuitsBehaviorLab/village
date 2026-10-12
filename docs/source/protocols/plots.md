@@ -5,26 +5,28 @@ Each one is triggered at a different point in the data lifecycle:
 
 | Class | When it runs | Data available |
 |---|---|---|
-| `OnlinePlotBase` | After every trial, during the session | Current session trials so far |
-| `SessionPlotBase` | When a finished session is selected in the GUI | Full session CSV |
-| `SubjectPlotBase` | When a subject is selected in the GUI | All sessions for that subject |
+| `OnlinePlotBase` | During the session, in the window opened with `ONLINE PLOTS` | Current session trials so far |
+| `SessionPlotBase` | With `PLOT` on a session of `DATA` → `SESSIONS_SUMMARY` | Full session CSV |
+| `SubjectPlotBase` | With `PLOT` on a subject of the `SUBJECTS` screen | All sessions for that subject |
 
-Create a file anywhere inside your project's `code` directory and define a subclass
-with the exact class name shown below. The system detects it automatically at startup
-and uses it instead of the default.
+Create a file anywhere inside your project's `code` directory and define a subclass of
+the base class (e.g. `OnlinePlot` in `online_plot.py`; the file and class names are up to
+you). The system detects it automatically at startup and uses it instead of the
+default. Only one subclass of each base class is used per project.
 
 ---
 
 ### OnlinePlotBase
 
-`OnlinePlotBase` lets you monitor the session in real time. The plot is embedded in
-the GUI and updated after every trial.
+`OnlinePlotBase` lets you monitor the session in real time. The plot is shown in a
+separate window, opened with the `ONLINE PLOTS` button of the toolbar, and updated when
+new trials have finished (at most every `UPDATE_TIME_TABLE` seconds).
 
 Override two methods:
 
 - **`create_figure_and_axes()`** — called once when the figure is first needed.
   Create `self.fig` and any axes you need (store them as instance attributes).
-- **`update_plot(df)`** — called after each trial with the growing session DataFrame.
+- **`update_plot(df)`** — called when the plot is updated, with the growing session DataFrame.
   Clear and redraw your axes here.
 
 ```{admonition} Note
@@ -42,14 +44,19 @@ Always clear the axes at the start of `update_plot` to avoid stacking traces.
 - `subject` — subject name.
 - `task` — task class name.
 - `system_name` — name of the Village system.
-- `run_mode` — `"Manual"` or `"Automatic"`.
-- `session` — session index within the subject's history.
+- `TRIAL_START` / `TRIAL_END` — absolute timestamps of the start and end of the trial.
+- `ordered_list_of_events` — event names in the order they occurred.
 
-*Bpod event columns (present when using a Bpod controller)*
+*State and event columns*
 
-- `TRIAL_START` — time (s) when the trial state machine started.
-- One column per Bpod event and state (e.g. `Port1In`, `Port1Out`, `Tup`, ...).
-  Values are timestamps in seconds; `NaN` if the event did not occur in that trial.
+- One column per state (`STATE_<name>_START` / `STATE_<name>_END`) and per event
+  (e.g. `Port1In`, `Port1Out`, `Tup`, ...): the ones Bpod records automatically, or the
+  ones the task registers itself without Bpod. Each cell is a **list** of the
+  timestamps of that trial (see `self.trial_data` in [Tasks (Bpod)](tasks_bpod.md)).
+
+The saved session file (and so the `df` of `SessionPlotBase`) also has `run_mode`
+(`"Manual"` or `"Auto"`) and `session` (the session index within the subject's
+history), added when the session is saved; the online `df` doesn't.
 
 *Custom columns*
 
@@ -99,7 +106,7 @@ Override **`create_plot(df, weight, width, height)`** and return a `matplotlib.f
 **Arguments:**
 
 - `df` — the full session CSV as a DataFrame. Same columns as `OnlinePlotBase.df`
-  (see above), with all trials already present.
+  (see above) plus `run_mode` and `session`, with all trials already present.
 - `weight` — body weight of the subject at the time of the session (float, grams).
   `0.0` if not recorded.
 - `width`, `height` — figure size in inches requested by the GUI.

@@ -16,10 +16,10 @@ a lever pressed with a given force, ...).
 
 ### Creating a custom ScaleTrigger
 
-Create a file named `scale_trigger.py` inside your project's `code` directory
-and define a class named `ScaleTrigger` that inherits from `ScaleTriggerBase`.
-The system will automatically detect it and use it instead of the default
-base class.
+Create a file inside your project's `code` directory (e.g. `scale_trigger.py`) and define
+a class (e.g. `ScaleTrigger`) that inherits from `ScaleTriggerBase`. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
 
 ```python
 from village.custom_classes.scale_trigger_base import ScaleTriggerBase

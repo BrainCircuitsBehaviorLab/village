@@ -1,173 +1,160 @@
+import math
 import random
 
 import numpy as np
 import pandas as pd
+from bpod_6_delay import get_delay_probabilities
 
 from village.custom_classes.auto_no_mouse_base import AutoNoMouseBase, AutonomouseParam
 from village.scripts.time_utils import time_utils
 
 
 class AutoFollowTheLight(AutoNoMouseBase):
-    # TASK_NAME = "S5"  # Task it is designed for
+    """A virtual animal that performs Bpod6Delay (bpod_6_delay.py) by itself,
+    to test the task, the training protocol and the plots without a real
+    animal. Started and stopped from the VIRTUAL MOUSE tab of the MONITOR
+    screen while the task is running.
 
-    # # Custom parameters for this Autonomouse, that will appear in the UI.
-    # PARAMS = [AutonomouseParam(name="p_correct", type_=float,
-    #                            default=0.80, label="p correct",
-    #                            min_val=0.0, max_val=1.0,
-    #                            tooltip="Prob choosing the correct port")]
-    TASK_NAME = "S5"  # Task it is designed for
+    In every trial it pokes the center port and, after its reaction time,
+    pokes a side port. It has to poke the side that lit up first: the longer
+    the delay between the two side LEDs, the easier it is to tell them apart,
+    so the more likely it chooses right. This way its accuracy depends on the
+    difficulty, as a real animal's does, and the task's adaptation of p can be
+    watched at work.
+    """
 
-    # Custom parameters for this Autonomouse, that will appear in the UI.
+    # The task this virtual animal is for (the task class name). Without it,
+    # it would be used for any task that has no virtual animal of its own.
+    TASK_NAME = "Bpod6Delay"
+
+    # Parameters shown in the VIRTUAL MOUSE tab, editable while it runs.
     PARAMS = [
-        AutonomouseParam("k_decay", float, 2.0, "memory decay", 0.1, 10.0),
-        AutonomouseParam("noise", float, 0.5, "decision noise", 0.0, 2.0),
+        AutonomouseParam(
+            "tau",
+            float,
+            0.3,
+            "delay needed (s)",
+            0.01,
+            5.0,
+            "How long a delay it needs to tell the sides apart: the larger, "
+            "the more mistakes with short delays",
+        ),
+        AutonomouseParam(
+            "reaction_time",
+            float,
+            0.5,
+            "reaction time (s)",
+            0.0,
+            5.0,
+            "Time from the center poke to the side poke",
+        ),
+        AutonomouseParam(
+            "lapse",
+            float,
+            0.05,
+            "lapse rate",
+            0.0,
+            1.0,
+            "Probability of choosing at random, whatever the delay",
+        ),
     ]
 
+    def p_correct(self, delay: float) -> float:
+        """Probability of choosing the right side for a given delay: from 0.5
+        (chance) with no delay, to 1 with a long one, minus the lapses."""
+        p_seen = 1 - math.exp(-delay / self.tau)
+        return (1 - self.lapse) * (0.5 + 0.5 * p_seen) + self.lapse * 0.5
+
     def run_trial(self) -> None:
-        """
-        Run a trial, what you want the autonomouse to do on each trial.
-        Here, it will poke centre, wait, then choose the side port and poke.
-        """
-        """
-        DO THE TASK PERFECTLY:
-        """
+        """One trial: center poke, wait the reaction time, side poke."""
+        self.wait(1.0)  # some time to reach the center port
+        if self._stop_event.is_set():
+            return
+        self.poke(2)  # starts the trial: the first side LED turns on
 
-        #  # 1. center poke
-        # self.wait(1)
-        # self.poke(2)
-        # self.wait(1)
-
-        # # 2. WAIT until cue period (you don't know side yet!)
-        # self.wait(0.1)
-
-        # # 3. READ TRUE cue
-        # first_side = self.task.first_side
-        # print('***First side:', first_side)
-        # # fallback safety
-        # if first_side is None:
-        #     return
-
-        # # 4. respect delay (optional realism)
-        # delay = self.task.delay
-        # # print('***Delay:', delay)
-        # # self.wait(delay)
-
-        # # 5. correct choice
-        # if first_side == 0:
-        #     self.poke(1)
-        # else:
-        #     self.poke(3)
-
-        """
-        ADD NOISE AND MEMORY DECAY::
-        """
-        self.wait(1)
-        self.poke(2)
-        self.wait(1)
-
-        first_side = self.task.first_side
-        delay = self.task.delay
-
-        # encode as -1 / +1
-        s = -1 if first_side == 0 else +1
-
-        # memory decay
-        m = s * np.exp(-self.k_decay * delay)
-
-        # noise
-        m += np.random.normal(0, self.noise)
-
-        # decision
-        port = 3 if m > 0 else 1
-
-        self.poke(port)
-
+        self.wait(self.reaction_time)
         if self._stop_event.is_set():
             return
 
-        """
-        FOLLOW THE LIGHT:
-        """
-        # # Wait a bit
-        # self.wait(.5)
+        # correct_side and delay are set by the task in create_trial
+        correct = random.random() < self.p_correct(self.task.delay)
+        if self.task.correct_side == "left":
+            port = 1 if correct else 3
+        else:
+            port = 3 if correct else 1
+        self.poke(port)
 
-        # # Poke in the middle to initiate the trial then wait a bit
-        # self.poke(2)
-        # self.wait(.5)
-
-        # # Choose a side and poke
-        # trial_type = getattr(self.task, "this_trial_type", "left")
-        # if random.random() < self.p_correct:
-        #     port = 1 if trial_type == "left" else 3
-        # else:
-        #     port = 3 if trial_type == "left" else 1
-        # self.poke(port)
-
-        # if self._stop_event.is_set():
-        #     return
+        # Let the reward or the timeout and the ITI pass before the next trial
+        self.wait(self.task.settings.timeout + self.task.settings.iti_time)
 
     def inject_trial(self, **kwargs) -> None:
-        """Append one mock trial directly to task.session_df."""
+        """Appends one simulated trial directly to the session data, without
+        running the state machine, with the same columns Bpod6Delay saves.
+        Useful to fill a session quickly and test the plots and the training
+        protocol."""
 
-        # Update parameters if provided
-        for param in self.PARAMS:
-            if param.name in kwargs:
-                setattr(self, param.name, param.clamp(kwargs[param.name]))
-
-        # define if trials is correct or not based on p_correct
+        self.update_params(**kwargs)
         task = self.task
-        trial_type = random.choice(["left", "right"])
-        correct = random.random() < self.p_correct
-        if correct:
-            choice_port = "Port1In" if trial_type == "left" else "Port3In"
-        else:
-            choice_port = "Port3In" if trial_type == "left" else "Port1In"
+        settings = task.settings
 
-        # Set timing of trial, e.g. how long the mouse takes to poke after
-        # stimulus, how long the outcome lasts, etc. We also need to call
-        # the recorder so trial is created in session_df.
+        p = getattr(task, "p", getattr(settings, "p", 0.0))
+        delays, probabilities = get_delay_probabilities(
+            p, settings.delay_thresholds, gamma=getattr(settings, "curve_power", 3.0)
+        )
+        delay = float(np.random.choice(delays, p=probabilities))
+        correct_side = random.choice(["left", "right"])
+        correct = random.random() < self.p_correct(delay)
+        response_side = (
+            correct_side if correct else ("right" if correct_side == "left" else "left")
+        )
+        choice_port = "Port1In" if response_side == "left" else "Port3In"
+
+        # Times of the simulated trial. The recorder must also open and close
+        # the trial, so that the session's trial count stays consistent.
         t0 = time_utils.now_timestamp()
         task.recorder.start_trial(t0, t0)
-
-        t_init = t0 + 0.25
-        t_choice = t_init + 0.25
-        t_iti = t_choice + 1
-        t_end = t_iti + 1
-
+        t_center = t0 + 1.0
+        t_choice = t_center + self.reaction_time
+        t_outcome_end = t_choice + (0.1 if correct else settings.noise_time)
+        t_end = t_outcome_end + (settings.iti_time if correct else settings.timeout)
         task.recorder.end_trial(t_end)
 
-        # Construct the mock trial row to append to session_df.
+        # the side poke happens either before or after the second LED turns on
+        first_led_end = min(t_center + delay, t_choice)
+        outcome_state = "correct_choice" if correct else "wrong_choice"
+        after_state = "iti" if correct else "timeout"
         row: dict = {
-            # Task information
             "date": task.date,
             "trial": task.current_trial,
             "subject": task.subject,
             "task": task.name,
             "system_name": task.system_name,
-            # Trial events and timings
             "TRIAL_START": t0,
             "TRIAL_END": t_end,
-            "Port2In": [t_init],
-            "Port2Out": [t_init + 0.05],
+            "STATE_c_led_on_START": [t0],
+            "STATE_c_led_on_END": [t_center],
+            "STATE_first_side_led_START": [t_center],
+            "STATE_first_side_led_END": [first_led_end],
+            f"STATE_{outcome_state}_START": [t_choice],
+            f"STATE_{outcome_state}_END": [t_outcome_end],
+            f"STATE_{after_state}_START": [t_outcome_end],
+            f"STATE_{after_state}_END": [t_end],
+            "Port2In": [t_center],
             choice_port: [t_choice],
-            "ordered_list_of_events": ["Port2In", "Port2Out", choice_port],
-            "STATE_ready_to_initiate_START": [t0],
-            "STATE_ready_to_initiate_END": [t_init],
-            "STATE_stimulus_state_START": [t_init],
-            "STATE_stimulus_state_END": [t_choice],
-            "STATE_reward_state_START": [t_choice] if correct else [],
-            "STATE_reward_state_END": ([t_choice + 1] if correct else []),
-            "STATE_punish_state_START": [] if correct else [t_choice],
-            "STATE_punish_state_END": ([] if correct else [t_choice + 1]),
-            "STATE_iti_state_START": [t_iti],
-            "STATE_iti_state_END": [t_end],
-            # Outcome and trial type (what's logged in Task.after_trial)
-            "water": task.settings.reward_amount_ml if correct else 0,
-            "trial_type": trial_type,
-            "correct": correct,
+            "ordered_list_of_events": ["Port2In", choice_port],
+            # the values Bpod6Delay registers in after_trial
+            "first_trial_response_time": t_choice,
+            "p": p,
+            "water": settings.reward_volume if correct else 0,
+            "outcome": "correct" if correct else "incorrect",
+            "response_side": response_side,
+            "rewarded_side": correct_side,
+            "delay_cues": -delay if correct_side == "left" else delay,
         }
+        if t_center + delay < t_choice:
+            row["STATE_both_side_leds_START"] = [t_center + delay]
+            row["STATE_both_side_leds_END"] = [t_choice]
 
-        # Write in df and update trial number.
         task.session_df = pd.concat(
             [task.session_df, pd.DataFrame([row])], ignore_index=True
         )

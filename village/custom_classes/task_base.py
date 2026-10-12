@@ -143,7 +143,7 @@ class TaskBase:
         Executes a registered function.
 
         Args:
-            i (int): The function index (1-99).
+            i (int): The function index (1-98).
 
         Example::
             self.execute_function(1)  # executes the function registered at index 1
@@ -482,15 +482,15 @@ class TaskBase:
     #
     # execute_function
     #
-    # Executes a registered function by its index (1-99).
+    # Executes a registered function by its index (1-98).
 
     def execute_function(self, i: int) -> None:
         """Executes a registered function.
 
         Args:
-            i (int): The function index (1-99).
+            i (int): The function index (1-98).
         """
-        if 1 <= i <= 99:
+        if 1 <= i <= 98:
             self.functions[i]()
 
     # ----------------------------------------------------------------------------------

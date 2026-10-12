@@ -16,9 +16,10 @@ responses.
 
 ### Creating a custom TouchTrigger
 
-Create a file named `touch_trigger` inside your project's `code` directory and
-define a class named `TouchTrigger` that inherits from `TouchTriggerBase`. The
-system will automatically detect it and use it instead of the default base class.
+Create a file inside your project's `code` directory (e.g. `touch_trigger.py`) and define
+a class (e.g. `TouchTrigger`) that inherits from `TouchTriggerBase`. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
 
 ```python
 from village.custom_classes.touch_trigger_base import TouchTriggerBase
@@ -35,7 +36,8 @@ class TouchTrigger(TouchTriggerBase):
         Args:
             x (int): Touch x position in screen pixels.
             y (int): Touch y position in screen pixels.
-            timestamp (float): Monotonic timestamp of the event (seconds).
+            timestamp (float): Raspberry Pi time of the touch (the same clock as
+                time_utils.now_timestamp()).
 
         Available via self.task:
         - self.task.cam_box      — box camera (write_text, areas, position, …)
@@ -44,6 +46,10 @@ class TouchTrigger(TouchTriggerBase):
         """
         self.task.cam_box.write_text(f"Touch: {x}, {y}")
 ```
+
+You don't need to register the touches yourself: every touch that arrives while a trial
+is running is already saved in the trial data as a Raspberry Pi event named
+`touch_<x>_<y>` (e.g. `touch_640_360`), with its time.
 
 ---
 
@@ -58,16 +64,19 @@ branch accordingly.
 so the `TouchTrigger` can read them via `self.task`:
 
 ```python
-class MyTask(Task):
+from village.custom_classes.task_base import BpodEvent, TaskBase
 
-    def start_trial(self):
+
+class MyTask(TaskBase):
+
+    def create_trial(self):
         # Position and radius of the target on the stimulus screen (pixels)
         self.target_x: int = 640
         self.target_y: int = 360
         self.tolerance_px: int = 80
         self.touch_correct: bool = False
 
-        # ... build and run the state machine ...
+        # ... build the state machine (see below) ...
 ```
 
 **In `touch_trigger.py`**, check the distance to the target and send the
@@ -101,16 +110,17 @@ class TouchTrigger(TouchTriggerBase):
             task.bpod.send_softcode_to_bpod(2)   # softcode 2 → incorrect
 ```
 
-The Bpod state machine receives the softcode and can use it to branch:
+The Bpod state machine (built in the task's `create_trial`) receives the softcode
+and can use it to branch:
 
 ```python
-sma.add_state(
-    state_name="WaitForTouch",
+self.bpod.add_state(
+    state_name="wait_for_touch",
     state_timer=5,
     state_change_conditions={
-        "Tup": "Timeout",
-        "SoftCode1": "Reward",
-        "SoftCode2": "Punish",
+        BpodEvent.Tup: "timeout",
+        BpodEvent.SoftCode1: "reward",
+        BpodEvent.SoftCode2: "punish",
     },
     output_actions=[],
 )

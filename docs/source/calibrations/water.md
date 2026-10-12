@@ -4,18 +4,20 @@ Calibrates the relationship between how long a valve (or a pump) is open and how
 water it actually delivers, per behavior port — so tasks can request a volume in
 microliters instead of a raw opening time.
 
-```{admonition} Note
-:class: note
-With Bpod as the configured behavior controller (`BEHAVIOR_CONTROLLER` → `BPOD`), the
-CALIBRATE/TEST sequence runs through a built-in Bpod state machine automatically. For
-any other controller, the project's code directory must define a class inheriting from
-`WaterCalibrationTaskBase` (`village.custom_classes.water_calibration_task_base`)
-implementing the same sequence on that controller's own hardware -- if a project
-provides one, it's used instead of the Bpod default even when the controller is Bpod.
-Without either, clicking CALIBRATE or TEST shows a message explaining what's missing.
-`WaterCalibrationTaskBase` is a `CalibrationTaskBase`: it doesn't appear in the TASKS
-tab, and without Bpod `create_trial` doesn't need to call `register_start_trial`.
-```
+Always available in the `CALIBRATION` screen:
+
+- **With Bpod** (`BEHAVIOR_CONTROLLER` → `BPOD`), the CALIBRATE/TEST sequence runs
+  through a built-in Bpod state machine, with nothing to set up.
+- **With any other controller**, the project's code directory must define a class
+  inheriting from `WaterCalibrationTaskBase`
+  (`village.custom_classes.water_calibration_task_base`) that runs the same sequence
+  on that controller (see [Water calibration](../protocols/tasks_arduino.md#water-calibration)
+  in the Arduino tasks page, and
+  [Running a Task from the Calibration](../advanced_customization/calibrations.md#running-a-task-from-the-calibration)).
+  Without it, clicking CALIBRATE or TEST shows a message explaining what's missing.
+
+If a project defines such a class, it is used instead of the Bpod default even when the
+controller is Bpod.
 
 ### Calibrating
 
@@ -38,7 +40,7 @@ recent one per port. `DELETE CALIBRATION` discards the points collected so far (
 confirmation) without saving them.
 
 ```{admonition} Tip
-:class: note
+:class: tip
 If you're not sure what time to start with, begin with a short opening time (a few
 ms). You can always delete points later that turn out to be far outside the range of
 interest for your tasks.
@@ -77,4 +79,4 @@ Data is stored in `water_calibration.csv` (columns: `date`, `port_number`,
 
 ---
 
-Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md).
+Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md) and the [led_calibration.py](../examples/led_calibration.md) example.

@@ -3,7 +3,7 @@
 ```{admonition} Note
 :class: note
 The Telegram bot must be enabled and configured before custom commands can be
-used. See [Telegram](../preparation/telegram.md) for setup.
+used. See [Telegram Bot Integration](../preparation/telegram.md) for setup.
 ```
 
 You can add your own `/commands` to the Telegram bot by creating classes that
@@ -31,19 +31,18 @@ from telegram.ext import ContextTypes
 from village.custom_classes.telegram_command_base import TelegramCommandBase
 
 
-class WaterCommand(TelegramCommandBase):
-    """Custom command: /water <amount> — deliver a manual water reward."""
+class EchoCommand(TelegramCommandBase):
+    """Custom command: /echo <text> — replies with the same text."""
 
-    command = "water"
-    description = "Deliver a manual water reward, e.g. /water 10"
+    command = "echo"
+    description = "Replies with the same text, e.g. /echo hello"
 
     async def handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        try:
-            amount = float(context.args[0]) if context.args else 10.0
-            # ... trigger the reward here ...
-            await update.message.reply_text(f"Delivered {amount} µl of water.")
-        except Exception:
-            await update.message.reply_text("Usage: /water <amount>")
+        # The words written after the command arrive in context.args, as strings.
+        if not context.args:
+            await update.message.reply_text("Usage: /echo <text>")
+            return
+        await update.message.reply_text(" ".join(context.args))
 ```
 
 A complete example with two commands, one of them reading an argument:

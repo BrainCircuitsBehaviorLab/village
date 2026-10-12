@@ -79,7 +79,7 @@ The active training protocol is displayed on the left side, along with a list of
 - `maximum_number_of_trials`: The task will automatically end once this number of trials is completed.
 - `maximum_duration`: The task will automatically end when this timer is reached.
 
-In addition to these settings, a list of all variables defined for this specific training protocol will appear. In the [Protocol Creation][CREATE] section, we explain how to create a protocol and define its variables.
+In addition to these settings, a list of all variables defined for this specific training protocol will appear. [The Training Protocol][CREATE] explains how to create a protocol and define its variables.
 
 Next to the `RUN TASK` button, which starts the task, the `Subject` selector opens a list of all available subjects, as well as the option "None." Selecting "None" runs the task without saving any data.
 

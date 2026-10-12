@@ -4,8 +4,9 @@ With `BEHAVIOR_CONTROLLER` set to `OTHER` in `SETTINGS` and no microcontroller, 
 Raspberry Pi runs the trial itself: it reacts to what it detects (the box camera
 areas, the touchscreen, the GPIO input pin, the box scale) and produces the
 stimuli (sounds, the screen, the LED strip, the GPIO output pin). Its timing is
-less precise than a microcontroller's: for fast and precise timing, use Bpod or a
-microcontroller.
+less precise than a microcontroller's (see
+[Timing, Clocks & Latencies](../system_operation/timing.md)): for fast and precise
+timing, use Bpod or a microcontroller.
 
 The detections arrive through the triggers (camera, touchscreen, GPIO, scale), which
 run in their own threads and call your code while the task is running. The usual
@@ -157,9 +158,10 @@ triggered (adjustable in the Settings tab of the GUI).
 :class: note
 Each session saves two files:
 
-- The **raw** file (`<session>_RAW.csv`) has one line per event, written as it
-  happens, so it keeps everything — including the trial that was still running
-  when the session stopped.
+- The **raw** file (`<session>_RAW.csv`) has one line per event. During the session
+  the events are written as they happen to `data/sessions/session.csv`, which is
+  copied to the raw file when the session ends, so it keeps everything — including
+  the trial that was still running when the session stopped.
 - The **clean** file (`<session>.csv`) is a table with one row per trial, and a
   trial's row is only created when the trial finishes (after `after_trial`). So
   the trial that was still running when the session stopped never gets its row.
@@ -242,7 +244,7 @@ self.register_value("response_time", 0.432)
 def execute_function(self, i: int) -> None
 ```
 
-Runs the direct function registered at index `i` (1-99). See
+Runs the direct function registered at index `i` (1-98). See
 [Direct, Audio & Video Functions](functions.md) for how those get registered and
 the other ways they can be triggered.
 
@@ -289,7 +291,7 @@ values and real-world units (see [Custom Calibrations](../advanced_customization
 
 ```python
 gain = self.calibrations.sound_calibration.get_sound_gain(
-    speaker=1, dB=70.0, sound_name="white_noise"
+    speaker=1, dB=70.0, sound_name="whitenoise"
 )
 ```
 

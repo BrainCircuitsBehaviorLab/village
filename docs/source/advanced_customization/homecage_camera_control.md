@@ -1,6 +1,6 @@
 ## Homecage Camera Control
 
-Some setups connect two homecages through the corridor, with animals able to move
+Some setups connect two home cages through the corridor, with animals able to move
 between them. The passage between them can be blocked on purpose using pieces of a
 distinct color, placed to physically close it off. `AREA_EXTRA` is a 5th, special
 corridor detection area (on top of the regular `AREA1_CORRIDOR`-`AREA4_CORRIDOR`) used
@@ -35,7 +35,7 @@ Once active, a new `EXTRA` tab appears in `MONITOR`, alongside `INFO`, `PLOT` an
 - **`AREA_EXTRA_CORRIDOR`** position and threshold controls — `left`, `right`, `top`,
   `bottom`, and day/night detection thresholds, exactly like `AREA1_CORRIDOR`-`AREA4_CORRIDOR`
   in `DETECTION SETTINGS`. Position the rectangle over the passage between the two
-  homecages.
+  home cages.
 
 When active, the area is drawn on the corridor camera feed in a vivid violet
 rectangle (`COLOR_EXTRA`, editable in `SETTINGS` -> `ADVANCED SETTINGS` -> `VISUAL

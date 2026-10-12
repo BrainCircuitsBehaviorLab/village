@@ -207,7 +207,10 @@ data/sessions/{subject}/
 
 #### 1. Raw Session (`{filename}_RAW.csv`)
 
-Created in real time, one row per event:
+One row per event. During the session, the events are written as they happen to
+`data/sessions/session.csv`; when the session ends, that file is copied here. (That
+real-time file is emptied when the Training Village starts: see
+[After a Power Cut](../troubleshooting/troubleshooting.md#after-a-power-cut).)
 
 | Column | Description |
 | :--- | :--- |

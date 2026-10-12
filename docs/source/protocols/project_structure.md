@@ -17,8 +17,9 @@ village_projects/
 - **`media/`**: *(Optional)* Audio, video, or image assets used by behavioral tasks.
 - **`data/`**: All experimental outputs — raw and processed data files and videos.
 
-The first time you run the Training Village, a `village-demo-project` is created
-automatically with working example code you can use as a reference.
+The first time you run the Training Village, a `demo-village-project` is created
+automatically with working example code you can use as a reference (see
+[Manual Task Execution](../system_operation/manual.md) for the list of its tasks).
 
 ---
 
@@ -59,20 +60,33 @@ In Example 2, a single task is used throughout, but `training_protocol.py` adjus
 parameters after every session to increase difficulty progressively.
 
 Both approaches can be combined freely. In addition to task scripts and the training
-protocol, a typical `code/` folder contains helper modules for plotting, sound or video
-generation, and direct hardware functions:
+protocol, the `code/` folder can contain files that customize other parts of the system:
+functions that produce sounds and visual stimuli, reactions to the camera, the
+touchscreen or the GPIO pin, plots, actions run after each session... This is, for
+example, the `code/` folder of the demo project (shortened):
 
 ```
 code/
-├── __init__.py
-├── habituation.py
-├── follow_the_light.py
+├── bpod_1_habituation.py ... bpod_6_delay.py    # tasks
+├── arduino_1_habituation.py ... arduino_6_delay.py
+├── raspberry_area1_sound.py, raspberry_touchscreen.py
 ├── training_protocol.py
-├── session_plot.py
-├── subject_plot.py
-├── online_plot.py
-├── direct_functions.py
-├── sound_functions.py
-├── LICENSE
-└── README.md
+├── direct_functions.py, sound_functions.py, video_functions.py
+├── camera_trigger.py, camera_draw.py, touch_trigger.py
+├── gpio_trigger.py, scale_trigger.py
+├── online_plot.py, session_plot.py, subject_plot.py
+├── after_session.py, change_cycle.py, telegram_commands.py
+├── led_calibration.py, auto_follow_the_light.py
+└── arduino_firmware/
+```
+
+```{admonition} File and class names
+:class: tip
+Except for tasks, the names of these files and classes are up to you: when Village
+starts, it reads every `.py` file in `code/` and recognizes each class by the base class
+it inherits from (`TrainingProtocolBase`, `CameraTriggerBase`, `OnlinePlotBase`...).
+Only one class of each kind is used per project. Tasks are the exception, in the sense
+that the class name is the name of the task. The other exception is
+`sound_functions.py`, which must have exactly that name (see
+[Direct Sound & Video Functions](functions.md)).
 ```
