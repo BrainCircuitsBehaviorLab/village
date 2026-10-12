@@ -11,7 +11,7 @@ While any remote desktop client providing a full graphical user interface can be
 AnyDesk is highly reliable, easy to deploy, and its free tier is fully sufficient for lab operations.
 
 #### From your Raspberry Pi 5:
-1. Open the web browser on your Raspberry Pi, go to the AnyDesk download page, and download the **Raspberry Pi / Debian (64-bit / ARM64)** `.deb` package.
+1. Open the web browser on your Raspberry Pi, go to the [AnyDesk download page][ANYDESK], and download the **Raspberry Pi / Debian (64-bit / ARM64)** `.deb` package.
 2. Open a terminal and install it with:
    ```
    sudo apt install ~/Downloads/anydesk_*.deb
@@ -32,7 +32,7 @@ You can rename and save this connection to your favorites for quick access.
 
 ### Option 2: Using RealVNC
 
-RealVNC is an excellent choice because the server software comes pre-installed by default on Raspberry Pi OS. You will need to create an account, but the free **Lite** tier is ideal for managing a standalone system.
+[RealVNC][REAL] is an excellent choice because the server software comes pre-installed by default on Raspberry Pi OS. You will need to create an account, but the free **Lite** tier is ideal for managing a standalone system.
 
 #### From your Raspberry Pi 5 (RealVNC):
 1. Navigate to the [RealVNC Lite Access Subscription Page][LITE] and create a free account (eligible for non-commercial/research use). If you encounter any verification issues, follow these [detailed instructions][INSTRUCTIONS].

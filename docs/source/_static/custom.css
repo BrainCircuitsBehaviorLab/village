@@ -204,3 +204,54 @@ img.zoomable {
     border-radius: 4px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
+
+/* ── Landing page ──────────────────────────────────────── */
+/* Jost: free (OFL) font very close to Futura, self-hosted, used where Futura
+   isn't installed (anything but macOS). */
+@font-face {
+    font-family: "Jost";
+    src: url("jost-400-latin.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+.tv-lab-name {
+    font-family: Futura, "Jost", sans-serif;
+}
+
+/* Section titles: <h2> (only the page title is <h1>) with the h1 look. */
+.yue h2.tv-section-title {
+    margin-top: 0;
+    margin-bottom: 0.888889em;
+    font-weight: 800;
+}
+
+/* Image + text side by side; stacked on narrow screens. */
+.tv-split {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.tv-split-media {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+.tv-split-text {
+    flex: 1 1 0;
+    min-width: 0;
+}
+@media (max-width: 767px) {
+    .tv-split {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    .tv-split-media {
+        flex-basis: auto !important;
+        width: 100%;
+    }
+    /* Images and video narrower than the page on desktop: full width here. */
+    .tv-wide {
+        width: 100% !important;
+    }
+}

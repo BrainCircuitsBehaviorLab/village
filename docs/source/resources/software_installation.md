@@ -1,14 +1,14 @@
 ## Manual Software Installation
 
-You can download a ready-to-use disk image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed [here][IMAGE].
+You can download a ready-to-use disk image containing the operating system (Raspberry Pi OS) along with all necessary libraries and Python code pre-installed: see [Raspberry Pi Disk Image][IMAGE].
 
 Follow the instructions on this page if you prefer a manual installation. The process can be challenging, so proceed only if you have a basic understanding of Linux distributions and are comfortable using the terminal.
 
 ### What You Need
 
 - Raspberry Pi 5 - 8GB
-- Fan
-- Micro SD 128GB
+- Raspberry Pi Active Cooler
+- Micro SD 256GB
 - Keyboard
 - Mouse
 - Screen
@@ -16,18 +16,17 @@ Follow the instructions on this page if you prefer a manual installation. The pr
 - Power supply for Raspberry Pi
 - 2 Raspberry Pi Camera Module 3 Wide Noir
 - Ethernet cable (optional)
-- Raspberry Pi Dac Pro (optional)
+- Raspberry Pi DAC Pro (optional)
 - 2 servo motors
 - RFID sensor
 - Weight sensor
-- Temperature sensor
 
 ### Launch Raspberry Pi OS for the First Time
 
 1. Connect a keyboard, mouse, and screen to the Raspberry Pi.
-2. Connect the fan.
+2. Connect the Active Cooler.
 3. Connect the Ethernet cable if you are going to use an Ethernet connection.
-4. If your SD card has the OS preinstalled, jump to step 4.
+4. If your SD card has the OS preinstalled, jump to step 6.
 5. If your SD card is empty, follow these instructions to download the OS and copy it to the SD: [Raspberry Pi OS][OS]. Don't customize it, we will do it later.
 6. Insert the SD card and start the Raspberry Pi.
 7. Select your country and keyboard language and choose English as the general language.
@@ -46,7 +45,8 @@ sudo apt full-upgrade
 ```
 
 ### Installing Needed Libraries
-0. The OS comes with python 3.13 pre-installed.
+
+The OS comes with Python 3.13 pre-installed.
 
 1. Install OpenCV (the library used for video processing).
 
@@ -64,7 +64,7 @@ sudo apt install libasound2-dev
 3. Install PyQT5 multimedia
 
 ```
-sudo apt install python-pyqt5
+sudo apt install python3-pyqt5
 sudo apt install python3-pyqt5.qtmultimedia
 sudo apt install libqt5multimedia5-plugins
 ```
@@ -95,7 +95,7 @@ sudo apt install code
 Python environment:
 
 ```
-python -m venv --system-site-packages ~/.env
+python3 -m venv --system-site-packages ~/.env
 ```
 
 2. Activate it:
@@ -148,7 +148,7 @@ sudo nano /boot/firmware/cmdline.txt
 Explanation of values: (=1 makes the system operate as if a screen is connected to HDMI 1). (=2 makes the system operate as if a screen is connected to HDMI 2). (=3 makes the system operate as if screens are connected to both HDMI 1 and HDMI 2). HDMI-A-1 and HDMI-A-2 are used to specify the desired resolution.
 
 5. After every reboot, the system will recognize two screens at the specified resolution. You can change the screen resolution (or resolutions) at any time in: `Preferences` ->
- `Screen Configuration`.
+ `Control Centre` -> `Screens`.
 
 6. Reboot the system to use X11.
 
@@ -208,7 +208,7 @@ enable_uart=1
 
 When you connect your behavioral controller (e.g., Bpod, Arduino, or compatible boards) to the Raspberry Pi, the operating system assigns it a device path in `/dev/`. Depending on the specific serial chip used by your board, it is typically named `ttyACM0` or `ttyUSB0`.
 
-However, this designation can change dynamically (`ttyACM1`, `ttyUSB1`, etc.) upon reboot or if other USB peripherals are connected. To guarantee that the Training Village software can always locate the hardware, you can create a persistent symbolic link that maps the physical USB port directly to a static name.
+However, this designation can change dynamically (`ttyACM1`, `ttyUSB1`, etc.) upon reboot or if other USB peripherals are connected. To guarantee that the Training Village software can always locate the hardware, create a persistent symbolic link that maps the physical USB port directly to a static name. **This step is required**: by default, the Training Village looks for the controller at `/dev/controller` (the `CONTROLLER_PORT` setting).
 
 1. Navigate to the system directory where custom hardware rules are stored:
 ```
@@ -372,7 +372,7 @@ nano ~/.bashrc
 alias village='/home/pi/.env/bin/python /home/pi/village/village/main.py'
 ```
 
-3. Reload the .bahsrc:
+3. Reload the .bashrc:
 
 ```
 source ~/.bashrc

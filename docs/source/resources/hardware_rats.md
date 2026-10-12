@@ -4,6 +4,7 @@ The rat-adapted version of the Training Village was originally developed by the 
 
 For detailed engineering schematics, bill of materials, and manufacturing files for this specific version, please contact us directly.
 
-```{image} /_static/rat_version.png
+```{image} /_static/rat_version.webp
+:class: zoomable
 :width: 100%
 ```

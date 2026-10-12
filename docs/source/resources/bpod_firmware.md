@@ -9,10 +9,20 @@ By default, some Bpod firmware versions flush outgoing USB serial data with a **
 * Newer models (Bpod 2.5 / 2+): Use the Teensy 4.x platform and are not affected by this issue.
 
 Lowering the timeout to **1 ms** noticeably reduces Bpod Softcode communication latency
-(see the [Timing, Clocks & Latencies][TIMING] section). On this Raspberry Pi, the
-one-line edit the fix requires has already been made to the Teensy core library (see
-the note at the end of this guide) — you still need to follow the steps below to build
-and upload the firmware so the fix actually reaches your Bpod.
+(see the [Timing, Clocks & Latencies][TIMING] section). On a Raspberry Pi set up with the
+[Raspberry Pi Disk Image](image.md), the one-line edit the fix requires has already been
+made to the Teensy core library (see the note at the end of this guide) — you still need
+to follow the steps below to build and upload the firmware so the fix actually reaches
+your Bpod.
+
+```{admonition} Manual installation
+:class: note
+If you installed the software manually instead of using the disk image, first install
+the [Arduino IDE 1.8](https://www.arduino.cc/en/software) and the
+[Teensy board support (Teensyduino)](https://www.pjrc.com/teensy/td_download.html),
+download the [Bpod firmware][FW_REPO], and make the one-line edit described in the note
+at the end of this guide yourself.
+```
 
 ### 1. Open the firmware sketch
 
@@ -53,7 +63,7 @@ Default Teensy core installations ship with:
 #define TRANSMIT_FLUSH_TIMEOUT  5  /* in milliseconds */
 ```
 
-On this Raspberry Pi, that line has already been changed to:
+In the disk image, that line has already been changed to:
 
 ```c
 #define TRANSMIT_FLUSH_TIMEOUT  1  /* in milliseconds */

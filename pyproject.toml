@@ -24,6 +24,11 @@ dependencies = [
     "pyarrow",
     "ahrs",
     "bleak",
+    "PCA9685-smbus2",
+    "smbus2",
+    "requests",
+    "numpy",
+    "matplotlib",
 ]
 
 license = {text = "MIT"}
