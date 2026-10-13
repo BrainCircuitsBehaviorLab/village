@@ -87,12 +87,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -147,23 +141,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="video_functions.html">Video Functions Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Camera Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="camera_draw.html">Camera Draw Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="camera_trigger.html">Camera Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Touchscreen Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="touch_trigger.html">Touchscreen Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">GPIO Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="gpio_trigger.html">GPIO Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/scale_trigger.html">Scale Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
 </ul>
@@ -589,27 +566,30 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="37">        <span class="n">trial_index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_trials</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </span><span data-line="38">
 </span><span data-line="39">        <span class="k">if</span> <span class="s2">"TRIAL_START"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="40">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">],</span> <span class="n">trial_index</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">)</span>
-</span><span data-line="41">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Session time (s)"</span><span class="p">)</span>
-</span><span data-line="42">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="43">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trial_index</span><span class="p">,</span> <span class="n">trial_index</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">)</span>
-</span><span data-line="44">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
-</span><span data-line="45">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Cumulative trials"</span><span class="p">)</span>
-</span><span data-line="46">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Trial progression"</span><span class="p">)</span>
-</span><span data-line="47">
-</span><span data-line="48">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="49">            <span class="n">acc</span> <span class="o">=</span> <span class="n">_rolling_accuracy</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</span><span data-line="50">            <span class="k">if</span> <span class="ow">not</span> <span class="n">acc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span data-line="51">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:green"</span><span class="p">)</span>
-</span><span data-line="52">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span data-line="53">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="54">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
-</span><span data-line="55">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="56">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span data-line="57">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
-</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rolling accuracy (window=</span><span class="si">{</span><span class="n">ROLLING_WINDOW</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-</span><span data-line="59">
-</span><span data-line="60">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="40">            <span class="c1"># TRIAL_START is an absolute time (seconds since 1970): measure it</span>
+</span><span data-line="41">            <span class="c1"># from the start of the first trial</span>
+</span><span data-line="42">            <span class="n">session_time</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="43">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">session_time</span><span class="p">,</span> <span class="n">trial_index</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">)</span>
+</span><span data-line="44">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Session time (s)"</span><span class="p">)</span>
+</span><span data-line="45">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="46">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trial_index</span><span class="p">,</span> <span class="n">trial_index</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">)</span>
+</span><span data-line="47">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Cumulative trials"</span><span class="p">)</span>
+</span><span data-line="49">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_trials</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Trial progression"</span><span class="p">)</span>
+</span><span data-line="50">
+</span><span data-line="51">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="52">            <span class="n">acc</span> <span class="o">=</span> <span class="n">_rolling_accuracy</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span><span data-line="53">            <span class="k">if</span> <span class="ow">not</span> <span class="n">acc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span data-line="54">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:green"</span><span class="p">)</span>
+</span><span data-line="55">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="56">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="57">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="58">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="59">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+</span><span data-line="60">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+</span><span data-line="61">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rolling accuracy (window=</span><span class="si">{</span><span class="n">ROLLING_WINDOW</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+</span><span data-line="62">
+</span><span data-line="63">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </section>
@@ -651,7 +631,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
+      <script src="../_static/documentation_options.js?v=720a0233"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

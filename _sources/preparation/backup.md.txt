@@ -1,28 +1,44 @@
 ## Data Persistence & Backups
 
-For safety and storage reasons, all behavioral data (session data and videos) should be
-synchronized to a remote server or external hard drive.
+The Raspberry Pi stores everything on a 256 GB microSD card, so the data must be copied
+regularly to a remote server or to an external hard drive, and old videos must be
+deleted from the card to make room for new recordings. This is done automatically by
+the system, at the end of each behavioral session, the system automatically synchronizes the data
+with the selected backup destination. Old videos are deleted on every day/night change.
 
-Because the system runs on a microSD card with a limited capacity of 256 GB, older video
-files must be regularly purged to make room for new recordings. Note that **behavioral
-task data is never deleted from the microSD card** — only video files are removed.
+### What Is Synchronized
 
-By default, the system retains one week of video storage, but this window can be adjusted
-under `SETTINGS` → `ADVANCED SETTINGS` → `DAYS_OF_VIDEO_STORAGE`.
+The project's `data/` folder (see [Saved Data and Video](../system_operation/data.md)):
 
-At the end of each behavioral session, the system automatically triggers a data
-synchronization routine. To specify your backup destination, configure the fields under
-`SETTINGS` → `SYNC SETTINGS`, where you can choose between syncing to a remote network
-server or to an external hard drive connected directly to the Raspberry Pi.
+- **Session data**: the raw and processed files of every session, their settings, and
+  the history file of each subject.
+- **Task videos**: the operant box videos and their per-frame data files.
+- **System data**: events, subjects, sessions summary, temperatures, calibrations...
+
+Not synchronized:
+
+- **Corridor videos** (`CORRIDOR_*`), recorded continuously 24/7: copying them would
+  take an impractical amount of storage space.
+
+### What Is Deleted from the microSD Card
+
+**Session data and system data are never deleted** from the card: only videos are.
+
+- **Task videos** older than `DAYS_OF_VIDEO_STORAGE` days (7 by default,
+  `SETTINGS` → `ADVANCED SETTINGS`) are deleted. With `SAFE_DELETE` ON (the default),
+  only once the system has checked that they are already in the backup destination.
+- **Corridor videos** older than `DAYS_OF_VIDEO_STORAGE` days are always deleted, since
+  they are never synchronized.
 
 ```{warning}
-Corridor videos, which are recorded continuously 24/7, are **not** synchronized to any
-backup destination and are automatically deleted after `DAYS_OF_VIDEO_STORAGE` days —
-the same retention policy that applies to task videos. This is intentional, as continuous recordings would
-otherwise consume an impractical amount of storage space.
+Videos are only deleted when synchronization is enabled (`SYNC_TYPE` set to `HD` or
+`SERVER`). With `SYNC_TYPE` set to `OFF`, no video is ever deleted, not even the corridor
+ones, and the card will eventually fill up (the "Low disk space" alarm warns about it).
 ```
 
 ### Key Configuration Fields
+
+These fields are found in `SETTINGS` → `SYNC SETTINGS`:
 
 - **`SYNC_TYPE`:** where to sync the data.
   - **`HD`:** to an external hard drive connected to the Raspberry Pi.
@@ -32,7 +48,7 @@ otherwise consume an impractical amount of storage space.
 - **`SYNC_DESTINATION`:** the base path of the backup: the path where the hard drive is
   mounted (e.g. `/media/pi/my_disk`), or a path on the server. The data are copied
   into `SYNC_DIRECTORY`, which is created automatically inside it with the project name
-  followed by `_data`.
+  followed by `_data` (in this example, `/media/pi/my_disk/demo-village-project_data`).
 
 - **`SERVER_USER`, `SERVER_HOST`, `SERVER_PORT`:** only for `SERVER`: the user and
   hostname (or IP address) of the server, and the SSH port.
@@ -40,9 +56,9 @@ otherwise consume an impractical amount of storage space.
 Two more parameters govern the backup and deletion behavior:
 
 - **`SAFE_DELETE`**
-  - **`ON`:** Video files are only deleted after the system confirms they have been
+  - **`ON`:** Task video files are only deleted after the system confirms they have been
     successfully backed up to the remote server or external hard drive.
-  - **`OFF`:** Video files are automatically purged once they exceed the retention window,
+  - **`OFF`:** Task video files are deleted once they exceed the retention window,
     regardless of whether a backup exists.
 
 - **`MAXIMUM_SYNC_TIME`:** Maximum duration (in seconds, 1200 by default) allowed for a

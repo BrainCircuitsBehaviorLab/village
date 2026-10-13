@@ -87,12 +87,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -147,23 +141,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="camera.html">Camera Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="touchscreen.html">Touchscreen Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="gpio_trigger.html">GPIO Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="scale_trigger.html">Scale Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
 </ul>
@@ -567,8 +544,8 @@ softcode, or a direct call from your task’s own code.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">video_functions.py</span></code></strong> — small libraries of
 generator functions that direct functions (or tasks) call to actually produce a
 sound or a visual stimulus, built on top of the <code class="docutils literal notranslate"><span class="pre">sound_device</span></code> and <code class="docutils literal notranslate"><span class="pre">screen</span></code> APIs
-described in <a class="reference internal" href="../system_operation/sound.html"><span class="std std-doc">Sound Integration</span></a> and
-<a class="reference internal" href="../system_operation/screen.html"><span class="std std-doc">Screen Integration</span></a>.</p></li>
+described in <a class="reference internal" href="#../system_operation/sound.md"><span class="xref myst">Sound Integration</span></a> and
+<a class="reference internal" href="#../system_operation/screen.md"><span class="xref myst">Screen Integration</span></a>.</p></li>
 </ul>
 <hr class="docutils" />
 <section id="direct-functions">
@@ -609,13 +586,13 @@ examples covering sound playback and on-screen stimuli.</p>
 <li><p><strong>GUI</strong> — the <code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code> tab shows one button per registered function, labeled
 with its docstring. Clicking it calls that function right away.</p></li>
 <li><p><strong>Camera trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside
-<code class="docutils literal notranslate"><span class="pre">CameraTriggerBase.trigger</span></code>. See <a class="reference internal" href="camera.html#camera-triggers"><span class="std std-ref">Camera Triggers</span></a>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">CameraTriggerBase.trigger</span></code>. See <a class="reference internal" href="#camera.md#camera-triggers"><span class="xref myst">Camera Triggers</span></a>.</p></li>
 <li><p><strong>GPIO trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> /
-<code class="docutils literal notranslate"><span class="pre">trigger_off</span></code>. See <a class="reference internal" href="gpio_trigger.html"><span class="std std-doc">Custom GPIO Interaction</span></a>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">trigger_off</span></code>. See <a class="reference internal" href="#gpio_trigger.md"><span class="xref myst">Custom GPIO Interaction</span></a>.</p></li>
 <li><p><strong>Scale trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside
-<code class="docutils literal notranslate"><span class="pre">ScaleTriggerBase.on_weight</span></code>. See <a class="reference internal" href="scale_trigger.html"><span class="std std-doc">Custom Scale Interaction</span></a>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">ScaleTriggerBase.on_weight</span></code>. See <a class="reference internal" href="#scale_trigger.md"><span class="xref myst">Custom Scale Interaction</span></a>.</p></li>
 <li><p><strong>Touchscreen trigger</strong> — call <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(N)</span></code> inside
-<code class="docutils literal notranslate"><span class="pre">TouchTriggerBase.trigger</span></code>. See <a class="reference internal" href="touchscreen.html"><span class="std std-doc">Touchscreen</span></a>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">TouchTriggerBase.trigger</span></code>. See <a class="reference internal" href="#touchscreen.md"><span class="xref myst">Touchscreen</span></a>.</p></li>
 <li><p><strong>Bpod softcodes</strong> — if <code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> is <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>, functions 1-98 can be
 triggered automatically from inside the state machine (see below).</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">OTHER</span></code> controller (a microcontroller you talk to yourself, or none at all)</strong>
@@ -650,7 +627,7 @@ around — the task can send a softcode from the Raspberry Pi to Bpod
 (<code class="docutils literal notranslate"><span class="pre">self.task.bpod.send_softcode_to_bpod(N)</span></code>), for the <em>state machine</em> to branch on
 via <code class="docutils literal notranslate"><span class="pre">state_change_conditions={&quot;SoftCodeN&quot;:</span> <span class="pre">&quot;next_state&quot;}</span></code>. That’s a different
 mechanism (a Bpod input condition, not a direct-function trigger) — see
-the “Example” section of <a class="reference internal" href="touchscreen.html"><span class="std std-doc">Touchscreen</span></a>.</p>
+the “Example” section of <a class="reference internal" href="#touchscreen.md"><span class="xref myst">Touchscreen</span></a>.</p>
 </div>
 </section>
 </section>
@@ -693,7 +670,7 @@ calibration lookup silently stops matching and raises a “not calibrated” err
 <p><code class="docutils literal notranslate"><span class="pre">video_functions.py</span></code> holds <code class="docutils literal notranslate"><span class="pre">draw_X_generator(...)</span></code> factories: each one takes the
 stimulus parameters and returns a <code class="docutils literal notranslate"><span class="pre">draw()</span></code> closure, meant to be passed to
 <code class="docutils literal notranslate"><span class="pre">screen.load_draw_function(draw_fn=...)</span></code> (see
-<a class="reference internal" href="../system_operation/screen.html"><span class="std std-doc">Screen Integration</span></a>). Qt then calls that <code class="docutils literal notranslate"><span class="pre">draw()</span></code>
+<a class="reference internal" href="#../system_operation/screen.md"><span class="xref myst">Screen Integration</span></a>). Qt then calls that <code class="docutils literal notranslate"><span class="pre">draw()</span></code>
 on every frame while <code class="docutils literal notranslate"><span class="pre">screen.start_drawing()</span></code> is active.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QRect</span><span class="p">,</span> <span class="n">Qt</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
@@ -781,7 +758,7 @@ directly wherever you need it, the same way <code class="docutils literal notran
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
+      <script src="../_static/documentation_options.js?v=720a0233"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

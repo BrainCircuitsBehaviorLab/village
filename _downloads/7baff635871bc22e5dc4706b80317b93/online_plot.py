@@ -37,7 +37,10 @@ class OnlinePlot(OnlinePlotBase):
         trial_index = range(1, n_trials + 1)
 
         if "TRIAL_START" in df.columns:
-            self.ax_trials.plot(df["TRIAL_START"], trial_index, marker=".")
+            # TRIAL_START is an absolute time (seconds since 1970): measure it
+            # from the start of the first trial
+            session_time = df["TRIAL_START"] - df["TRIAL_START"].iloc[0]
+            self.ax_trials.plot(session_time, trial_index, marker=".")
             self.ax_trials.set_xlabel("Session time (s)")
         else:
             self.ax_trials.plot(trial_index, trial_index, marker=".")

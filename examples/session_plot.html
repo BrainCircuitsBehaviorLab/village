@@ -87,12 +87,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -147,23 +141,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="video_functions.html">Video Functions Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Camera Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="camera_draw.html">Camera Draw Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="camera_trigger.html">Camera Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Touchscreen Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="touch_trigger.html">Touchscreen Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">GPIO Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="gpio_trigger.html">GPIO Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/scale_trigger.html">Scale Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
 </ul>
@@ -603,72 +580,75 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="51">        <span class="c1"># --- Trial progression over session time ---</span>
 </span><span data-line="52">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 </span><span data-line="53">        <span class="k">if</span> <span class="s2">"TRIAL_START"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
-</span><span data-line="54">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">],</span> <span class="n">trial_index</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">)</span>
-</span><span data-line="55">            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Session time (s)"</span><span class="p">)</span>
-</span><span data-line="56">        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Cumulative trials"</span><span class="p">)</span>
-</span><span data-line="57">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Trial progression"</span><span class="p">)</span>
-</span><span data-line="58">
-</span><span data-line="59">        <span class="c1"># --- Cumulative water ---</span>
-</span><span data-line="60">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-</span><span data-line="61">        <span class="k">if</span> <span class="s2">"water"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
-</span><span data-line="62">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trial_index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"water"</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:blue"</span><span class="p">)</span>
-</span><span data-line="63">        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
-</span><span data-line="64">        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Water (µL)"</span><span class="p">)</span>
-</span><span data-line="65">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Cumulative water"</span><span class="p">)</span>
-</span><span data-line="66">
-</span><span data-line="67">        <span class="c1"># --- Outcome distribution ---</span>
-</span><span data-line="68">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-</span><span data-line="69">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
-</span><span data-line="70">            <span class="n">counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
-</span><span data-line="71">            <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">)</span>
-</span><span data-line="72">            <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-</span><span data-line="73">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="74">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span data-line="75">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
-</span><span data-line="76">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Outcomes"</span><span class="p">)</span>
-</span><span data-line="77">
-</span><span data-line="78">        <span class="c1"># --- Rolling accuracy ---</span>
-</span><span data-line="79">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-</span><span data-line="80">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="81">            <span class="n">acc</span> <span class="o">=</span> <span class="n">_rolling_accuracy</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</span><span data-line="82">            <span class="k">if</span> <span class="ow">not</span> <span class="n">acc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-</span><span data-line="83">                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:green"</span><span class="p">)</span>
-</span><span data-line="84">                <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</span><span data-line="85">                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="86">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="87">                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no choice trials"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span data-line="88">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="89">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span data-line="90">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
-</span><span data-line="91">        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
-</span><span data-line="92">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rolling accuracy (window=</span><span class="si">{</span><span class="n">ROLLING_WINDOW</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-</span><span data-line="93">
-</span><span data-line="94">        <span class="c1"># --- Left / right balance (tasks 2-6 only) ---</span>
-</span><span data-line="95">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-</span><span data-line="96">        <span class="n">side_col</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
-</span><span data-line="97">            <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="s2">"rewarded_side"</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="kc">None</span>
-</span><span data-line="98">        <span class="p">)</span>
-</span><span data-line="99">        <span class="k">if</span> <span class="n">side_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
-</span><span data-line="100">            <span class="n">counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">side_col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
-</span><span data-line="101">            <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:purple"</span><span class="p">)</span>
-</span><span data-line="102">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="103">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"not applicable"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span data-line="104">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
-</span><span data-line="105">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">side_col</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'side'</span><span class="si">}</span><span class="s2"> distribution"</span><span class="p">)</span>
-</span><span data-line="106">
-</span><span data-line="107">        <span class="c1"># --- Delay-task difficulty (task 6 only) ---</span>
-</span><span data-line="108">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-</span><span data-line="109">        <span class="k">if</span> <span class="s2">"p"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
-</span><span data-line="110">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trial_index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:red"</span><span class="p">)</span>
-</span><span data-line="111">            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="112">            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
-</span><span data-line="113">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="114">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"not applicable"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span data-line="115">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
-</span><span data-line="116">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Difficulty (p)"</span><span class="p">)</span>
-</span><span data-line="117">
-</span><span data-line="118">        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</span><span data-line="119">        <span class="k">return</span> <span class="n">fig</span>
+</span><span data-line="54">            <span class="c1"># TRIAL_START is an absolute time (seconds since 1970): measure it</span>
+</span><span data-line="55">            <span class="c1"># from the start of the first trial</span>
+</span><span data-line="56">            <span class="n">session_time</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span data-line="57">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">session_time</span><span class="p">,</span> <span class="n">trial_index</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">)</span>
+</span><span data-line="58">            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Session time (s)"</span><span class="p">)</span>
+</span><span data-line="59">        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Cumulative trials"</span><span class="p">)</span>
+</span><span data-line="60">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Trial progression"</span><span class="p">)</span>
+</span><span data-line="61">
+</span><span data-line="62">        <span class="c1"># --- Cumulative water ---</span>
+</span><span data-line="63">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</span><span data-line="64">        <span class="k">if</span> <span class="s2">"water"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
+</span><span data-line="65">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trial_index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"water"</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:blue"</span><span class="p">)</span>
+</span><span data-line="66">        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="67">        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Water (µL)"</span><span class="p">)</span>
+</span><span data-line="68">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Cumulative water"</span><span class="p">)</span>
+</span><span data-line="69">
+</span><span data-line="70">        <span class="c1"># --- Outcome distribution ---</span>
+</span><span data-line="71">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</span><span data-line="72">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
+</span><span data-line="73">            <span class="n">counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</span><span data-line="74">            <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:orange"</span><span class="p">)</span>
+</span><span data-line="75">            <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+</span><span data-line="76">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="77">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+</span><span data-line="78">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+</span><span data-line="79">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Outcomes"</span><span class="p">)</span>
+</span><span data-line="80">
+</span><span data-line="81">        <span class="c1"># --- Rolling accuracy ---</span>
+</span><span data-line="82">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</span><span data-line="83">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="84">            <span class="n">acc</span> <span class="o">=</span> <span class="n">_rolling_accuracy</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span><span data-line="85">            <span class="k">if</span> <span class="ow">not</span> <span class="n">acc</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+</span><span data-line="86">                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:green"</span><span class="p">)</span>
+</span><span data-line="87">                <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="88">                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="89">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="90">                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no choice trials"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+</span><span data-line="91">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="92">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+</span><span data-line="93">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+</span><span data-line="94">        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="95">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rolling accuracy (window=</span><span class="si">{</span><span class="n">ROLLING_WINDOW</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+</span><span data-line="96">
+</span><span data-line="97">        <span class="c1"># --- Left / right balance (tasks 2-6 only) ---</span>
+</span><span data-line="98">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</span><span data-line="99">        <span class="n">side_col</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+</span><span data-line="100">            <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"response_side"</span><span class="p">,</span> <span class="s2">"rewarded_side"</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="kc">None</span>
+</span><span data-line="101">        <span class="p">)</span>
+</span><span data-line="102">        <span class="k">if</span> <span class="n">side_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
+</span><span data-line="103">            <span class="n">counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">side_col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</span><span data-line="104">            <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="n">counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:purple"</span><span class="p">)</span>
+</span><span data-line="105">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="106">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"not applicable"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+</span><span data-line="107">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+</span><span data-line="108">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">side_col</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">'side'</span><span class="si">}</span><span class="s2"> distribution"</span><span class="p">)</span>
+</span><span data-line="109">
+</span><span data-line="110">        <span class="c1"># --- Delay-task difficulty (task 6 only) ---</span>
+</span><span data-line="111">        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</span><span data-line="112">        <span class="k">if</span> <span class="s2">"p"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">n_trials</span><span class="p">:</span>
+</span><span data-line="113">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trial_index</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:red"</span><span class="p">)</span>
+</span><span data-line="114">            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="115">            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="116">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="117">            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"not applicable"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+</span><span data-line="118">            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+</span><span data-line="119">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Difficulty (p)"</span><span class="p">)</span>
+</span><span data-line="120">
+</span><span data-line="121">        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="122">        <span class="k">return</span> <span class="n">fig</span>
 </span></pre></div>
 </div>
 </section>
@@ -710,7 +690,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
+      <script src="../_static/documentation_options.js?v=720a0233"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

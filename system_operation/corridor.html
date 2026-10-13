@@ -87,12 +87,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sound.html">Sound Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="screen.html">Screen Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="led_strip.html">LED Strip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="gpio.html">GPIO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
@@ -147,23 +141,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Camera Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Touchscreen Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">GPIO Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/scale_trigger.html">Scale Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
 </ul>
@@ -571,7 +548,7 @@ data-aria-dark="Switch to auto color mode">
 <li><p><strong>Unchecked</strong>: the PWM signal is cut once the motor has arrived, so the servo goes quiet and cool — but anything pushing on it can move it out of position.</p></li>
 </ul>
 <p>Corridor doors normally want it checked, since the door has to stay where it was put. A mechanism that latches on its own, or one that only has to reach a position and then be left alone, is better off unchecked.</p>
-<p>The checkbox takes effect immediately on <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code>, so you can hear the difference before saving. It only sets the <strong>default</strong>: task code can override it for a single movement (see <a class="reference internal" href="motors.html"><span class="std std-doc">Motors</span></a>).</p>
+<p>The checkbox takes effect immediately on <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code>, so you can hear the difference before saving. It only sets the <strong>default</strong>: task code can override it for a single movement (see <a class="reference internal" href="#motors.md"><span class="xref myst">Motors</span></a>).</p>
 </div>
 <ol class="arabic simple" start="2">
 <li><p><strong>Calibrate the Scale</strong>: Use the <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code> button with a known weight to calibrate the scale, <code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code> to zero it, and verify functionality by pressing <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code>.</p></li>
@@ -624,7 +601,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
+      <script src="../_static/documentation_options.js?v=720a0233"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

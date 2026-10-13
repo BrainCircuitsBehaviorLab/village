@@ -87,12 +87,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/sound.html">Sound Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/screen.html">Screen Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/led_strip.html">LED Strip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/gpio.html">GPIO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
@@ -147,23 +141,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Camera Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Touchscreen Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">GPIO Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/scale_trigger.html">Scale Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
 </ul>
@@ -475,6 +452,8 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#what-is-synchronized">What Is Synchronized</a></li>
+<li><a class="reference internal" href="#what-is-deleted-from-the-microsd-card">What Is Deleted from the microSD Card</a></li>
 <li><a class="reference internal" href="#key-configuration-fields">Key Configuration Fields</a></li>
 <li><a class="reference internal" href="#syncing-to-a-server-ssh-access-without-a-password">Syncing to a Server: SSH Access Without a Password</a></li>
 </ul>
@@ -552,26 +531,46 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="data-persistence-backups">
 <h1>Data Persistence &amp; Backups</h1>
-<p>For safety and storage reasons, all behavioral data (session data and videos) should be
-synchronized to a remote server or external hard drive.</p>
-<p>Because the system runs on a microSD card with a limited capacity of 256 GB, older video
-files must be regularly purged to make room for new recordings. Note that <strong>behavioral
-task data is never deleted from the microSD card</strong> — only video files are removed.</p>
-<p>By default, the system retains one week of video storage, but this window can be adjusted
-under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code>.</p>
-<p>At the end of each behavioral session, the system automatically triggers a data
-synchronization routine. To specify your backup destination, configure the fields under
-<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>, where you can choose between syncing to a remote network
-server or to an external hard drive connected directly to the Raspberry Pi.</p>
+<p>The Raspberry Pi stores everything on a 256 GB microSD card, so the data must be copied
+regularly to a remote server or to an external hard drive, and old videos must be
+deleted from the card to make room for new recordings. This is done automatically by
+the system, at the end of each behavioral session, the system automatically synchronizes the data
+with the selected backup destination. Old videos are deleted on every day/night change.</p>
+<section id="what-is-synchronized">
+<h2>What Is Synchronized</h2>
+<p>The project’s <code class="docutils literal notranslate"><span class="pre">data/</span></code> folder (see <a class="reference internal" href="../system_operation/data.html"><span class="std std-doc">Saved Data and Video</span></a>):</p>
+<ul class="simple">
+<li><p><strong>Session data</strong>: the raw and processed files of every session, their settings, and
+the history file of each subject.</p></li>
+<li><p><strong>Task videos</strong>: the operant box videos and their per-frame data files.</p></li>
+<li><p><strong>System data</strong>: events, subjects, sessions summary, temperatures, calibrations…</p></li>
+</ul>
+<p>Not synchronized:</p>
+<ul class="simple">
+<li><p><strong>Corridor videos</strong> (<code class="docutils literal notranslate"><span class="pre">CORRIDOR_*</span></code>), recorded continuously 24/7: copying them would
+take an impractical amount of storage space.</p></li>
+</ul>
+</section>
+<section id="what-is-deleted-from-the-microsd-card">
+<h2>What Is Deleted from the microSD Card</h2>
+<p><strong>Session data and system data are never deleted</strong> from the card: only videos are.</p>
+<ul class="simple">
+<li><p><strong>Task videos</strong> older than <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days (7 by default,
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>) are deleted. With <code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code> ON (the default),
+only once the system has checked that they are already in the backup destination.</p></li>
+<li><p><strong>Corridor videos</strong> older than <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days are always deleted, since
+they are never synchronized.</p></li>
+</ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Corridor videos, which are recorded continuously 24/7, are <strong>not</strong> synchronized to any
-backup destination and are automatically deleted after <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days —
-the same retention policy that applies to task videos. This is intentional, as continuous recordings would
-otherwise consume an impractical amount of storage space.</p>
+<p>Videos are only deleted when synchronization is enabled (<code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> set to <code class="docutils literal notranslate"><span class="pre">HD</span></code> or
+<code class="docutils literal notranslate"><span class="pre">SERVER</span></code>). With <code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> set to <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, no video is ever deleted, not even the corridor
+ones, and the card will eventually fill up (the “Low disk space” alarm warns about it).</p>
 </div>
+</section>
 <section id="key-configuration-fields">
 <h2>Key Configuration Fields</h2>
+<p>These fields are found in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code>:</strong> where to sync the data.</p>
 <ul>
@@ -583,7 +582,7 @@ otherwise consume an impractical amount of storage space.</p>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SYNC_DESTINATION</span></code>:</strong> the base path of the backup: the path where the hard drive is
 mounted (e.g. <code class="docutils literal notranslate"><span class="pre">/media/pi/my_disk</span></code>), or a path on the server. The data are copied
 into <code class="docutils literal notranslate"><span class="pre">SYNC_DIRECTORY</span></code>, which is created automatically inside it with the project name
-followed by <code class="docutils literal notranslate"><span class="pre">_data</span></code>.</p></li>
+followed by <code class="docutils literal notranslate"><span class="pre">_data</span></code> (in this example, <code class="docutils literal notranslate"><span class="pre">/media/pi/my_disk/demo-village-project_data</span></code>).</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SERVER_USER</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_HOST</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code>:</strong> only for <code class="docutils literal notranslate"><span class="pre">SERVER</span></code>: the user and
 hostname (or IP address) of the server, and the SSH port.</p></li>
 </ul>
@@ -591,9 +590,9 @@ hostname (or IP address) of the server, and the SSH port.</p></li>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code></strong></p>
 <ul>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">ON</span></code>:</strong> Video files are only deleted after the system confirms they have been
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ON</span></code>:</strong> Task video files are only deleted after the system confirms they have been
 successfully backed up to the remote server or external hard drive.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">OFF</span></code>:</strong> Video files are automatically purged once they exceed the retention window,
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OFF</span></code>:</strong> Task video files are deleted once they exceed the retention window,
 regardless of whether a backup exists.</p></li>
 </ul>
 </li>
@@ -656,7 +655,7 @@ without asking for a password: if it asks for one, the synchronization will fail
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
+      <script src="../_static/documentation_options.js?v=720a0233"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

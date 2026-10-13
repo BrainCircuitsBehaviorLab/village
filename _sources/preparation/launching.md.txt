@@ -22,9 +22,7 @@ village
 ---
 
 ### Default Project
-The first time the Training Village (TV) is launched, a default project named `demo-village-project` is created with several example tasks, copied from the Village installation into `~/village_projects/demo-village-project/code`. They are the same example files shown in [Protocol & Task Design](../protocol_index.rst) and [Advanced Customization](../advanced_customization_index.rst).
-
-This only happens once, and only if that folder is empty: the code is yours to modify, so later versions of Village never overwrite it.
+The first time the Training Village (TV) is launched, a default project named `demo-village-project` is created with several example tasks, copied from the Village installation into `~/village_projects/demo-village-project/code`. They are the same example files shown in [Protocol & Task Design](../protocol_index.rst), [Plotting](../plotting_index.rst) and [Advanced Customization](../advanced_customization_index.rst).
 
 ---
 

@@ -87,12 +87,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
-<li class="toctree-l3"><a class="reference internal" href="toolbar.html">Toolbar Controls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sound.html">Sound Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="screen.html">Screen Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="led_strip.html">LED Strip</a></li>
-<li class="toctree-l3"><a class="reference internal" href="gpio.html">GPIO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="motors.html">Motors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
@@ -147,23 +141,6 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/camera.html">Camera Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/touchscreen.html">Touchscreen Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/gpio_trigger.html">GPIO Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/scale_trigger.html">Scale Interaction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
 </ul>
 </li>
 </ul>
@@ -589,8 +566,21 @@ animal identification is disabled, and no subjects will be permitted to enter th
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
 buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.</p>
 <p><em>The <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.</em></p>
-<p><em>The box must never be completely dark, even between sessions: the box camera is watched all the time, both to check that no animal is left inside and to detect a failing camera, which delivers completely black frames. If the image stays completely black for 10 seconds, the system treats the camera as failed and restarts it. So keep some light in the box at all times: set the <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> (or the <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code>) to <code class="docutils literal notranslate"><span class="pre">ON</span></code> instead of <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> for both lights is only safe if the box gets some light from another source (light coming in from outside, a photogate, a port LED…), enough for the image not to be fully black.</em></p>
-<p><em>If a motor stops responding to <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> after being physically disconnected and reconnected, restart Village rather than assuming it’s broken — see <a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a>.</em></p>
+<div class="warning admonition">
+<p class="admonition-title">The box must never be completely dark</p>
+<p>The box camera is watched all the time, even between sessions, to check that no
+animal is left inside. If its image stays completely black for 10 seconds, the system
+treats the camera as failed and restarts it. Setting both lights to <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> is only
+safe if the box gets some light from another source (light coming in from outside, a
+photogate, a port LED…), enough for the image not to be fully black. If that is not
+the case, set the <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> (or the <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code>) to <code class="docutils literal notranslate"><span class="pre">ON</span></code> instead of <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>.</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">A motor stops responding</p>
+<p>If a motor stops responding to <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> after being physically disconnected and
+reconnected, restart Village rather than assuming it’s broken — see
+<a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a>.</p>
+</div>
 </li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
 for writing and deploying these functions can be found in the <a class="reference internal" href="../protocols/functions.html"><span class="std std-doc">Direct Sound &amp; Video Functions</span></a> section.</p></li>
@@ -706,7 +696,7 @@ for writing and deploying these functions can be found in the <a class="referenc
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
+      <script src="../_static/documentation_options.js?v=720a0233"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
