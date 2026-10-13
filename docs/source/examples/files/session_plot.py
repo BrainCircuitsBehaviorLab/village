@@ -51,7 +51,10 @@ class SessionPlot(SessionPlotBase):
         # --- Trial progression over session time ---
         ax = axes[0, 0]
         if "TRIAL_START" in df.columns and n_trials:
-            ax.plot(df["TRIAL_START"], trial_index, marker=".")
+            # TRIAL_START is an absolute time (seconds since 1970): measure it
+            # from the start of the first trial
+            session_time = df["TRIAL_START"] - df["TRIAL_START"].iloc[0]
+            ax.plot(session_time, trial_index, marker=".")
             ax.set_xlabel("Session time (s)")
         ax.set_ylabel("Cumulative trials")
         ax.set_title("Trial progression")

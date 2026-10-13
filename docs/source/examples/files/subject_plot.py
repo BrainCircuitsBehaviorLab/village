@@ -34,7 +34,9 @@ class SubjectPlot(SubjectPlotBase):
         # --- Sessions over time ---
         ax = axes[0, 0]
         if "date" in sdf.columns and len(sdf):
-            sdf["date"].value_counts().sort_index().plot(kind="bar", ax=ax)
+            # date is "YYYY-MM-DD HH:MM:SS": group by the day only
+            days = sdf["date"].astype(str).str[:10]
+            days.value_counts().sort_index().plot(kind="bar", ax=ax)
             ax.tick_params(axis="x", rotation=60, labelsize=6)
         ax.set_title("Sessions per day")
         ax.set_ylabel("Sessions")
