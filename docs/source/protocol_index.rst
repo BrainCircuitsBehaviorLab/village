@@ -14,8 +14,4 @@ PROTOCOL & TASK DESIGN
     protocols/tasks_bpod.md
     protocols/tasks_arduino.md
     protocols/tasks_raspberry.md
-    Direct Sound & Video Functions <protocols/functions.md>
-    Camera Interaction <protocols/camera.md>
-    Touchscreen Interaction <protocols/touchscreen.md>
-    GPIO Interaction <protocols/gpio_trigger.md>
-    Scale Interaction <protocols/scale_trigger.md>
+    protocols/functions.md

@@ -305,4 +305,4 @@ training progression across days without requiring human intervention:
 
 
 [CREATE]: /protocols/project_structure.md
-[CAMERA]: /protocols/camera.md
+[CAMERA]: /devices/camera.md

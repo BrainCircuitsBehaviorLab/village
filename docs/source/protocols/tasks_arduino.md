@@ -279,7 +279,7 @@ def execute_function(self, i: int) -> None
 ```
 
 Runs the direct function registered at index `i` (1-98). See
-[Direct, Audio & Video Functions](functions.md) for how those get registered and
+[Direct Functions](functions.md) for how those get registered and
 the other ways they can be triggered.
 
 ```python
@@ -297,7 +297,7 @@ self.execute_function(1)  # executes the function registered at index 1
 | `self.system_name` | `str` | Name of the system, as defined in the Settings tab. |
 | `self.settings` | `Settings` | Session parameters defined in the training protocol. Read and write its attributes to implement adaptive training. |
 | `self.cam_box` | `Camera \| NullCamera` | Camera attached to the operant box (`NullCamera` if not configured). |
-| `self.gpio` | `Gpio \| NullGpio` | Output pin control (`set_on()` / `set_off()`). See [Custom GPIO Interaction](gpio_trigger.md) for the input-pin trigger hook. |
+| `self.gpio` | `Gpio \| NullGpio` | Output pin control (`set_on()` / `set_off()`). See [GPIO](../devices/gpio.md) for the input-pin trigger hook. |
 | `self.current_trial` | `int` | The current trial number, starting from 1. |
 | `self.date` | `str` | Date string of the current session, set once when it starts. |
 | `self.run_mode` | `str` | `"Manual"` or `"Auto"`. |

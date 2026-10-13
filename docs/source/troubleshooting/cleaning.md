@@ -21,5 +21,5 @@ Before cleaning, check whether the operant box is occupied. If occupied, stop th
 
 
 [ALARMS]: /troubleshooting/alarm.md
-[TOOLBAR]: /system_operation/toolbar.md
+[TOOLBAR]: /system_operation/GUI.md#toolbar
 [WATER]: /calibrations/water.md

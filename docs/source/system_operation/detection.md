@@ -54,7 +54,7 @@ count condition, described below.
 ```
 
 The system classifies the occupancy of each area based on three key parameters:
-*   **`threshold` (`thr_day` / `thr_night`):** The numerical value that determines whether a pixel is classified as white or black. This parameter is adjusted independently for each area, and for the corridor, independently for day and night: each corridor area exposes two controls, `thr_day` and `thr_night`, so lighting changes between day and night don't require re-calibrating on the fly. The one that is not currently effective is shown greyed out; which one is effective follows the `Corridor Cycle` control (`SETTINGS` -> `CORRIDOR SETTINGS` -> `DAYTIME`/`NIGHTTIME` for `AUTO` mode — see the [GUI][GUI] section). Operant box areas only have a single `threshold`, since the box has no automated day/night lighting cycle and lighting stays the same throughout the task. Whichever threshold is active, it should be tuned so that when the area is completely empty, the detected pixel count is zero, and when an animal is present, it captures the maximum possible number of pixels.
+*   **`threshold` (`thr_day` / `thr_night`):** The numerical value that determines whether a pixel is classified as white or black. This parameter is adjusted independently for each area, and for the corridor, independently for day and night: each corridor area exposes two controls, `thr_day` and `thr_night`, so lighting changes between day and night don't require re-calibrating on the fly. The one that is not currently effective is shown greyed out; which one is effective follows the `Corridor Cycle` control (`SETTINGS` -> `CORRIDOR SETTINGS` -> `DAYTIME`/`NIGHTTIME` for `AUTO` mode — see [Monitor & Hardware Setup][GUI]). Operant box areas only have a single `threshold`, since the box has no automated day/night lighting cycle and lighting stays the same throughout the task. Whichever threshold is active, it should be tuned so that when the area is completely empty, the detected pixel count is zero, and when an animal is present, it captures the maximum possible number of pixels.
 *   **`empty_limit`:** The maximum number of detected pixels allowed before an area is flagged as occupied.
 *   **`subject_limit`:** The maximum pixel threshold for a single animal. Exceeding this limit flags the area as potentially containing multiple subjects.
 
@@ -103,7 +103,7 @@ The system supports the definition of up to four custom zones within the operant
 
 *   **`ALLOWED`:** A zone where the animal is expected to be. An alarm will trigger if the detected pixels exceed the `subject_limit`, indicating the possibility that two animals may have entered the operant box simultaneously by mistake.
 *   **`NOT_ALLOWED`:** A zone where the animal should not be. If pixel counts exceed the `empty_limit` within these regions, the system immediately sends an alarm via Telegram.
-*   **`TRIGGER`:** Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates $(x, y)$ entering a `TRIGGER` zone, it instantly fires a user-defined Python callback function (see [Camera Interaction](../protocols/camera.md)). This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.
+*   **`TRIGGER`:** Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates $(x, y)$ entering a `TRIGGER` zone, it instantly fires a user-defined Python callback function (see [Camera](../devices/camera.md)). This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.
 
 In the reference image above, the corridor and the touchscreen area are elevated and represent the zones where animals are expected to be. The blue and red zones, on the floor, should remain free of animals unless one has jumped into them.
 
@@ -130,4 +130,4 @@ Below the corridor and box detection areas, the `DETECTION SETTINGS` tab also pr
 
 For the corridor camera, `exposure` is split into `exposure_day` and `exposure_night`, following the same `Corridor Cycle` logic as the area thresholds: the value that is not currently effective is shown greyed out, and switching between `DAY`/`NIGHT`/`AUTO` (in `AUTO`, at the `DAYTIME`/`NIGHTTIME` boundaries) applies the corresponding stored value automatically. The box camera, which has no automated day/night cycle, has a single `exposure` control instead.
 
-[GUI]: /system_operation/GUI.md
+[GUI]: /system_operation/corridor.md

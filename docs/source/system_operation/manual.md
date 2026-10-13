@@ -49,8 +49,20 @@ each one.
 
 ### Launching a Task
 
-Select a task from the list. You can optionally select a subject from the subject
-selector before running it:
+![Tasks Training Village screen](/_static/tasks_screen.webp)
+
+The `TASKS` screen shows the active training protocol on the left, along with a list of
+all available tasks. When you click on a task, its description (`self.info`) is
+displayed, along with its settings, organized in the tabs defined by the training
+protocol (see [The Training Protocol](../protocols/creating.md)). Two more settings are
+added for manual runs:
+
+- `maximum_number_of_trials`: The task will automatically end once this number of trials
+  is completed.
+- `maximum_duration`: The task will automatically end when this time is reached.
+
+You can optionally select a subject from the `Subject` selector, next to the `RUN TASK`
+button, before running it:
 
 - **No subject selected (`None`):** The task runs with the default settings defined in
   `training_protocol.py`. No data or video is saved.

@@ -1,0 +1,441 @@
+## Screen & Touchscreen
+
+If you plan to present visual stimuli or record touch responses, enable the screen under
+`SETTINGS` → `SCREEN SETTINGS`.
+
+---
+
+### Setup
+
+#### Choosing the right screen technology
+
+We recommend using an **infrared (IR) touch frame** rather than a capacitive touchscreen.
+An IR frame works by projecting an invisible grid of IR beams across the display surface;
+a touch event is registered whenever an object interrupts one of the beams. This means
+the animal does not need to physically press the screen — proximity alone triggers a
+response — which reduces aversion and improves task engagement for rodents.
+
+The IR frame connects via USB and the display via the second micro-HDMI port on the
+Raspberry Pi.
+
+#### Dual-screen configuration
+
+The goal of this configuration is to make the system **always detect two
+displays, even when no physical monitors are connected**. Forcing
+both ports to be treated as active means the two display outputs are always
+present and addressable, whether or not real monitors are attached.
+
+The system runs with two display outputs:
+
+- **HDMI-1**: Primary display showing the Training Village GUI *(can be virtual —
+  no physical monitor required)*.
+- **HDMI-2**: Secondary display inside the operant box showing behavioral stimuli.
+
+**Step 1 — Edit the boot configuration:**
+
+```
+sudo nano /boot/firmware/cmdline.txt
+```
+
+Replace:
+
+```
+vc4.force_hotplug=1 video=HDMI-A-1:1600x900@60D
+```
+
+With:
+
+```
+vc4.force_hotplug=3 video=HDMI-A-1:1600x900@60D video=HDMI-A-2:1280x720@60D
+```
+
+The `vc4.force_hotplug` flag controls which HDMI ports the system treats as
+connected regardless of whether a monitor is physically plugged in:
+`1` = HDMI-1 only, `2` = HDMI-2 only, `3` = both. Setting it to `3` is what
+guarantees both screens are always detected. The `video=HDMI-A-*` parameters
+set the resolution for each port independently.
+
+**Step 2 — Reboot:**
+
+Changes to `cmdline.txt` are only read at boot, so you must restart the
+operating system for the new display configuration to take effect.
+
+**Step 3 — Set the resolution in the desktop:**
+
+Navigate to **Raspberry Pi menu → Preferences → Control Centre → Screens → HDMI-2**,
+set the resolution to **1280×720** or lower, and apply.
+
+#### Resolution and display latency
+
+Keep the stimulus display at 1280×720 or below. Higher resolutions significantly
+increase CPU load on the Raspberry Pi, leading to greater stimulus presentation
+latency.
+
+The system operates at a **60 Hz refresh rate** (one frame every 16.6 ms). Because the
+next frame is preloaded in the buffer while the current one is displayed, the latency
+from issuing a display command to the frame appearing on screen spans approximately
+one full frame plus the remaining portion of the current frame — equivalent to roughly
+1.5 × frame duration plus 1-2 ms of controller-to-Raspberry Pi communication.
+Measured latencies: **mean = 26.1 ms, SD = 7.5 ms**.
+
+#### Configuring the touchscreen settings
+
+Use these settings when the screen is configured as a touchscreen to both display stimuli and register touch responses from the animals.
+
+Three settings control touchscreen behaviour:
+
+| Setting | Description | Example |
+|---|---|---|
+| `TOUCHSCREEN_DEVICE` | Exact device name as shown in `/proc/bus/input/devices` | `USB Touch USB Touch` |
+| `TOUCH_RESOLUTION` | Digitizer coordinate range: `[max_x + 1, max_y + 1]` | `[4096, 4096]` |
+| `TOUCH_INTERVAL` | Minimum seconds between two registered touches (debounce) | `0.5` |
+
+```{admonition} Note
+:class: note
+`TOUCH_RESOLUTION` is the internal coordinate range of the touch digitizer hardware —
+it is independent of and usually different from the display pixel resolution.
+The system uses both values to convert raw touch coordinates into screen pixel positions.
+```
+
+
+##### Finding the device name and resolution
+
+**Step 1 — List all input devices:**
+
+```
+cat /proc/bus/input/devices
+```
+
+Look for the entry that has `B: ABS` in its capabilities (indicating absolute position
+events). The value you need is the `N: Name=` field:
+
+```
+I: Bus=0003 Vendor=0b1e Product=000f Version=0110
+N: Name="USB Touch USB Touch"
+...
+H: Handlers=mouse0 event5
+B: EV=1b
+B: ABS=3
+```
+
+Copy the name exactly as it appears (without quotes) into `TOUCHSCREEN_DEVICE` (in this case `USB Touch USB Touch`).
+
+**Step 2 — Find the digitizer resolution:**
+
+Use the `Handlers` path from Step 1 (e.g. `event5`) to inspect the coordinate range:
+
+```
+sudo evtest /dev/input/event5
+```
+
+In the output, look for the `EV_ABS` section:
+
+```
+Event type 3 (EV_ABS)
+  Event code 0 (ABS_X)
+    Min        0
+    Max     4095
+  Event code 1 (ABS_Y)
+    Min        0
+    Max     4095
+```
+
+Set `TOUCH_RESOLUTION` to `[Max_X + 1, Max_Y + 1]` — in this example `[4096, 4096]`.
+
+```{admonition} Note
+:class: note
+If `evtest` is not installed: `sudo apt install evtest`
+```
+
+**Step 3 — Prevent the touchscreen from controlling the desktop:**
+
+When Training Village is running, Python grabs the touchscreen device exclusively
+via `evdev` (`device.grab()`), so touch events never reach the graphical layer of
+the OS — the animals cannot accidentally interact with the desktop. However, when
+Training Village is not running the device is released and `libinput` (the input
+layer used by the desktop compositor) picks it up again.
+
+To prevent this permanently — regardless of whether Training Village is running —
+create a udev rule that tells libinput to always ignore the device. Replace
+`USB Touch USB Touch` with the exact name you found in Step 1.
+
+Create the file `/etc/udev/rules.d/99-touchscreen-grab.rules`:
+
+```
+sudo nano /etc/udev/rules.d/99-touchscreen-grab.rules
+```
+
+Add the following line, replacing `USB Touch USB Touch` with the exact device name
+found in Step 1:
+
+```
+SUBSYSTEM=="input", ATTRS{name}=="USB Touch USB Touch", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+```
+
+Save and close the file (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+This makes libinput ignore the device completely. It remains accessible at
+`/dev/input/eventX` so Training Village can still read it via `evdev`, but the OS
+will never treat it as a pointer device.
+
+Apply the rule without rebooting:
+
+```
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+
+---
+
+### Using It in Tasks
+
+Import the module-level instance and provide a drawing function along with any required
+image or video. Note that `load_draw_function()` only sets the callback executed on
+each frame; media assets must be loaded separately using `load_image()` or
+`load_video()` (either before or after setting the function).
+
+Use `start_drawing()` and `stop_drawing()` to control when the stimulus appears.
+
+**Displaying a static image:**
+
+```python
+from village.devices.screen import screen
+from PyQt5.QtGui import QPainter
+
+def draw():
+    with QPainter(screen) as painter:
+        if screen.image:
+            painter.drawPixmap(0, 0, screen.image)
+
+screen.load_image("stimulus.png")
+screen.load_draw_function(draw)
+screen.start_drawing()
+
+# ... trial runs ...
+
+screen.stop_drawing()
+```
+
+**Displaying a video:**
+
+```python
+def draw():
+    frame = screen.get_video_frame()
+    with QPainter(screen) as painter:
+        if frame:
+            painter.drawImage(0, 0, frame)
+
+screen.load_video("movie.mp4")
+screen.load_draw_function(draw)
+screen.start_drawing()
+```
+
+**Drawing programmatically (shapes, text, time-varying stimuli):**
+
+```python
+from PyQt5.QtCore import QRect
+from PyQt5.QtGui import QColor, QPainter
+
+def draw():
+    with QPainter(screen) as painter:
+        painter.fillRect(screen.rect(), QColor("black"))   # background
+        # flash a white square for the first 0.1 s of each second
+        if screen.elapsed_time % 1.0 < 0.1:
+            painter.fillRect(QRect(100, 100, 200, 200), QColor("white"))
+
+screen.load_draw_function(draw)
+screen.start_drawing()
+```
+
+The drawing function is called once per frame (60 Hz) with no arguments. Two
+attributes are updated automatically before each call:
+
+- `screen.frame` — number of frames rendered since `start_drawing()`.
+- `screen.elapsed_time` — seconds elapsed since `start_drawing()`.
+
+Files passed to `load_image()` and `load_video()` are looked up inside `MEDIA_DIRECTORY`
+(`~/village_projects/<project_name>/media`). Reference them by filename only.
+
+#### Method reference
+
+| Method | Arguments | Description |
+|--------|-----------|-------------|
+| `load_draw_function(draw_fn)` | `draw_fn`: callable | Sets the function called every frame. Does not load any media — call `load_image()`/`load_video()` separately for that. |
+| `load_image(file)` | `file`: filename | Loads an image from `MEDIA_DIRECTORY` into `screen.image`. |
+| `load_video(file, volume_gain=0.1)` | `file`: filename; `volume_gain`: audio volume for the video's soundtrack, `0.0`–`1.0` | Prepares a video (and its audio track) for playback (started by `start_drawing()`). |
+| `start_drawing()` | — | Starts the 60 Hz rendering loop. |
+| `stop_drawing()` | — | Stops rendering and blanks the screen. |
+| `get_video_frame()` | — | Returns the current video frame as a `QImage`, or `None`. |
+
+---
+
+### Video Functions
+
+Your project's `code/video_functions.py` holds `draw_X_generator(...)` factories: each one takes the
+stimulus parameters and returns a `draw()` closure, meant to be passed to
+`screen.load_draw_function(draw_fn=...)` (see
+[Using the screen in tasks](#using-it-in-tasks)). Qt then calls that `draw()`
+on every frame while `screen.start_drawing()` is active.
+
+```python
+from PyQt5.QtCore import QRect, Qt
+from PyQt5.QtGui import QPainter
+
+def draw_circle_generator(duration, x_pos, y_pos, diameter, color):
+    def draw():
+        with QPainter(screen) as painter:
+            painter.fillRect(painter.viewport(), screen.background_color)
+            if screen.elapsed_time < duration:
+                painter.setPen(Qt.NoPen)
+                painter.setBrush(color)
+                painter.drawEllipse(QRect(x_pos, y_pos, diameter, diameter))
+    return draw
+```
+
+Two things every `draw()` needs to do itself, since nothing does them
+automatically:
+
+- Fill the background first (`screen.background_color`) — Qt doesn't clear the
+  widget between paints, so skipping this leaves the previous frame's stimulus
+  on screen underneath the new one.
+- Check `screen.elapsed_time < duration` before painting anything — once the
+  duration is over, `draw()` just stops drawing the stimulus (falling back to
+  the plain background) until a new draw function is loaded.
+
+---
+
+### Reacting to Touches
+
+Every time a touch event passes the debounce filter, the `trigger` method of
+`TouchTriggerBase` is called. By default it writes the touch coordinates to the
+box camera feed. You can override this behavior to implement task-specific touch
+responses.
+
+
+---
+
+#### Creating a custom TouchTrigger
+
+Create a file inside your project's `code` directory (e.g. `touch_trigger.py`) and define
+a class (e.g. `TouchTrigger`) that inherits from `TouchTriggerBase`. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.
+
+```python
+from village.custom_classes.touch_trigger_base import TouchTriggerBase
+
+
+class TouchTrigger(TouchTriggerBase):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def trigger(self, x: int, y: int, timestamp: float) -> None:
+        """Called on every touch event that passes the debounce interval.
+
+        Args:
+            x (int): Touch x position in screen pixels.
+            y (int): Touch y position in screen pixels.
+            timestamp (float): Raspberry Pi time of the touch (the same clock as
+                time_utils.now_timestamp()).
+
+        Available via self.task:
+        - self.task.cam_box      — box camera (write_text, areas, position, …)
+        - self.task.bpod         — Bpod controller (send_softcode_to_bpod, …)
+        - any attribute defined in the task class
+        """
+        self.task.cam_box.write_text(f"Touch: {x}, {y}")
+```
+
+You don't need to register the touches yourself: every touch that arrives while a trial
+is running is already saved in the trial data as a Raspberry Pi event named
+`touch_<x>_<y>` (e.g. `touch_640_360`), with its time.
+
+---
+
+#### Example — checking a target area and sending a softcode to Bpod
+
+A common pattern in touchscreen tasks is to define a circular target on the
+stimulus screen and determine whether the animal's touch landed inside or outside
+it. The result is then sent to Bpod as a softcode so that the state machine can
+branch accordingly.
+
+**In the task**, define the target position and tolerance as instance attributes
+so the `TouchTrigger` can read them via `self.task`:
+
+```python
+from village.custom_classes.task_base import BpodEvent, TaskBase
+
+
+class MyTask(TaskBase):
+
+    def create_trial(self):
+        # Position and radius of the target on the stimulus screen (pixels)
+        self.target_x: int = 640
+        self.target_y: int = 360
+        self.tolerance_px: int = 80
+        self.touch_correct: bool = False
+
+        # ... build the state machine (see below) ...
+```
+
+**In `touch_trigger.py`**, check the distance to the target and send the
+appropriate softcode:
+
+```python
+from village.custom_classes.touch_trigger_base import TouchTriggerBase
+
+
+class TouchTrigger(TouchTriggerBase):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def trigger(self, x: int, y: int, timestamp: float) -> None:
+        task = self.task
+
+        # Compute distance from touch to the current target
+        dx = x - task.target_x
+        dy = y - task.target_y
+        distance = (dx**2 + dy**2) ** 0.5
+        tolerance = getattr(task, "tolerance_px", 80)
+
+        if distance <= tolerance:
+            task.touch_correct = True
+            task.cam_box.write_text(f"Correct touch: {x}, {y}")
+            task.bpod.send_softcode_to_bpod(1)   # softcode 1 → correct
+        else:
+            task.touch_correct = False
+            task.cam_box.write_text(f"Wrong touch: {x}, {y}")
+            task.bpod.send_softcode_to_bpod(2)   # softcode 2 → incorrect
+```
+
+The Bpod state machine (built in the task's `create_trial`) receives the softcode
+and can use it to branch:
+
+```python
+self.bpod.add_state(
+    state_name="wait_for_touch",
+    state_timer=5,
+    state_change_conditions={
+        BpodEvent.Tup: "timeout",
+        BpodEvent.SoftCode1: "reward",
+        BpodEvent.SoftCode2: "punish",
+    },
+    output_actions=[],
+)
+```
+
+```{admonition} Note
+:class: note
+`trigger` runs in the touch reader thread, not in the task thread. Keep the
+method fast and avoid blocking calls. Writing to `cam_box` and sending a
+softcode are both non-blocking and safe to call from here.
+```
+
+```{toctree}
+:hidden:
+
+Video Functions Example <../examples/video_functions.md>
+Touchscreen Trigger Example <../examples/touch_trigger.md>
+```

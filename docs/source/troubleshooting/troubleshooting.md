@@ -153,7 +153,7 @@ has been in the box for too long." (repeated every hour).
 - **Check the thresholds** against the weight of your animals. For rats, or for heavier
   mice, `MAX_WEIGHT_THRESHOLD` must be raised.
 - **If an animal is stuck**, help it out and use `CHANGE STATE` → "All subjects are
-  back home, go to WAIT state" (see [Toolbar Controls](../system_operation/toolbar.md)).
+  back home, go to WAIT state" (see the [Toolbar](../system_operation/GUI.md#toolbar)).
 
 ---
 
@@ -182,7 +182,7 @@ heartbeat alarm.
 ### No Sound
 
 - **The DAC is still used by the operating system.** Its device profile must be set to
-  **Off** (see [Sound Integration](../system_operation/sound.md)).
+  **Off** (see [Sound](../devices/sound.md)).
 - **The sound device is not selected**: `SETTINGS` → `SOUND SETTINGS` → `USE_SOUNDCARD`
   ON, and the right `SOUND_DEVICE`.
 - **The sound card mutes itself** after a silence: disable its auto-mute (see the
@@ -196,11 +196,11 @@ heartbeat alarm.
 - **Nothing is shown on the screen of the box**: the system must be set to always detect
   two screens (`vc4.force_hotplug=3` in `/boot/firmware/cmdline.txt`), and the second
   screen must be connected to the second micro-HDMI port (see
-  [Screen Integration](../system_operation/screen.md)).
+  [Screen & Touchscreen](../devices/screen.md)).
 - **Touches are not registered**: check `TOUCHSCREEN_DEVICE` (the exact name of the
   device) and `TOUCH_RESOLUTION`.
 - **Touches move the mouse pointer of the desktop**: the udev rule that tells the desktop
-  to ignore the touchscreen is missing (see [Screen Integration](../system_operation/screen.md)).
+  to ignore the touchscreen is missing (see [Screen & Touchscreen](../devices/screen.md)).
 
 ---
 

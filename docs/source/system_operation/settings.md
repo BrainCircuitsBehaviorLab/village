@@ -7,7 +7,7 @@ Some initial settings must be configured before the system can be used.  Navigat
     *   **`FAVOURITE_TASK`:** A task preselected when opening the `TASKS` tab, so you can start a session immediately. Set to `None` to disable preselection.
     *   **`Project Selection`:** This section allows you to select an active experimental project or initialize a new one. For now, keep the default project: **demo-village-project**.
 
-*   **`CORRIDOR SETTINGS`:** These settings only appear once `USE_CORRIDOR` (at the top of this section) is toggled **ON**; turning it off hides the rest of the section and disables the whole Corridor subsystem (RFID, scale, temperature sensor, motors, lighting, and the dedicated corridor camera). Define `DAYTIME` and `NIGHTTIME` to set the hours used by the `Corridor Cycle` control's `AUTO` mode (see the [GUI][GUI] section) to switch lighting and camera exposure/thresholds between day and night values. Adjust `DETECTION_COLOR` if you are tracking light-colored animals on a dark corridor background, and `MIN_WEIGHT_THRESHOLD`/`MAX_WEIGHT_THRESHOLD` to filter out invalid weight readings. `MOTOR3_CORRIDOR` and `MOTOR4_CORRIDOR` let you declare whether those optional motors are physically installed.
+*   **`CORRIDOR SETTINGS`:** These settings only appear once `USE_CORRIDOR` (at the top of this section) is toggled **ON**; turning it off hides the rest of the section and disables the whole Corridor subsystem (RFID, scale, temperature sensor, motors, lighting, and the dedicated corridor camera). Define `DAYTIME` and `NIGHTTIME` to set the hours used by the `Corridor Cycle` control's `AUTO` mode (see [Monitor & Hardware Setup][GUI]) to switch lighting and camera exposure/thresholds between day and night values. Adjust `DETECTION_COLOR` if you are tracking light-colored animals on a dark corridor background, and `MIN_WEIGHT_THRESHOLD`/`MAX_WEIGHT_THRESHOLD` to filter out invalid weight readings. `MOTOR3_CORRIDOR` and `MOTOR4_CORRIDOR` let you declare whether those optional motors are physically installed.
 
     ```{admonition} Note
     :class: note
@@ -47,4 +47,4 @@ Some initial settings must be configured before the system can be used.  Navigat
 [TELEGRAM]: /preparation/telegram.md
 [REMOTE]: /preparation/heartbeat.md
 [ALARM]: /troubleshooting/alarm.md
-[GUI]: /system_operation/GUI.md
+[GUI]: /system_operation/corridor.md
