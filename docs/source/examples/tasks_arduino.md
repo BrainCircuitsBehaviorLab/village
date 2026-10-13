@@ -1,6 +1,6 @@
 ## Task Examples (Arduino)
 
-The same six training tasks run by an Arduino instead of a Bpod (`BEHAVIOR_CONTROLLER` set to `OTHER`). Each page has the task and the Arduino firmware it needs.
+The six training stages of the *Follow the Light* task (see [Task Examples (Bpod)](tasks_bpod.md)), run by an Arduino instead of a Bpod (`BEHAVIOR_CONTROLLER` set to `OTHER`). Each page has the task and the Arduino firmware it needs.
 
 | File | What it shows |
 | :--- | :--- |

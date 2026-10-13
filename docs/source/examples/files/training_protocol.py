@@ -2,7 +2,9 @@ from village.custom_classes.training_protocol_base import TrainingProtocolBase
 
 
 class TrainingProtocol(TrainingProtocolBase):
-    """Moves each subject through the 6 Bpod training stages, one after another:
+    """Moves each subject through the 6 Bpod training stages of Follow the Light,
+    a 2AFC task in which the animal pokes the side port that lights up first,
+    one after another:
     Bpod1Habituation -> Bpod2Passive -> Bpod3Active -> Bpod4CenterInitiated ->
     Bpod5IntroducePenalty -> Bpod6Delay (bpod_1_habituation.py ..
     bpod_6_delay.py).
@@ -12,10 +14,10 @@ class TrainingProtocol(TrainingProtocolBase):
     same settings and register the same values, so it is enough to change the
     task names (Arduino1Habituation, Arduino2Passive...).
 
-    The other example tasks (bpod_example_*.py, bpod_purge_ports.py,
-    bpod_area2_sound.py, bpod_touchscreen.py, raspberry_*.py) are not part of
-    the progression: they are run manually, and this protocol leaves next_task
-    alone after them.
+    The other example tasks (bpod_global_timer.py, bpod_outputs_and_events.py,
+    bpod_purge_ports.py, bpod_area2_sound.py, bpod_touchscreen.py,
+    raspberry_*.py) are not part of the progression: they are run manually,
+    and this protocol leaves next_task alone after them.
     """
 
     def __init__(self) -> None:

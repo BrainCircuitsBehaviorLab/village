@@ -496,9 +496,9 @@ SPECS["bpod_area2_sound"] = dict(
 )
 
 # ------------------------------------------------------- global timer demo
-SPECS["bpod_example_global_timer"] = dict(
+SPECS["bpod_global_timer"] = dict(
     size=(14.5, 7.4),
-    title="BpodExampleGlobalTimer — state machine (one trial)",
+    title="BpodGlobalTimer — state machine (one trial)",
     subtitle="Demo: a 10 s global timer bounds the whole trial; each poke in port 1 "
     "flashes LED1.",
     nodes={
@@ -525,10 +525,10 @@ SPECS["bpod_example_global_timer"] = dict(
 )
 
 # -------------------------------------------------- outputs and events demo
-SPECS["bpod_example_outputs_and_events"] = dict(
+SPECS["bpod_outputs_and_events"] = dict(
     size=(19.5, 13.4),
     yshift=0.8,
-    title="BpodExampleOutputsAndEvents — state machine (one trial)",
+    title="BpodOutputsAndEvents — state machine (one trial)",
     subtitle="Demo of the Bpod primitives, step by step (follow the arrows).",
     nodes={
         "start": dict(kind="start", xy=(0.7, 9.6)),

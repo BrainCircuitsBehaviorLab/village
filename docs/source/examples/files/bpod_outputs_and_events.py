@@ -3,7 +3,7 @@ import math
 from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
 
 
-class BpodExampleOutputsAndEvents(TaskBase):
+class BpodOutputsAndEvents(TaskBase):
     """Reference task: not a real behavioral protocol, just a walkthrough of
     the Bpod primitives available from create_trial, one per state:
 
@@ -18,7 +18,7 @@ class BpodExampleOutputsAndEvents(TaskBase):
     - Send a TTL pulse (Bpod -> an external device, on a BNC output)
     - Receive a TTL pulse (an external device -> Bpod, on a BNC input)
 
-    See bpod_example_global_timer.py for the global timer primitive.
+    See bpod_global_timer.py for the global timer primitive.
 
     Note on Bpod outputs: every state resets all outputs to off/0 first and
     then applies only what's listed in that state's own output_actions -- so
@@ -30,7 +30,7 @@ class BpodExampleOutputsAndEvents(TaskBase):
         super().__init__()
 
         self.info = """
-        Bpod Example: Outputs & Events
+        Outputs & Events Demo (Bpod)
         ----------------------------------------------------------------
         Not a real task -- a step-by-step demo of the Bpod primitives:
         1. Wait for a poke in port 1, turn LED1 fully on.

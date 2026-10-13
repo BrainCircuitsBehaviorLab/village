@@ -72,7 +72,9 @@ MENU_TOOLTIPS: dict[str, str] = {
         "Detection thresholds, weight limits and timing for corridor access."
     ),
     "BOX SETTINGS": ("Which box motors and hardware components are present."),
-    "CONTROLLER SETTINGS": ("Behavior controller type (Bpod, Arduino, Raspberry)."),
+    "CONTROLLER SETTINGS": (
+        "Behavior controller: BPOD, or OTHER (any other microcontroller, or none)."
+    ),
     "CAMERA SETTINGS": ("Camera framerates, resolution and tracking settings."),
     "SOUND SETTINGS": "Soundcard and audio device configuration.",
     "SCREEN SETTINGS": ("Screen or touchscreen configuration for behavioral stimuli."),

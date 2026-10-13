@@ -28,6 +28,11 @@ class Gui:
         self.q_app.setStyleSheet(
             "* { font-family: 'DejaVu Sans Condensed'; font-size: 9pt; }"
             "QLineEdit:disabled { background-color: #f0f0f0; }"
+            # Explicit tooltip colors: with the Fusion style and the Raspberry Pi
+            # desktop palette, tooltips would otherwise show light text on a light
+            # background (e.g. the Hold position tooltip of the motors dialog).
+            "QToolTip { background-color: white; color: black;"
+            " font-size: 10pt; padding: 4px; }"
         )
 
         # put a pretty icon

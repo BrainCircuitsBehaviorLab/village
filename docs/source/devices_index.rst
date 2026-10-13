@@ -1,4 +1,4 @@
-DEVICES
+TASK DEVICES
 =================================
 
 .. raw:: html

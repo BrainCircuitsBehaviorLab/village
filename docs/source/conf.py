@@ -81,7 +81,6 @@ sys.modules["PyQt5.QtWidgets"] = MagicMock()
 # Mock controllers and hardware-specific modules that create hardware connections
 # at module-level import time. These only run on Raspberry Pi and fail on macOS
 # with OSError [Errno 45] or ModuleNotFoundError for Linux-only libraries.
-sys.modules["village.controllers.arduino_controller"] = MagicMock()
 sys.modules["village.controllers.bpod_controller"] = MagicMock()
 sys.modules["village.controllers.trial_recorder"] = MagicMock()
 

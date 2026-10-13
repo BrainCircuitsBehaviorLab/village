@@ -202,6 +202,13 @@ class Settings:
     # systems upgraded from an older version don't keep an orphan value.
     _obsolete_keys = frozenset({"GITHUB_REPOSITORY_EXAMPLES"})
 
+    # Values that no longer exist, replaced on startup by the current one. Older
+    # versions had ARDUINO and RASPBERRY as behavior controllers; both are OTHER
+    # now (any microcontroller you talk to yourself, or none).
+    _obsolete_values = {
+        "BEHAVIOR_CONTROLLER": {"ARDUINO": "OTHER", "RASPBERRY": "OTHER"},
+    }
+
     def restore_fixed_settings(self) -> None:
         """Reset device wiring settings and a few fixed hidden settings to
         their factory defaults, overwriting whatever was previously stored.
@@ -213,6 +220,10 @@ class Settings:
                 self.saved_settings.setValue(s.key, s.value)
         for key in self._obsolete_keys:
             self.saved_settings.remove(key)
+        for key, replacements in self._obsolete_values.items():
+            value = self.saved_settings.value(key)
+            if value is not None and str(value) in replacements:
+                self.saved_settings.setValue(key, replacements[str(value)])
 
     def check_settings(self) -> None:
         """Ensure all required settings exist in storage.

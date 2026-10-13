@@ -352,9 +352,9 @@ class FollowTheLight(TaskBase):
 For a runnable walkthrough of the Bpod building blocks, see two reference
 tasks of the examples (neither is a real behavioral protocol):
 
-- [bpod_example_outputs_and_events.py](../examples/bpod_example_outputs_and_events.md) — LEDs, a valve, poke in/out,
+- [bpod_outputs_and_events.py](../examples/bpod_outputs_and_events.md) — LEDs, a valve, poke in/out,
   softcodes in both directions, and TTL pulses in both directions.
-- [bpod_example_global_timer.py](../examples/bpod_example_global_timer.md) — a global timer: a deadline that ticks in
+- [bpod_global_timer.py](../examples/bpod_global_timer.md) — a global timer: a deadline that ticks in
   the background across every state, independently of each state's own
   timer, until it ends or is cancelled.
 
@@ -636,7 +636,7 @@ Tasks Examples <../examples/tasks_bpod.md>
 ../examples/bpod_6_delay.md
 ../examples/bpod_area2_sound.md
 ../examples/bpod_touchscreen.md
-../examples/bpod_example_global_timer.md
-../examples/bpod_example_outputs_and_events.md
+../examples/bpod_global_timer.md
+../examples/bpod_outputs_and_events.md
 ../examples/bpod_purge_ports.md
 ```
