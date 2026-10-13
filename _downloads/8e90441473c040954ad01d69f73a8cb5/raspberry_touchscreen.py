@@ -22,7 +22,7 @@ class RaspberryTouchscreen(TaskBase):
     for any touch, or a timeout.
 
     Required setup (in SETTINGS, not in this file):
-    - Touchscreen must be enabled and configured (see Screen Integration
+    - Touchscreen must be enabled and configured (see Screen & Touchscreen
       docs).
     """
 

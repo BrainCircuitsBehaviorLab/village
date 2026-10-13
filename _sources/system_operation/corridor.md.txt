@@ -1,6 +1,60 @@
-## Corridor Hardware Setup
+## Monitor & Hardware Setup
 
-The corridor elements must be calibrated. Navigate to the `MONITOR` Screen:
+![Monitor Training village screen](/_static/monitor_screen.webp)
+
+The `MONITOR` screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the operant box, and to control and set up the hardware.
+
+### Control Tabs
+Depending on your active configuration, several control tabs are available at the center of the screen:
+
+*   **`CORRIDOR`:** Provides manual and automated overrides for the RFID reader, doors, weighing scale, and temperature sensor. When the RFID system is toggled **OFF**,
+    animal identification is disabled, and no subjects will be permitted to enter the operant box.
+
+    *Lighting and camera exposure/thresholds are driven together by the `Corridor Cycle` control, which can be set to `DAY`, `NIGHT`, or `AUTO`. `DAY` turns the visible light **ON** and the IR light **OFF**, and applies the daytime camera exposure/threshold settings. `NIGHT` does the opposite: visible light **OFF**, IR light **ON**, and the nighttime camera exposure/threshold settings. `AUTO` switches automatically between `DAY` and `NIGHT` according to the actual time of day; the daytime/nighttime schedule can be customized under `SETTINGS` -> `CORRIDOR SETTINGS`.*
+
+*   **`BOX`:** Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
+    buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.
+
+    *The `Visible Light` and `IR Light` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.*
+
+    ```{admonition} The box must never be completely dark
+    :class: warning
+    The box camera is watched all the time, even between sessions, to check that no
+    animal is left inside. If its image stays completely black for 10 seconds, the system
+    treats the camera as failed and restarts it. Setting both lights to `AUTO` is only
+    safe if the box gets some light from another source (light coming in from outside, a
+    photogate, a port LED...), enough for the image not to be fully black. If that is not
+    the case, set the `IR Light` (or the `Visible Light`) to `ON` instead of `AUTO`.
+    ```
+
+    ```{admonition} A motor stops responding
+    :class: note
+    If a motor stops responding to `OPEN`/`CLOSE` after being physically disconnected and
+    reconnected, restart Village rather than assuming it's broken — see
+    [Troubleshooting](../troubleshooting/troubleshooting.md).
+    ```
+
+*   **`FUNCTIONS`:** Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
+    for writing and deploying these functions can be found in the [Direct Functions](../protocols/functions.md) section.
+
+*   **`VIRTUAL MOUSE`:** Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness (see also [Custom AutoNoMouse](../advanced_customization/auto.md), a virtual animal that performs a task by itself).
+    *   **Bpod Integration:** Simulate a nose-poke in any behavior port with a single click.
+    *   **Touchscreen Integration:** Simulate screen-touch events by sending precise coordinate inputs $(x, y)$.
+    *   **Position Tracking:** If real-time animal tracking is active within the operant box, you can simulate custom trajectories to verify location-based experimental triggers.
+
+
+### Bottom Tabs
+A secondary group of tabs is located at the bottom of the screen to monitor system telemetry and history:
+
+*   **`INFO`:** Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.
+*   **`PLOT`:** Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.
+*   **`DETECTION SETTINGS`:** Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and operant box tracking systems. A comprehensive breakdown of these parameters is available in the [Animal Detection & Tracking](detection.md).
+
+---
+
+### Setting Up the Hardware
+
+The corridor elements must be calibrated from the `MONITOR` screen:
 
 1. **Set Door Motor Angles**: Select the `CORRIDOR` tab in the center of the screen. Each installed motor has its own `MOTORx VALUES` button (`MOTOR1`/`MOTOR2` are always shown; `MOTOR3`/`MOTOR4` only appear if enabled in `SETTINGS` → `CORRIDOR SETTINGS`). Clicking it opens a dialog with the `Open angle`/`Open time (ms)` and `Close angle`/`Close time (ms)` fields, a `Hold position` checkbox, plus `OPEN`/`CLOSE` buttons to move the motor immediately and test the values before committing. The closing angle should allow the door to gently touch the top without pushing further.
 ```{admonition} Note
@@ -21,7 +75,7 @@ Due to the symmetrical placement of the servomotors, the opening angle will be g
 
 Corridor doors normally want it checked, since the door has to stay where it was put. A mechanism that latches on its own, or one that only has to reach a position and then be left alone, is better off unchecked.
 
-The checkbox takes effect immediately on `OPEN`/`CLOSE`, so you can hear the difference before saving. It only sets the **default**: task code can override it for a single movement (see [Motors](motors.md)).
+The checkbox takes effect immediately on `OPEN`/`CLOSE`, so you can hear the difference before saving. It only sets the **default**: task code can override it for a single movement (see [Motors](../devices/motors.md)).
 ```
 2. **Calibrate the Scale**: Use the `CALIBRATE SCALE` button with a known weight to calibrate the scale, `TARE SCALE` to zero it, and verify functionality by pressing `GET WEIGHT`.
 3. **Check Temperature and Humidity**: Use the `GET TEMPERATURE` button to check temperature and humidity readings.

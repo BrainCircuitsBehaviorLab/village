@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Screen &amp; Touchscreen - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="video_functions.py" href="../examples/video_functions.html" /><link rel="prev" title="sound_functions.py" href="../examples/sound_functions.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/devices/screen.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/devices/screen.html"/>
+  <meta property="og:title" content="Screen &amp; Touchscreen"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/logo_light.svg" alt="village" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/logo_dark.svg" alt="village" height="28" loading="lazy" />
+      <strong>village</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../overview/system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="../resources/list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/BrainCircuitsBehaviorLab/village" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../preparation_index.html">PREPARATION &amp; SETUP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/initial.html">Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/launching.html">Launching the TV Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/access.html">Remote Access Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/telegram.html">Telegram Bot Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/backup.html">Data Persistence &amp; Backups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/heartbeat.html">Remote Heartbeat Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/animal.html">Animal Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Monitor &amp; Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data_visualization.html">Data Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/overview.html">Calibration Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/project_structure.html">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">The Training Protocol</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/training_protocol.html">Training Protocol Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_bpod.html">Tasks (Bpod)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sound.html">Sound</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="motors.html">Motors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Create Custom Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/after_session.html">After Session Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/change_cycle.html">Change Cycle Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/telegram_commands.html">Custom Telegram Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/auto_follow_the_light.html">AutoNoMouse Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/homecage_camera_control.html">Homecage Camera Control</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; ALARMS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.html">corridor_threshold_detection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.area_count.html">area_count</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.scan_video.html">scan_video</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.select_from_grays.html">select_from_grays</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.enums.html">enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ControllerEnum.html">ControllerEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.CycleDay.html">CycleDay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.null_classes.html">null_classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCalibrationBase.html">NullCalibrationBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullGpio.html">NullGpio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullLEDStrip.html">NullLEDStrip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoundDevice.html">NullSoundDevice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTouch.html">NullTouch</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.settings_class.html">settings_class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.custom_classes.html">custom_classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouseBase.html">AutoNoMouseBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_task_base.html">calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_task_base.CalibrationTaskBase.html">CalibrationTaskBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.html">camera_area_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html">CameraAreaBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.html">gpio_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html">GpioTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.html">scale_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.ScaleTriggerBase.html">ScaleTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.SessionPlotBase.html">SessionPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.html">telegram_command_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.TelegramCommandBase.html">TelegramCommandBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_if_active.html">get_motor_if_active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.parse_motor_values.html">parse_motor_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.gpio.html">gpio</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.gpio.Gpio.html">Gpio</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.og_connect.html">og_connect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.match_sound_device_setting.html">match_sound_device_setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.weights_plot.html">weights_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.scripts.html">scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.playground.html">playground</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../hardware.html">HARDWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../resources/list_of_parts.html">List of Parts &amp; Design Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware.html">Assembly Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware_large.html">Assembly Guide (with Eco-HAB)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/hardware_rats.html">Assembly Guide (Rat Version)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../resources/software_installation.html">Manual Software Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/bpod_firmware.html">Custom Bpod Firmware</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../faq_index2.html">FAQ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#setup">Setup</a><ul>
+<li><a class="reference internal" href="#choosing-the-right-screen-technology">Choosing the right screen technology</a></li>
+<li><a class="reference internal" href="#dual-screen-configuration">Dual-screen configuration</a></li>
+<li><a class="reference internal" href="#resolution-and-display-latency">Resolution and display latency</a></li>
+<li><a class="reference internal" href="#configuring-the-touchscreen-settings">Configuring the touchscreen settings</a><ul>
+<li><a class="reference internal" href="#finding-the-device-name-and-resolution">Finding the device name and resolution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-it-in-tasks">Using It in Tasks</a><ul>
+<li><a class="reference internal" href="#method-reference">Method reference</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#video-functions">Video Functions</a></li>
+<li><a class="reference internal" href="#reacting-to-touches">Reacting to Touches</a><ul>
+<li><a class="reference internal" href="#creating-a-custom-touchtrigger">Creating a custom TouchTrigger</a></li>
+<li><a class="reference internal" href="#example-checking-a-target-area-and-sending-a-softcode-to-bpod">Example &#8212; checking a target area and sending a softcode to Bpod</a></li>
+</ul>
+</li>
+</ul>
+</div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">village</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../documentation_index.html"><span itemprop="name">DOCUMENTATION</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../devices_index.html"><span itemprop="name">DEVICES</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Screen &amp; Touchscreen</strong>
+        <meta itemprop="position" content="4" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <div class="copy-page-wrapper relative pb-4 lg:absolute lg:top-8 lg:right-6 xl:right-12">
+  <div id="copy-page-trigger">
+    <button
+      type="button"
+      class="js-copy px-3 py-1 inline-flex items-center gap-1"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/devices/screen.md.txt"
+    >
+      <i class="i-lucide" data-icon="copy"></i>
+      <span>Copy page</span>
+    </button>
+    <button class="js-menu px-2 py-1" type="button" aria-label="More actions"
+      aria-haspopup="menu" aria-expanded="false" aria-controls="copy-page-content">
+      <i class="i-lucide chevron-down"></i>
+    </button>
+  </div>
+  <div id="copy-page-content" role="menu" aria-orientation="vertical" aria-hidden="true">
+    <div role="presentation">
+      <div class="flex flex-col" role="group">
+        <button class="js-copy" type="button" role="menuitem"
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/devices/screen.md.txt">
+          <span class="iconify-icon">
+            <i class="i-lucide" data-icon="copy"></i>
+          </span>
+          <span>Copy page</span>
+        </button>
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/devices/screen.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/devices/screen.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:openai"></iconify-icon>
+          <span>Open in ChatGPT</span>
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/devices/screen.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:claude"></iconify-icon>
+          <span>Open in Claude</span>
+        </a></div>
+    </div>
+  </div>
+</div><article class="yue" role="main">
+          <section id="screen-touchscreen">
+<h1>Screen &amp; Touchscreen</h1>
+<p>If you plan to present visual stimuli or record touch responses, enable the screen under
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>.</p>
+<hr class="docutils" />
+<section id="setup">
+<h2>Setup</h2>
+<section id="choosing-the-right-screen-technology">
+<h3>Choosing the right screen technology</h3>
+<p>We recommend using an <strong>infrared (IR) touch frame</strong> rather than a capacitive touchscreen.
+An IR frame works by projecting an invisible grid of IR beams across the display surface;
+a touch event is registered whenever an object interrupts one of the beams. This means
+the animal does not need to physically press the screen — proximity alone triggers a
+response — which reduces aversion and improves task engagement for rodents.</p>
+<p>The IR frame connects via USB and the display via the second micro-HDMI port on the
+Raspberry Pi.</p>
+</section>
+<section id="dual-screen-configuration">
+<h3>Dual-screen configuration</h3>
+<p>The goal of this configuration is to make the system <strong>always detect two
+displays, even when no physical monitors are connected</strong>. Forcing
+both ports to be treated as active means the two display outputs are always
+present and addressable, whether or not real monitors are attached.</p>
+<p>The system runs with two display outputs:</p>
+<ul class="simple">
+<li><p><strong>HDMI-1</strong>: Primary display showing the Training Village GUI <em>(can be virtual —
+no physical monitor required)</em>.</p></li>
+<li><p><strong>HDMI-2</strong>: Secondary display inside the operant box showing behavioral stimuli.</p></li>
+</ul>
+<p><strong>Step 1 — Edit the boot configuration:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">cmdline</span><span class="o">.</span><span class="n">txt</span>
+</span></pre></div>
+</div>
+<p>Replace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">vc4</span><span class="o">.</span><span class="n">force_hotplug</span><span class="o">=</span><span class="mi">1</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1600</span><span class="n">x900</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span>
+</span></pre></div>
+</div>
+<p>With:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">vc4</span><span class="o">.</span><span class="n">force_hotplug</span><span class="o">=</span><span class="mi">3</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1600</span><span class="n">x900</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="mi">1280</span><span class="n">x720</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span>
+</span></pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">vc4.force_hotplug</span></code> flag controls which HDMI ports the system treats as
+connected regardless of whether a monitor is physically plugged in:
+<code class="docutils literal notranslate"><span class="pre">1</span></code> = HDMI-1 only, <code class="docutils literal notranslate"><span class="pre">2</span></code> = HDMI-2 only, <code class="docutils literal notranslate"><span class="pre">3</span></code> = both. Setting it to <code class="docutils literal notranslate"><span class="pre">3</span></code> is what
+guarantees both screens are always detected. The <code class="docutils literal notranslate"><span class="pre">video=HDMI-A-*</span></code> parameters
+set the resolution for each port independently.</p>
+<p><strong>Step 2 — Reboot:</strong></p>
+<p>Changes to <code class="docutils literal notranslate"><span class="pre">cmdline.txt</span></code> are only read at boot, so you must restart the
+operating system for the new display configuration to take effect.</p>
+<p><strong>Step 3 — Set the resolution in the desktop:</strong></p>
+<p>Navigate to <strong>Raspberry Pi menu → Preferences → Control Centre → Screens → HDMI-2</strong>,
+set the resolution to <strong>1280×720</strong> or lower, and apply.</p>
+</section>
+<section id="resolution-and-display-latency">
+<h3>Resolution and display latency</h3>
+<p>Keep the stimulus display at 1280×720 or below. Higher resolutions significantly
+increase CPU load on the Raspberry Pi, leading to greater stimulus presentation
+latency.</p>
+<p>The system operates at a <strong>60 Hz refresh rate</strong> (one frame every 16.6 ms). Because the
+next frame is preloaded in the buffer while the current one is displayed, the latency
+from issuing a display command to the frame appearing on screen spans approximately
+one full frame plus the remaining portion of the current frame — equivalent to roughly
+1.5 × frame duration plus 1-2 ms of controller-to-Raspberry Pi communication.
+Measured latencies: <strong>mean = 26.1 ms, SD = 7.5 ms</strong>.</p>
+</section>
+<section id="configuring-the-touchscreen-settings">
+<h3>Configuring the touchscreen settings</h3>
+<p>Use these settings when the screen is configured as a touchscreen to both display stimuli and register touch responses from the animals.</p>
+<p>Three settings control touchscreen behaviour:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TOUCHSCREEN_DEVICE</span></code></p></td>
+<td><p>Exact device name as shown in <code class="docutils literal notranslate"><span class="pre">/proc/bus/input/devices</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">USB</span> <span class="pre">Touch</span> <span class="pre">USB</span> <span class="pre">Touch</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TOUCH_RESOLUTION</span></code></p></td>
+<td><p>Digitizer coordinate range: <code class="docutils literal notranslate"><span class="pre">[max_x</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">max_y</span> <span class="pre">+</span> <span class="pre">1]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[4096,</span> <span class="pre">4096]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TOUCH_INTERVAL</span></code></p></td>
+<td><p>Minimum seconds between two registered touches (debounce)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.5</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">TOUCH_RESOLUTION</span></code> is the internal coordinate range of the touch digitizer hardware —
+it is independent of and usually different from the display pixel resolution.
+The system uses both values to convert raw touch coordinates into screen pixel positions.</p>
+</div>
+<section id="finding-the-device-name-and-resolution">
+<h4>Finding the device name and resolution</h4>
+<p><strong>Step 1 — List all input devices:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">bus</span><span class="o">/</span><span class="nb">input</span><span class="o">/</span><span class="n">devices</span>
+</span></pre></div>
+</div>
+<p>Look for the entry that has <code class="docutils literal notranslate"><span class="pre">B:</span> <span class="pre">ABS</span></code> in its capabilities (indicating absolute position
+events). The value you need is the <code class="docutils literal notranslate"><span class="pre">N:</span> <span class="pre">Name=</span></code> field:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">I</span><span class="p">:</span> <span class="n">Bus</span><span class="o">=</span><span class="mi">0003</span> <span class="n">Vendor</span><span class="o">=</span><span class="mb">0b1</span><span class="n">e</span> <span class="n">Product</span><span class="o">=</span><span class="mi">000</span><span class="n">f</span> <span class="n">Version</span><span class="o">=</span><span class="mi">0110</span>
+</span><span data-line="2"><span class="n">N</span><span class="p">:</span> <span class="n">Name</span><span class="o">=</span><span class="s2">"USB Touch USB Touch"</span>
+</span><span data-line="3"><span class="o">...</span>
+</span><span data-line="4"><span class="n">H</span><span class="p">:</span> <span class="n">Handlers</span><span class="o">=</span><span class="n">mouse0</span> <span class="n">event5</span>
+</span><span data-line="5"><span class="n">B</span><span class="p">:</span> <span class="n">EV</span><span class="o">=</span><span class="mi">1</span><span class="n">b</span>
+</span><span data-line="6"><span class="n">B</span><span class="p">:</span> <span class="n">ABS</span><span class="o">=</span><span class="mi">3</span>
+</span></pre></div>
+</div>
+<p>Copy the name exactly as it appears (without quotes) into <code class="docutils literal notranslate"><span class="pre">TOUCHSCREEN_DEVICE</span></code> (in this case <code class="docutils literal notranslate"><span class="pre">USB</span> <span class="pre">Touch</span> <span class="pre">USB</span> <span class="pre">Touch</span></code>).</p>
+<p><strong>Step 2 — Find the digitizer resolution:</strong></p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">Handlers</span></code> path from Step 1 (e.g. <code class="docutils literal notranslate"><span class="pre">event5</span></code>) to inspect the coordinate range:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">evtest</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="nb">input</span><span class="o">/</span><span class="n">event5</span>
+</span></pre></div>
+</div>
+<p>In the output, look for the <code class="docutils literal notranslate"><span class="pre">EV_ABS</span></code> section:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">Event</span> <span class="nb">type</span> <span class="mi">3</span> <span class="p">(</span><span class="n">EV_ABS</span><span class="p">)</span>
+</span><span data-line="2">  <span class="n">Event</span> <span class="n">code</span> <span class="mi">0</span> <span class="p">(</span><span class="n">ABS_X</span><span class="p">)</span>
+</span><span data-line="3">    <span class="n">Min</span>        <span class="mi">0</span>
+</span><span data-line="4">    <span class="n">Max</span>     <span class="mi">4095</span>
+</span><span data-line="5">  <span class="n">Event</span> <span class="n">code</span> <span class="mi">1</span> <span class="p">(</span><span class="n">ABS_Y</span><span class="p">)</span>
+</span><span data-line="6">    <span class="n">Min</span>        <span class="mi">0</span>
+</span><span data-line="7">    <span class="n">Max</span>     <span class="mi">4095</span>
+</span></pre></div>
+</div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">TOUCH_RESOLUTION</span></code> to <code class="docutils literal notranslate"><span class="pre">[Max_X</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">Max_Y</span> <span class="pre">+</span> <span class="pre">1]</span></code> — in this example <code class="docutils literal notranslate"><span class="pre">[4096,</span> <span class="pre">4096]</span></code>.</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">evtest</span></code> is not installed: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">evtest</span></code></p>
+</div>
+<p><strong>Step 3 — Prevent the touchscreen from controlling the desktop:</strong></p>
+<p>When Training Village is running, Python grabs the touchscreen device exclusively
+via <code class="docutils literal notranslate"><span class="pre">evdev</span></code> (<code class="docutils literal notranslate"><span class="pre">device.grab()</span></code>), so touch events never reach the graphical layer of
+the OS — the animals cannot accidentally interact with the desktop. However, when
+Training Village is not running the device is released and <code class="docutils literal notranslate"><span class="pre">libinput</span></code> (the input
+layer used by the desktop compositor) picks it up again.</p>
+<p>To prevent this permanently — regardless of whether Training Village is running —
+create a udev rule that tells libinput to always ignore the device. Replace
+<code class="docutils literal notranslate"><span class="pre">USB</span> <span class="pre">Touch</span> <span class="pre">USB</span> <span class="pre">Touch</span></code> with the exact name you found in Step 1.</p>
+<p>Create the file <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-touchscreen-grab.rules</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">udev</span><span class="o">/</span><span class="n">rules</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mi">99</span><span class="o">-</span><span class="n">touchscreen</span><span class="o">-</span><span class="n">grab</span><span class="o">.</span><span class="n">rules</span>
+</span></pre></div>
+</div>
+<p>Add the following line, replacing <code class="docutils literal notranslate"><span class="pre">USB</span> <span class="pre">Touch</span> <span class="pre">USB</span> <span class="pre">Touch</span></code> with the exact device name
+found in Step 1:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">SUBSYSTEM</span><span class="o">==</span><span class="s2">"input"</span><span class="p">,</span> <span class="n">ATTRS</span><span class="p">{</span><span class="n">name</span><span class="p">}</span><span class="o">==</span><span class="s2">"USB Touch USB Touch"</span><span class="p">,</span> <span class="n">ENV</span><span class="p">{</span><span class="n">LIBINPUT_IGNORE_DEVICE</span><span class="p">}</span><span class="o">=</span><span class="s2">"1"</span>
+</span></pre></div>
+</div>
+<p>Save and close the file (<code class="docutils literal notranslate"><span class="pre">Ctrl+O</span></code>, <code class="docutils literal notranslate"><span class="pre">Enter</span></code>, <code class="docutils literal notranslate"><span class="pre">Ctrl+X</span></code>).</p>
+<p>This makes libinput ignore the device completely. It remains accessible at
+<code class="docutils literal notranslate"><span class="pre">/dev/input/eventX</span></code> so Training Village can still read it via <code class="docutils literal notranslate"><span class="pre">evdev</span></code>, but the OS
+will never treat it as a pointer device.</p>
+<p>Apply the rule without rebooting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">control</span> <span class="o">--</span><span class="n">reload</span><span class="o">-</span><span class="n">rules</span>
+</span><span data-line="2"><span class="n">sudo</span> <span class="n">udevadm</span> <span class="n">trigger</span>
+</span></pre></div>
+</div>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="using-it-in-tasks">
+<h2>Using It in Tasks</h2>
+<p>Import the module-level instance and provide a drawing function along with any required
+image or video. Note that <code class="docutils literal notranslate"><span class="pre">load_draw_function()</span></code> only sets the callback executed on
+each frame; media assets must be loaded separately using <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">load_video()</span></code> (either before or after setting the function).</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.</p>
+<p><strong>Displaying a static image:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.screen</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
+</span><span data-line="5">    <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="6">        <span class="k">if</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">:</span>
+</span><span data-line="7">            <span class="n">painter</span><span class="o">.</span><span class="n">drawPixmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="n">screen</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"stimulus.png"</span><span class="p">)</span>
+</span><span data-line="10"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
+</span><span data-line="11"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="c1"># ... trial runs ...</span>
+</span><span data-line="14">
+</span><span data-line="15"><span class="n">screen</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p><strong>Displaying a video:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
+</span><span data-line="2">    <span class="n">frame</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_video_frame</span><span class="p">()</span>
+</span><span data-line="3">    <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="4">        <span class="k">if</span> <span class="n">frame</span><span class="p">:</span>
+</span><span data-line="5">            <span class="n">painter</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="n">screen</span><span class="o">.</span><span class="n">load_video</span><span class="p">(</span><span class="s2">"movie.mp4"</span><span class="p">)</span>
+</span><span data-line="8"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
+</span><span data-line="9"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p><strong>Drawing programmatically (shapes, text, time-varying stimuli):</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QRect</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QPainter</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
+</span><span data-line="5">    <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="6">        <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">rect</span><span class="p">(),</span> <span class="n">QColor</span><span class="p">(</span><span class="s2">"black"</span><span class="p">))</span>   <span class="c1"># background</span>
+</span><span data-line="7">        <span class="c1"># flash a white square for the first 0.1 s of each second</span>
+</span><span data-line="8">        <span class="k">if</span> <span class="n">screen</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">%</span> <span class="mf">1.0</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+</span><span data-line="9">            <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="n">QRect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span> <span class="n">QColor</span><span class="p">(</span><span class="s2">"white"</span><span class="p">))</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
+</span><span data-line="12"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>The drawing function is called once per frame (60 Hz) with no arguments. Two
+attributes are updated automatically before each call:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">screen.frame</span></code> — number of frames rendered since <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">screen.elapsed_time</span></code> — seconds elapsed since <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>.</p></li>
+</ul>
+<p>Files passed to <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> and <code class="docutils literal notranslate"><span class="pre">load_video()</span></code> are looked up inside <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>
+(<code class="docutils literal notranslate"><span class="pre">~/village_projects/&lt;project_name&gt;/media</span></code>). Reference them by filename only.</p>
+<section id="method-reference">
+<h3>Method reference</h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Arguments</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_draw_function(draw_fn)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">draw_fn</span></code>: callable</p></td>
+<td><p>Sets the function called every frame. Does not load any media — call <code class="docutils literal notranslate"><span class="pre">load_image()</span></code>/<code class="docutils literal notranslate"><span class="pre">load_video()</span></code> separately for that.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">load_image(file)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename</p></td>
+<td><p>Loads an image from <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code> into <code class="docutils literal notranslate"><span class="pre">screen.image</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_video(file,</span> <span class="pre">volume_gain=0.1)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">file</span></code>: filename; <code class="docutils literal notranslate"><span class="pre">volume_gain</span></code>: audio volume for the video’s soundtrack, <code class="docutils literal notranslate"><span class="pre">0.0</span></code>–<code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
+<td><p>Prepares a video (and its audio track) for playback (started by <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Starts the 60 Hz rendering loop.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Stops rendering and blanks the screen.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">get_video_frame()</span></code></p></td>
+<td><p>—</p></td>
+<td><p>Returns the current video frame as a <code class="docutils literal notranslate"><span class="pre">QImage</span></code>, or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="video-functions">
+<h2>Video Functions</h2>
+<p>Your project’s <code class="docutils literal notranslate"><span class="pre">code/video_functions.py</span></code> holds <code class="docutils literal notranslate"><span class="pre">draw_X_generator(...)</span></code> factories: each one takes the
+stimulus parameters and returns a <code class="docutils literal notranslate"><span class="pre">draw()</span></code> closure, meant to be passed to
+<code class="docutils literal notranslate"><span class="pre">screen.load_draw_function(draw_fn=...)</span></code> (see
+<a class="reference internal" href="#using-it-in-tasks"><span class="std std-ref">Using the screen in tasks</span></a>). Qt then calls that <code class="docutils literal notranslate"><span class="pre">draw()</span></code>
+on every frame while <code class="docutils literal notranslate"><span class="pre">screen.start_drawing()</span></code> is active.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QRect</span><span class="p">,</span> <span class="n">Qt</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">draw_circle_generator</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">diameter</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+</span><span data-line="5">    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
+</span><span data-line="6">        <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="7">            <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="n">painter</span><span class="o">.</span><span class="n">viewport</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">background_color</span><span class="p">)</span>
+</span><span data-line="8">            <span class="k">if</span> <span class="n">screen</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">&lt;</span> <span class="n">duration</span><span class="p">:</span>
+</span><span data-line="9">                <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">NoPen</span><span class="p">)</span>
+</span><span data-line="10">                <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+</span><span data-line="11">                <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">QRect</span><span class="p">(</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">diameter</span><span class="p">,</span> <span class="n">diameter</span><span class="p">))</span>
+</span><span data-line="12">    <span class="k">return</span> <span class="n">draw</span>
+</span></pre></div>
+</div>
+<p>Two things every <code class="docutils literal notranslate"><span class="pre">draw()</span></code> needs to do itself, since nothing does them
+automatically:</p>
+<ul class="simple">
+<li><p>Fill the background first (<code class="docutils literal notranslate"><span class="pre">screen.background_color</span></code>) — Qt doesn’t clear the
+widget between paints, so skipping this leaves the previous frame’s stimulus
+on screen underneath the new one.</p></li>
+<li><p>Check <code class="docutils literal notranslate"><span class="pre">screen.elapsed_time</span> <span class="pre">&lt;</span> <span class="pre">duration</span></code> before painting anything — once the
+duration is over, <code class="docutils literal notranslate"><span class="pre">draw()</span></code> just stops drawing the stimulus (falling back to
+the plain background) until a new draw function is loaded.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="reacting-to-touches">
+<h2>Reacting to Touches</h2>
+<p>Every time a touch event passes the debounce filter, the <code class="docutils literal notranslate"><span class="pre">trigger</span></code> method of
+<code class="docutils literal notranslate"><span class="pre">TouchTriggerBase</span></code> is called. By default it writes the touch coordinates to the
+box camera feed. You can override this behavior to implement task-specific touch
+responses.</p>
+<hr class="docutils" />
+<section id="creating-a-custom-touchtrigger">
+<h3>Creating a custom TouchTrigger</h3>
+<p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (e.g. <code class="docutils literal notranslate"><span class="pre">touch_trigger.py</span></code>) and define
+a class (e.g. <code class="docutils literal notranslate"><span class="pre">TouchTrigger</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">TouchTriggerBase</span></code>. The file and class names are
+up to you: the system detects the class by what it inherits from, and uses it
+instead of the default base class. Only one such class is used per project.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.touch_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TouchTriggerBase</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">TouchTrigger</span><span class="p">(</span><span class="n">TouchTriggerBase</span><span class="p">):</span>
+</span><span data-line="5">
+</span><span data-line="6">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="7">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="10"><span class="w">        </span><span class="sd">"""Called on every touch event that passes the debounce interval.</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="sd">        Args:</span>
+</span><span data-line="13"><span class="sd">            x (int): Touch x position in screen pixels.</span>
+</span><span data-line="14"><span class="sd">            y (int): Touch y position in screen pixels.</span>
+</span><span data-line="15"><span class="sd">            timestamp (float): Raspberry Pi time of the touch (the same clock as</span>
+</span><span data-line="16"><span class="sd">                time_utils.now_timestamp()).</span>
+</span><span data-line="17">
+</span><span data-line="18"><span class="sd">        Available via self.task:</span>
+</span><span data-line="19"><span class="sd">        - self.task.cam_box      — box camera (write_text, areas, position, …)</span>
+</span><span data-line="20"><span class="sd">        - self.task.bpod         — Bpod controller (send_softcode_to_bpod, …)</span>
+</span><span data-line="21"><span class="sd">        - any attribute defined in the task class</span>
+</span><span data-line="22"><span class="sd">        """</span>
+</span><span data-line="23">        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>You don’t need to register the touches yourself: every touch that arrives while a trial
+is running is already saved in the trial data as a Raspberry Pi event named
+<code class="docutils literal notranslate"><span class="pre">touch_&lt;x&gt;_&lt;y&gt;</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">touch_640_360</span></code>), with its time.</p>
+</section>
+<hr class="docutils" />
+<section id="example-checking-a-target-area-and-sending-a-softcode-to-bpod">
+<h3>Example — checking a target area and sending a softcode to Bpod</h3>
+<p>A common pattern in touchscreen tasks is to define a circular target on the
+stimulus screen and determine whether the animal’s touch landed inside or outside
+it. The result is then sent to Bpod as a softcode so that the state machine can
+branch accordingly.</p>
+<p><strong>In the task</strong>, define the target position and tolerance as instance attributes
+so the <code class="docutils literal notranslate"><span class="pre">TouchTrigger</span></code> can read them via <code class="docutils literal notranslate"><span class="pre">self.task</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BpodEvent</span><span class="p">,</span> <span class="n">TaskBase</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">MyTask</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
+</span><span data-line="5">
+</span><span data-line="6">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="7">        <span class="c1"># Position and radius of the target on the stimulus screen (pixels)</span>
+</span><span data-line="8">        <span class="bp">self</span><span class="o">.</span><span class="n">target_x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">640</span>
+</span><span data-line="9">        <span class="bp">self</span><span class="o">.</span><span class="n">target_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span>
+</span><span data-line="10">        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span>
+</span><span data-line="11">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_correct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="12">
+</span><span data-line="13">        <span class="c1"># ... build the state machine (see below) ...</span>
+</span></pre></div>
+</div>
+<p><strong>In <code class="docutils literal notranslate"><span class="pre">touch_trigger.py</span></code></strong>, check the distance to the target and send the
+appropriate softcode:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.touch_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TouchTriggerBase</span>
+</span><span data-line="2">
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">TouchTrigger</span><span class="p">(</span><span class="n">TouchTriggerBase</span><span class="p">):</span>
+</span><span data-line="5">
+</span><span data-line="6">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="7">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="10">        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span>
+</span><span data-line="11">
+</span><span data-line="12">        <span class="c1"># Compute distance from touch to the current target</span>
+</span><span data-line="13">        <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">task</span><span class="o">.</span><span class="n">target_x</span>
+</span><span data-line="14">        <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">task</span><span class="o">.</span><span class="n">target_y</span>
+</span><span data-line="15">        <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+</span><span data-line="16">        <span class="n">tolerance</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"tolerance_px"</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+</span><span data-line="17">
+</span><span data-line="18">        <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="n">tolerance</span><span class="p">:</span>
+</span><span data-line="19">            <span class="n">task</span><span class="o">.</span><span class="n">touch_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="20">            <span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Correct touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="21">            <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># softcode 1 → correct</span>
+</span><span data-line="22">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="23">            <span class="n">task</span><span class="o">.</span><span class="n">touch_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="24">            <span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Wrong touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="25">            <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># softcode 2 → incorrect</span>
+</span></pre></div>
+</div>
+<p>The Bpod state machine (built in the task’s <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>) receives the softcode
+and can use it to branch:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">state_name</span><span class="o">=</span><span class="s2">"wait_for_touch"</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">state_timer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">state_change_conditions</span><span class="o">=</span><span class="p">{</span>
+</span><span data-line="5">        <span class="n">BpodEvent</span><span class="o">.</span><span class="n">Tup</span><span class="p">:</span> <span class="s2">"timeout"</span><span class="p">,</span>
+</span><span data-line="6">        <span class="n">BpodEvent</span><span class="o">.</span><span class="n">SoftCode1</span><span class="p">:</span> <span class="s2">"reward"</span><span class="p">,</span>
+</span><span data-line="7">        <span class="n">BpodEvent</span><span class="o">.</span><span class="n">SoftCode2</span><span class="p">:</span> <span class="s2">"punish"</span><span class="p">,</span>
+</span><span data-line="8">    <span class="p">},</span>
+</span><span data-line="9">    <span class="n">output_actions</span><span class="o">=</span><span class="p">[],</span>
+</span><span data-line="10"><span class="p">)</span>
+</span></pre></div>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">trigger</span></code> runs in the touch reader thread, not in the task thread. Keep the
+method fast and avoid blocking calls. Writing to <code class="docutils literal notranslate"><span class="pre">cam_box</span></code> and sending a
+softcode are both non-blocking and safe to call from here.</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="../examples/sound_functions.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">sound_functions.py</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="../examples/video_functions.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">video_functions.py</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright">
+        <p>© <a href="https://braincircuitsbehavior.org">Brain Circuits and Behavior Lab</a></p>
+        <p>Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://shibuya.lepture.com">Shibuya theme</a>.</p>
+      </div>
+      <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
+        <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=be00876f"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
+      <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
+</html>

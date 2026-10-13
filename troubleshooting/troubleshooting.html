@@ -85,14 +85,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Monitor &amp; Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data_visualization.html">Data Visualization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/overview.html">Calibration Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
@@ -137,12 +139,37 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Sound &amp; Video Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/sound.html">Sound</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/screen.html">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
@@ -706,7 +733,7 @@ has been in the box for too long.” (repeated every hour).</p>
 <li><p><strong>Check the thresholds</strong> against the weight of your animals. For rats, or for heavier
 mice, <code class="docutils literal notranslate"><span class="pre">MAX_WEIGHT_THRESHOLD</span></code> must be raised.</p></li>
 <li><p><strong>If an animal is stuck</strong>, help it out and use <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">STATE</span></code> → “All subjects are
-back home, go to WAIT state” (see <a class="reference internal" href="#../system_operation/toolbar.md"><span class="xref myst">Toolbar Controls</span></a>).</p></li>
+back home, go to WAIT state” (see the <a class="reference internal" href="../system_operation/GUI.html#toolbar"><span class="std std-ref">Toolbar</span></a>).</p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -736,7 +763,7 @@ start.</p></li>
 <h2>No Sound</h2>
 <ul class="simple">
 <li><p><strong>The DAC is still used by the operating system.</strong> Its device profile must be set to
-<strong>Off</strong> (see <a class="reference internal" href="#../system_operation/sound.md"><span class="xref myst">Sound Integration</span></a>).</p></li>
+<strong>Off</strong> (see <a class="reference internal" href="../devices/sound.html"><span class="std std-doc">Sound</span></a>).</p></li>
 <li><p><strong>The sound device is not selected</strong>: <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code>
 ON, and the right <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code>.</p></li>
 <li><p><strong>The sound card mutes itself</strong> after a silence: disable its auto-mute (see the
@@ -751,11 +778,11 @@ ON, and the right <code class="docutils literal notranslate"><span class="pre">S
 <li><p><strong>Nothing is shown on the screen of the box</strong>: the system must be set to always detect
 two screens (<code class="docutils literal notranslate"><span class="pre">vc4.force_hotplug=3</span></code> in <code class="docutils literal notranslate"><span class="pre">/boot/firmware/cmdline.txt</span></code>), and the second
 screen must be connected to the second micro-HDMI port (see
-<a class="reference internal" href="#../system_operation/screen.md"><span class="xref myst">Screen Integration</span></a>).</p></li>
+<a class="reference internal" href="../devices/screen.html"><span class="std std-doc">Screen &amp; Touchscreen</span></a>).</p></li>
 <li><p><strong>Touches are not registered</strong>: check <code class="docutils literal notranslate"><span class="pre">TOUCHSCREEN_DEVICE</span></code> (the exact name of the
 device) and <code class="docutils literal notranslate"><span class="pre">TOUCH_RESOLUTION</span></code>.</p></li>
 <li><p><strong>Touches move the mouse pointer of the desktop</strong>: the udev rule that tells the desktop
-to ignore the touchscreen is missing (see <a class="reference internal" href="#../system_operation/screen.md"><span class="xref myst">Screen Integration</span></a>).</p></li>
+to ignore the touchscreen is missing (see <a class="reference internal" href="../devices/screen.html"><span class="std std-doc">Screen &amp; Touchscreen</span></a>).</p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -846,7 +873,7 @@ storage availability.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=720a0233"></script>
+      <script src="../_static/documentation_options.js?v=be00876f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

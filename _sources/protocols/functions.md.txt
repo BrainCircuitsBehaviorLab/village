@@ -1,4 +1,4 @@
-## Direct, Audio & Video Functions
+## Direct Functions
 
 Your project's `code` directory can hold three files that work together:
 
@@ -9,12 +9,12 @@ Your project's `code` directory can hold three files that work together:
 - **`sound_functions.py`** and **`video_functions.py`** — small libraries of
   generator functions that direct functions (or tasks) call to actually produce a
   sound or a visual stimulus, built on top of the `sound_device` and `screen` APIs
-  described in [Sound Integration](../system_operation/sound.md) and
-  [Screen Integration](../system_operation/screen.md).
+  described in [Sound](../devices/sound.md) and
+  [Screen & Touchscreen](../devices/screen.md).
 
 ---
 
-### Direct Functions
+### Writing Direct Functions
 
 Create a file inside your project's `code` directory (e.g. `direct_functions.py`) and define
 a class (e.g. `DirectFunctions`) that inherits from `DirectFunctionsBase`. The file and class names are
@@ -54,13 +54,13 @@ examples covering sound playback and on-screen stimuli.
 - **GUI** — the `FUNCTIONS` tab shows one button per registered function, labeled
   with its docstring. Clicking it calls that function right away.
 - **Camera trigger** — call `self.task.execute_function(N)` inside
-  `CameraTriggerBase.trigger`. See [Camera Triggers](camera.md#camera-triggers).
+  `CameraTriggerBase.trigger`. See [Camera Triggers](../devices/camera.md#reacting-to-the-animals-position).
 - **GPIO trigger** — call `self.task.execute_function(N)` inside `trigger_on` /
-  `trigger_off`. See [Custom GPIO Interaction](gpio_trigger.md).
+  `trigger_off`. See [GPIO](../devices/gpio.md).
 - **Scale trigger** — call `self.task.execute_function(N)` inside
-  `ScaleTriggerBase.on_weight`. See [Custom Scale Interaction](scale_trigger.md).
+  `ScaleTriggerBase.on_weight`. See [Scale](../devices/scale.md).
 - **Touchscreen trigger** — call `self.task.execute_function(N)` inside
-  `TouchTriggerBase.trigger`. See [Touchscreen](touchscreen.md).
+  `TouchTriggerBase.trigger`. See [Screen & Touchscreen](../devices/screen.md).
 - **Bpod softcodes** — if `BEHAVIOR_CONTROLLER` is `BPOD`, functions 1-98 can be
   triggered automatically from inside the state machine (see below).
 - **`OTHER` controller (a microcontroller you talk to yourself, or none at all)**
@@ -96,90 +96,21 @@ around — the task can send a softcode from the Raspberry Pi to Bpod
 (`self.task.bpod.send_softcode_to_bpod(N)`), for the *state machine* to branch on
 via `state_change_conditions={"SoftCodeN": "next_state"}`. That's a different
 mechanism (a Bpod input condition, not a direct-function trigger) — see
-the "Example" section of [Touchscreen](touchscreen.md).
+the "Example" section of [Screen & Touchscreen](../devices/screen.md).
 ```
 
 ---
 
-### Audio Functions
+### Sound and Video Functions
 
-`sound_functions.py` holds two kinds of functions:
-
-1. **Generic generators** (e.g. `tone_generator`, `whitenoise_generator`) that take
-   whatever arguments they need and return a numpy waveform array. Call them from
-   anywhere — a direct function, a task, a trigger — and pass the result to
-   `sound_device.load()`.
-2. **Calibration-sound wrappers** — thin wrappers around a generic generator that
-   fix every argument except `duration` and `gain`, since that's the signature the
-   Sound Calibration panel always calls them with. They are listed in
-   `sound_calibration_functions`, which fills the `SOUND` dropdown in the
-   [Sound Calibration](../calibrations/sound.md) panel.
-
-```python
-def tone_generator(duration: float, gain: float, frequency: int):
-    ...  # returns a numpy array
-
-def tone_600(duration: float, gain: float):
-    return tone_generator(duration=duration, gain=gain, frequency=600)
-
-sound_calibration_functions = [tone_600, ...]
-```
-
-```{admonition} Keep names in sync
-:class: warning
-A wrapper's `__name__` (`"tone_600"` above) is stored as the sound's identity in
-the calibration data, and is what you pass as `sound_name=` to
-`get_sound_gain(...)` everywhere else in the project. Rename a wrapper here and
-every call site referencing its old name has to be updated too, or the
-calibration lookup silently stops matching and raises a "not calibrated" error.
-```
-
----
-
-### Video Functions
-
-`video_functions.py` holds `draw_X_generator(...)` factories: each one takes the
-stimulus parameters and returns a `draw()` closure, meant to be passed to
-`screen.load_draw_function(draw_fn=...)` (see
-[Screen Integration](../system_operation/screen.md)). Qt then calls that `draw()`
-on every frame while `screen.start_drawing()` is active.
-
-```python
-from PyQt5.QtCore import QRect, Qt
-from PyQt5.QtGui import QPainter
-
-def draw_circle_generator(duration, x_pos, y_pos, diameter, color):
-    def draw():
-        with QPainter(screen) as painter:
-            painter.fillRect(painter.viewport(), screen.background_color)
-            if screen.elapsed_time < duration:
-                painter.setPen(Qt.NoPen)
-                painter.setBrush(color)
-                painter.drawEllipse(QRect(x_pos, y_pos, diameter, diameter))
-    return draw
-```
-
-Two things every `draw()` needs to do itself, since nothing does them
-automatically:
-
-- Fill the background first (`screen.background_color`) — Qt doesn't clear the
-  widget between paints, so skipping this leaves the previous frame's stimulus
-  on screen underneath the new one.
-- Check `screen.elapsed_time < duration` before painting anything — once the
-  duration is over, `draw()` just stops drawing the stimulus (falling back to
-  the plain background) until a new draw function is loaded.
+The functions that generate sounds (`sound_functions.py`) and visual stimuli
+(`video_functions.py`), which direct functions use, are explained with each device:
+[Sound](../devices/sound.md#sound-functions) and
+[Screen & Touchscreen](../devices/screen.md#video-functions).
 
 ---
 
 ### Adding your own functions
-
-```{admonition} sound_functions.py must have this exact name
-:class: warning
-The [Sound Calibration](../calibrations/sound.md) panel looks for a file named exactly
-`sound_functions.py` in `code/` to fill its `SOUND` dropdown with
-`sound_calibration_functions`. Unlike the classes of the other files, it is found by
-its name.
-```
 
 `sound_functions.py` and `video_functions.py` are plain modules, not subclasses —
 unlike `direct_functions.py` (or `camera_trigger.py`, `gpio_trigger.py`, ...),
@@ -196,6 +127,4 @@ from video_functions import draw_circle_generator, draw_rectangle_generator
 :hidden:
 
 Direct Functions Example <../examples/direct_functions.md>
-Sound Functions Example <../examples/sound_functions.md>
-Video Functions Example <../examples/video_functions.md>
 ```

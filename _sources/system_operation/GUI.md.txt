@@ -8,8 +8,7 @@ village
 
 When the GUI launches, the system automatically checks connections with essential components (such as cameras, temperature sensors, weight sensors, etc.). If any connection cannot be established, a warning message will display, and the Training Village will enter debug mode. For help resolving connection issues, refer to the [troubleshooting section][TROUBLE].
 
-Once the GUI is active, a menu will appear at the top with the following options: `MAIN`, `MONITOR`, `SUBJECTS`, `TASKS`, `DATA`, `CALIBRATION` and `SETTINGS`.
-
+Once the GUI is active, a menu will appear at the top with the following screens: `MAIN`, `MONITOR`, `SUBJECTS`, `TASKS`, `DATA`, `CALIBRATION` and `SETTINGS`, and a toolbar with the buttons described [below](#toolbar).
 
 ---
 
@@ -23,134 +22,86 @@ The default screen where the Raspberry Pi does not perform any rendering to disp
 ### MONITOR
 ![Monitor Training village screen](/_static/monitor_screen.webp)
 
-The `MONITOR` screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the operant box. Here, you can view images captured by the two system cameras: one positioned above the corridor and another focused inside the operant box.
-
-#### Primary Control Tabs
-Depending on your active configuration, several control tabs are available at the center of the screen:
-
-*   **`CORRIDOR`:** Provides manual and automated overrides for the RFID reader, doors, weighing scale, and temperature sensor. When the RFID system is toggled **OFF**,
-    animal identification is disabled, and no subjects will be permitted to enter the operant box.
-
-    *Lighting and camera exposure/thresholds are driven together by the `Corridor Cycle` control, which can be set to `DAY`, `NIGHT`, or `AUTO`. `DAY` turns the visible light **ON** and the IR light **OFF**, and applies the daytime camera exposure/threshold settings. `NIGHT` does the opposite: visible light **OFF**, IR light **ON**, and the nighttime camera exposure/threshold settings. `AUTO` switches automatically between `DAY` and `NIGHT` according to the actual time of day; the daytime/nighttime schedule can be customized under `SETTINGS` -> `CORRIDOR SETTINGS`.*
-
-*   **`BOX`:** Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
-    buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.
-
-    *The `Visible Light` and `IR Light` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.*
-
-    ```{admonition} The box must never be completely dark
-    :class: warning
-    The box camera is watched all the time, even between sessions, to check that no
-    animal is left inside. If its image stays completely black for 10 seconds, the system
-    treats the camera as failed and restarts it. Setting both lights to `AUTO` is only
-    safe if the box gets some light from another source (light coming in from outside, a
-    photogate, a port LED...), enough for the image not to be fully black. If that is not
-    the case, set the `IR Light` (or the `Visible Light`) to `ON` instead of `AUTO`.
-    ```
-
-    ```{admonition} A motor stops responding
-    :class: note
-    If a motor stops responding to `OPEN`/`CLOSE` after being physically disconnected and
-    reconnected, restart Village rather than assuming it's broken — see
-    [Troubleshooting][TROUBLE].
-    ```
-
-*   **`FUNCTIONS`:** Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
-    for writing and deploying these functions can be found in the [Direct Sound & Video Functions][FUNCTIONS] section.
-
-*   **`VIRTUAL MOUSE`:** Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness.
-    *   **Bpod Integration:** Simulate a nose-poke in any behavior port with a single click.
-    *   **Touchscreen Integration:** Simulate screen-touch events by sending precise coordinate inputs $(x, y)$.
-    *   **Position Tracking:** If real-time animal tracking is active within the operant box, you can simulate custom trajectories to verify location-based experimental triggers.
-
-
-#### Secondary Diagnostic Tabs
-A secondary group of tabs is located at the bottom of the screen to monitor system telemetry and history:
-
-*   **`INFO`:** Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.
-*   **`PLOT`:** Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.
-*   **`DETECTION SETTINGS`:** Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and operant box tracking systems. A comprehensive breakdown of these parameters is available in the [Animal Detection Section][DETECTION].
+The live images of the corridor and box cameras, with the controls of the hardware (doors, scales, lights, RFID reader...), the direct functions, the virtual mouse, and the events and detection settings. See [Monitor & Hardware Setup][MONITOR].
 
 ---
-
 
 ### SUBJECTS
 ![Subjects Training Village screen](/_static/subjects_screen.webp)
 
-In this section you can create new subjects and edit their settings. Check the [Subject Management Section][SUBJECT].
+In this section you can create new subjects and edit their settings. See [Subject Management][SUBJECT].
 
 ---
-
 
 ### TASKS
 ![Tasks Training Village screen](/_static/tasks_screen.webp)
 
-From this screen, tasks can be launched manually at any time.
+Run any task manually, with or without a subject, and test the training protocol. See [Manual Task Execution][MANUAL].
 
-The active training protocol is displayed on the left side, along with a list of all available tasks. Clicking on the training protocol allows you to test its functionality (check the [Manual Task Execution][MANUAL] section to know how). When you click on a task, task information is displayed, along with an options menu that includes the following settings:
-
-- `maximum_number_of_trials`: The task will automatically end once this number of trials is completed.
-- `maximum_duration`: The task will automatically end when this timer is reached.
-
-In addition to these settings, a list of all variables defined for this specific training protocol will appear. [The Training Protocol][CREATE] explains how to create a protocol and define its variables.
-
-Next to the `RUN TASK` button, which starts the task, the `Subject` selector opens a list of all available subjects, as well as the option "None." Selecting "None" runs the task without saving any data.
+---
 
 ### DATA
 ![Data Training village screen](/_static/data_screen.webp)
 
-On this screen, saved data is displayed. The following tables are accessible:
-
-*   **`EVENTS`:** A comprehensive system log that records animal entries, exits, and denied entry attempts. Selecting any specific event and clicking `VIDEO` opens the corresponding video recording of that moment.
-
-*   **`SESSIONS SUMMARY`:** A historical list of all completed training sessions. Selecting an item from this list grants access to its corresponding CSV file (available in both standard `DATA` and raw `DATA_RAW` formats), the session's video file, `VIDEO` and a user-configurable behavioral plot `PLOT`.
-
-*   **`TEMPERATURES`:** A chronological log of all recorded environmental temperature and humidity values within the system.
-
-*   **`SESSION_RAW`:** Displays the session currently in progress or the most recently completed one, rendered in real time (one row per registered hardware/behavioral event). Clicking `PLOT` opens a user-configurable, real-time graphical chart of the session.
-
-*   **`SESSION`:** Displays the session currently in progress or the most recently completed one, structured according to the final data storage format (parsed dynamically into one row per trial). Clicking `PLOT` opens a user-configurable, real-time graphical chart of the session.
-
-*   **Calibrations:** One table for each active calibration that stores data (e.g. `WATER CALIBRATION`, `SOUND CALIBRATION`, and any custom calibration), with all its saved measurements.
-
-
-A more detailed description of these tables, including their exact database schemas and storage paths, can be found in the [Saved Data][DATA] section.
+Browse the events, sessions, temperatures and calibrations, plot them and watch the videos. See [Data Visualization][DATAVIS].
 
 ---
 
 ### CALIBRATION
 ![Calibration Training village screen](/_static/calibration_screen.webp)
 
-This screen provides a dedicated panel for each calibration tool available on the system. A left-side menu lists every calibration relevant to your current hardware configuration; selecting an entry opens its panel on the right.
-
-Besides the calibration tools installed by default, you can create your own and have them appear here alongside the built-in ones — see the [Custom Calibrations][CALIBRATIONS] section for details.
-
-*   **`WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Always available: with Bpod it works out of the box; with any other controller, it needs a water calibration task written for that controller. See [Water Calibration](/calibrations/water.md).
-
-*   **`SOUND_CALIBRATION`:** Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when `USE_SOUNDCARD` is **ON**. See [Sound Calibration](/calibrations/sound.md).
-
-*   **`CAMERA_CALIBRATION`:** Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available. See [Camera Calibration](/calibrations/camera.md).
-
-*   **`CORRIDOR_THRESHOLD_CALIBRATION`:** Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result against a recorded corridor video. Only available when `USE_CORRIDOR` is **ON**. See [Corridor Threshold Calibration](/calibrations/thresholds.md).
-
-*   **`OPTOGRID_CALIBRATION`:** Provides a visual map of the OptoGrid device for composing an LED selection and inspecting it over Bluetooth. Always available. See [OptoGrid Calibration](/calibrations/optogrid.md).
+One panel for each calibration of the system. See [Calibration Overview][CALIBRATION].
 
 ---
 
 ### SETTINGS
 ![Settings Training village screen](/_static/settings_screen.webp)
 
-This section displays a comprehensive list of all modifiable system settings, organized into distinct categories for streamlined configuration. You can hover over any individual parameter item to view a tooltip with more detailed information.
+All the system settings, organized into categories. Hover over any setting to see a tooltip with more detailed information. The ones to configure first are explained in [System Settings][SETTINGS].
 
-The most critical parameters from this list will be discussed and modified step-by-step in the next section.
+---
+
+### Toolbar
+
+The top bar of the GUI contains a set of buttons for performing the following actions. Depending on the current system state, you will see different buttons available.
+
+#### `CHANGE STATE`
+
+Opens a dialog offering only the actions valid for the current state:
+
+- While the system believes a subject is inside the box but it is not (e.g. a door did not close properly and the animal escaped back to the home cage without being detected), it offers **"All subjects are back home, go to WAIT state."**
+- While the system is in the WAIT state, it offers **"Force data sync"** (forces an immediate synchronization, useful if the automatic sync did not run due to a connection failure, a network change, or any other issue) and **"Subject is inside the box"** (use this when the system believes there is no subject in the box but there is one — e.g. two mice entered the operant box simultaneously and the system detected one exiting, switching to WAIT while the other stayed inside).
+
+#### `STOP SYNC`
+
+By default, the system synchronizes data with an external device or server after each session ends. While syncing, animals cannot be detected or enter the operant box. `STOP SYNC` stops the current synchronization — useful during testing to avoid waiting for a sync after each test run, since it will run automatically at the end of the next session. Once synchronization is complete (or stopped), the system returns to the WAIT state and animals can enter again.
+
+#### `STOP TASK`
+
+Stops a running task. In automatic mode, pressing this button disconnects the RFID reader to prevent new animals from entering, and the system waits for the current animal to exit the box. If you remove the animal manually, use `CHANGE STATE` → "All subjects are back home, go to WAIT state" afterwards and re-enable the RFID reader.
+
+#### `ONLINE PLOTS`
+
+Shows live plots while a task is running. The plots displayed are configurable by the user. Only enabled while a task is actually running.
+
+#### `CHECK MICE`
+
+Confirms that the mice have been checked today. Shows `CHECK MICE` and turns orange until confirmed, either by clicking it or via the `/mice_checked` Telegram command; once confirmed, it shows `MICE OK` and stays disabled until the next reset, which happens at midnight. If the mice have not been checked by the time set in `SETTINGS` → `TELEGRAM SETTINGS` → `CHECK_MICE_TIME`, an alarm is triggered to remind you via Telegram.
+
+#### `ALARM`
+
+Shows the number of pending alarms and turns orange while any are pending (`NO ALARMS` when there are none). Clicking it acknowledges every pending alarm and stops their Telegram reminders.
+
+#### `EXIT`
+
+Shuts down the system.
 
 
 
 [TROUBLE]: /troubleshooting/troubleshooting.md
-[DETECTION]: /system_operation/detection.md
+[MONITOR]: /system_operation/corridor.md
 [SUBJECT]: /system_operation/subject.md
 [MANUAL]: /system_operation/manual.md
-[CREATE]: /protocols/creating.md
-[DATA]: /system_operation/data.md
-[CALIBRATIONS]: /advanced_customization/calibrations.md
-[FUNCTIONS]: /protocols/functions.md
+[DATAVIS]: /system_operation/data_visualization.md
+[CALIBRATION]: /calibrations/overview.md
+[SETTINGS]: /system_operation/settings.md

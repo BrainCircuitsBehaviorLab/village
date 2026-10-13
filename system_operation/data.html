@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Saved Data and Video - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Timing, Clocks &amp; Latencies" href="timing.html" /><link rel="prev" title="Animal Detection &amp; Tracking" href="detection.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Saved Data and Video - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Timing, Clocks &amp; Latencies" href="timing.html" /><link rel="prev" title="Data Visualization" href="data_visualization.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/data.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -85,14 +85,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="corridor.html">Monitor &amp; Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_visualization.html">Data Visualization</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/overview.html">Calibration Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
@@ -137,12 +139,37 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Sound &amp; Video Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/sound.html">Sound</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/screen.html">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
@@ -745,7 +772,7 @@ pixel detection is working correctly across all areas.</p>
 downside to leaving it permanently enabled too — it only adds a live visual aid on the
 <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen while you work.</p>
 </div>
-<p>See the <a class="reference internal" href="#/protocols/camera.md"><span class="xref myst">Custom Camera Drawing</span></a> section for how this <code class="docutils literal notranslate"><span class="pre">draw</span></code> (disk + screen) vs.
+<p>See the <a class="reference internal" href="../devices/camera.html"><span class="std std-doc">Custom Camera Drawing</span></a> section for how this <code class="docutils literal notranslate"><span class="pre">draw</span></code> (disk + screen) vs.
 <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> (screen only) split also applies to overlays you add yourself.</p>
 </section>
 <hr class="docutils" />
@@ -883,10 +910,10 @@ writes them back to the <code class="docutils literal notranslate"><span class="
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="detection.html">
+    <a href="data_visualization.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Animal Detection &amp; Tracking</div></div>
+        <span>Previous</span><div class="title">Data Visualization</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="timing.html">
@@ -914,7 +941,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=720a0233"></script>
+      <script src="../_static/documentation_options.js?v=be00876f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

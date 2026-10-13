@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>sound_functions.py - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="video_functions.py" href="video_functions.html" /><link rel="prev" title="direct_functions.py" href="direct_functions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>sound_functions.py - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Screen &amp; Touchscreen" href="../devices/screen.html" /><link rel="prev" title="Sound" href="../devices/sound.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/examples/sound_functions.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -85,14 +85,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Monitor &amp; Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data_visualization.html">Data Visualization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/overview.html">Calibration Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
@@ -100,7 +102,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/project_structure.html">Project Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">The Training Protocol</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="training_protocol.html">Training Protocol Example</a></li>
@@ -137,12 +139,37 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="../protocols/functions.html">Direct Sound &amp; Video Functions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="direct_functions.html">Direct Functions Example</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Sound Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="video_functions.html">Video Functions Example</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../devices/sound.html">Sound</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/screen.html">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
@@ -471,11 +498,11 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="2" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../protocol_index.html"><span itemprop="name">PROTOCOL &amp; TASK DESIGN</span></a>
+        <a itemprop="item" href="../devices_index.html"><span itemprop="name">DEVICES</span></a>
         <span>/</span>
         <meta itemprop="position" content="3" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="../protocols/functions.html"><span itemprop="name">Direct, Audio &amp; Video Functions</span></a>
+        <a itemprop="item" href="../devices/sound.html"><span itemprop="name">Sound</span></a>
         <span>/</span>
         <meta itemprop="position" content="4" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -649,16 +676,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="direct_functions.html">
+    <a href="../devices/sound.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">direct_functions.py</div></div>
+        <span>Previous</span><div class="title">Sound</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="video_functions.html">
+    <a href="../devices/screen.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">video_functions.py</div>
+        <div class="title">Screen &amp; Touchscreen</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -680,7 +707,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=720a0233"></script>
+      <script src="../_static/documentation_options.js?v=be00876f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

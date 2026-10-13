@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Water Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Sound Calibration" href="sound.html" /><link rel="prev" title="CALIBRATIONS" href="../calibrations_index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Water Calibration - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Sound Calibration" href="sound.html" /><link rel="prev" title="Calibration Overview" href="overview.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/calibrations/water.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -85,14 +85,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Monitor &amp; Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data_visualization.html">Data Visualization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">Calibration Overview</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="camera.html">Camera Calibration</a></li>
@@ -137,12 +139,37 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Sound &amp; Video Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/sound.html">Sound</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/screen.html">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
@@ -610,10 +637,10 @@ needs calibrating or the requested volume needs adjusting.</p>
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../calibrations_index.html">
+    <a href="overview.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">CALIBRATIONS</div></div>
+        <span>Previous</span><div class="title">Calibration Overview</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="sound.html">
@@ -641,7 +668,7 @@ needs calibrating or the requested volume needs adjusting.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=720a0233"></script>
+      <script src="../_static/documentation_options.js?v=be00876f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

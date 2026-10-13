@@ -88,5 +88,5 @@ it inherits from (`TrainingProtocolBase`, `CameraTriggerBase`, `OnlinePlotBase`.
 Only one class of each kind is used per project. Tasks are the exception, in the sense
 that the class name is the name of the task. The other exception is
 `sound_functions.py`, which must have exactly that name (see
-[Direct Sound & Video Functions](functions.md)).
+[Direct Functions](functions.md)).
 ```

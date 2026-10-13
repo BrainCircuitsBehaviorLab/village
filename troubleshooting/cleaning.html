@@ -85,14 +85,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Monitor &amp; Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data_visualization.html">Data Visualization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/overview.html">Calibration Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
@@ -137,12 +139,37 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Sound &amp; Video Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/sound.html">Sound</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/screen.html">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
@@ -527,7 +554,7 @@ data-aria-dark="Switch to auto color mode">
 <h1>Cleaning &amp; Routine Maintenance</h1>
 <p>This is a routine to maintain proper functioning and hygiene in the TV system.</p>
 <p><strong>Daily:</strong>
-Connect to the system once a day to make sure everything is working correctly, then click <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> (see <a class="reference internal" href="#/system_operation/toolbar.md"><span class="xref myst">Toolbar</span></a>) to confirm the mice are fine. Review <a class="reference internal" href="alarm.html"><span class="std std-doc">Telegram alarms</span></a> and resolve any issues, and review daily reports to monitor animals’ progression in training.</p>
+Connect to the system once a day to make sure everything is working correctly, then click <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> (see <a class="reference internal" href="../system_operation/GUI.html#toolbar"><span class="std std-ref">Toolbar</span></a>) to confirm the mice are fine. Review <a class="reference internal" href="alarm.html"><span class="std std-doc">Telegram alarms</span></a> and resolve any issues, and review daily reports to monitor animals’ progression in training.</p>
 <p><strong>Weekly:</strong>
 Clean the operant box and corridor. Clean and refill sucrose water in the operant box.</p>
 <p><strong>Biweekly:</strong>
@@ -536,7 +563,7 @@ Replace citric acid bottles. Change home cages and enrichment, ensure sufficient
 Deliver water manually to a specific mouse (as required). Calibrate the water delivery system (once every two months or if a malfunction is suspected; see <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a>). Clean lickports and remove dust from water ports (once every two months). Deep-clean the touchscreen, if your box has one.</p>
 <div class="warning admonition">
 <p class="admonition-title">Notes on cleaning</p>
-<p>Before cleaning, check whether the operant box is occupied. If occupied, stop the task with <code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">TASK</span></code> and wait for the animal to leave the box (if you remove it by hand, use <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">STATE</span></code> → “All subjects are back home, go to WAIT state” afterwards; see <a class="reference internal" href="#/system_operation/toolbar.md"><span class="xref myst">Toolbar</span></a>). Block the entrance to the corridor with a plastic blocker. After cleaning, verify that all electronic components in the operant box and corridor are functioning properly.</p>
+<p>Before cleaning, check whether the operant box is occupied. If occupied, stop the task with <code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">TASK</span></code> and wait for the animal to leave the box (if you remove it by hand, use <code class="docutils literal notranslate"><span class="pre">CHANGE</span> <span class="pre">STATE</span></code> → “All subjects are back home, go to WAIT state” afterwards; see <a class="reference internal" href="../system_operation/GUI.html#toolbar"><span class="std std-ref">Toolbar</span></a>). Block the entrance to the corridor with a plastic blocker. After cleaning, verify that all electronic components in the operant box and corridor are functioning properly.</p>
 </div>
 </section>
 
@@ -577,7 +604,7 @@ Deliver water manually to a specific mouse (as required). Calibrate the water de
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=720a0233"></script>
+      <script src="../_static/documentation_options.js?v=be00876f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

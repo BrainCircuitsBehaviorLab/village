@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Manual Task Execution - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Corridor Hardware Setup" href="corridor.html" /><link rel="prev" title="Subject Management" href="subject.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Manual Task Execution - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Monitor &amp; Hardware Setup" href="corridor.html" /><link rel="prev" title="Subject Management" href="subject.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/system_operation/manual.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -85,14 +85,16 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="settings.html">System Settings</a></li>
 <li class="toctree-l3"><a class="reference internal" href="subject.html">Subject Management</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Manual Task Execution</a></li>
-<li class="toctree-l3"><a class="reference internal" href="corridor.html">Corridor Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="corridor.html">Monitor &amp; Hardware Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_visualization.html">Data Visualization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">Saved Data and Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timing.html">Timing, Clocks &amp; Latencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="state_machine.html">System Logic (State Machine)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/overview.html">Calibration Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
@@ -137,12 +139,37 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Sound &amp; Video Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/sound.html">Sound</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/screen.html">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
@@ -580,8 +607,19 @@ each one.</p>
 <hr class="docutils" />
 <section id="launching-a-task">
 <h2>Launching a Task</h2>
-<p>Select a task from the list. You can optionally select a subject from the subject
-selector before running it:</p>
+<p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.webp" /></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TASKS</span></code> screen shows the active training protocol on the left, along with a list of
+all available tasks. When you click on a task, its description (<code class="docutils literal notranslate"><span class="pre">self.info</span></code>) is
+displayed, along with its settings, organized in the tabs defined by the training
+protocol (see <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">The Training Protocol</span></a>). Two more settings are
+added for manual runs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: The task will automatically end once this number of trials
+is completed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>: The task will automatically end when this time is reached.</p></li>
+</ul>
+<p>You can optionally select a subject from the <code class="docutils literal notranslate"><span class="pre">Subject</span></code> selector, next to the <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code>
+button, before running it:</p>
 <ul class="simple">
 <li><p><strong>No subject selected (<code class="docutils literal notranslate"><span class="pre">None</span></code>):</strong> The task runs with the default settings defined in
 <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>. No data or video is saved.</p></li>
@@ -618,7 +656,7 @@ without making any actual changes. The settings displayed are never saved or app
     <a href="corridor.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Corridor Hardware Setup</div>
+        <div class="title">Monitor &amp; Hardware Setup</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -640,7 +678,7 @@ without making any actual changes. The settings displayed are never saved or app
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=720a0233"></script>
+      <script src="../_static/documentation_options.js?v=be00876f"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
