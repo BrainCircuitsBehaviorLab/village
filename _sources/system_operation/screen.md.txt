@@ -169,7 +169,7 @@ Three settings control touchscreen behaviour:
 | `TOUCH_INTERVAL` | Minimum seconds between two registered touches (debounce) | `0.5` |
 
 ```{admonition} Note
-:class: tip
+:class: note
 `TOUCH_RESOLUTION` is the internal coordinate range of the touch digitizer hardware —
 it is independent of and usually different from the display pixel resolution.
 The system uses both values to convert raw touch coordinates into screen pixel positions.
@@ -221,7 +221,7 @@ Event type 3 (EV_ABS)
 Set `TOUCH_RESOLUTION` to `[Max_X + 1, Max_Y + 1]` — in this example `[4096, 4096]`.
 
 ```{admonition} Note
-:class: tip
+:class: note
 If `evtest` is not installed: `sudo apt install evtest`
 ```
 

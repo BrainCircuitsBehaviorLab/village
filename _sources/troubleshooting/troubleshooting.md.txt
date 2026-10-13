@@ -63,7 +63,7 @@ ls -l /dev/controller
 6. **Fix Missing Symlink:** If the raw device (`ttyACM*` or `ttyUSB*`) appears but `/dev/controller` is missing, inspect the system logs by typing `dmesg` to find the exact port configuration, then review your rule file at `/etc/udev/rules.d/99-usb.rules`.
 
 ```{admonition} Understanding Symlinks, udev Rules & /dev/controller
-:class: tip
+:class: note
 A **symlink** (short for symbolic link) is a software shortcut in Linux that transparently redirects one file path to another.
 
 * **Why it is necessary:** When you connect a serial device (like a Bpod or Arduino) to the Raspberry Pi, Linux dynamically assigns it a generic node path like `/dev/ttyACM0` or `/dev/ttyUSB0`. However, if the device is unplugged, if the Pi reboots, or if another USB peripheral is connected, Linux might randomly reassign that hardware to `/dev/ttyACM1`. If the Training Village software were hardcoded to look for a static name like `ttyACM0`, the connection would instantly break.

@@ -642,7 +642,7 @@ by your own code.</p></li>
 <ol class="arabic simple" start="6">
 <li><p><strong>Fix Missing Symlink:</strong> If the raw device (<code class="docutils literal notranslate"><span class="pre">ttyACM*</span></code> or <code class="docutils literal notranslate"><span class="pre">ttyUSB*</span></code>) appears but <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> is missing, inspect the system logs by typing <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> to find the exact port configuration, then review your rule file at <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-usb.rules</span></code>.</p></li>
 </ol>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">Understanding Symlinks, udev Rules &amp; /dev/controller</p>
 <p>A <strong>symlink</strong> (short for symbolic link) is a software shortcut in Linux that transparently redirects one file path to another.</p>
 <ul class="simple">
@@ -869,7 +869,7 @@ storage availability.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
+      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

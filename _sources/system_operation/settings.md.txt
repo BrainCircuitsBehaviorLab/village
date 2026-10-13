@@ -10,7 +10,7 @@ Some initial settings must be configured before the system can be used.  Navigat
 *   **`CORRIDOR SETTINGS`:** These settings only appear once `USE_CORRIDOR` (at the top of this section) is toggled **ON**; turning it off hides the rest of the section and disables the whole Corridor subsystem (RFID, scale, temperature sensor, motors, lighting, and the dedicated corridor camera). Define `DAYTIME` and `NIGHTTIME` to set the hours used by the `Corridor Cycle` control's `AUTO` mode (see the [GUI][GUI] section) to switch lighting and camera exposure/thresholds between day and night values. Adjust `DETECTION_COLOR` if you are tracking light-colored animals on a dark corridor background, and `MIN_WEIGHT_THRESHOLD`/`MAX_WEIGHT_THRESHOLD` to filter out invalid weight readings. `MOTOR3_CORRIDOR` and `MOTOR4_CORRIDOR` let you declare whether those optional motors are physically installed.
 
     ```{admonition} Note
-    :class: tip
+    :class: note
     Turning `USE_CORRIDOR` **OFF** also hides `TELEGRAM SETTINGS`. `USE_CORRIDOR` should only be OFF for setups running tasks manually rather than through the fully automated corridor pipeline, and without the corridor there is nothing for Telegram to monitor or alert on remotely.
     ```
 
@@ -18,7 +18,7 @@ Some initial settings must be configured before the system can be used.  Navigat
 
 *   **`CONTROLLER SETTINGS`:** Select your primary behavioral control hardware architecture: `BPOD` (state machine construction, event/state logging and softcodes are all built in), or `OTHER` (any other microcontroller you talk to yourself from within the task, or no microcontroller at all if you control everything from the Raspberry Pi). `CONTROLLER_PORT` is only actually used when `BPOD` is selected, or when an `OTHER` task talks to an external microcontroller over serial.
     ```{admonition} Note
-    :class: tip
+    :class: note
     The system automatically creates a symlink named `/dev/controller` pointing directly to any device connected to the bottom USB port adjacent to the Raspberry Pi's native RJ45 Ethernet jack.
     ```
 

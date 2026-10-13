@@ -6,7 +6,7 @@ If you purchased a Training Village from us, the system arrives fully pre-assemb
 We provide the Raspberry Pi along with an SD card that already contains the operating system (Raspberry Pi OS) and all required software pre-installed. If you ever need to write this image onto a new SD card yourself, see [Raspberry Pi Disk Image][IMAGE] for the image and step-by-step instructions.
 
 ```{admonition} Build-It-Yourself
-:class: tip
+:class: note
 If you prefer to build the Training Village yourself, start by reviewing the complete list of required parts and the plans for all 3D-printable pieces in [List of Parts & Design Files][PLANS]. Once you have your own Raspberry Pi, you can either copy the [Raspberry Pi Disk Image][IMAGE] onto its SD card or [install everything from scratch][SOFTWARE].
 ```
 

@@ -90,7 +90,7 @@ self.bpod.add_state(
 ```
 
 ```{admonition} This is not the only softcode channel
-:class: tip
+:class: note
 The example above is Bpod → Raspberry Pi. There is also a channel the other way
 around — the task can send a softcode from the Raspberry Pi to Bpod
 (`self.task.bpod.send_softcode_to_bpod(N)`), for the *state machine* to branch on

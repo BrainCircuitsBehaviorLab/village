@@ -82,7 +82,7 @@ systemName/
   `task`, `duration`, `trials`, `water`, `settings`.
 
   ```{admonition} Note
-  :class: tip
+  :class: warning
   For the `water` column to be populated, water intake must be explicitly recorded within
   the task definition (see [PROTOCOL & TASK DESIGN][CREATE]).
   ```
@@ -172,7 +172,7 @@ delimiting each active tracking area. This option is configurable under `MONITOR
   preview widget only — it is **never** encoded into the saved video, regardless of
   whether it is enabled or disabled.
 
-```{tip}
+```{note}
 In practice, both can be left permanently enabled, though for different reasons:
 
 Keep `VIEW_DETECTION_CORRIDOR` permanently enabled. Corridor recordings are not
@@ -240,6 +240,7 @@ with the following fixed columns: `session`, `date`, `trial`, `subject`, `task`,
 `system_name`, `run_mode`.
 
 ```{admonition} run_mode
+:class: note
 The `run_mode` field is set to `Manual` if the session was launched manually from the
 GUI, or `Auto` if it was triggered automatically upon detecting an animal in the corridor.
 ```
@@ -254,7 +255,7 @@ panel listing all session parameters will appear; the `observations` field is ed
 and empty by default.
 
 ```{admonition} Tip
-:class: tip
+:class: note
 Although `.json` files already capture all parameters used in a session, it is good
 practice to also record relevant variables from within the task using `register_value()`,
 as this makes them directly accessible in the `.csv` file.

@@ -565,7 +565,7 @@ data-aria-dark="Switch to auto color mode">
 <section id="detection-in-the-corridor">
 <h2>Detection in the Corridor</h2>
 <p>The physical corridor is typically constructed using white 3D-printing filament, which optimizes the detection of dark-colored animals. However, if your facility uses light-colored animals, the corridor can be printed in black. You can easily invert the binary logic by configuring <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">DETECTION_COLOR</span></code>.</p>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">Note</p>
 <p>Toggling the <code class="docutils literal notranslate"><span class="pre">DETECTION_COLOR</span></code> parameter automatically synchronizes the pixel detection logic across both the corridor and the operant box cameras simultaneously.</p>
 </div>
@@ -580,7 +580,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 <a class="reference internal image-reference" href="../_images/areas.webp"><img alt="../_images/areas.webp" class="align-center" src="../_images/areas.webp" style="width: 40%;" />
 </a>
-<div class="tip admonition">
+<div class="warning admonition">
 <p class="admonition-title">Important</p>
 <p>Access is granted only when Areas 1, 2, and 4 are empty and Area 3 is occupied by
 exactly one animal. Consequently, Area 3 should be sized to fully accommodate a single
@@ -626,7 +626,7 @@ count condition, described below.</p>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code>:</strong> Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates <span class="math notranslate nohighlight">\((x, y)\)</span> entering a <code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code> zone, it instantly fires a user-defined Python callback function (see <a class="reference internal" href="../protocols/camera.html"><span class="std std-doc">Camera Interaction</span></a>). This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.</p></li>
 </ul>
 <p>In the reference image above, the corridor and the touchscreen area are elevated and represent the zones where animals are expected to be. The blue and red zones, on the floor, should remain free of animals unless one has jumped into them.</p>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">Note</p>
 <p>Every time the detection algorithm processes a frame and extracts the animal’s <span class="math notranslate nohighlight">\((x, y)\)</span> coordinates, it passes them to a customizable tracking function. While this is primarily used to fire actions when entering a designated <code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code> zone, you can also write custom code that depends entirely on the continuous coordinate stream to log trajectories or trigger position-dependent stimuli.</p>
 </div>
@@ -683,7 +683,7 @@ count condition, described below.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
+      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

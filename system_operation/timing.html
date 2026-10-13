@@ -586,7 +586,7 @@ exposed through <code class="docutils literal notranslate"><span class="pre">tim
 <p class="admonition-title">Important</p>
 <p>Do not use <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>. Always use <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> and <code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code>.</p>
 </div>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">What is a monotonic clock?</p>
 <p>Unlike the system wall clock, a monotonic clock guarantees that time always advances steadily and never jumps forward or steps backward. Wall clocks are prone to sudden time shifts caused by:</p>
 <ul class="simple">
@@ -709,7 +709,7 @@ Raspberry Pi, leading to greater stimulus presentation latency. Because the next
 is preloaded in the buffer while the current one is displayed, the latency from issuing
 a display command to the frame appearing on screen spans approximately one full frame
 plus the remaining portion of the current frame: <strong>mean = 24.9 ms, SD = 7.5 ms</strong>.</p>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">CPU Load and Latency</p>
 <p>Communication and action latencies are both sensitive to CPU load. The platform
 implements several measures to keep CPU usage low during sessions:</p>
@@ -793,7 +793,7 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
 </tbody>
 </table>
 </div>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">Note on Latency Measurements</p>
 <p>All latency values reported here were obtained experimentally using an oscilloscope. Visual stimulus latencies were measured with a photodiode placed on the display, while auditory stimulus latencies were measured using a direct electrical connection to the audio signal. These measurements correspond to the default system configuration described above. Any modifications to camera settings, display resolution, or other relevant hardware or software parameters may affect latency and should therefore be validated with new measurements. For experiments requiring precise temporal control, we strongly recommend measuring latencies directly within the specific experimental setup rather than relying solely on the reference values provided here.</p>
 </div>
@@ -838,7 +838,7 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
+      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

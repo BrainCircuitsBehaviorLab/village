@@ -32,7 +32,7 @@ Training Village.
 ```
 
 ```{admonition} Note
-:class: tip
+:class: note
 This configuration step only needs to be done once. The "Off" profile selection persists
 across reboots, so the DAC will remain available to the Training Village after the system
 restarts.
@@ -61,7 +61,7 @@ finished yet: `play` then waits for that stop to complete and plays immediately
 after.
 
 ```{admonition} Fade-in / fade-out ramp
-:class: tip
+:class: note
 If the `SOUND_RAMP_MS` setting (`SETTINGS` → `SOUND SETTINGS`) is set to a value other
 than zero, a raised-cosine ramp of that duration is applied automatically to every sound:
 at its start, at its end, and whenever `stop` cuts playback short. This smooths out the

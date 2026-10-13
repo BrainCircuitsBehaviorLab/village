@@ -642,7 +642,7 @@ the previous session.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code></strong>: Summary table of all completed sessions. A new row is
 appended each time a session ends. Columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">weight</span></code>,
 <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">trials</span></code>, <code class="docutils literal notranslate"><span class="pre">water</span></code>, <code class="docutils literal notranslate"><span class="pre">settings</span></code>.</p>
-<div class="tip admonition">
+<div class="warning admonition">
 <p class="admonition-title">Note</p>
 <p>For the <code class="docutils literal notranslate"><span class="pre">water</span></code> column to be populated, water intake must be explicitly recorded within
 the task definition (see <a class="reference internal" href="../protocols/project_structure.html"><span class="std std-doc">PROTOCOL &amp; TASK DESIGN</span></a>).</p>
@@ -758,8 +758,8 @@ it is burnt into the saved video file as well as the live preview.</p></li>
 preview widget only — it is <strong>never</strong> encoded into the saved video, regardless of
 whether it is enabled or disabled.</p></li>
 </ul>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>In practice, both can be left permanently enabled, though for different reasons:</p>
 <p>Keep <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION_CORRIDOR</span></code> permanently enabled. Corridor recordings are not
 critical data, and having the overlay burnt in makes it easy to verify at a glance that
@@ -836,7 +836,7 @@ is written to <code class="docutils literal notranslate"><span class="pre">MSG</
 raw data. Instead of one row per event, this file contains one row per trial. It begins
 with the following fixed columns: <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>,
 <code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>.</p>
-<div class="admonition-run-mode admonition">
+<div class="note admonition">
 <p class="admonition-title">run_mode</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">Manual</span></code> if the session was launched manually from the
 GUI, or <code class="docutils literal notranslate"><span class="pre">Auto</span></code> if it was triggered automatically upon detecting an animal in the corridor.</p>
@@ -849,7 +849,7 @@ GUI, or <code class="docutils literal notranslate"><span class="pre">Auto</span>
 <p>To add a note to a session, click on its entry in <code class="docutils literal notranslate"><span class="pre">sessions_summary</span></code> within the GUI. A
 panel listing all session parameters will appear; the <code class="docutils literal notranslate"><span class="pre">observations</span></code> field is editable
 and empty by default.</p>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">Tip</p>
 <p>Although <code class="docutils literal notranslate"><span class="pre">.json</span></code> files already capture all parameters used in a session, it is good
 practice to also record relevant variables from within the task using <code class="docutils literal notranslate"><span class="pre">register_value()</span></code>,
@@ -937,7 +937,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
+      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

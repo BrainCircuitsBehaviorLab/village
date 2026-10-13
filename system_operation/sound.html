@@ -581,7 +581,7 @@ system holds exclusive access to the device, preventing the Training Village fro
 it. Setting the profile to <strong>Off</strong> releases the device and makes it available for the
 Training Village.</p>
 </div>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">Note</p>
 <p>This configuration step only needs to be done once. The “Off” profile selection persists
 across reboots, so the DAC will remain available to the Training Village after the system
@@ -608,7 +608,7 @@ sound short before it finishes on its own.</p>
 where <code class="docutils literal notranslate"><span class="pre">play</span></code> is <strong>not</strong> instant is calling it right after a <code class="docutils literal notranslate"><span class="pre">stop</span></code> that hasn’t
 finished yet: <code class="docutils literal notranslate"><span class="pre">play</span></code> then waits for that stop to complete and plays immediately
 after.</p>
-<div class="tip admonition">
+<div class="note admonition">
 <p class="admonition-title">Fade-in / fade-out ramp</p>
 <p>If the <code class="docutils literal notranslate"><span class="pre">SOUND_RAMP_MS</span></code> setting (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>) is set to a value other
 than zero, a raised-cosine ramp of that duration is applied automatically to every sound:
@@ -730,7 +730,7 @@ WAV files at the same sample rate as the <code class="docutils literal notransla
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=ce1ed774"></script>
+      <script src="../_static/documentation_options.js?v=a23e38b3"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

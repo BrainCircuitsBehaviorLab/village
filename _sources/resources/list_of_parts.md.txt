@@ -30,7 +30,12 @@ These lists cover the home cages, the corridor and the Raspberry Pi. The operant
 *   1 x 1 kg Load Cell (Note: The custom Corridor Board integrates the HX711 amplifier onboard; only the physical load cell sensor is needed)
 *   2 x Standard-size servo motor (≥5 kg/cm torque, 5V)
 *   1 x [SparkFun RFID Reader ID-20LA (125 kHz)](https://www.sparkfun.com/rfid-reader-id-20la-125-khz.html)
-*   1 x 5-pin JST-PH connector
+*   1 x 5-pin JST-PH connector (to wire the RFID reader), made with:
+    *   1 x [JST PHR-5 housing](https://www.digikey.es/es/products/detail/jst-sales-america-inc/PHR-5/608605)
+    *   5 x [JST SPH-002T-P0.5S crimp contacts](https://www.digikey.es/es/products/detail/jst-sales-america-inc/SPH-002T-P0.5S/527358)
+    *   5 x 24–26 AWG wires (crimp the contacts with a crimping tool)
+    *   Alternative, already crimped (no tool needed): a pack of
+        [JST-PH 2.0 mm 5-pin connectors with wires](https://www.amazon.es/dp/B0CBWZVNXS)
 *   1 x Set of RFID Glass Transponder Capsules (125 kHz) for animal identification
 *   1 x Complete set of 3D-printed structural components
 *   1 x 3mm Matte White Acrylic Base (laser-cut or CNC-machined)
@@ -67,7 +72,13 @@ These lists cover the home cages, the corridor and the Raspberry Pi. The operant
 *   1 x Custom Corridor Board
 *   1 x Custom Box Board
 *   2 x Standard Ethernet Cables (used to interface the Corridor and Box satellite boards to the Main HAT)
-*   2 x DC Barrel Jack Power Cables (5V, used to power the Corridor and Box satellite boards from the Main HAT)
+*   2 x DC power cables with a 5.5 × 2.1 mm barrel plug on both ends (5V, to power the Corridor and Box satellite boards from the Main HAT). Each one is made
+    with:
+    *   2 x 5.5 × 2.1 mm barrel plugs for cable, one of these two kinds:
+        *   With screw terminals, no soldering needed:
+            [Adafruit 369](https://www.digikey.es/es/products/detail/adafruit-industries-llc/369/5629435)
+        *   To solder: [CUI PP3-002A](https://www.digikey.es/es/products/detail/cui-devices/PP3-002A/992136)
+    *   A 2-conductor cable of the required length, 22 AWG (0.35 mm²) or thicker
 *   2 x 5x20 mm Fuses (250V, 5A)
 *   2 x Extra-tall GPIO Header Spacer/Extension (for vertical clearance between the Pi and the Main HAT, and between the Main HAT and the optional Raspberry Pi DAC Pro)
 

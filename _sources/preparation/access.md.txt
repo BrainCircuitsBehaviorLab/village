@@ -24,7 +24,7 @@ AnyDesk is highly reliable, easy to deploy, and its free tier is fully sufficien
 1. Download and install AnyDesk on your external workstation, laptop, or mobile phone.
 2. Launch the application, type the Raspberry Pi’s unique AnyDesk Address into the connection bar, and enter your preset unattended access password when prompted.
 
-```{tip}
+```{note}
 You can rename and save this connection to your favorites for quick access.
 ```
 
@@ -56,7 +56,7 @@ Our system explicitly runs on an **X11 display server** instead of Wayland (whic
 ---
 
 ```{admonition} Note
-:class: tip
+:class: note
 Once remote access is successfully configured, we highly recommend disconnecting the keyboard, mouse, and monitor, and completing the remaining setup steps remotely.
 ```
 

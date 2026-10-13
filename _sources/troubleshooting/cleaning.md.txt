@@ -14,7 +14,7 @@ Replace citric acid bottles. Change home cages and enrichment, ensure sufficient
 Deliver water manually to a specific mouse (as required). Calibrate the water delivery system (once every two months or if a malfunction is suspected; see [Water Calibration][WATER]). Clean lickports and remove dust from water ports (once every two months). Deep-clean the touchscreen, if your box has one.
 
 ```{admonition} Notes on cleaning
-:class: tip
+:class: warning
 Before cleaning, check whether the operant box is occupied. If occupied, stop the task with `STOP TASK` and wait for the animal to leave the box (if you remove it by hand, use `CHANGE STATE` → "All subjects are back home, go to WAIT state" afterwards; see [Toolbar][TOOLBAR]). Block the entrance to the corridor with a plastic blocker. After cleaning, verify that all electronic components in the operant box and corridor are functioning properly.
 ```
 

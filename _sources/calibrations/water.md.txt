@@ -40,7 +40,7 @@ recent one per port. `DELETE CALIBRATION` discards the points collected so far (
 confirmation) without saving them.
 
 ```{admonition} Tip
-:class: tip
+:class: note
 If you're not sure what time to start with, begin with a short opening time (a few
 ms). You can always delete points later that turn out to be far outside the range of
 interest for your tasks.

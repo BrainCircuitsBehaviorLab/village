@@ -51,7 +51,7 @@ Two more parameters govern the backup and deletion behavior:
   blocking other animals from accessing the operant box.
 
 ```{admonition} Note
-:class: tip
+:class: note
 When synchronizing to a remote server, the `SERVER_PORT` field can be left blank if no
 specific port needs to be defined for the SSH connection.
 ```
