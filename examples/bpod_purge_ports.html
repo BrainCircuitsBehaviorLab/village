@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>bpod_purge_ports.py - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Tasks (Arduino or other microcontroller)" href="../protocols/tasks_arduino.html" /><link rel="prev" title="bpod_example_outputs_and_events.py" href="bpod_example_outputs_and_events.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>bpod_purge_ports.py - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Tasks (Arduino)" href="../protocols/tasks_arduino.html" /><link rel="prev" title="bpod_outputs_and_events.py" href="bpod_outputs_and_events.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/examples/bpod_purge_ports.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -118,12 +118,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="bpod_6_delay.html">bpod_6_delay.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bpod_area2_sound.html">bpod_area2_sound.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bpod_touchscreen.html">bpod_touchscreen.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bpod_global_timer.html">bpod_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bpod_outputs_and_events.html">bpod_outputs_and_events.py</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">bpod_purge_ports.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_arduino.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_2_passive.html">arduino_2_passive.py</a></li>
@@ -145,7 +145,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">TASK DEVICES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="camera_draw.html">Camera Draw Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="camera_trigger.html">Camera Trigger Example</a></li>
@@ -594,7 +594,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="33"><span class="sd">        valve open for exactly as long as the poke is held (the valve</span>
 </span><span data-line="34"><span class="sd">        isn't re-listed in the next state, so it closes automatically the</span>
 </span><span data-line="35"><span class="sd">        moment the poke ends -- same pattern as the LED-until-poke-out</span>
-</span><span data-line="36"><span class="sd">        states in bpod_example_outputs_and_events.py).</span>
+</span><span data-line="36"><span class="sd">        states in bpod_outputs_and_events.py).</span>
 </span><span data-line="37"><span class="sd">        """</span>
 </span><span data-line="38">
 </span><span data-line="39">        <span class="bp">self</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span>
@@ -664,16 +664,16 @@ data-aria-dark="Switch to auto color mode">
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="bpod_example_outputs_and_events.html">
+    <a href="bpod_outputs_and_events.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">bpod_example_outputs_and_events.py</div></div>
+        <span>Previous</span><div class="title">bpod_outputs_and_events.py</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="../protocols/tasks_arduino.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Tasks (Arduino or other microcontroller)</div>
+        <div class="title">Tasks (Arduino)</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -695,7 +695,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=be00876f"></script>
+      <script src="../_static/documentation_options.js?v=61a66734"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

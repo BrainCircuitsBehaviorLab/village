@@ -33,7 +33,7 @@ class BpodPurgePorts(TaskBase):
         valve open for exactly as long as the poke is held (the valve
         isn't re-listed in the next state, so it closes automatically the
         moment the poke ends -- same pattern as the LED-until-poke-out
-        states in bpod_example_outputs_and_events.py).
+        states in bpod_outputs_and_events.py).
         """
 
         self.bpod.add_state(

@@ -118,12 +118,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="bpod_6_delay.html">bpod_6_delay.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bpod_area2_sound.html">bpod_area2_sound.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bpod_touchscreen.html">bpod_touchscreen.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bpod_global_timer.html">bpod_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bpod_outputs_and_events.html">bpod_outputs_and_events.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bpod_purge_ports.html">bpod_purge_ports.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_arduino.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_2_passive.html">arduino_2_passive.py</a></li>
@@ -145,7 +145,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">TASK DEVICES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="camera_draw.html">Camera Draw Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="camera_trigger.html">Camera Trigger Example</a></li>
@@ -479,7 +479,7 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#training-stages">Training stages</a></li>
+<li><a class="reference internal" href="#training-stages-follow-the-light">Training stages: Follow the Light</a></li>
 <li><a class="reference internal" href="#other-tasks-demos-and-tools">Other tasks, demos and tools</a></li>
 </ul>
 </div></div>
@@ -561,9 +561,9 @@ data-aria-dark="Switch to auto color mode">
           <section id="task-examples-bpod">
 <h1>Task Examples (Bpod)</h1>
 <p>Tasks whose trials are run by a Bpod state machine (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>). Each page shows the state machine diagram of the task.</p>
-<section id="training-stages">
-<h2>Training stages</h2>
-<p>The six tasks of the <a class="reference internal" href="training_protocol.html"><span class="std std-doc">training protocol</span></a>, in order.</p>
+<section id="training-stages-follow-the-light">
+<h2>Training stages: Follow the Light</h2>
+<p><em>Follow the Light</em> is a two-alternative forced choice (2AFC) task: the animal has to poke the side port that lights up first. It is learned in six stages, from habituation to the final task, where the second side light turns on after a delay that gets shorter (and harder) as the animal improves. The six tasks of the <a class="reference internal" href="training_protocol.html"><span class="std std-doc">training protocol</span></a>, in order:</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -611,10 +611,10 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-odd"><td class="text-left"><p><a class="reference internal" href="bpod_touchscreen.html"><span class="std std-doc">bpod_touchscreen.py</span></a></p></td>
 <td class="text-left"><p>Touchscreen task: touching the rectangle that stays on screen gives water; touching the one that disappears sooner doesn’t.</p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><a class="reference internal" href="bpod_example_global_timer.html"><span class="std std-doc">bpod_example_global_timer.py</span></a></p></td>
+<tr class="row-even"><td class="text-left"><p><a class="reference internal" href="bpod_global_timer.html"><span class="std std-doc">bpod_global_timer.py</span></a></p></td>
 <td class="text-left"><p>Demo, not a training task: a Bpod global timer bounding the whole trial.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a class="reference internal" href="bpod_example_outputs_and_events.html"><span class="std std-doc">bpod_example_outputs_and_events.py</span></a></p></td>
+<tr class="row-odd"><td class="text-left"><p><a class="reference internal" href="bpod_outputs_and_events.html"><span class="std std-doc">bpod_outputs_and_events.py</span></a></p></td>
 <td class="text-left"><p>Demo, not a training task: the Bpod primitives step by step — LEDs, valves, softcodes, TTL outputs and inputs.</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><a class="reference internal" href="bpod_purge_ports.html"><span class="std std-doc">bpod_purge_ports.py</span></a></p></td>
@@ -663,7 +663,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=be00876f"></script>
+      <script src="../_static/documentation_options.js?v=61a66734"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

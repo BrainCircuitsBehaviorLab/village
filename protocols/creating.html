@@ -118,12 +118,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_global_timer.html">bpod_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_outputs_and_events.html">bpod_outputs_and_events.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="tasks_arduino.html">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
@@ -145,7 +145,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">TASK DEVICES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
@@ -563,7 +563,8 @@ data-aria-dark="Switch to auto color mode">
 (the names are up to you; only one training protocol is used per project).</p>
 <p>The code on this page is taken from the training protocol of the example tasks
 (<a class="reference internal" href="../examples/training_protocol.html"><span class="std std-doc">training_protocol.py</span></a>), which moves each subject
-through six Bpod stages, from habituation to a delay discrimination task:</p>
+through the six Bpod stages of <em>Follow the Light</em>, a 2AFC task, from habituation to a
+delay discrimination task:</p>
 <!-- The code on this page is included from docs/source/examples/files/training_protocol.py,
 selected by method name (pyobject) and by some lines of text (start-at / end-before).
 If those lines change there, update them here too, and check the page: a block whose
@@ -572,25 +573,27 @@ text is not found can come out empty. -->
 </span><span data-line="2">
 </span><span data-line="3">
 </span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">TrainingProtocol</span><span class="p">(</span><span class="n">TrainingProtocolBase</span><span class="p">):</span>
-</span><span data-line="5"><span class="w">    </span><span class="sd">"""Moves each subject through the 6 Bpod training stages, one after another:</span>
-</span><span data-line="6"><span class="sd">    Bpod1Habituation -&gt; Bpod2Passive -&gt; Bpod3Active -&gt; Bpod4CenterInitiated -&gt;</span>
-</span><span data-line="7"><span class="sd">    Bpod5IntroducePenalty -&gt; Bpod6Delay (bpod_1_habituation.py ..</span>
-</span><span data-line="8"><span class="sd">    bpod_6_delay.py).</span>
-</span><span data-line="9">
-</span><span data-line="10"><span class="sd">    A practically identical protocol works for the Arduino versions of the</span>
-</span><span data-line="11"><span class="sd">    same tasks (arduino_1_habituation.py .. arduino_6_delay.py): they read the</span>
-</span><span data-line="12"><span class="sd">    same settings and register the same values, so it is enough to change the</span>
-</span><span data-line="13"><span class="sd">    task names (Arduino1Habituation, Arduino2Passive...).</span>
-</span><span data-line="14">
-</span><span data-line="15"><span class="sd">    The other example tasks (bpod_example_*.py, bpod_purge_ports.py,</span>
-</span><span data-line="16"><span class="sd">    bpod_area2_sound.py, bpod_touchscreen.py, raspberry_*.py) are not part of</span>
-</span><span data-line="17"><span class="sd">    the progression: they are run manually, and this protocol leaves next_task</span>
-</span><span data-line="18"><span class="sd">    alone after them.</span>
-</span><span data-line="19"><span class="sd">    """</span>
-</span><span data-line="20">
-</span><span data-line="21">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="22">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="23">
+</span><span data-line="5"><span class="w">    </span><span class="sd">"""Moves each subject through the 6 Bpod training stages of Follow the Light,</span>
+</span><span data-line="6"><span class="sd">    a 2AFC task in which the animal pokes the side port that lights up first,</span>
+</span><span data-line="7"><span class="sd">    one after another:</span>
+</span><span data-line="8"><span class="sd">    Bpod1Habituation -&gt; Bpod2Passive -&gt; Bpod3Active -&gt; Bpod4CenterInitiated -&gt;</span>
+</span><span data-line="9"><span class="sd">    Bpod5IntroducePenalty -&gt; Bpod6Delay (bpod_1_habituation.py ..</span>
+</span><span data-line="10"><span class="sd">    bpod_6_delay.py).</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="sd">    A practically identical protocol works for the Arduino versions of the</span>
+</span><span data-line="13"><span class="sd">    same tasks (arduino_1_habituation.py .. arduino_6_delay.py): they read the</span>
+</span><span data-line="14"><span class="sd">    same settings and register the same values, so it is enough to change the</span>
+</span><span data-line="15"><span class="sd">    task names (Arduino1Habituation, Arduino2Passive...).</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="sd">    The other example tasks (bpod_global_timer.py, bpod_outputs_and_events.py,</span>
+</span><span data-line="18"><span class="sd">    bpod_purge_ports.py, bpod_area2_sound.py, bpod_touchscreen.py,</span>
+</span><span data-line="19"><span class="sd">    raspberry_*.py) are not part of the progression: they are run manually,</span>
+</span><span data-line="20"><span class="sd">    and this protocol leaves next_task alone after them.</span>
+</span><span data-line="21"><span class="sd">    """</span>
+</span><span data-line="22">
+</span><span data-line="23">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="24">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="25">
 </span></pre></div>
 </div>
 <p>Every <code class="docutils literal notranslate"><span class="pre">TrainingProtocol</span></code> must define <code class="docutils literal notranslate"><span class="pre">default_training_settings</span></code> and
@@ -887,7 +890,7 @@ saving them.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=be00876f"></script>
+      <script src="../_static/documentation_options.js?v=61a66734"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

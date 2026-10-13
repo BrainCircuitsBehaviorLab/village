@@ -2,9 +2,9 @@
 
 Tasks whose trials are run by a Bpod state machine (`BEHAVIOR_CONTROLLER` set to `BPOD`). Each page shows the state machine diagram of the task.
 
-### Training stages
+### Training stages: Follow the Light
 
-The six tasks of the [training protocol](training_protocol.md), in order.
+*Follow the Light* is a two-alternative forced choice (2AFC) task: the animal has to poke the side port that lights up first. It is learned in six stages, from habituation to the final task, where the second side light turns on after a delay that gets shorter (and harder) as the animal improves. The six tasks of the [training protocol](training_protocol.md), in order:
 
 | File | What it shows |
 | :--- | :--- |
@@ -23,6 +23,6 @@ Not part of the training progression: they are run manually.
 | :--- | :--- |
 | [bpod_area2_sound.py](bpod_area2_sound.md) | Driven by the box camera: entering box area 2 plays a sound and delivers water, through a Bpod softcode. |
 | [bpod_touchscreen.py](bpod_touchscreen.md) | Touchscreen task: touching the rectangle that stays on screen gives water; touching the one that disappears sooner doesn't. |
-| [bpod_example_global_timer.py](bpod_example_global_timer.md) | Demo, not a training task: a Bpod global timer bounding the whole trial. |
-| [bpod_example_outputs_and_events.py](bpod_example_outputs_and_events.md) | Demo, not a training task: the Bpod primitives step by step — LEDs, valves, softcodes, TTL outputs and inputs. |
+| [bpod_global_timer.py](bpod_global_timer.md) | Demo, not a training task: a Bpod global timer bounding the whole trial. |
+| [bpod_outputs_and_events.py](bpod_outputs_and_events.md) | Demo, not a training task: the Bpod primitives step by step — LEDs, valves, softcodes, TTL outputs and inputs. |
 | [bpod_purge_ports.py](bpod_purge_ports.md) | Maintenance tool, not a training task: each valve stays open while its port is poked, to flush the water lines. |

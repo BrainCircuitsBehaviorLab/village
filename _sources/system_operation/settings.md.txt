@@ -1,5 +1,7 @@
 ## System Settings
 
+![Settings Training village screen](/_static/settings_screen.webp)
+
 Some initial settings must be configured before the system can be used.  Navigate to the `SETTINGS` screen and adjust the following sections according to your laboratory setup:
 
 *   **`MAIN SETTINGS`:**

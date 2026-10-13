@@ -118,12 +118,12 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_global_timer.html">bpod_example_global_timer.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_example_outputs_and_events.html">bpod_example_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_global_timer.html">bpod_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_outputs_and_events.html">bpod_outputs_and_events.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino or other microcontroller)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
@@ -145,7 +145,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">DEVICES</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">TASK DEVICES</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
@@ -557,13 +557,33 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="manual-task-execution">
 <h1>Manual Task Execution</h1>
+<p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.webp" /></p>
 <p>To launch a task, navigate to the <code class="docutils literal notranslate"><span class="pre">TASKS</span></code> tab. If you have not yet created a new project,
 you will be working within the <code class="docutils literal notranslate"><span class="pre">demo-village-project</span></code> by default. This project includes
 several example tasks that cover a range of system functionalities.</p>
 <section id="demo-tasks">
 <h2>Demo Tasks</h2>
-<p>The following tasks are included; each one links to its code and explanation. Note that
-some require additional hardware beyond the Raspberry Pi itself.</p>
+<p>The following tasks are included. Note that some require additional hardware beyond
+the Raspberry Pi itself.</p>
+<p><strong>Requires a Bpod with 3 behavioral ports</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>):</p>
+<ul class="simple">
+<li><p>The six training stages of <em>Follow the Light</em>, a 2AFC task in which the animal
+pokes the side port that lights up first: see
+<a class="reference internal" href="../examples/tasks_bpod.html"><span class="std std-doc">Task Examples (Bpod)</span></a>.</p></li>
+<li><p><a class="reference internal" href="../examples/bpod_area2_sound.html"><span class="std std-doc">bpod_area2_sound.py</span></a>: entering box area 2 plays a
+sound and delivers water.</p></li>
+<li><p><a class="reference internal" href="../examples/bpod_touchscreen.html"><span class="std std-doc">bpod_touchscreen.py</span></a>: touching the rectangle that
+stays on screen gives water.</p></li>
+<li><p>Demos and tools, not training tasks:
+<a class="reference internal" href="../examples/bpod_global_timer.html"><span class="std std-doc">bpod_global_timer.py</span></a>,
+<a class="reference internal" href="../examples/bpod_outputs_and_events.html"><span class="std std-doc">bpod_outputs_and_events.py</span></a>
+and <a class="reference internal" href="../examples/bpod_purge_ports.html"><span class="std std-doc">bpod_purge_ports.py</span></a> (to flush the water lines).</p></li>
+</ul>
+<p><strong>Requires an Arduino</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>):</p>
+<ul class="simple">
+<li><p>The same six stages of <em>Follow the Light</em>, each with its Arduino firmware: see
+<a class="reference internal" href="../examples/tasks_arduino.html"><span class="std std-doc">Task Examples (Arduino)</span></a>.</p></li>
+</ul>
 <p><strong>No external controller required</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>):</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../examples/raspberry_area1_sound.html"><span class="std std-doc">raspberry_area1_sound.py</span></a>: entering box area 1
@@ -571,43 +591,16 @@ plays a sound and lights an LED of the LED strip.</p></li>
 <li><p><a class="reference internal" href="../examples/raspberry_touchscreen.html"><span class="std std-doc">raspberry_touchscreen.py</span></a>: a menu of 6
 rectangles on the touchscreen, each one showing a different stimulus when touched.</p></li>
 </ul>
-<p><strong>Requires a Bpod with 3 behavioral ports</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>):</p>
-<ul class="simple">
-<li><p>The six training stages, from
-<a class="reference internal" href="../examples/bpod_1_habituation.html"><span class="std std-doc">bpod_1_habituation.py</span></a> to
-<a class="reference internal" href="../examples/bpod_6_delay.html"><span class="std std-doc">bpod_6_delay.py</span></a>: habituation, passive and active
-learning, center-initiated trials, penalty for the wrong side, and a delay task whose
-difficulty adapts to the animal.</p></li>
-<li><p><a class="reference internal" href="../examples/bpod_area2_sound.html"><span class="std std-doc">bpod_area2_sound.py</span></a>: entering box area 2 plays a
-sound and delivers water.</p></li>
-<li><p><a class="reference internal" href="../examples/bpod_touchscreen.html"><span class="std std-doc">bpod_touchscreen.py</span></a>: touching the rectangle that
-stays on screen gives water.</p></li>
-<li><p>Demos and tools, not training tasks:
-<a class="reference internal" href="../examples/bpod_example_global_timer.html"><span class="std std-doc">bpod_example_global_timer.py</span></a>,
-<a class="reference internal" href="../examples/bpod_example_outputs_and_events.html"><span class="std std-doc">bpod_example_outputs_and_events.py</span></a>
-and <a class="reference internal" href="../examples/bpod_purge_ports.html"><span class="std std-doc">bpod_purge_ports.py</span></a> (to flush the water lines).</p></li>
-</ul>
-<p><strong>Requires an Arduino</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>):</p>
-<ul class="simple">
-<li><p>The same six training stages, run by an Arduino, from
-<a class="reference internal" href="../examples/arduino_1_habituation.html"><span class="std std-doc">arduino_1_habituation.py</span></a> to
-<a class="reference internal" href="../examples/arduino_6_delay.html"><span class="std std-doc">arduino_6_delay.py</span></a>, each with its Arduino firmware.</p></li>
-</ul>
 <p><strong>Training protocol</strong> (<a class="reference internal" href="../examples/training_protocol.html"><span class="std std-doc">training_protocol.py</span></a>):</p>
 <ul class="simple">
-<li><p>Moves each subject through the six Bpod training stages, one after another, deciding
-the next task after every session from the subject’s performance. The other tasks are
-run manually and don’t change the subject’s next task.</p></li>
+<li><p>Moves each subject through the six Bpod stages of <em>Follow the Light</em>, deciding the
+next task after every session. The other tasks are run manually and don’t change
+the subject’s next task.</p></li>
 </ul>
-<p>See <a class="reference internal" href="../examples/tasks_bpod.html"><span class="std std-doc">Task Examples (Bpod)</span></a>,
-<a class="reference internal" href="../examples/tasks_arduino.html"><span class="std std-doc">Task Examples (Arduino)</span></a> and
-<a class="reference internal" href="../examples/tasks_raspberry.html"><span class="std std-doc">Task Examples (Raspberry Pi only)</span></a> for a summary of
-each one.</p>
 </section>
 <hr class="docutils" />
 <section id="launching-a-task">
 <h2>Launching a Task</h2>
-<p><img alt="Tasks Training Village screen" src="../_images/tasks_screen.webp" /></p>
 <p>The <code class="docutils literal notranslate"><span class="pre">TASKS</span></code> screen shows the active training protocol on the left, along with a list of
 all available tasks. When you click on a task, its description (<code class="docutils literal notranslate"><span class="pre">self.info</span></code>) is
 displayed, along with its settings, organized in the tabs defined by the training
@@ -678,7 +671,7 @@ without making any actual changes. The settings displayed are never saved or app
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=be00876f"></script>
+      <script src="../_static/documentation_options.js?v=61a66734"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

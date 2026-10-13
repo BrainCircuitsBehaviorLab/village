@@ -6,7 +6,8 @@ The training protocol is a class that inherits from `TrainingProtocolBase`, usua
 
 The code on this page is taken from the training protocol of the example tasks
 ([training_protocol.py](../examples/training_protocol.md)), which moves each subject
-through six Bpod stages, from habituation to a delay discrimination task:
+through the six Bpod stages of *Follow the Light*, a 2AFC task, from habituation to a
+delay discrimination task:
 
 <!-- The code on this page is included from docs/source/examples/files/training_protocol.py,
 selected by method name (pyobject) and by some lines of text (start-at / end-before).

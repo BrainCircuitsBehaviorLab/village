@@ -3,11 +3,11 @@ import math
 from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
 
 
-class BpodExampleGlobalTimer(TaskBase):
+class BpodGlobalTimer(TaskBase):
     """Reference task: a minimal demo of Bpod's global timer -- a deadline
     that ticks in the background across every state that follows, until it
     ends or is cancelled (GlobalTimer1Cancel), independently of each state's
-    own timer. See bpod_example_outputs_and_events.py for the rest of the
+    own timer. See bpod_outputs_and_events.py for the rest of the
     Bpod primitives (LEDs, valve, pokes, softcodes, TTL).
 
     Two more primitives exist but aren't demonstrated here: global counters
@@ -22,7 +22,7 @@ class BpodExampleGlobalTimer(TaskBase):
         super().__init__()
 
         self.info = """
-        Bpod Example: Global Timer
+        Global Timer Demo (Bpod)
         ----------------------------------------------------------------
         Not a real task -- a minimal demo of the global timer primitive:
         1. Trigger a 10s global timer at the very start of the trial.

@@ -1,4 +1,4 @@
-## Tasks (Arduino or other microcontroller)
+## Tasks (Arduino)
 
 With `BEHAVIOR_CONTROLLER` set to `OTHER` in `SETTINGS`, a microcontroller (an
 Arduino, or any other board that talks over a serial port) can run the
