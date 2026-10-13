@@ -48,14 +48,8 @@ operant box. Illumination must be consistent to prevent video-tracking errors.
   paradigm. The Box Board includes dedicated connectors for internal visible and IR
   lighting.
 
-### 8. Calibrations
 
-The [water valves](../calibrations/water.md) (and the
-[speakers](../calibrations/sound.md), if the tasks use sound) must be calibrated before
-the first task is run: tasks ask for volumes in microliters and sound levels in dB,
-and the calibrations convert them into valve times and gains.
-
-### 9. Data Format
+### 8. Data Format
 
 The system uses a standardized data format. Existing analysis scripts may require
 updates to maintain compatibility.
@@ -72,7 +66,7 @@ updates to maintain compatibility.
 
 All the files are described in [Saved Data and Video](../system_operation/data.md).
 
-### 10. Initial Adjustment Period
+### 9. Initial Adjustment Period
 
 ```{admonition} Monitor the system closely during the first days
 :class: warning
@@ -82,7 +76,7 @@ reason, it is essential to monitor the system every few hours until everything i
 confirmed to be working correctly.
 ```
 
-### 11. Alarm Monitoring
+### 10. Alarm Monitoring
 
 ```{admonition} Alarms must be addressed within 24 hours
 :class: warning

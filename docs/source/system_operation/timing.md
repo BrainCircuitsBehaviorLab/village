@@ -23,7 +23,7 @@ Do not use `time.time()` or `datetime.now()`. Always use `time_utils.now_timesta
 ```
 
 ```{admonition} What is a monotonic clock?
-:class: tip
+:class: note
 Unlike the system wall clock, a monotonic clock guarantees that time always advances steadily and never jumps forward or steps backward. Wall clocks are prone to sudden time shifts caused by:
 * Network Time Protocol (NTP): Automated network syncs that correct internal clock drift.
 * Daylight Saving Time (DST) & timezone changes: Seasonal or location-based hour shifts.
@@ -153,7 +153,7 @@ plus the remaining portion of the current frame: **mean = 24.9 ms, SD = 7.5 ms**
 
 
 ```{admonition} CPU Load and Latency
-:class: tip
+:class: note
 Communication and action latencies are both sensitive to CPU load. The platform
 implements several measures to keep CPU usage low during sessions:
 
@@ -197,7 +197,7 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).
 
 
 ```{admonition} Note on Latency Measurements
-:class: tip
+:class: note
 All latency values reported here were obtained experimentally using an oscilloscope. Visual stimulus latencies were measured with a photodiode placed on the display, while auditory stimulus latencies were measured using a direct electrical connection to the audio signal. These measurements correspond to the default system configuration described above. Any modifications to camera settings, display resolution, or other relevant hardware or software parameters may affect latency and should therefore be validated with new measurements. For experiments requiring precise temporal control, we strongly recommend measuring latencies directly within the specific experimental setup rather than relying solely on the reference values provided here.
 ```
 

@@ -24,7 +24,7 @@ Every hour, the system runs an automated background diagnostic.
 *   **Corridor Occupation:** The system checks whether any corridor area has been occupied for more than 90% of the last hour, which may indicate an animal sleeping in that area, debris in the corridor, or a false detection from a badly tuned threshold. Whatever the cause, an area that is always occupied stops the animals from entering and leaving the operant box normally.
 
 ```{admonition} Troubleshooting Context
-:class: tip
+:class: note
 If your project hosts a large cohort of animals, it is highly unusual to have zero RFID detections or sessions for more than 6 consecutive hours. A silent system often points to an accidental physical barrier (e.g., a door stuck closed) or an RFID reader malfunction. If you are working with a small cohort, you may want to increase this window to prevent false alarms.
 ```
 

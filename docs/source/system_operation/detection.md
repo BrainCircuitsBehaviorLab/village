@@ -21,7 +21,7 @@ As mentioned in [System Requirements](../overview/requirements.md), maintaining 
 The physical corridor is typically constructed using white 3D-printing filament, which optimizes the detection of dark-colored animals. However, if your facility uses light-colored animals, the corridor can be printed in black. You can easily invert the binary logic by configuring `SETTINGS` -> `CORRIDOR SETTINGS` -> `DETECTION_COLOR`.
 
 ```{admonition} Note
-:class: tip
+:class: note
 Toggling the `DETECTION_COLOR` parameter automatically synchronizes the pixel detection logic across both the corridor and the operant box cameras simultaneously.
 ```
 
@@ -43,7 +43,7 @@ To set up detection in the corridor, you must configure four distinct bounding b
 ```
 
 ```{admonition} Important
-:class: tip
+:class: warning
 Access is granted only when Areas 1, 2, and 4 are empty and Area 3 is occupied by
 exactly one animal. Consequently, Area 3 should be sized to fully accommodate a single
 animal while remaining small enough to make it harder for two animals to fit inside it
@@ -109,7 +109,7 @@ In the reference image above, the corridor and the touchscreen area are elevated
 
 
 ```{admonition} Note
-:class: tip
+:class: note
 Every time the detection algorithm processes a frame and extracts the animal's $(x, y)$ coordinates, it passes them to a customizable tracking function. While this is primarily used to fire actions when entering a designated `TRIGGER` zone, you can also write custom code that depends entirely on the continuous coordinate stream to log trajectories or trigger position-dependent stimuli.
 ```
 

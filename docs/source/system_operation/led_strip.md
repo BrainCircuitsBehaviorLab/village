@@ -65,7 +65,7 @@ your specific LED strip:
 | `GRBW` | 4-channel, green–red–blue–white order |
 
 ```{admonition} Note
-:class: tip
+:class: note
 WS2812B LEDs are physically wired as **GRB** even though the chip is commonly called
 "RGB". If colors appear swapped, switch between `RGB` and `GRB`.
 ```

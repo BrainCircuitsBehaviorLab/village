@@ -2,7 +2,7 @@
 
 To create a new subject, some data is required: a unique name, the tag ID of its RFID capsule, and its baseline weight. To obtain the RFID tag, place the animal in the corridor area where the RFID reader is located. Go to the `MONITOR` screen and ensure the `RFID reader` is activated. The animal should be detected, and its tag will appear in a log message at the bottom of the screen. To view this message, make sure `INFO` is selected so that the log appears at the bottom.
 
-```{tip}
+```{note}
 All messages displayed in `INFO` are recorded in the `data/<SYSTEM_NAME>/events.csv` file located in your project folder. You can also preview this CSV file by going to the `DATA` screen and checking the `EVENTS` table.
 ```
 
@@ -18,7 +18,7 @@ Next, go to the `SUBJECTS` screen. By clicking the `ADD` button, a new row repre
 - `next_settings`: Stores the task variables that will be applied at the start of the subject’s next session. When a subject is created, these values are automatically populated with the default values defined in the training protocol. To inspect or modify them, double-click the cell to open an editor showing all available variables. After each session ends, the training protocol automatically updates this field based on the subject’s performance and the progression logic you have defined.
 
 ```{admonition} Note
-:class: tip
+:class: note
 If new variables are added to the training protocol after a subject has already been created, they will appear automatically with their default values the next time the `next_settings` cell is opened or the table is saved — no manual update is required. Variables that are removed from the protocol will silently disappear on the next save.
 ```
 

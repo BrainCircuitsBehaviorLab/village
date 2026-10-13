@@ -81,7 +81,7 @@ code/
 ```
 
 ```{admonition} File and class names
-:class: tip
+:class: note
 Except for tasks, the names of these files and classes are up to you: when Village
 starts, it reads every `.py` file in `code/` and recognizes each class by the base class
 it inherits from (`TrainingProtocolBase`, `CameraTriggerBase`, `OnlinePlotBase`...).

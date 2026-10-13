@@ -39,7 +39,7 @@ Before this step, make sure all animals have been registered in the system with 
 Remove the blocker piece from each home cage opening to grant animals access to the corridor. Door 1 will remain open, while Door 2 remains closed. With the RFID reader active, any detected animal will be granted access to the operant box automatically.
 
 ```{admonition} Notes on the CA
-:class: tip
+:class: note
 If animals, over time, perform few trials while maintaining high relative weights, this indicates they have adapted to the bitter water and are using it as their main water source. In this case, increase the CA concentration by 0.5% and monitor their task motivation and relative weights over the following weeks. If the issue persists but weights remain high, repeat this step weekly until a maximum of 4.5% CA.
 ```
 
@@ -64,7 +64,7 @@ When housing large cohorts in the TV, animals from different cages may need to b
 *Action:* Monitor the animals closely for one week after cohabitation. Check for signs of aggression: wounds, fur loss, weight loss, marked submissive behavior, or changes in eating/drinking. Remove any wounded animals and isolate them until healed. If intense fights persist 3 days after cohabitation, move to the retry plan. A successful mixing is declared if minimal fights occur and no visible signs of aggression are present after one week.
 
 ```{admonition} Notes on Sex Differences
-:class: tip
+:class: note
 All steps are essential when mixing males, however, for females, step 3 can be skipped on many occasions.
 ```
 

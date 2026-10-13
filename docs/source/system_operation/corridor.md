@@ -4,7 +4,7 @@ The corridor elements must be calibrated. Navigate to the `MONITOR` Screen:
 
 1. **Set Door Motor Angles**: Select the `CORRIDOR` tab in the center of the screen. Each installed motor has its own `MOTORx VALUES` button (`MOTOR1`/`MOTOR2` are always shown; `MOTOR3`/`MOTOR4` only appear if enabled in `SETTINGS` → `CORRIDOR SETTINGS`). Clicking it opens a dialog with the `Open angle`/`Open time (ms)` and `Close angle`/`Close time (ms)` fields, a `Hold position` checkbox, plus `OPEN`/`CLOSE` buttons to move the motor immediately and test the values before committing. The closing angle should allow the door to gently touch the top without pushing further.
 ```{admonition} Note
-:class: tip
+:class: note
 Due to the symmetrical placement of the servomotors, the opening angle will be greater than the closing angle for one servo, while the opposite will apply to the other. Typically, the angular displacement between the open and closed positions is approximately 25° to 30°. The most straightforward way to calibrate the gates is by following these steps:
 1. Temporarily detach the plastic gate from the servo horn.
 2. Click **CLOSE** in the dialog, then manually place and secure the plastic gate in its physical "fully closed" position.
@@ -13,7 +13,7 @@ Due to the symmetrical placement of the servomotors, the opening angle will be g
 5. Once you are happy with the angles and times, click **SAVE** to persist them (or **DISCARD** to revert to the values the motor had before opening the dialog).
 ```
 ```{admonition} Hold position
-:class: tip
+:class: note
 `Hold position` sets what the motor does **after** it arrives, and it is saved per motor along with the angles and times:
 
 - **Checked** (the default): the servo stays powered and keeps its holding torque, so it resists a load — but it hums continuously and warms up.
@@ -27,7 +27,7 @@ The checkbox takes effect immediately on `OPEN`/`CLOSE`, so you can hear the dif
 3. **Check Temperature and Humidity**: Use the `GET TEMPERATURE` button to check temperature and humidity readings.
 
 ```{admonition} Note
-:class: tip
+:class: note
 If you are using motors in the operant box, calibrate them the same way from the `BOX` tab: each active motor (up to `MOTOR1`-`MOTOR7`, as enabled in `SETTINGS` → `BOX SETTINGS`) has its own `MOTORx VALUES` button opening the same angle/time dialog. If a box scale is enabled (`SCALE_BOX`), the `BOX` tab also has its own `CALIBRATE SCALE`, `TARE SCALE`, and `GET WEIGHT` buttons, calibrated independently from the corridor scale.
 ```
 
