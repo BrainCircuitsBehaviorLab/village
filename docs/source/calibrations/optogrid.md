@@ -1,5 +1,7 @@
 ## OptoGrid Calibration
 
+![OptoGrid calibration screen](/_static/optogrid_calibration.webp)
+
 Provides a visual map of the OptoGrid optogenetic stimulation device (a wireless,
 64-LED array) for composing an LED selection and inspecting the device over
 Bluetooth.

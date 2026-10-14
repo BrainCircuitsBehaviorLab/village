@@ -10,10 +10,20 @@ Depending on your active configuration, several control tabs are available at th
 *   **`CORRIDOR`:** Provides manual and automated overrides for the RFID reader, doors, weighing scale, and temperature sensor. When the RFID system is toggled **OFF**,
     animal identification is disabled, and no subjects will be permitted to enter the operant box.
 
+    ```{image} /_static/corridor_menu.webp
+    :alt: CORRIDOR tab
+    :width: 380px
+    ```
+
     *Lighting and camera exposure/thresholds are driven together by the `Corridor Cycle` control, which can be set to `DAY`, `NIGHT`, or `AUTO`. `DAY` turns the visible light **ON** and the IR light **OFF**, and applies the daytime camera exposure/threshold settings. `NIGHT` does the opposite: visible light **OFF**, IR light **ON**, and the nighttime camera exposure/threshold settings. `AUTO` switches automatically between `DAY` and `NIGHT` according to the actual time of day; the daytime/nighttime schedule can be customized under `SETTINGS` -> `CORRIDOR SETTINGS`.*
 
 *   **`BOX`:** Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
     buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.
+
+    ```{image} /_static/box_menu.webp
+    :alt: BOX tab
+    :width: 380px
+    ```
 
     *The `Visible Light` and `IR Light` modes can be set to `ON`, `OFF`, or `AUTO`. In `AUTO` mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.*
 
@@ -37,7 +47,17 @@ Depending on your active configuration, several control tabs are available at th
 *   **`FUNCTIONS`:** Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
     for writing and deploying these functions can be found in the [Direct Functions](../protocols/functions.md) section.
 
+    ```{image} /_static/functions_menu.webp
+    :alt: FUNCTIONS tab
+    :width: 380px
+    ```
+
 *   **`VIRTUAL MOUSE`:** Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness (see also [Custom AutoNoMouse](../advanced_customization/auto.md), a virtual animal that performs a task by itself).
+
+    ```{image} /_static/virtual_menu.webp
+    :alt: VIRTUAL MOUSE tab
+    :width: 380px
+    ```
     *   **Bpod Integration:** Simulate a nose-poke in any behavior port with a single click.
     *   **Touchscreen Integration:** Simulate screen-touch events by sending precise coordinate inputs $(x, y)$.
     *   **Position Tracking:** If real-time animal tracking is active within the operant box, you can simulate custom trajectories to verify location-based experimental triggers.

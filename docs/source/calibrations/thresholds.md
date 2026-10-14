@@ -1,5 +1,7 @@
 ## Corridor Threshold Calibration
 
+![Corridor threshold calibration screen](/_static/corridor_thresholds.webp)
+
 Lets you position the four corridor detection areas and tune their day/night
 pixel-detection thresholds while previewing the result against a recorded corridor
 video, instead of tuning blind or waiting for an animal to be live in the corridor.
