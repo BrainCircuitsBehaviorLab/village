@@ -1,5 +1,7 @@
 ## Sound Calibration
 
+![Sound calibration screen](/_static/sound_calibration.webp)
+
 Calibrates speaker output so a requested sound level in dB corresponds to an actual,
 measured volume — per speaker (left/right) and per sound, so tasks can request a
 sound in dB instead of a raw gain value.

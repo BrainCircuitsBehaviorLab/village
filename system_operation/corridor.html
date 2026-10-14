@@ -565,10 +565,14 @@ data-aria-dark="Switch to auto color mode">
 <ul>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>:</strong> Provides manual and automated overrides for the RFID reader, doors, weighing scale, and temperature sensor. When the RFID system is toggled <strong>OFF</strong>,
 animal identification is disabled, and no subjects will be permitted to enter the operant box.</p>
+<a class="reference internal image-reference" href="../_images/corridor_menu.webp"><img alt="CORRIDOR tab" src="../_images/corridor_menu.webp" style="width: 380px;" />
+</a>
 <p><em>Lighting and camera exposure/thresholds are driven together by the <code class="docutils literal notranslate"><span class="pre">Corridor</span> <span class="pre">Cycle</span></code> control, which can be set to <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. <code class="docutils literal notranslate"><span class="pre">DAY</span></code> turns the visible light <strong>ON</strong> and the IR light <strong>OFF</strong>, and applies the daytime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> does the opposite: visible light <strong>OFF</strong>, IR light <strong>ON</strong>, and the nighttime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> switches automatically between <code class="docutils literal notranslate"><span class="pre">DAY</span></code> and <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> according to the actual time of day; the daytime/nighttime schedule can be customized under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>.</em></p>
 </li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
 buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.</p>
+<a class="reference internal image-reference" href="../_images/box_menu.webp"><img alt="BOX tab" src="../_images/box_menu.webp" style="width: 380px;" />
+</a>
 <p><em>The <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.</em></p>
 <div class="warning admonition">
 <p class="admonition-title">The box must never be completely dark</p>
@@ -587,8 +591,13 @@ reconnected, restart Village rather than assuming it’s broken — see
 </div>
 </li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
-for writing and deploying these functions can be found in the <a class="reference internal" href="../protocols/functions.html"><span class="std std-doc">Direct Functions</span></a> section.</p></li>
+for writing and deploying these functions can be found in the <a class="reference internal" href="../protocols/functions.html"><span class="std std-doc">Direct Functions</span></a> section.</p>
+<a class="reference internal image-reference" href="../_images/functions_menu.webp"><img alt="FUNCTIONS tab" src="../_images/functions_menu.webp" style="width: 380px;" />
+</a>
+</li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness (see also <a class="reference internal" href="../advanced_customization/auto.html"><span class="std std-doc">Custom AutoNoMouse</span></a>, a virtual animal that performs a task by itself).</p>
+<a class="reference internal image-reference" href="../_images/virtual_menu.webp"><img alt="VIRTUAL MOUSE tab" src="../_images/virtual_menu.webp" style="width: 380px;" />
+</a>
 <ul class="simple">
 <li><p><strong>Bpod Integration:</strong> Simulate a nose-poke in any behavior port with a single click.</p></li>
 <li><p><strong>Touchscreen Integration:</strong> Simulate screen-touch events by sending precise coordinate inputs <span class="math notranslate nohighlight">\((x, y)\)</span>.</p></li>
@@ -686,7 +695,7 @@ for writing and deploying these functions can be found in the <a class="referenc
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=d7abec92"></script>
+      <script src="../_static/documentation_options.js?v=17f91881"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -1,5 +1,7 @@
 ## Water Calibration
 
+![Water calibration screen](/_static/calibration_screen.webp)
+
 Calibrates the relationship between how long a valve (or a pump) is open and how much
 water it actually delivers, per behavior port — so tasks can request a volume in
 microliters instead of a raw opening time.
