@@ -6,7 +6,6 @@ Some initial settings must be configured before the system can be used.  Navigat
 
 *   **`MAIN SETTINGS`:**
     *   **`SYSTEM_NAME`:** Define a unique identifier for your setup. This name will be appended to all saved datasets, which is essential for distinguishing data source origins if your facility operates multiple Training Villages.
-    *   **`FAVOURITE_TASK`:** A task preselected when opening the `TASKS` tab, so you can start a session immediately. Set to `None` to disable preselection.
     *   **`Project Selection`:** This section allows you to select an active experimental project or initialize a new one. For now, keep the default project: **demo-village-project**.
 
 *   **`CORRIDOR SETTINGS`:** These settings only appear once `USE_CORRIDOR` (at the top of this section) is toggled **ON**; turning it off hides the rest of the section and disables the whole Corridor subsystem (RFID, scale, temperature sensor, motors, lighting, and the dedicated corridor camera). Define `DAYTIME` and `NIGHTTIME` to set the hours used by the `Corridor Cycle` control's `AUTO` mode (see [Monitor & Hardware Setup][GUI]) to switch lighting and camera exposure/thresholds between day and night values. Adjust `DETECTION_COLOR` if you are tracking light-colored animals on a dark corridor background, and `MIN_WEIGHT_THRESHOLD`/`MAX_WEIGHT_THRESHOLD` to filter out invalid weight readings. `MOTOR3_CORRIDOR` and `MOTOR4_CORRIDOR` let you declare whether those optional motors are physically installed.
@@ -33,7 +32,7 @@ Some initial settings must be configured before the system can be used.  Navigat
 
 *   **`LED STRIP SETTINGS`:** Electrical configuration for the LED strip enabled via `LED_STRIP_BOX` in `BOX SETTINGS`: the `SPI_DEVICE` path, `NUMBER_OF_LEDS`, `SPI_SPEED_KHZ`, and the pixel color order (`PIXEL_TYPE`).
 
-*   **`SYNC SETTINGS`:** Configure the destination for your external data synchronization. Refer to the [Data Persistence Section][BACKUP].
+*   **`SYNC SETTINGS`:** Configure the destination for your external data synchronization, and how many days the videos are kept (`DAYS_OF_VIDEO_STORAGE`). Refer to the [Data Persistence Section][BACKUP].
 
 *   **`TELEGRAM SETTINGS`:** Input your unique authentication keys to link the system with your [Telegram Bot][TELEGRAM] and the external [Remote Heartbeat][REMOTE] monitoring service. You can customize alarm triggers, adjust sensor thresholds, or silence specific diagnostic checks by consulting the [Alarm System Section][ALARM].
 
@@ -42,7 +41,7 @@ Some initial settings must be configured before the system can be used.  Navigat
     Never share or publish your TELEGRAM_TOKEN. To prevent accidental exposure on public GitHub repositories, all settings are stored in the user's configuration on the Raspberry Pi, outside of the repository directory.
     ```
 
-*   **`ADVANCED SETTINGS`:** Settings that rarely need to be changed, such as the days of video storage (`DAYS_OF_VIDEO_STORAGE`) or the time before the GUI returns to the `MAIN` screen (`SCREENSAVE_TIME`), and the `VISUAL SETTINGS` (colors used in the GUI and on the camera images).
+*   **`ADVANCED SETTINGS`:** Settings that rarely need to be changed, such as the favourite task preselected when opening the `TASKS` screen (`FAVOURITE_TASK`) or the time before the GUI returns to the `MAIN` screen (`SCREENSAVE_TIME`), and the `VISUAL SETTINGS` (colors used in the GUI and on the camera images).
 
 
 [BACKUP]: /preparation/backup.md

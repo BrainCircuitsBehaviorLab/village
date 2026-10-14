@@ -582,17 +582,18 @@ take an impractical amount of storage space.</p></li>
 <h2>What Is Deleted from the microSD Card</h2>
 <p><strong>Session data and system data are never deleted</strong> from the card: only videos are.</p>
 <ul class="simple">
-<li><p><strong>Task videos</strong> older than <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days (7 by default,
-<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>) are deleted. With <code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code> ON (the default),
-only once the system has checked that they are already in the backup destination.</p></li>
-<li><p><strong>Corridor videos</strong> older than <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days are always deleted, since
-they are never synchronized.</p></li>
+<li><p><strong>Corridor videos</strong> older than <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days (7 by default,
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SYNC</span> <span class="pre">SETTINGS</span></code>) are always deleted, since they are never synchronized.</p></li>
+<li><p><strong>Task videos</strong> older than <code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days are deleted only when
+synchronization is enabled (<code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> set to <code class="docutils literal notranslate"><span class="pre">HD</span></code> or <code class="docutils literal notranslate"><span class="pre">SERVER</span></code>). With <code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code>
+ON (the default), only once the system has checked that they are already in the
+backup destination.</p></li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Videos are only deleted when synchronization is enabled (<code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> set to <code class="docutils literal notranslate"><span class="pre">HD</span></code> or
-<code class="docutils literal notranslate"><span class="pre">SERVER</span></code>). With <code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> set to <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, no video is ever deleted, not even the corridor
-ones, and the card will eventually fill up (the “Low disk space” alarm warns about it).</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> set to <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, the task videos are never deleted, since they have no
+backup, and the card will eventually fill up with them (the “Low disk space” alarm
+warns about it).</p>
 </div>
 </section>
 <section id="key-configuration-fields">
@@ -613,8 +614,12 @@ followed by <code class="docutils literal notranslate"><span class="pre">_data</
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SERVER_USER</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_HOST</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code>:</strong> only for <code class="docutils literal notranslate"><span class="pre">SERVER</span></code>: the user and
 hostname (or IP address) of the server, and the SSH port.</p></li>
 </ul>
-<p>Two more parameters govern the backup and deletion behavior:</p>
+<p>Three more parameters govern the backup and deletion behavior:</p>
 <ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code>:</strong> Number of days the videos are kept on the microSD card
+(7 by default), see <a class="reference internal" href="#what-is-deleted-from-the-microsd-card"><span class="std std-ref">What Is Deleted from the microSD Card</span></a>.
+It is shown even with <code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> set to <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, since the corridor videos are still
+deleted after this time.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SAFE_DELETE</span></code></strong></p>
 <ul>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">ON</span></code>:</strong> Task video files are only deleted after the system confirms they have been
@@ -682,7 +687,7 @@ without asking for a password: if it asks for one, the synchronization will fail
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=61a66734"></script>
+      <script src="../_static/documentation_options.js?v=d7abec92"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
