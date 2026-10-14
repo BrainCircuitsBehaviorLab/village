@@ -32,13 +32,6 @@ default_sync_directory = str(
 
 main_settings = [
     Setting("SYSTEM_NAME", default_system_name, str, "The system’s unique name."),
-    Setting(
-        "FAVOURITE_TASK",
-        "None",
-        str,
-        """A favourite (★) task that is preselected when opening the TASKS tab, so that
-the user can start a session immediately. Set to None to disable preselection.""",
-    ),
 ]
 
 sound_settings = [
@@ -176,6 +169,14 @@ directory_settings = [
 
 
 sync_settings = [
+    Setting(
+        "DAYS_OF_VIDEO_STORAGE",
+        7,
+        int,
+        """Number of days the videos are kept before being deleted. Corridor videos
+are always deleted after this time. Task videos are only deleted when SYNC_TYPE is
+HD or SERVER (and, with SAFE_DELETE ON, only once they are backed up).""",
+    ),
     Setting(
         "SYNC_TYPE",
         "OFF",
@@ -636,6 +637,13 @@ some box components, such as LED stimuli, visible/infrared lighting, and motors.
 
 extra_settings = [
     Setting(
+        "FAVOURITE_TASK",
+        "None",
+        str,
+        """A favourite (★) task that is preselected when opening the TASKS tab, so that
+the user can start a session immediately. Set to None to disable preselection.""",
+    ),
+    Setting(
         "UPDATE_TIME_TABLE",
         1,
         int,
@@ -657,12 +665,6 @@ preventing unnecessary processing.""",
         """The duration of the corridor videos in seconds. A new video is never
 started while a task is being launched, run or saved: if the duration is reached
 then, the video continues until the task ends, so it can be longer.""",
-    ),
-    Setting(
-        "DAYS_OF_VIDEO_STORAGE",
-        7,
-        int,
-        "Number of days to store video data before deleting it.",
     ),
     Setting(
         "MATPLOTLIB_DPI",

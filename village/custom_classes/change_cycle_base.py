@@ -36,7 +36,13 @@ class ChangeCycleBase:
             self.port = None
 
     def run(self) -> None:
-        """Executes the cycle change logic, primarily old data removal."""
+        """Executes the cycle change logic, primarily old data removal.
+
+        With synchronization (HD or SERVER), old task videos are removed (only if
+        already backed up when SAFE_DELETE is ON) together with the old corridor
+        videos. Without synchronization (OFF), only the old corridor videos are
+        removed: they are never synchronized, and the task videos have no backup.
+        """
         if self.sync_type == SyncType.HD:
             safe_removal_script(
                 directory=self.directory,
@@ -55,6 +61,15 @@ class ChangeCycleBase:
                 remote_user=self.remote_user,
                 remote_host=self.remote_host,
                 port=self.port,
+            )
+        else:
+            safe_removal_script(
+                directory=self.directory,
+                days=self.days,
+                safe=False,
+                backup_dir="",
+                remote=False,
+                only_corridor=True,
             )
 
 

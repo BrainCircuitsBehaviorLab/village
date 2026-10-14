@@ -116,6 +116,7 @@ def remove_old_data(
     remote_user: str | None = None,
     remote_host: str | None = None,
     port: int | None = None,
+    only_corridor: bool = False,
 ) -> None:
     """Core logic to identify and remove old data files.
 
@@ -128,6 +129,9 @@ def remove_old_data(
         remote_user (str | None): Remote username.
         remote_host (str | None): Remote host.
         port (int | None): SSH port.
+        only_corridor (bool): If True, only the corridor videos (CORRIDOR_*) are
+            removed, and the task videos are left untouched (used when there is
+            no synchronization, so the task videos have no backup).
     """
     removed_count = 0
     files_to_check = []
@@ -144,6 +148,8 @@ def remove_old_data(
                 # if file starts with CORRIDOR_, remove it
                 if file.startswith("CORRIDOR_"):
                     removed_count = remove_file(file_path, removed_count)
+                elif only_corridor:
+                    continue
                 elif backup_dir:
                     files_to_check.append(relative_file_path)
                 else:
@@ -204,6 +210,7 @@ def main(
     remote_user: str | None = None,
     remote_host: str | None = None,
     port: int | None = None,
+    only_corridor: bool = False,
 ) -> None:
     """Main function to remove old data files from a directory.
 
@@ -216,13 +223,22 @@ def main(
         remote_user (str | None): Remote username.
         remote_host (str | None): Remote host.
         port (int | None): SSH port.
+        only_corridor (bool): If True, only the corridor videos are removed.
     """
 
     log_file, file_handler = setup_logging(logs_subdirectory="data_removal_logs")
     logging.info(f"Logging to file: {log_file}")
     try:
         remove_old_data(
-            directory, days, safe, backup_dir, remote, remote_user, remote_host, port
+            directory,
+            days,
+            safe,
+            backup_dir,
+            remote,
+            remote_user,
+            remote_host,
+            port,
+            only_corridor,
         )
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")

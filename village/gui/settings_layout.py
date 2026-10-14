@@ -453,13 +453,19 @@ class SettingsLayout(Layout):
                         row += 2
 
         elif name == "SYNC SETTINGS":
-            s = settings.sync_settings[0]
-            if self._should_show(s.key):
-                self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
-                row += 2
+            # DAYS_OF_VIDEO_STORAGE and SYNC_TYPE are always shown (corridor
+            # videos are deleted even without synchronization); the rest only
+            # when synchronization is on.
+            always_shown = ("DAYS_OF_VIDEO_STORAGE", "SYNC_TYPE")
+            for s in settings.sync_settings:
+                if s.key in always_shown and self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
             sync_type = self._get("SYNC_TYPE")
             if sync_type != SyncType.OFF:
-                for s in settings.sync_settings[1:]:
+                for s in settings.sync_settings:
+                    if s.key in always_shown:
+                        continue
                     if self._should_show(s.key):
                         self.create_label_and_value(
                             row, C_COL, s, name, width=C_VAL_OFF

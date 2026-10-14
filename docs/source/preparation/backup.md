@@ -24,16 +24,17 @@ Not synchronized:
 
 **Session data and system data are never deleted** from the card: only videos are.
 
-- **Task videos** older than `DAYS_OF_VIDEO_STORAGE` days (7 by default,
-  `SETTINGS` → `ADVANCED SETTINGS`) are deleted. With `SAFE_DELETE` ON (the default),
-  only once the system has checked that they are already in the backup destination.
-- **Corridor videos** older than `DAYS_OF_VIDEO_STORAGE` days are always deleted, since
-  they are never synchronized.
+- **Corridor videos** older than `DAYS_OF_VIDEO_STORAGE` days (7 by default,
+  `SETTINGS` → `SYNC SETTINGS`) are always deleted, since they are never synchronized.
+- **Task videos** older than `DAYS_OF_VIDEO_STORAGE` days are deleted only when
+  synchronization is enabled (`SYNC_TYPE` set to `HD` or `SERVER`). With `SAFE_DELETE`
+  ON (the default), only once the system has checked that they are already in the
+  backup destination.
 
 ```{warning}
-Videos are only deleted when synchronization is enabled (`SYNC_TYPE` set to `HD` or
-`SERVER`). With `SYNC_TYPE` set to `OFF`, no video is ever deleted, not even the corridor
-ones, and the card will eventually fill up (the "Low disk space" alarm warns about it).
+With `SYNC_TYPE` set to `OFF`, the task videos are never deleted, since they have no
+backup, and the card will eventually fill up with them (the "Low disk space" alarm
+warns about it).
 ```
 
 ### Key Configuration Fields
@@ -53,7 +54,12 @@ These fields are found in `SETTINGS` → `SYNC SETTINGS`:
 - **`SERVER_USER`, `SERVER_HOST`, `SERVER_PORT`:** only for `SERVER`: the user and
   hostname (or IP address) of the server, and the SSH port.
 
-Two more parameters govern the backup and deletion behavior:
+Three more parameters govern the backup and deletion behavior:
+
+- **`DAYS_OF_VIDEO_STORAGE`:** Number of days the videos are kept on the microSD card
+  (7 by default), see [What Is Deleted from the microSD Card](#what-is-deleted-from-the-microsd-card).
+  It is shown even with `SYNC_TYPE` set to `OFF`, since the corridor videos are still
+  deleted after this time.
 
 - **`SAFE_DELETE`**
   - **`ON`:** Task video files are only deleted after the system confirms they have been
