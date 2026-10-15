@@ -191,6 +191,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_customization/water_calibration_arduino.html">Water Calibration with Arduino</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
@@ -596,7 +597,7 @@ count condition, described below.</p>
 </div>
 <p>The system classifies the occupancy of each area based on three key parameters:</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">threshold</span></code> (<code class="docutils literal notranslate"><span class="pre">thr_day</span></code> / <code class="docutils literal notranslate"><span class="pre">thr_night</span></code>):</strong> The numerical value that determines whether a pixel is classified as white or black. This parameter is adjusted independently for each area, and for the corridor, independently for day and night: each corridor area exposes two controls, <code class="docutils literal notranslate"><span class="pre">thr_day</span></code> and <code class="docutils literal notranslate"><span class="pre">thr_night</span></code>, so lighting changes between day and night don’t require re-calibrating on the fly. The one that is not currently effective is shown greyed out; which one is effective follows the <code class="docutils literal notranslate"><span class="pre">Corridor</span> <span class="pre">Cycle</span></code> control (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">DAYTIME</span></code>/<code class="docutils literal notranslate"><span class="pre">NIGHTTIME</span></code> for <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode — see <a class="reference internal" href="corridor.html"><span class="std std-doc">Monitor &amp; Hardware Setup</span></a>). Operant box areas only have a single <code class="docutils literal notranslate"><span class="pre">threshold</span></code>, since the box has no automated day/night lighting cycle and lighting stays the same throughout the task. Whichever threshold is active, it should be tuned so that when the area is completely empty, the detected pixel count is zero, and when an animal is present, it captures the maximum possible number of pixels.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">threshold</span></code> (<code class="docutils literal notranslate"><span class="pre">thr_day</span></code> / <code class="docutils literal notranslate"><span class="pre">thr_night</span></code>):</strong> The numerical value that determines whether a pixel is classified as white or black. This parameter is adjusted independently for each area, and for the corridor, independently for day and night: each corridor area exposes two controls, <code class="docutils literal notranslate"><span class="pre">thr_day</span></code> and <code class="docutils literal notranslate"><span class="pre">thr_night</span></code>, so lighting changes between day and night don’t require re-calibrating on the fly. The one that is not currently effective is shown greyed out. Operant box areas only have a single <code class="docutils literal notranslate"><span class="pre">threshold</span></code>, since the box has no automated day/night lighting cycle and lighting stays the same throughout the task. Whichever threshold is active, it should be tuned so that when the area is completely empty, the detected pixel count is zero, and when an animal is present, it captures the maximum possible number of pixels.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">empty_limit</span></code>:</strong> The maximum number of detected pixels allowed before an area is flagged as occupied.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">subject_limit</span></code>:</strong> The maximum pixel threshold for a single animal. Exceeding this limit flags the area as potentially containing multiple subjects.</p></li>
 </ul>
@@ -687,7 +688,7 @@ count condition, described below.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4090bf62"></script>
+      <script src="../_static/documentation_options.js?v=8fa77496"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

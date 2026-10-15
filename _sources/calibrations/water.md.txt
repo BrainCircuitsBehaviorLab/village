@@ -13,9 +13,8 @@ Always available in the `CALIBRATION` screen:
 - **With any other controller**, the project's code directory must define a class
   inheriting from `WaterCalibrationTaskBase`
   (`village.custom_classes.water_calibration_task_base`) that runs the same sequence
-  on that controller (see [Water calibration](../protocols/tasks_arduino.md#water-calibration)
-  in the Arduino tasks page, and
-  [Running a Task from the Calibration](../advanced_customization/calibrations.md#running-a-task-from-the-calibration)).
+  on that controller. For an Arduino, a ready-to-use one is in
+  [Water Calibration with Arduino](../advanced_customization/water_calibration_arduino.md).
   Without it, clicking CALIBRATE or TEST shows a message explaining what's missing.
 
 If a project defines such a class, it is used instead of the Bpod default even when the

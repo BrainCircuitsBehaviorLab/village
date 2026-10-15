@@ -40,12 +40,12 @@ Due to the symmetrical placement of the servomotors, the opening angle will be g
 :class: note
 `Hold position` sets what the motor does **after** it arrives, and it is saved per motor along with the angles and times:
 
-- **Checked** (the default): the servo stays powered and keeps its holding torque, so it resists a load — but it hums continuously and warms up.
-- **Unchecked**: the PWM signal is cut once the motor has arrived, so the servo goes quiet and cool — but anything pushing on it can move it out of position.
+- **Checked** (the default): the servo stays powered and keeps its holding torque, so it actively holds its position and resists anything pushing on it.
+- **Unchecked**: the PWM signal is cut once the motor has arrived, so the servo goes quiet and cool. What happens next depends on the servo: some models keep holding their last position, while others go limp and can be pushed out of place.
 
-Corridor doors normally want it checked, since the door has to stay where it was put. A mechanism that latches on its own, or one that only has to reach a position and then be left alone, is better off unchecked.
+For corridor doors, with the servos we use, keep it **checked**: otherwise the animal can push the door and force it open.
 
-The checkbox takes effect immediately on `OPEN`/`CLOSE`, so you can hear the difference before saving. It only sets the **default**: task code can override it for a single movement (see [Motors](../devices/motors.md)).
+The checkbox takes effect immediately on `OPEN`/`CLOSE`, so you can test the behaviour before saving. It only sets the **default**: task code can override it for a single movement (see [Motors](../devices/motors.md)).
 ```
 
 ```{admonition} A motor stops responding

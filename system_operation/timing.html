@@ -191,6 +191,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_customization/water_calibration_arduino.html">Water Calibration with Arduino</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
@@ -589,6 +590,12 @@ exposed through <code class="docutils literal notranslate"><span class="pre">tim
 <div class="warning admonition">
 <p class="admonition-title">Important</p>
 <p>Do not use <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>. Always use <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> and <code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code>.</p>
+<p>Everything the system records (trial starts and ends, events, values, video frames) is
+timestamped with <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>. The system clock and <code class="docutils literal notranslate"><span class="pre">time_utils</span></code> normally agree to the
+millisecond, but if the system clock jumps (an NTP correction, a manual change, a
+daylight saving time change), timestamps taken with <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>
+are shifted by that jump relative to everything else, and durations measured across the
+jump are wrong. Nothing fails or warns about it: the data are just silently misaligned.</p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">What is a monotonic clock?</p>
@@ -599,7 +606,7 @@ exposed through <code class="docutils literal notranslate"><span class="pre">tim
 <li><p>Leap seconds: Occasional single-second adjustments to match Earth’s astronomical rotation.</p></li>
 <li><p>Manual modifications: Manual date/time changes made by a user or system script.
 By avoiding these external adjustments, a monotonic clock ensures that event ordering and elapsed-time calculations remain strictly consistent throughout a session.
-Any necessary resynchronization with the wall clock only occurs between sessions during the SYNC state. For implementation details, see <code class="docutils literal notranslate"><span class="pre">village/scripts/time_utils.py</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">time_utils</span></code> takes a reference from the wall clock and then advances it with the monotonic clock. The reference is retaken right before every session starts, so it never changes in the middle of a session. For implementation details, see <code class="docutils literal notranslate"><span class="pre">village/scripts/time_utils.py</span></code>.</p></li>
 </ul>
 </div>
 </section>
@@ -610,7 +617,7 @@ Any necessary resynchronization with the wall clock only occurs between sessions
 <h3>1. Raspberry Pi only (native execution)</h3>
 <p>Timestamps are derived from the Raspberry Pi master clock via
 <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> (see <a class="reference internal" href="#raspberry-pi-monotonic-clock-time-utils"><span class="std std-ref">Raspberry Pi Monotonic Clock</span></a>
-above), which tracks the Linux system clock and is resynchronized only between
+above), which tracks the Linux system clock and is resynchronized between
 sessions.</p>
 </section>
 <section id="controller-integrated-setups-bpod-or-arduino">
@@ -842,7 +849,7 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4090bf62"></script>
+      <script src="../_static/documentation_options.js?v=8fa77496"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

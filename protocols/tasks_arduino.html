@@ -191,6 +191,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_customization/water_calibration_arduino.html">Water Calibration with Arduino</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
@@ -486,7 +487,6 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#the-after-trial-method">The <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> method</a></li>
 <li><a class="reference internal" href="#the-close-method">The <code class="docutils literal notranslate"><span class="pre">close()</span></code> method</a></li>
 <li><a class="reference internal" href="#a-more-complete-example">A more complete example</a></li>
-<li><a class="reference internal" href="#water-calibration">Water calibration</a></li>
 <li><a class="reference internal" href="#methods-you-must-override">Methods you must override</a></li>
 <li><a class="reference internal" href="#methods-you-can-call">Methods you can call</a><ul>
 <li><a class="reference internal" href="#registering-the-trial-and-controller-events">Registering the trial and controller events</a></li>
@@ -910,12 +910,6 @@ the side LED, the response and the valve, and reports every state and poke. The
 inter-trial interval is timed by the Pi after the Arduino has finished
 (<code class="docutils literal notranslate"><span class="pre">register_enter_state(&quot;iti&quot;,</span> <span class="pre">...)</span></code> and a wait). The other <code class="docutils literal notranslate"><span class="pre">arduino_*</span></code> examples
 follow the same pattern, each with its firmware.</p>
-</section>
-<section id="water-calibration">
-<h2>Water calibration</h2>
-<p>The built-in water calibration opens the valves through Bpod. With an Arduino,
-write a subclass of <code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> that opens them through your board:
-see <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a>.</p>
 </section>
 <hr class="docutils" />
 <section id="methods-you-must-override">
@@ -1351,7 +1345,7 @@ started it), and <code class="docutils literal notranslate"><span class="pre">ou
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4090bf62"></script>
+      <script src="../_static/documentation_options.js?v=8fa77496"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

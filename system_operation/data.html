@@ -191,6 +191,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_customization/water_calibration_arduino.html">Water Calibration with Arduino</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
@@ -487,8 +488,6 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#log-folders">Log Folders</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#video-recordings-frame-data">Video Recordings &amp; Frame Data</a></li>
-<li><a class="reference internal" href="#frame-annotations-on-screen-overlays">Frame Annotations &amp; On-Screen Overlays</a></li>
 <li><a class="reference internal" href="#subject-behavioral-sessions">Subject Behavioral Sessions</a><ul>
 <li><a class="reference internal" href="#raw-session-filename-raw-csv">1. Raw Session (<code class="docutils literal notranslate"><span class="pre">{filename}_RAW.csv</span></code>)</a></li>
 <li><a class="reference internal" href="#processed-session-filename-csv">2. Processed Session (<code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code>)</a></li>
@@ -496,6 +495,8 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#aggregate-history-file">Aggregate History File</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#video-recordings-frame-data">Video Recordings &amp; Frame Data</a></li>
+<li><a class="reference internal" href="#frame-annotations-on-screen-overlays">Frame Annotations &amp; On-Screen Overlays</a></li>
 <li><a class="reference internal" href="#understanding-the-automated-training-loop">Understanding the Automated Training Loop</a></li>
 </ul>
 </div></div>
@@ -689,6 +690,101 @@ created once a line threshold is exceeded. Older event records are archived here
 </section>
 </section>
 <hr class="docutils" />
+<section id="subject-behavioral-sessions">
+<h2>Subject Behavioral Sessions</h2>
+<ul class="simple">
+<li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/sessions/{subject}/</span></code></p></li>
+<li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code></p></li>
+</ul>
+<p>Three files are generated for every completed behavioral session:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">data/sessions/{subject}/
+</span><span data-line="2">├── {filename}_RAW.csv
+</span><span data-line="3">├── {filename}.csv
+</span><span data-line="4">└── {filename}.json
+</span></pre></div>
+</div>
+<section id="raw-session-filename-raw-csv">
+<h3>1. Raw Session (<code class="docutils literal notranslate"><span class="pre">{filename}_RAW.csv</span></code>)</h3>
+<p>One row per event. During the session, the events are written as they happen to
+<code class="docutils literal notranslate"><span class="pre">data/sessions/session.csv</span></code>; when the session ends, that file is copied here. (That
+real-time file is emptied when the Training Village starts: see
+<a class="reference internal" href="../troubleshooting/troubleshooting.html#after-a-power-cut"><span class="std std-ref">After a Power Cut</span></a>.)</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Column</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">TRIAL</span></code></p></td>
+<td class="text-left"><p>Trial index.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">START</span></code></p></td>
+<td class="text-left"><p>Absolute Unix timestamp (4 decimal places) marking the onset of a state or event.</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">END</span></code></p></td>
+<td class="text-left"><p>Absolute Unix timestamp of state termination (empty for instantaneous events).</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MSG</span></code></p></td>
+<td class="text-left"><p>Message type (see standards below).</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">VALUE</span></code></p></td>
+<td class="text-left"><p>Value associated with the message.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Message type standards (<code class="docutils literal notranslate"><span class="pre">MSG</span></code>):</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">_Transition_to_{stateName}</span></code>: State machine transition flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_START</span></code> / <code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_END</span></code>: Structural boundaries of a
+behavioral state.</p></li>
+<li><p><em>Hardware event name</em>: Digital input/output line transitions (e.g., photo-gate beams,
+ports).</p></li>
+<li><p><em>Custom variable tag</em>: Any performance variable explicitly captured with
+<code class="docutils literal notranslate"><span class="pre">register_value()</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">stimulus_side</span></code>, <code class="docutils literal notranslate"><span class="pre">correct_choice</span></code>, <code class="docutils literal notranslate"><span class="pre">rewarded</span></code>). The tag name
+is written to <code class="docutils literal notranslate"><span class="pre">MSG</span></code> and its value to <code class="docutils literal notranslate"><span class="pre">VALUE</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> / <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code>: Absolute trial boundary markers.</p></li>
+</ul>
+</section>
+<section id="processed-session-filename-csv">
+<h3>2. Processed Session (<code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code>)</h3>
+<p>A parsed, trial-by-trial overview: instead of one row per event, this file contains one
+row per trial. Each row is built when its trial finishes (after <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>), and the
+file is saved when the session ends. It begins
+with the following fixed columns: <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>,
+<code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>.</p>
+<div class="note admonition">
+<p class="admonition-title">run_mode</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">Manual</span></code> if the session was launched manually from the
+GUI, or <code class="docutils literal notranslate"><span class="pre">Auto</span></code> if it was triggered automatically upon detecting an animal in the corridor.</p>
+</div>
+</section>
+<section id="session-settings-metadata-filename-json">
+<h3>3. Session Settings Metadata (<code class="docutils literal notranslate"><span class="pre">{filename}.json</span></code>)</h3>
+<p>Stores all parameters used during the session: <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code>, <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>,
+<code class="docutils literal notranslate"><span class="pre">run_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">observations</span></code>, and all custom protocol parameters.</p>
+<p>To add a note to a session, click on its entry in <code class="docutils literal notranslate"><span class="pre">sessions_summary</span></code> within the GUI. A
+panel listing all session parameters will appear; the <code class="docutils literal notranslate"><span class="pre">observations</span></code> field is editable
+and empty by default.</p>
+<div class="note admonition">
+<p class="admonition-title">Tip</p>
+<p>Although <code class="docutils literal notranslate"><span class="pre">.json</span></code> files already capture all parameters used in a session, it is good
+practice to also record relevant variables from within the task using <code class="docutils literal notranslate"><span class="pre">register_value()</span></code>,
+as this makes them directly accessible in the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file.</p>
+</div>
+</section>
+<section id="aggregate-history-file">
+<h3>Aggregate History File</h3>
+<p>In addition to the per-session files, a persistent history file is maintained in each
+subject’s directory:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">{subject}.csv</span></code></strong>: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. This aggregate dataset is essential for adaptive automated training (<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved &gt;80% accuracy over its last three sessions before advancing to the next training stage.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
 <section id="video-recordings-frame-data">
 <h2>Video Recordings &amp; Frame Data</h2>
 <ul class="simple">
@@ -776,100 +872,6 @@ downside to leaving it permanently enabled too — it only adds a live visual ai
 <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> (screen only) split also applies to overlays you add yourself.</p>
 </section>
 <hr class="docutils" />
-<section id="subject-behavioral-sessions">
-<h2>Subject Behavioral Sessions</h2>
-<ul class="simple">
-<li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/sessions/{subject}/</span></code></p></li>
-<li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code></p></li>
-</ul>
-<p>Three files are generated for every completed behavioral session:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">data/sessions/{subject}/
-</span><span data-line="2">├── {filename}_RAW.csv
-</span><span data-line="3">├── {filename}.csv
-</span><span data-line="4">└── {filename}.json
-</span></pre></div>
-</div>
-<section id="raw-session-filename-raw-csv">
-<h3>1. Raw Session (<code class="docutils literal notranslate"><span class="pre">{filename}_RAW.csv</span></code>)</h3>
-<p>One row per event. During the session, the events are written as they happen to
-<code class="docutils literal notranslate"><span class="pre">data/sessions/session.csv</span></code>; when the session ends, that file is copied here. (That
-real-time file is emptied when the Training Village starts: see
-<a class="reference internal" href="../troubleshooting/troubleshooting.html#after-a-power-cut"><span class="std std-ref">After a Power Cut</span></a>.)</p>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p>Column</p></th>
-<th class="head text-left"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">TRIAL</span></code></p></td>
-<td class="text-left"><p>Trial index.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">START</span></code></p></td>
-<td class="text-left"><p>Absolute Unix timestamp (4 decimal places) marking the onset of a state or event.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">END</span></code></p></td>
-<td class="text-left"><p>Absolute Unix timestamp of state termination (empty for instantaneous events).</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">MSG</span></code></p></td>
-<td class="text-left"><p>Message type (see standards below).</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">VALUE</span></code></p></td>
-<td class="text-left"><p>Value associated with the message.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>Message type standards (<code class="docutils literal notranslate"><span class="pre">MSG</span></code>):</strong></p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">_Transition_to_{stateName}</span></code>: State machine transition flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_START</span></code> / <code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_END</span></code>: Structural boundaries of a
-behavioral state.</p></li>
-<li><p><em>Hardware event name</em>: Digital input/output line transitions (e.g., photo-gate beams,
-ports).</p></li>
-<li><p><em>Custom variable tag</em>: Any performance variable explicitly captured with
-<code class="docutils literal notranslate"><span class="pre">register_value()</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">stimulus_side</span></code>, <code class="docutils literal notranslate"><span class="pre">correct_choice</span></code>, <code class="docutils literal notranslate"><span class="pre">rewarded</span></code>). The tag name
-is written to <code class="docutils literal notranslate"><span class="pre">MSG</span></code> and its value to <code class="docutils literal notranslate"><span class="pre">VALUE</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> / <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code>: Absolute trial boundary markers.</p></li>
-</ul>
-</section>
-<section id="processed-session-filename-csv">
-<h3>2. Processed Session (<code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code>)</h3>
-<p>A parsed, trial-by-trial overview generated at the end of each trial by processing the
-raw data. Instead of one row per event, this file contains one row per trial. It begins
-with the following fixed columns: <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>,
-<code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>.</p>
-<div class="note admonition">
-<p class="admonition-title">run_mode</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">Manual</span></code> if the session was launched manually from the
-GUI, or <code class="docutils literal notranslate"><span class="pre">Auto</span></code> if it was triggered automatically upon detecting an animal in the corridor.</p>
-</div>
-</section>
-<section id="session-settings-metadata-filename-json">
-<h3>3. Session Settings Metadata (<code class="docutils literal notranslate"><span class="pre">{filename}.json</span></code>)</h3>
-<p>Stores all parameters used during the session: <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code>, <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>,
-<code class="docutils literal notranslate"><span class="pre">run_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">observations</span></code>, and all custom protocol parameters.</p>
-<p>To add a note to a session, click on its entry in <code class="docutils literal notranslate"><span class="pre">sessions_summary</span></code> within the GUI. A
-panel listing all session parameters will appear; the <code class="docutils literal notranslate"><span class="pre">observations</span></code> field is editable
-and empty by default.</p>
-<div class="note admonition">
-<p class="admonition-title">Tip</p>
-<p>Although <code class="docutils literal notranslate"><span class="pre">.json</span></code> files already capture all parameters used in a session, it is good
-practice to also record relevant variables from within the task using <code class="docutils literal notranslate"><span class="pre">register_value()</span></code>,
-as this makes them directly accessible in the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file.</p>
-</div>
-</section>
-<section id="aggregate-history-file">
-<h3>Aggregate History File</h3>
-<p>In addition to the per-session files, a persistent history file is maintained in each
-subject’s directory:</p>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">{subject}.csv</span></code></strong>: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. This aggregate dataset is essential for adaptive automated training (<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved &gt;80% accuracy over its last three sessions before advancing to the next training stage.</p></li>
-</ul>
-</section>
-</section>
-<hr class="docutils" />
 <section id="understanding-the-automated-training-loop">
 <h2>Understanding the Automated Training Loop</h2>
 <p>The Training Village uses a closed-loop parameter cycle to drive fully autonomous
@@ -941,7 +943,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4090bf62"></script>
+      <script src="../_static/documentation_options.js?v=8fa77496"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

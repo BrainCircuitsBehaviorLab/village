@@ -191,6 +191,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_customization/water_calibration_arduino.html">Water Calibration with Arduino</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
@@ -568,9 +569,8 @@ through a built-in Bpod state machine, with nothing to set up.</p></li>
 <li><p><strong>With any other controller</strong>, the project’s code directory must define a class
 inheriting from <code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code>
 (<code class="docutils literal notranslate"><span class="pre">village.custom_classes.water_calibration_task_base</span></code>) that runs the same sequence
-on that controller (see <a class="reference internal" href="../protocols/tasks_arduino.html#water-calibration"><span class="std std-ref">Water calibration</span></a>
-in the Arduino tasks page, and
-<a class="reference internal" href="../advanced_customization/calibrations.html#running-a-task-from-the-calibration"><span class="std std-ref">Running a Task from the Calibration</span></a>).
+on that controller. For an Arduino, a ready-to-use one is in
+<a class="reference internal" href="../advanced_customization/water_calibration_arduino.html"><span class="std std-doc">Water Calibration with Arduino</span></a>.
 Without it, clicking CALIBRATE or TEST shows a message explaining what’s missing.</p></li>
 </ul>
 <p>If a project defines such a class, it is used instead of the Bpod default even when the
@@ -669,7 +669,7 @@ needs calibrating or the requested volume needs adjusting.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=4090bf62"></script>
+      <script src="../_static/documentation_options.js?v=8fa77496"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

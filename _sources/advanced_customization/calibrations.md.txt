@@ -112,7 +112,9 @@ class LedCalibration(CalibrationBase):
 ```
 
 The built-in water calibration works the same way, with
-`WaterCalibrationTaskBase`, see [Water Calibration](../calibrations/water.md).
+`WaterCalibrationTaskBase`, see [Water Calibration](../calibrations/water.md). To run it
+on an Arduino instead of Bpod, see
+[Water Calibration with Arduino](water_calibration_arduino.md).
 
 ---
 
@@ -160,4 +162,5 @@ self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)
 :hidden:
 
 LED Calibration Example <../examples/led_calibration.md>
+Water Calibration with Arduino <water_calibration_arduino.md>
 ```

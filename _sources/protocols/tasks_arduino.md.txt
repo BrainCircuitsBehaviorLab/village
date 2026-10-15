@@ -153,12 +153,6 @@ inter-trial interval is timed by the Pi after the Arduino has finished
 (`register_enter_state("iti", ...)` and a wait). The other `arduino_*` examples
 follow the same pattern, each with its firmware.
 
-### Water calibration
-
-The built-in water calibration opens the valves through Bpod. With an Arduino,
-write a subclass of `WaterCalibrationTaskBase` that opens them through your board:
-see [Water Calibration](../calibrations/water.md).
-
 ---
 
 ### Methods you must override
