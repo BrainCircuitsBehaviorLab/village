@@ -594,8 +594,7 @@ rectangles on the touchscreen, each one showing a different stimulus when touche
 <p><strong>Training protocol</strong> (<a class="reference internal" href="../examples/training_protocol.html"><span class="std std-doc">training_protocol.py</span></a>):</p>
 <ul class="simple">
 <li><p>Moves each subject through the six Bpod stages of <em>Follow the Light</em>, deciding the
-next task after every session. The other tasks are run manually and don’t change
-the subject’s next task.</p></li>
+next task after every session.</p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -604,12 +603,17 @@ the subject’s next task.</p></li>
 <p>The <code class="docutils literal notranslate"><span class="pre">TASKS</span></code> screen shows the active training protocol on the left, along with a list of
 all available tasks. When you click on a task, its description (<code class="docutils literal notranslate"><span class="pre">self.info</span></code>) is
 displayed, along with its settings, organized in the tabs defined by the training
-protocol (see <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">The Training Protocol</span></a>). Two more settings are
-added for manual runs:</p>
+protocol (see <a class="reference internal" href="../protocols/creating.html"><span class="std std-doc">The Training Protocol</span></a>). Two more fields are
+shown:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: The task will automatically end once this number of trials
-is completed.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>: The task will automatically end when this time is reached.</p></li>
+is completed. It only exists for manual runs: it is not a setting of the training
+protocol, it is not saved, and it has no effect on the sessions run automatically
+(to limit the trials in those, see
+<a class="reference internal" href="../protocols/tasks_bpod.html#force-stop"><span class="std std-ref">Stopping the task from your own logic</span></a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>: The task will automatically end when this time is reached. Unlike
+the previous one, it is a setting of the training protocol, used in automatic
+sessions too.</p></li>
 </ul>
 <p>You can optionally select a subject from the <code class="docutils literal notranslate"><span class="pre">Subject</span></code> selector, next to the <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code>
 button, before running it:</p>
@@ -620,6 +624,14 @@ button, before running it:</p>
 subject. Once the session ends, the subject’s settings are updated automatically by
 <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>.</p></li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When a subject is selected, the values you change before pressing <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code>
+(<code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code> or any other setting) are kept for that subject: they become its
+settings for the next sessions, automatic ones included, unless
+<code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code> reassigns them at the end of the session (see
+<a class="reference internal" href="../protocols/creating.html#update-training-settings"><span class="std std-ref">update_training_settings()</span></a>).</p>
+</div>
 <p>Press <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">TASK</span></code> to start.</p>
 </section>
 <hr class="docutils" />
@@ -671,7 +683,7 @@ without making any actual changes. The settings displayed are never saved or app
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=17f91881"></script>
+      <script src="../_static/documentation_options.js?v=4090bf62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

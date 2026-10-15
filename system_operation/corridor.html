@@ -479,9 +479,19 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#control-tabs">Control Tabs</a></li>
+<li><a class="reference internal" href="#control-tabs">Control Tabs</a><ul>
+<li><a class="reference internal" href="#corridor"><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code></a><ul>
+<li><a class="reference internal" href="#door-motors">Door motors</a></li>
+<li><a class="reference internal" href="#scale">Scale</a></li>
+<li><a class="reference internal" href="#temperature-sensor">Temperature sensor</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#box"><code class="docutils literal notranslate"><span class="pre">BOX</span></code></a></li>
+<li><a class="reference internal" href="#functions"><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code></a></li>
+<li><a class="reference internal" href="#virtual-mouse"><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#bottom-tabs">Bottom Tabs</a></li>
-<li><a class="reference internal" href="#setting-up-the-hardware">Setting Up the Hardware</a></li>
 </ul>
 </div></div>
   </aside>
@@ -561,69 +571,25 @@ data-aria-dark="Switch to auto color mode">
 <p>The <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen is used to track the system’s status, displaying real-time video feeds from both the corridor and the operant box, and to control and set up the hardware.</p>
 <section id="control-tabs">
 <h2>Control Tabs</h2>
-<p>Depending on your active configuration, several control tabs are available at the center of the screen:</p>
-<ul>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>:</strong> Provides manual and automated overrides for the RFID reader, doors, weighing scale, and temperature sensor. When the RFID system is toggled <strong>OFF</strong>,
-animal identification is disabled, and no subjects will be permitted to enter the operant box.</p>
+<p>Several control tabs are available at the center of the screen. Which ones are shown depends on your configuration:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>:</strong> only if <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is ON (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> only if <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> is ON (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>) or the behavioral controller is a Bpod.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> always.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> only if the behavioral controller is a Bpod or the box camera tracking is enabled.</p></li>
+</ul>
+<section id="corridor">
+<h3><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code></h3>
 <a class="reference internal image-reference" href="../_images/corridor_menu.webp"><img alt="CORRIDOR tab" src="../_images/corridor_menu.webp" style="width: 380px;" />
 </a>
-<p><em>Lighting and camera exposure/thresholds are driven together by the <code class="docutils literal notranslate"><span class="pre">Corridor</span> <span class="pre">Cycle</span></code> control, which can be set to <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. <code class="docutils literal notranslate"><span class="pre">DAY</span></code> turns the visible light <strong>ON</strong> and the IR light <strong>OFF</strong>, and applies the daytime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> does the opposite: visible light <strong>OFF</strong>, IR light <strong>ON</strong>, and the nighttime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> switches automatically between <code class="docutils literal notranslate"><span class="pre">DAY</span></code> and <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> according to the actual time of day; the daytime/nighttime schedule can be customized under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>.</em></p>
-</li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> Provides dedicated controls for the lighting, scale and motor modules inside the operant box. If a Bpod is connected as the primary behavioral controller, this tab will also display dedicated
-buttons to manually trigger the port LEDs or deliver water rewards (1-second duration) directly to the behavior ports.</p>
-<a class="reference internal image-reference" href="../_images/box_menu.webp"><img alt="BOX tab" src="../_images/box_menu.webp" style="width: 380px;" />
-</a>
-<p><em>The <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code> and <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> modes can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.</em></p>
-<div class="warning admonition">
-<p class="admonition-title">The box must never be completely dark</p>
-<p>The box camera is watched all the time, even between sessions, to check that no
-animal is left inside. If its image stays completely black for 10 seconds, the system
-treats the camera as failed and restarts it. Setting both lights to <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> is only
-safe if the box gets some light from another source (light coming in from outside, a
-photogate, a port LED…), enough for the image not to be fully black. If that is not
-the case, set the <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> (or the <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code>) to <code class="docutils literal notranslate"><span class="pre">ON</span></code> instead of <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>.</p>
-</div>
-<div class="note admonition">
-<p class="admonition-title">A motor stops responding</p>
-<p>If a motor stops responding to <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> after being physically disconnected and
-reconnected, restart Village rather than assuming it’s broken — see
-<a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a>.</p>
-</div>
-</li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions
-for writing and deploying these functions can be found in the <a class="reference internal" href="../protocols/functions.html"><span class="std std-doc">Direct Functions</span></a> section.</p>
-<a class="reference internal image-reference" href="../_images/functions_menu.webp"><img alt="FUNCTIONS tab" src="../_images/functions_menu.webp" style="width: 380px;" />
-</a>
-</li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness (see also <a class="reference internal" href="../advanced_customization/auto.html"><span class="std std-doc">Custom AutoNoMouse</span></a>, a virtual animal that performs a task by itself).</p>
-<a class="reference internal image-reference" href="../_images/virtual_menu.webp"><img alt="VIRTUAL MOUSE tab" src="../_images/virtual_menu.webp" style="width: 380px;" />
-</a>
+<p>Provides manual control of the corridor hardware (RFID reader, doors, weighing scale and temperature sensor), and is where the corridor elements are set up.</p>
 <ul class="simple">
-<li><p><strong>Bpod Integration:</strong> Simulate a nose-poke in any behavior port with a single click.</p></li>
-<li><p><strong>Touchscreen Integration:</strong> Simulate screen-touch events by sending precise coordinate inputs <span class="math notranslate nohighlight">\((x, y)\)</span>.</p></li>
-<li><p><strong>Position Tracking:</strong> If real-time animal tracking is active within the operant box, you can simulate custom trajectories to verify location-based experimental triggers.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RFID</span> <span class="pre">Reader</span></code>:</strong> When it is toggled <strong>OFF</strong>, animal identification is disabled, and no subjects will be permitted to enter the operant box.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Corridor</span> <span class="pre">Cycle</span></code>:</strong> Lighting and camera exposure/thresholds are driven together by this control, which can be set to <code class="docutils literal notranslate"><span class="pre">DAY</span></code>, <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. <code class="docutils literal notranslate"><span class="pre">DAY</span></code> turns the visible light <strong>ON</strong> and the IR light <strong>OFF</strong>, and applies the daytime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> does the opposite: visible light <strong>OFF</strong>, IR light <strong>ON</strong>, and the nighttime camera exposure/threshold settings. <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> switches automatically between <code class="docutils literal notranslate"><span class="pre">DAY</span></code> and <code class="docutils literal notranslate"><span class="pre">NIGHT</span></code> according to the actual time of day; the daytime/nighttime schedule can be customized under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>.</p></li>
 </ul>
-</li>
-</ul>
-</section>
-<section id="bottom-tabs">
-<h2>Bottom Tabs</h2>
-<p>A secondary group of tabs is located at the bottom of the screen to monitor system telemetry and history:</p>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">INFO</span></code>:</strong> Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code>:</strong> Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>:</strong> Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and operant box tracking systems. A comprehensive breakdown of these parameters is available in the <a class="reference internal" href="detection.html"><span class="std std-doc">Animal Detection &amp; Tracking</span></a>.</p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="setting-up-the-hardware">
-<h2>Setting Up the Hardware</h2>
-<p>The corridor elements must be calibrated from the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen:</p>
-<ol class="arabic simple">
-<li><p><strong>Set Door Motor Angles</strong>: Select the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> tab in the center of the screen. Each installed motor has its own <code class="docutils literal notranslate"><span class="pre">MOTORx</span> <span class="pre">VALUES</span></code> button (<code class="docutils literal notranslate"><span class="pre">MOTOR1</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR2</span></code> are always shown; <code class="docutils literal notranslate"><span class="pre">MOTOR3</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR4</span></code> only appear if enabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>). Clicking it opens a dialog with the <code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> and <code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> fields, a <code class="docutils literal notranslate"><span class="pre">Hold</span> <span class="pre">position</span></code> checkbox, plus <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> buttons to move the motor immediately and test the values before committing. The closing angle should allow the door to gently touch the top without pushing further.</p></li>
-</ol>
-<div class="note admonition">
-<p class="admonition-title">Note</p>
+<section id="door-motors">
+<h4>Door motors</h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">OPEN</span> <span class="pre">MOTORx</span></code> / <code class="docutils literal notranslate"><span class="pre">CLOSE</span> <span class="pre">MOTORx</span></code> buttons move each door with its saved values. To set those values, each installed motor has its own <code class="docutils literal notranslate"><span class="pre">MOTORx</span> <span class="pre">VALUES</span></code> button (<code class="docutils literal notranslate"><span class="pre">MOTOR1</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR2</span></code> are always shown; <code class="docutils literal notranslate"><span class="pre">MOTOR3</span></code>/<code class="docutils literal notranslate"><span class="pre">MOTOR4</span></code> only appear if enabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>). Clicking it opens a dialog with the <code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> and <code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">angle</span></code>/<code class="docutils literal notranslate"><span class="pre">Close</span> <span class="pre">time</span> <span class="pre">(ms)</span></code> fields, a <code class="docutils literal notranslate"><span class="pre">Hold</span> <span class="pre">position</span></code> checkbox, plus <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> buttons to move the motor immediately and test the values before committing. The closing angle should allow the door to gently touch the top without pushing further.</p>
 <p>Due to the symmetrical placement of the servomotors, the opening angle will be greater than the closing angle for one servo, while the opposite will apply to the other. Typically, the angular displacement between the open and closed positions is approximately 25° to 30°. The most straightforward way to calibrate the gates is by following these steps:</p>
 <ol class="arabic simple">
 <li><p>Temporarily detach the plastic gate from the servo horn.</p></li>
@@ -632,7 +598,6 @@ for writing and deploying these functions can be found in the <a class="referenc
 <li><p>Adjust the final <code class="docutils literal notranslate"><span class="pre">Open</span> <span class="pre">angle</span></code> incrementally until the gate allows the animal to pass through easily when open.</p></li>
 <li><p>Once you are happy with the angles and times, click <strong>SAVE</strong> to persist them (or <strong>DISCARD</strong> to revert to the values the motor had before opening the dialog).</p></li>
 </ol>
-</div>
 <div class="note admonition">
 <p class="admonition-title">Hold position</p>
 <p><code class="docutils literal notranslate"><span class="pre">Hold</span> <span class="pre">position</span></code> sets what the motor does <strong>after</strong> it arrives, and it is saved per motor along with the angles and times:</p>
@@ -643,18 +608,71 @@ for writing and deploying these functions can be found in the <a class="referenc
 <p>Corridor doors normally want it checked, since the door has to stay where it was put. A mechanism that latches on its own, or one that only has to reach a position and then be left alone, is better off unchecked.</p>
 <p>The checkbox takes effect immediately on <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code>, so you can hear the difference before saving. It only sets the <strong>default</strong>: task code can override it for a single movement (see <a class="reference internal" href="../devices/motors.html"><span class="std std-doc">Motors</span></a>).</p>
 </div>
-<ol class="arabic simple" start="2">
-<li><p><strong>Calibrate the Scale</strong>: Use the <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code> button with a known weight to calibrate the scale, <code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code> to zero it, and verify functionality by pressing <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code>.</p></li>
-<li><p><strong>Check Temperature and Humidity</strong>: Use the <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">TEMPERATURE</span></code> button to check temperature and humidity readings.</p></li>
-</ol>
 <div class="note admonition">
-<p class="admonition-title">Note</p>
-<p>If you are using motors in the operant box, calibrate them the same way from the <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tab: each active motor (up to <code class="docutils literal notranslate"><span class="pre">MOTOR1</span></code>-<code class="docutils literal notranslate"><span class="pre">MOTOR7</span></code>, as enabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>) has its own <code class="docutils literal notranslate"><span class="pre">MOTORx</span> <span class="pre">VALUES</span></code> button opening the same angle/time dialog. If a box scale is enabled (<code class="docutils literal notranslate"><span class="pre">SCALE_BOX</span></code>), the <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tab also has its own <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code>, <code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code>, and <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code> buttons, calibrated independently from the corridor scale.</p>
+<p class="admonition-title">A motor stops responding</p>
+<p>If a motor stops responding to <code class="docutils literal notranslate"><span class="pre">OPEN</span></code>/<code class="docutils literal notranslate"><span class="pre">CLOSE</span></code> after being physically disconnected and
+reconnected, restart Village rather than assuming it’s broken — see
+<a class="reference internal" href="../troubleshooting/troubleshooting.html"><span class="std std-doc">Troubleshooting</span></a>.</p>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">BOX</span></code> tabs are not visible, it is because the corresponding options <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> or <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> are disabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code> / <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>.</p>
+</section>
+<section id="scale">
+<h4>Scale</h4>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code> button with a known weight to calibrate the scale, <code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code> to zero it, and verify functionality by pressing <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code>.</p>
+</section>
+<section id="temperature-sensor">
+<h4>Temperature sensor</h4>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">TEMPERATURE</span></code> button to check temperature and humidity readings.</p>
+</section>
+</section>
+<section id="box">
+<h3><code class="docutils literal notranslate"><span class="pre">BOX</span></code></h3>
+<a class="reference internal image-reference" href="../_images/box_menu.webp"><img alt="BOX tab" src="../_images/box_menu.webp" style="width: 380px;" />
+</a>
+<p>Provides dedicated controls for the lighting, scale and motor modules inside the operant box (as enabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>).</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code> / <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code>:</strong> Can be set to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. In <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> mode, both visible and IR lights (if installed) are dynamically triggered: they switch ON automatically as soon as an animal enters the operant box and switch OFF once the subject leaves.</p>
+<div class="warning admonition">
+<p class="admonition-title">The box must never be completely dark</p>
+<p>The box camera is watched all the time, even between sessions, to check that no
+animal is left inside. If its image stays completely black for 10 seconds, the system
+treats the camera as failed and restarts it. Setting both lights to <code class="docutils literal notranslate"><span class="pre">AUTO</span></code> is only
+safe if the box gets some light from another source (light coming in from outside, a
+photogate, a port LED…), enough for the image not to be fully black. If that is not
+the case, set the <code class="docutils literal notranslate"><span class="pre">IR</span> <span class="pre">Light</span></code> (or the <code class="docutils literal notranslate"><span class="pre">Visible</span> <span class="pre">Light</span></code>) to <code class="docutils literal notranslate"><span class="pre">ON</span></code> instead of <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>.</p>
 </div>
+</li>
+<li><p><strong>Motors and scale:</strong> They work like the ones in the <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code> tab. Each active motor (up to <code class="docutils literal notranslate"><span class="pre">MOTOR1</span></code>-<code class="docutils literal notranslate"><span class="pre">MOTOR7</span></code>, as enabled in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>) has its own <code class="docutils literal notranslate"><span class="pre">MOTORx</span> <span class="pre">VALUES</span></code> button opening the same angle/time dialog. If a box scale is enabled (<code class="docutils literal notranslate"><span class="pre">SCALE_BOX</span></code>), the tab also has its own <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span> <span class="pre">SCALE</span></code>, <code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code>, and <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">WEIGHT</span></code> buttons, calibrated independently from the corridor scale.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">LEDx</span></code> / <code class="docutils literal notranslate"><span class="pre">WATERx</span></code>:</strong> Only if a Bpod is the behavioral controller. They turn on the LED of a behavior port, or deliver water (1-second valve opening) to it.</p></li>
+</ul>
+</section>
+<section id="functions">
+<h3><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code></h3>
+<a class="reference internal image-reference" href="../_images/functions_menu.webp"><img alt="FUNCTIONS tab" src="../_images/functions_menu.webp" style="width: 380px;" />
+</a>
+<p>Allows you to execute custom, user-defined Python functions in real time (e.g., displaying specific visual stimuli, playing auditory cues, etc.). Step-by-step instructions for writing and deploying these functions can be found in the <a class="reference internal" href="../protocols/functions.html"><span class="std std-doc">Direct Functions</span></a> section.</p>
+</section>
+<section id="virtual-mouse">
+<h3><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code></h3>
+<a class="reference internal image-reference" href="../_images/virtual_menu.webp"><img alt="VIRTUAL MOUSE tab" src="../_images/virtual_menu.webp" style="width: 380px;" />
+</a>
+<p>Enables real-time simulation of animal behavior through software triggers—an invaluable tool for debugging task logic and testing system responsiveness.</p>
+<ul class="simple">
+<li><p><strong>Bpod Integration (<code class="docutils literal notranslate"><span class="pre">POKE1</span></code>-<code class="docutils literal notranslate"><span class="pre">POKE8</span></code>):</strong> Simulate a nose-poke in any behavior port with a single click.</p></li>
+<li><p><strong>Touchscreen Integration:</strong> Simulate screen-touch events by sending precise coordinate inputs <span class="math notranslate nohighlight">\((x, y)\)</span> (<code class="docutils literal notranslate"><span class="pre">Touch</span> <span class="pre">the</span> <span class="pre">screen</span></code>).</p></li>
+<li><p><strong>AutoNoMouse:</strong> If the box camera tracking is enabled, <code class="docutils literal notranslate"><span class="pre">AutoNoMouse</span></code> starts and stops a virtual animal that performs the running task by itself, and <code class="docutils literal notranslate"><span class="pre">Inject</span> <span class="pre">Trials</span></code> adds <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">inject</span></code> simulated trials to the session data (one every <code class="docutils literal notranslate"><span class="pre">Interval</span> <span class="pre">(s)</span></code> seconds), to fill a session quickly and test the plots or the training protocol. See <a class="reference internal" href="../advanced_customization/auto.html"><span class="std std-doc">Custom AutoNoMouse</span></a>.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="bottom-tabs">
+<h2>Bottom Tabs</h2>
+<p>A secondary group of tabs is located at the bottom of the screen to monitor system telemetry and history:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">INFO</span></code>:</strong> Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code>:</strong> Only with <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> ON. Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>:</strong> Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and operant box tracking systems. A comprehensive breakdown of these parameters is available in the <a class="reference internal" href="detection.html"><span class="std std-doc">Animal Detection &amp; Tracking</span></a>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EXTRA</span></code>:</strong> Only with <code class="docutils literal notranslate"><span class="pre">CORRIDOR_AREA_EXTRA</span></code> ON (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>). Configures the extra corridor area used to check that the passage between the two homecages is not blocked. See <a class="reference internal" href="../advanced_customization/homecage_camera_control.html"><span class="std std-doc">Homecage Camera Control</span></a>.</p></li>
+</ul>
 </section>
 </section>
 
@@ -695,7 +713,7 @@ for writing and deploying these functions can be found in the <a class="referenc
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=17f91881"></script>
+      <script src="../_static/documentation_options.js?v=4090bf62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -499,6 +499,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#self-info"><code class="docutils literal notranslate"><span class="pre">self.info</span></code></a></li>
 <li><a class="reference internal" href="#self-calibrations"><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></a></li>
 <li><a class="reference internal" href="#self-should-stop-read-only-property"><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</a></li>
+<li><a class="reference internal" href="#stopping-the-task-from-your-own-logic-self-force-stop">Stopping the task from your own logic (<code class="docutils literal notranslate"><span class="pre">self.force_stop</span></code>)</a></li>
 <li><a class="reference internal" href="#self-trial-data-dict"><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</a><ul>
 <li><a class="reference internal" href="#example">Example</a></li>
 </ul>
@@ -1160,9 +1161,9 @@ values and real-world units (see <a class="reference internal" href="../advanced
 </section>
 <section id="self-should-stop-read-only-property">
 <h3><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (read-only property)</h3>
-<p><code class="docutils literal notranslate"><span class="pre">True</span></code> once <em>any</em> stopping condition is met: the trial/time limit (Manual mode
-only — Auto mode runs until the subject leaves the corridor, not for a fixed
-number of trials), <code class="docutils literal notranslate"><span class="pre">force_stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">stop_button_pressed</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">True</span></code> once <em>any</em> stopping condition is met: the time limit (<code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code>),
+the trial limit (<code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>, Manual mode only: Auto mode does not
+stop after a fixed number of trials), <code class="docutils literal notranslate"><span class="pre">force_stop</span></code>, or <code class="docutils literal notranslate"><span class="pre">stop_button_pressed</span></code>.</p>
 <div class="warning admonition">
 <p class="admonition-title">Poll it in your own waiting loop</p>
 <p>Trial/time limits and <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> are only checked <em>between</em> trials, by the
@@ -1175,6 +1176,24 @@ when asked to:</p>
 </span></pre></div>
 </div>
 </div>
+</section>
+<section id="stopping-the-task-from-your-own-logic-self-force-stop">
+<h3>Stopping the task from your own logic (<code class="docutils literal notranslate"><span class="pre">self.force_stop</span></code>)</h3>
+<p>Set <code class="docutils literal notranslate"><span class="pre">self.force_stop</span> <span class="pre">=</span> <span class="pre">True</span></code> (usually in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>) to end the session when a
+condition of your own is met. It works in both Manual and Auto mode: in Auto mode, the
+session is saved and the subject is let out, as when <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code> is reached.</p>
+<p>For example, to limit the number of trials also in Auto mode (where
+<code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code> does not apply), add a variable to the training protocol
+(<code class="docutils literal notranslate"><span class="pre">self.settings.max_trials</span> <span class="pre">=</span> <span class="pre">300</span></code> in <code class="docutils literal notranslate"><span class="pre">default_training_settings</span></code>) and check it in the
+task:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="o">...</span>
+</span><span data-line="3">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">max_trials</span><span class="p">:</span>
+</span><span data-line="4">        <span class="bp">self</span><span class="o">.</span><span class="n">force_stop</span> <span class="o">=</span> <span class="kc">True</span>
+</span></pre></div>
+</div>
+<p>The same pattern works for any other criterion: a maximum amount of water, a number of
+correct trials, a performance threshold…</p>
 </section>
 <section id="self-trial-data-dict">
 <h3><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> (dict)</h3>
@@ -1332,7 +1351,7 @@ started it), and <code class="docutils literal notranslate"><span class="pre">ou
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=17f91881"></script>
+      <script src="../_static/documentation_options.js?v=4090bf62"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

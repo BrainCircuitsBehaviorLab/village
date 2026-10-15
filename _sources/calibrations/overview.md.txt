@@ -1,7 +1,5 @@
 ## Calibration Overview
 
-![Calibration Training village screen](/_static/calibration_screen.webp)
-
 The `CALIBRATION` screen has a dedicated panel for each calibration of the system. A
 left-side menu lists every calibration relevant to your current hardware configuration;
 selecting an entry opens its panel on the right. Every saved calibration is kept in its

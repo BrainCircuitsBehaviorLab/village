@@ -8,12 +8,11 @@ Some initial settings must be configured before the system can be used.  Navigat
     *   **`SYSTEM_NAME`:** Define a unique identifier for your setup. This name will be appended to all saved datasets, which is essential for distinguishing data source origins if your facility operates multiple Training Villages.
     *   **`Project Selection`:** This section allows you to select an active experimental project or initialize a new one. For now, keep the default project: **demo-village-project**.
 
-*   **`CORRIDOR SETTINGS`:** These settings only appear once `USE_CORRIDOR` (at the top of this section) is toggled **ON**; turning it off hides the rest of the section and disables the whole Corridor subsystem (RFID, scale, temperature sensor, motors, lighting, and the dedicated corridor camera). Define `DAYTIME` and `NIGHTTIME` to set the hours used by the `Corridor Cycle` control's `AUTO` mode (see [Monitor & Hardware Setup][GUI]) to switch lighting and camera exposure/thresholds between day and night values. Adjust `DETECTION_COLOR` if you are tracking light-colored animals on a dark corridor background, and `MIN_WEIGHT_THRESHOLD`/`MAX_WEIGHT_THRESHOLD` to filter out invalid weight readings. `MOTOR3_CORRIDOR` and `MOTOR4_CORRIDOR` let you declare whether those optional motors are physically installed.
+*   **`CORRIDOR SETTINGS`:** The `USE_CORRIDOR` toggle at the top of the section decides whether the system uses the corridor (changing it requires a restart).
+    *   **`ON`** (the default): the fully automated Training Village, where animals enter the operant box on their own through the corridor. Keep it ON unless you have a reason not to.
+    *   **`OFF`:** for setups that only use the operant box, running tasks manually (e.g. tethered ephys or optogenetics recordings). The whole Corridor subsystem is disabled: RFID reader, scale, temperature sensor, door motors, lighting and the corridor camera. The Telegram bot is disabled and no alarms are sent, since without the corridor there is nothing to monitor remotely.
 
-    ```{admonition} Note
-    :class: note
-    Turning `USE_CORRIDOR` **OFF** also hides `TELEGRAM SETTINGS`. `USE_CORRIDOR` should only be OFF for setups running tasks manually rather than through the fully automated corridor pipeline, and without the corridor there is nothing for Telegram to monitor or alert on remotely.
-    ```
+    With `USE_CORRIDOR` ON, the rest of the section is shown. Define `DAYTIME` and `NIGHTTIME` to set the hours used by the `Corridor Cycle` control's `AUTO` mode (see [Monitor & Hardware Setup][GUI]) to switch lighting and camera exposure/thresholds between day and night values. Adjust `DETECTION_COLOR` if you are tracking light-colored animals on a dark corridor background, and `MIN_WEIGHT_THRESHOLD`/`MAX_WEIGHT_THRESHOLD` to filter out invalid weight readings. `MOTOR3_CORRIDOR` and `MOTOR4_CORRIDOR` let you declare whether those optional motors are physically installed.
 
 *   **`BOX SETTINGS`:** Likewise gated by `USE_BOX_BOARD` at the top of the section, which enables the Operant Box PCB. Once ON, declare which box hardware is physically present: `MOTOR1_BOX` through `MOTOR7_BOX`, `VISIBLE_LIGHT_BOX`, `IR_LIGHT_BOX`, `LED_STRIP_BOX`, and `SCALE_BOX`. Only the components you mark **ON** here get initialized and show up as controls on the `MONITOR` screen's `BOX` tab.
 

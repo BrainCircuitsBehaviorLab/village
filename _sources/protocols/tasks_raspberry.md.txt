@@ -297,9 +297,9 @@ gain = self.calibrations.sound_calibration.get_sound_gain(
 
 #### `self.should_stop` (read-only property)
 
-`True` once *any* stopping condition is met: the trial/time limit (Manual mode
-only — Auto mode runs until the subject leaves the corridor, not for a fixed
-number of trials), `force_stop`, or `stop_button_pressed`.
+`True` once *any* stopping condition is met: the time limit (`maximum_duration`),
+the trial limit (`maximum_number_of_trials`, Manual mode only: Auto mode does not
+stop after a fixed number of trials), `force_stop`, or `stop_button_pressed`.
 
 `````{admonition} Poll it in your own waiting loop
 :class: warning
@@ -314,6 +314,27 @@ def create_trial(self):
         ...  # wait for your own condition
 ```
 `````
+
+#### Stopping the task from your own logic (`self.force_stop`)
+
+Set `self.force_stop = True` (usually in `after_trial`) to end the session when a
+condition of your own is met. It works in both Manual and Auto mode: in Auto mode, the
+session is saved and the subject is let out, as when `maximum_duration` is reached.
+
+For example, to limit the number of trials also in Auto mode (where
+`maximum_number_of_trials` does not apply), add a variable to the training protocol
+(`self.settings.max_trials = 300` in `default_training_settings`) and check it in the
+task:
+
+```python
+def after_trial(self):
+    ...
+    if self.current_trial >= self.settings.max_trials:
+        self.force_stop = True
+```
+
+The same pattern works for any other criterion: a maximum amount of water, a number of
+correct trials, a performance threshold...
 
 #### `self.trial_data` (dict)
 
