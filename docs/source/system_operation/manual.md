@@ -36,8 +36,7 @@ the Raspberry Pi itself.
 
 **Training protocol** ([training_protocol.py](../examples/training_protocol.md)):
 - Moves each subject through the six Bpod stages of *Follow the Light*, deciding the
-  next task after every session. The other tasks are run manually and don't change
-  the subject's next task.
+  next task after every session.
 
 ---
 
@@ -46,12 +45,17 @@ the Raspberry Pi itself.
 The `TASKS` screen shows the active training protocol on the left, along with a list of
 all available tasks. When you click on a task, its description (`self.info`) is
 displayed, along with its settings, organized in the tabs defined by the training
-protocol (see [The Training Protocol](../protocols/creating.md)). Two more settings are
-added for manual runs:
+protocol (see [The Training Protocol](../protocols/creating.md)). Two more fields are
+shown:
 
 - `maximum_number_of_trials`: The task will automatically end once this number of trials
-  is completed.
-- `maximum_duration`: The task will automatically end when this time is reached.
+  is completed. It only exists for manual runs: it is not a setting of the training
+  protocol, it is not saved, and it has no effect on the sessions run automatically
+  (to limit the trials in those, see
+  [Stopping the task from your own logic](force-stop)).
+- `maximum_duration`: The task will automatically end when this time is reached. Unlike
+  the previous one, it is a setting of the training protocol, used in automatic
+  sessions too.
 
 You can optionally select a subject from the `Subject` selector, next to the `RUN TASK`
 button, before running it:
@@ -61,6 +65,14 @@ button, before running it:
 - **Subject selected:** The task runs with the settings currently assigned to that
   subject. Once the session ends, the subject's settings are updated automatically by
   `training_protocol.py`.
+
+```{warning}
+When a subject is selected, the values you change before pressing `RUN TASK`
+(`maximum_duration` or any other setting) are kept for that subject: they become its
+settings for the next sessions, automatic ones included, unless
+`update_training_settings()` reassigns them at the end of the session (see
+[update_training_settings()](../protocols/creating.md#update_training_settings)).
+```
 
 Press `RUN TASK` to start.
 
