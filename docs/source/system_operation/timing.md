@@ -20,6 +20,13 @@ exposed through `time_utils`:
 ```{admonition} Important
 :class: warning
 Do not use `time.time()` or `datetime.now()`. Always use `time_utils.now_timestamp()` and `time_utils.now()`.
+
+Everything the system records (trial starts and ends, events, values, video frames) is
+timestamped with `time_utils`. The system clock and `time_utils` normally agree to the
+millisecond, but if the system clock jumps (an NTP correction, a manual change, a
+daylight saving time change), timestamps taken with `time.time()` or `datetime.now()`
+are shifted by that jump relative to everything else, and durations measured across the
+jump are wrong. Nothing fails or warns about it: the data are just silently misaligned.
 ```
 
 ```{admonition} What is a monotonic clock?
@@ -30,7 +37,7 @@ Unlike the system wall clock, a monotonic clock guarantees that time always adva
 * Leap seconds: Occasional single-second adjustments to match Earth's astronomical rotation.
 * Manual modifications: Manual date/time changes made by a user or system script.
 By avoiding these external adjustments, a monotonic clock ensures that event ordering and elapsed-time calculations remain strictly consistent throughout a session.
-Any necessary resynchronization with the wall clock only occurs between sessions during the SYNC state. For implementation details, see `village/scripts/time_utils.py`.
+`time_utils` takes a reference from the wall clock and then advances it with the monotonic clock. The reference is retaken right before every session starts, so it never changes in the middle of a session. For implementation details, see `village/scripts/time_utils.py`.
 ```
 
 ### Hardware Synchronization
@@ -41,7 +48,7 @@ Depending on your setup, hardware timing is managed through one of two pathways.
 
 Timestamps are derived from the Raspberry Pi master clock via
 `time_utils.now_timestamp()` (see [Raspberry Pi Monotonic Clock](#raspberry-pi-monotonic-clock-time-utils)
-above), which tracks the Linux system clock and is resynchronized only between
+above), which tracks the Linux system clock and is resynchronized between
 sessions.
 
 #### 2. Controller-integrated setups (Bpod or Arduino)

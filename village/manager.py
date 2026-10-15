@@ -337,6 +337,8 @@ class Manager:
         Returns:
             bool: True if launched successfully, False otherwise.
         """
+        # Fresh clock reference, so the whole session uses the current wall clock
+        time_utils.sync()
         self.task.create_paths()
         self.task.cam_box = self.cam_box
         self.task.custom_areas = self.custom_areas
@@ -419,6 +421,9 @@ class Manager:
                 self.task.subject = self.subject.name
                 self.task.settings = self.training.settings
                 self.task.training = self.training
+                # Fresh clock reference, so the whole session uses the current
+                # wall clock
+                time_utils.sync()
                 self.task.create_paths()
                 self.task.cam_box = self.cam_box
                 self.task.custom_areas = self.custom_areas

@@ -121,6 +121,86 @@ systemName/
 
 ---
 
+### Subject Behavioral Sessions
+
+- **Storage path:** `data/sessions/{subject}/`
+- **Filename format:** `{subject}_{task}_{timestamp}`
+
+Three files are generated for every completed behavioral session:
+
+```text
+data/sessions/{subject}/
+├── {filename}_RAW.csv
+├── {filename}.csv
+└── {filename}.json
+```
+
+#### 1. Raw Session (`{filename}_RAW.csv`)
+
+One row per event. During the session, the events are written as they happen to
+`data/sessions/session.csv`; when the session ends, that file is copied here. (That
+real-time file is emptied when the Training Village starts: see
+[After a Power Cut](../troubleshooting/troubleshooting.md#after-a-power-cut).)
+
+| Column | Description |
+| :--- | :--- |
+| `TRIAL` | Trial index. |
+| `START` | Absolute Unix timestamp (4 decimal places) marking the onset of a state or event. |
+| `END` | Absolute Unix timestamp of state termination (empty for instantaneous events). |
+| `MSG` | Message type (see standards below). |
+| `VALUE` | Value associated with the message. |
+
+**Message type standards (`MSG`):**
+
+- `_Transition_to_{stateName}`: State machine transition flag.
+- `STATE_{stateName}_START` / `STATE_{stateName}_END`: Structural boundaries of a
+  behavioral state.
+- *Hardware event name*: Digital input/output line transitions (e.g., photo-gate beams,
+  ports).
+- *Custom variable tag*: Any performance variable explicitly captured with
+  `register_value()` (e.g., `stimulus_side`, `correct_choice`, `rewarded`). The tag name
+  is written to `MSG` and its value to `VALUE`.
+- `TRIAL_START` / `TRIAL_END`: Absolute trial boundary markers.
+
+#### 2. Processed Session (`{filename}.csv`)
+
+A parsed, trial-by-trial overview: instead of one row per event, this file contains one
+row per trial. Each row is built when its trial finishes (after `after_trial`), and the
+file is saved when the session ends. It begins
+with the following fixed columns: `session`, `date`, `trial`, `subject`, `task`,
+`system_name`, `run_mode`.
+
+```{admonition} run_mode
+:class: note
+The `run_mode` field is set to `Manual` if the session was launched manually from the
+GUI, or `Auto` if it was triggered automatically upon detecting an animal in the corridor.
+```
+
+#### 3. Session Settings Metadata (`{filename}.json`)
+
+Stores all parameters used during the session: `minimum_duration`, `maximum_duration`,
+`run_mode`, `observations`, and all custom protocol parameters.
+
+To add a note to a session, click on its entry in `sessions_summary` within the GUI. A
+panel listing all session parameters will appear; the `observations` field is editable
+and empty by default.
+
+```{admonition} Tip
+:class: note
+Although `.json` files already capture all parameters used in a session, it is good
+practice to also record relevant variables from within the task using `register_value()`,
+as this makes them directly accessible in the `.csv` file.
+```
+
+#### Aggregate History File
+
+In addition to the per-session files, a persistent history file is maintained in each
+subject's directory:
+
+- **`{subject}.csv`**: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. This aggregate dataset is essential for adaptive automated training (`training_protocol.py`), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved >80% accuracy over its last three sessions before advancing to the next training stage.
+
+---
+
 ### Video Recordings & Frame Data
 
 - **Storage path:** `data/videos/{subject}/`
@@ -186,87 +266,6 @@ downside to leaving it permanently enabled too — it only adds a live visual ai
 
 See the [Custom Camera Drawing][CAMERA] section for how this `draw` (disk + screen) vs.
 `draw_preview` (screen only) split also applies to overlays you add yourself.
-
----
-
-
-
-### Subject Behavioral Sessions
-
-- **Storage path:** `data/sessions/{subject}/`
-- **Filename format:** `{subject}_{task}_{timestamp}`
-
-Three files are generated for every completed behavioral session:
-
-```text
-data/sessions/{subject}/
-├── {filename}_RAW.csv
-├── {filename}.csv
-└── {filename}.json
-```
-
-#### 1. Raw Session (`{filename}_RAW.csv`)
-
-One row per event. During the session, the events are written as they happen to
-`data/sessions/session.csv`; when the session ends, that file is copied here. (That
-real-time file is emptied when the Training Village starts: see
-[After a Power Cut](../troubleshooting/troubleshooting.md#after-a-power-cut).)
-
-| Column | Description |
-| :--- | :--- |
-| `TRIAL` | Trial index. |
-| `START` | Absolute Unix timestamp (4 decimal places) marking the onset of a state or event. |
-| `END` | Absolute Unix timestamp of state termination (empty for instantaneous events). |
-| `MSG` | Message type (see standards below). |
-| `VALUE` | Value associated with the message. |
-
-**Message type standards (`MSG`):**
-
-- `_Transition_to_{stateName}`: State machine transition flag.
-- `STATE_{stateName}_START` / `STATE_{stateName}_END`: Structural boundaries of a
-  behavioral state.
-- *Hardware event name*: Digital input/output line transitions (e.g., photo-gate beams,
-  ports).
-- *Custom variable tag*: Any performance variable explicitly captured with
-  `register_value()` (e.g., `stimulus_side`, `correct_choice`, `rewarded`). The tag name
-  is written to `MSG` and its value to `VALUE`.
-- `TRIAL_START` / `TRIAL_END`: Absolute trial boundary markers.
-
-#### 2. Processed Session (`{filename}.csv`)
-
-A parsed, trial-by-trial overview generated at the end of each trial by processing the
-raw data. Instead of one row per event, this file contains one row per trial. It begins
-with the following fixed columns: `session`, `date`, `trial`, `subject`, `task`,
-`system_name`, `run_mode`.
-
-```{admonition} run_mode
-:class: note
-The `run_mode` field is set to `Manual` if the session was launched manually from the
-GUI, or `Auto` if it was triggered automatically upon detecting an animal in the corridor.
-```
-
-#### 3. Session Settings Metadata (`{filename}.json`)
-
-Stores all parameters used during the session: `minimum_duration`, `maximum_duration`,
-`run_mode`, `observations`, and all custom protocol parameters.
-
-To add a note to a session, click on its entry in `sessions_summary` within the GUI. A
-panel listing all session parameters will appear; the `observations` field is editable
-and empty by default.
-
-```{admonition} Tip
-:class: note
-Although `.json` files already capture all parameters used in a session, it is good
-practice to also record relevant variables from within the task using `register_value()`,
-as this makes them directly accessible in the `.csv` file.
-```
-
-#### Aggregate History File
-
-In addition to the per-session files, a persistent history file is maintained in each
-subject's directory:
-
-- **`{subject}.csv`**: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. This aggregate dataset is essential for adaptive automated training (`training_protocol.py`), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved >80% accuracy over its last three sessions before advancing to the next training stage.
 
 ---
 
