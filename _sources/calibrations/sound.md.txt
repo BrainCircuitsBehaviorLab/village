@@ -21,13 +21,9 @@ volume with a sound level meter and enter it in dB, then click `ADD` to save the
 point — it's added to the calibration curve, plotted immediately, and listed under
 `CALIBRATION POINTS`, where each point can be removed individually with its `-`
 button if it turns out to be an outlier. Repeat with a few different gain values per
-speaker/sound pair (at least two points are required) to build a gain → dB curve. If
-the sound device fails to play the sound, an error dialog is shown and the inputs are
-reset instead of prompting for a measurement.
+speaker/sound pair (at least two points are required) to build a gain → dB curve.
 
-Once you're happy with the curve, click `SAVE CALIBRATION` to persist it. Any
-speaker/sound pair left with fewer than two points is dropped from the save, with a
-warning listing which ones. Saved calibrations are never overwritten — every save gets
+Once you're happy with the curve, click `SAVE CALIBRATION` to persist it. Saved calibrations are never overwritten — every save gets
 a new `calibration_number` and the full history is kept, but tasks and the testing
 panel always use the most recent one per speaker/sound pair. `DELETE CALIBRATION`
 discards the points collected so far (after confirmation) without saving them.
@@ -36,9 +32,7 @@ discards the points collected so far (after confirmation) without saving them.
 
 Check whether the latest saved calibration for a speaker/sound pair is still accurate.
 Pick the sound and speaker, enter a target dB and a duration, then click `TEST` — the
-panel looks up the gain the calibration curve predicts for that dB. If the pair hasn't
-been calibrated yet, or the target dB falls outside the calibrated range, you get a
-warning immediately and nothing is played. Otherwise the sound is played at that gain;
+panel looks up the gain the calibration curve predicts for that dB. The sound is played at that gain;
 measure the actual dB the same way as during calibration and enter it back — the panel
 shows the resulting error and plots the test point against the existing curve.
 

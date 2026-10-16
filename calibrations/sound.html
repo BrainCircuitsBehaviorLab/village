@@ -576,12 +576,8 @@ volume with a sound level meter and enter it in dB, then click <code class="docu
 point — it’s added to the calibration curve, plotted immediately, and listed under
 <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span> <span class="pre">POINTS</span></code>, where each point can be removed individually with its <code class="docutils literal notranslate"><span class="pre">-</span></code>
 button if it turns out to be an outlier. Repeat with a few different gain values per
-speaker/sound pair (at least two points are required) to build a gain → dB curve. If
-the sound device fails to play the sound, an error dialog is shown and the inputs are
-reset instead of prompting for a measurement.</p>
-<p>Once you’re happy with the curve, click <code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">CALIBRATION</span></code> to persist it. Any
-speaker/sound pair left with fewer than two points is dropped from the save, with a
-warning listing which ones. Saved calibrations are never overwritten — every save gets
+speaker/sound pair (at least two points are required) to build a gain → dB curve.</p>
+<p>Once you’re happy with the curve, click <code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">CALIBRATION</span></code> to persist it. Saved calibrations are never overwritten — every save gets
 a new <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code> and the full history is kept, but tasks and the testing
 panel always use the most recent one per speaker/sound pair. <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">CALIBRATION</span></code>
 discards the points collected so far (after confirmation) without saving them.</p>
@@ -590,9 +586,7 @@ discards the points collected so far (after confirmation) without saving them.</
 <h2>Testing</h2>
 <p>Check whether the latest saved calibration for a speaker/sound pair is still accurate.
 Pick the sound and speaker, enter a target dB and a duration, then click <code class="docutils literal notranslate"><span class="pre">TEST</span></code> — the
-panel looks up the gain the calibration curve predicts for that dB. If the pair hasn’t
-been calibrated yet, or the target dB falls outside the calibrated range, you get a
-warning immediately and nothing is played. Otherwise the sound is played at that gain;
+panel looks up the gain the calibration curve predicts for that dB. The sound is played at that gain;
 measure the actual dB the same way as during calibration and enter it back — the panel
 shows the resulting error and plots the test point against the existing curve.</p>
 <ul class="simple">
@@ -661,7 +655,7 @@ tell whether the sound needs calibrating or the requested dB needs adjusting.</p
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=3710f61c"></script>
+      <script src="../_static/documentation_options.js?v=2d64bc7c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

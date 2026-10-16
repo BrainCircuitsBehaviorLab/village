@@ -595,6 +595,14 @@ default. Only one subclass of each base class is used per project.</p>
 <p><code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code> lets you monitor the session in real time. The plot is shown in a
 separate window, opened with the <code class="docutils literal notranslate"><span class="pre">ONLINE</span> <span class="pre">PLOTS</span></code> button of the toolbar, and updated when
 new trials have finished (at most every <code class="docutils literal notranslate"><span class="pre">UPDATE_TIME_TABLE</span></code> seconds).</p>
+<p>To redraw it periodically instead, also in the middle of a trial (e.g. to show data that
+change during long trials), set <code class="docutils literal notranslate"><span class="pre">self.refresh_period</span></code> to the number of seconds between
+redraws in <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, after <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="2">    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="3">    <span class="bp">self</span><span class="o">.</span><span class="n">refresh_period</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># redraw every second</span>
+</span></pre></div>
+</div>
 <p>Override two methods:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">create_figure_and_axes()</span></code></strong> — called once when the figure is first needed.
@@ -824,7 +832,7 @@ Columns:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=3710f61c"></script>
+      <script src="../_static/documentation_options.js?v=2d64bc7c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
