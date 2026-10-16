@@ -426,14 +426,6 @@ class TimeUtils:
             """
             return int(self.get_time())
 
-        def get_milliseconds(self) -> int:
-            """Returns elapsed time in milliseconds.
-
-            Returns:
-                int: Elapsed milliseconds.
-            """
-            return int(self.get_time() * 1000)
-
     class Timer:
         """Timer for checking if a specific duration has elapsed."""
 

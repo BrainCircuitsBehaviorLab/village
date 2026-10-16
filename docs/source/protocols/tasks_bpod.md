@@ -483,7 +483,7 @@ self.execute_function(1)  # executes the function registered at index 1
 | `self.run_mode` | `str` | `"Manual"` or `"Auto"`. |
 | `self.force_stop` | `bool` | Set to `True` from your own task logic (e.g. in `after_trial`) to make the task stop. |
 | `self.stop_button_pressed` | `bool` | `True` once something external (e.g. the STOP TASK button) has asked the task to stop. Read-only — react to it, don't set it. |
-| `self.chrono` | `Chrono` | `self.chrono.get_seconds()` gives the time in seconds since the task started. |
+| `self.chrono` | `Chrono` | `self.chrono.get_time()` gives the time in seconds since the task started. |
 
 #### `self.info`
 

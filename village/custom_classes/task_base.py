@@ -291,7 +291,7 @@ class TaskBase:
                     ...  # wait for your own condition
 
     self.chrono: Chrono
-        Using self.chrono.get_seconds() you can get the time in seconds since the
+        Using self.chrono.get_time() you can get the time in seconds since the
         task started.
     """
 
