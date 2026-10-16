@@ -11,12 +11,12 @@ from village.settings import settings
 
 # Water calibration with an Arduino instead of Bpod.
 #
-# Copy this file to your project's code directory and upload
-# water_calibration_arduino.ino to the board: the Water Calibration panel
-# then runs this class instead of the built-in Bpod sequence. Keep only one
-# WaterCalibrationTaskBase subclass in the project.
+# Copy this file to your project's code directory: the Water Calibration
+# panel then runs this class instead of the built-in Bpod sequence. Keep only
+# one WaterCalibrationTaskBase subclass in the project. The board must
+# understand CMD_OPEN_VALVE, as the firmware of the Arduino examples does.
 #
-# Protocol (see water_calibration_arduino.ino):
+# Protocol (see openValve() in village_arduino/village_arduino.ino):
 #
 # Pi -> Arduino, 6 raw bytes, once per valve opening:
 #   [CMD_OPEN_VALVE, port, time_us (uint32, little-endian)]
@@ -27,7 +27,7 @@ from village.settings import settings
 # Arduino -> Pi, 6 raw bytes, once the valve is closed again:
 #   [EVENT_VALVE_CLOSED, port, elapsed_us (uint32, little-endian)]
 #   elapsed_us is how long the valve was actually open.
-CMD_OPEN_VALVE = 2
+CMD_OPEN_VALVE = 20
 EVENT_VALVE_CLOSED = 4
 
 BAUDRATE = 9600  # must match the Arduino sketch's Serial.begin(...)

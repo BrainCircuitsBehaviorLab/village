@@ -12,8 +12,12 @@ Arduino version of [bpod_2_passive.py](bpod_2_passive.md): the same task and sta
 
 ### Arduino firmware
 
-{download}`Download arduino_2_passive.ino <files/arduino_firmware/arduino_2_passive.ino>`
+All the Arduino examples use the same firmware, [village_arduino.ino](village_arduino.md),
+uploaded once to the board. This task starts every trial with the `CMD_PASSIVE` command, and
+the trial runs in `runPassive()`:
 
-```{literalinclude} files/arduino_firmware/arduino_2_passive.ino
+```{literalinclude} files/village_arduino/village_arduino.ino
 :language: cpp
+:start-at: "// === Passive ("
+:end-before: "// === Active ("
 ```

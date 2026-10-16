@@ -552,7 +552,7 @@ def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     # Setup logging with timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = time_utils.now_string_for_filename()
     log_filename = str(logs_dir / f"{timestamp}.log")
 
     # Reset root logger to prevent duplicate logs

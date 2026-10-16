@@ -12,8 +12,12 @@ Arduino version of [bpod_5_introduce_penalty.py](bpod_5_introduce_penalty.md): t
 
 ### Arduino firmware
 
-{download}`Download arduino_5_introduce_penalty.ino <files/arduino_firmware/arduino_5_introduce_penalty.ino>`
+All the Arduino examples use the same firmware, [village_arduino.ino](village_arduino.md),
+uploaded once to the board. This task starts every trial with the `CMD_INTRODUCE_PENALTY` command, and
+the trial runs in `runIntroducePenalty()`:
 
-```{literalinclude} files/arduino_firmware/arduino_5_introduce_penalty.ino
+```{literalinclude} files/village_arduino/village_arduino.ino
 :language: cpp
+:start-at: "// === Introduce penalty ("
+:end-before: "// === Delay ("
 ```

@@ -12,8 +12,12 @@ Arduino version of [bpod_6_delay.py](bpod_6_delay.md): the same task and states 
 
 ### Arduino firmware
 
-{download}`Download arduino_6_delay.ino <files/arduino_firmware/arduino_6_delay.ino>`
+All the Arduino examples use the same firmware, [village_arduino.ino](village_arduino.md),
+uploaded once to the board. This task starts every trial with the `CMD_DELAY` command, and
+the trial runs in `runDelay()`:
 
-```{literalinclude} files/arduino_firmware/arduino_6_delay.ino
+```{literalinclude} files/village_arduino/village_arduino.ino
 :language: cpp
+:start-at: "// === Delay ("
+:end-before: "// === Water calibration ("
 ```

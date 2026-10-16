@@ -695,6 +695,10 @@ class Camera:
                 ],
             )
 
+        # The corridor is not trial-structured: its trial is always 0
+        if self.name == "CORRIDOR":
+            df = df.drop(columns="trial")
+
         df.to_csv(self.path_csv, index=False, sep=";")
 
     def print_info_about_config(self) -> None:

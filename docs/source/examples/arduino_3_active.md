@@ -12,8 +12,12 @@ Arduino version of [bpod_3_active.py](bpod_3_active.md): the same task and state
 
 ### Arduino firmware
 
-{download}`Download arduino_3_active.ino <files/arduino_firmware/arduino_3_active.ino>`
+All the Arduino examples use the same firmware, [village_arduino.ino](village_arduino.md),
+uploaded once to the board. This task starts every trial with the `CMD_ACTIVE` command, and
+the trial runs in `runActive()`:
 
-```{literalinclude} files/arduino_firmware/arduino_3_active.ino
+```{literalinclude} files/village_arduino/village_arduino.ino
 :language: cpp
+:start-at: "// === Active ("
+:end-before: "// === Center initiated ("
 ```

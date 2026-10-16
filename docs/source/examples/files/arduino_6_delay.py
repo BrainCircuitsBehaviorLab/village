@@ -42,7 +42,7 @@ def get_delay_probabilities(
     return delays, weights / weights.sum()
 
 
-# Protocol (see arduino_6_delay.ino):
+# Protocol (see runDelay() in village_arduino/village_arduino.ino):
 #
 # Pi -> Arduino, 10 raw bytes, sent once at the start of each trial:
 #   [CMD_START_TRIAL, first_port, c_led_on_timeout_ms (uint16, LE),
@@ -71,7 +71,7 @@ def get_delay_probabilities(
 #   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller
 #   timestamp (register_controller_event / register_enter_state), so the two
 #   clocks never need to be synchronized.
-CMD_START_TRIAL = 1
+CMD_START_TRIAL = 16  # CMD_DELAY in village_arduino.ino
 
 EVENT_POKE = 1
 EVENT_TRIAL_END = 2
