@@ -6,25 +6,26 @@ Calibrates the relationship between how long a valve (or a pump) is open and how
 water it actually delivers, per behavior port — so tasks can request a volume in
 microliters instead of a raw opening time.
 
-Always available in the `CALIBRATION` screen:
+Always available in the `CALIBRATION` screen.
 
-- **With Bpod** (`BEHAVIOR_CONTROLLER` → `BPOD`), the CALIBRATE/TEST sequence runs
-  through a built-in Bpod state machine, with nothing to set up.
-- **With any other controller**, the project's code directory must define a class
-  inheriting from `WaterCalibrationTaskBase`
-  (`village.custom_classes.water_calibration_task_base`) that runs the same sequence
-  on that controller. For an Arduino, a ready-to-use one is in
+Every time you click `CALIBRATE` or `TEST`, the panel runs a small task that opens each
+selected valve for its time, one after the other, and repeats the whole sequence the
+number of iterations you entered. That task depends on the controller:
+
+- **With Bpod** (`BEHAVIOR_CONTROLLER` → `BPOD`), it is built in: there is nothing to
+  set up.
+- **With any other controller**, you have to write it: a class inheriting from
+  `WaterCalibrationTaskBase` (`village.custom_classes.water_calibration_task_base`), in
+  the project's code directory, that runs the same sequence on that controller. For an
+  Arduino, a ready-to-use example is in
   [Water Calibration with Arduino](../advanced_customization/water_calibration_arduino.md).
-  Without it, clicking CALIBRATE or TEST shows a message explaining what's missing.
-
-If a project defines such a class, it is used instead of the Bpod default even when the
-controller is Bpod.
 
 ### Calibrating
 
-You can calibrate one port at a time or several at once. For each active port
-(`BPOD_BEHAVIOR_PORTS`) you want to calibrate, enter a valve opening time and a shared
-number of iterations, then click `CALIBRATE` — the selected valves each open that many
+You can calibrate one port at a time or several at once. If you are using Bpod, only the
+ports enabled in `BPOD_BEHAVIOR_PORTS` appear in the panel.
+For each port you want to calibrate, enter a valve opening time and a shared number of
+iterations, then click `CALIBRATE` — the selected valves each open that many
 times for that long. Weigh the total water collected per port and enter it back; the
 panel converts the weight to microliters delivered per iteration (assuming a water
 density of 1 g/ml) and shows it next to each port. Click `ADD` to save the point — it's
@@ -33,8 +34,7 @@ added to the calibration curve, plotted immediately, and listed under
 `-` button if it turns out to be an outlier. Repeat with a few different opening times
 per port (at least two points are required) to build a time → volume curve.
 
-Once you're happy with the curve, click `SAVE CALIBRATION` to persist it. Any port left
-with fewer than two points is dropped from the save, with a warning listing which ones.
+Once you're happy with the curve, click `SAVE CALIBRATION` to persist it.
 Saved calibrations are never overwritten — every save gets a new `calibration_number`
 and the full history is kept, but tasks and the `TESTING` panel always use the most
 recent one per port. `DELETE CALIBRATION` discards the points collected so far (after
@@ -77,7 +77,3 @@ needs calibrating or the requested volume needs adjusting.
 Data is stored in `water_calibration.csv` (columns: `date`, `port_number`,
 `time(s)`, `water_delivered(ul)`, `calibration_number`, `water_expected(ul)`,
 `error(%)`).
-
----
-
-Want to write your own calibration panel? See [Custom Calibrations](../advanced_customization/calibrations.md) and the [led_calibration.py](../examples/led_calibration.md) example.

@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
@@ -557,13 +558,13 @@ data-aria-dark="Switch to auto color mode">
 left-side menu lists every calibration relevant to your current hardware configuration;
 selecting an entry opens its panel on the right. Every saved calibration is kept in its
 own <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file in <code class="docutils literal notranslate"><span class="pre">data/&lt;SYSTEM_NAME&gt;/</span></code>, and can also be browsed and plotted from the
-<code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen (see <a class="reference internal" href="../system_operation/data_visualization.html"><span class="std std-doc">Data Visualization</span></a>).</p>
+<code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen.</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>:</strong> Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Always available: with Bpod it works out of the box; with any other controller, it needs a water calibration task written for that controller. See <a class="reference internal" href="water.html"><span class="std std-doc">Water Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>:</strong> Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> is <strong>ON</strong>. See <a class="reference internal" href="sound.html"><span class="std std-doc">Sound Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CAMERA_CALIBRATION</span></code>:</strong> Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available. See <a class="reference internal" href="camera.html"><span class="std std-doc">Camera Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR_THRESHOLD_CALIBRATION</span></code>:</strong> Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result against a recorded corridor video. Only available when <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is <strong>ON</strong>. See <a class="reference internal" href="thresholds.html"><span class="std std-doc">Corridor Threshold Calibration</span></a>.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">OPTOGRID_CALIBRATION</span></code>:</strong> Provides a visual map of the OptoGrid device for composing an LED selection and inspecting it over Bluetooth. Always available. See <a class="reference internal" href="optogrid.html"><span class="std std-doc">OptoGrid Calibration</span></a>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OPTOGRID_CALIBRATION</span></code>:</strong> <a class="reference external" href="https://github.com/erlichlab/optogrid">OptoGrid</a> is a wireless, head-mounted optogenetic stimulation device: a 64-µLED array over the brain, controlled over Bluetooth, with an IMU that records head movements. This panel shows a map of its LEDs to compose a selection and checks the device (battery, parameters) over Bluetooth. Always available. See <a class="reference internal" href="optogrid.html"><span class="std std-doc">OptoGrid Calibration</span></a>.</p></li>
 </ul>
 <p>Besides the built-in calibrations, you can create your own and have them appear here
 alongside them — see <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>.</p>
@@ -606,7 +607,7 @@ alongside them — see <a class="reference internal" href="../advanced_customiza
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

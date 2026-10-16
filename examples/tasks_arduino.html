@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Examples (Arduino) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="arduino_1_habituation.py" href="arduino_1_habituation.html" /><link rel="prev" title="Tasks (Arduino)" href="../protocols/tasks_arduino.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Task Examples (Arduino) - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="village_arduino.ino" href="village_arduino.html" /><link rel="prev" title="Tasks (Arduino)" href="../protocols/tasks_arduino.html" />
       <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/examples/tasks_arduino.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"light");
@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_3_active.html">arduino_3_active.py</a></li>
@@ -557,7 +558,7 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="task-examples-arduino">
 <h1>Task Examples (Arduino)</h1>
-<p>The six training stages of the <em>Follow the Light</em> task (see <a class="reference internal" href="tasks_bpod.html"><span class="std std-doc">Task Examples (Bpod)</span></a>), run by an Arduino instead of a Bpod (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>). Each page has the task and the Arduino firmware it needs.</p>
+<p>The six training stages of the <em>Follow the Light</em> task (see <a class="reference internal" href="tasks_bpod.html"><span class="std std-doc">Task Examples (Bpod)</span></a>), run by an Arduino instead of a Bpod (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>). Each page has the task and the part of the firmware that runs its trials. All of them use the same firmware, <a class="reference internal" href="village_arduino.html"><span class="std std-doc">village_arduino.ino</span></a>, uploaded once to the board.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -601,10 +602,10 @@ data-aria-dark="Switch to auto color mode">
         <span>Previous</span><div class="title">Tasks (Arduino)</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="arduino_1_habituation.html">
+    <a href="village_arduino.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">arduino_1_habituation.py</div>
+        <div class="title">village_arduino.ino</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
@@ -626,7 +627,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

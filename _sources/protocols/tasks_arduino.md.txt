@@ -110,12 +110,26 @@ Step by step:
 
 ### The firmware
 
-The Arduino side waits for the command, runs the trial with its own clock
+All the Arduino examples share one firmware,
+[village_arduino.ino](../examples/village_arduino.md), uploaded once to the board. Each
+task starts its trials with its own command, and the firmware's `loop()` reads the
+command byte, waits for the rest of the message (its size depends on the command) and
+runs that task's trial:
+
+```{literalinclude} ../examples/files/village_arduino/village_arduino.ino
+:language: cpp
+:start-at: "// Reads the command byte first"
+:end-before: "// === Habituation ("
+```
+
+The habituation trial waits for the command, runs the trial with its own clock
 (`millis()`), and sends every state and the result with the milliseconds elapsed
 since the command:
 
-```{literalinclude} ../examples/files/arduino_firmware/arduino_1_habituation.ino
+```{literalinclude} ../examples/files/village_arduino/village_arduino.ino
 :language: cpp
+:start-at: "// === Habituation ("
+:end-before: "// === Passive ("
 ```
 
 ### The `after_trial()` method
@@ -151,7 +165,7 @@ the Arduino with the timings and the valve time; the Arduino runs the center pok
 the side LED, the response and the valve, and reports every state and poke. The
 inter-trial interval is timed by the Pi after the Arduino has finished
 (`register_enter_state("iti", ...)` and a wait). The other `arduino_*` examples
-follow the same pattern, each with its firmware.
+follow the same pattern, all with the same firmware.
 
 ---
 
@@ -489,6 +503,7 @@ started it), and `outcome` is `"correct"`.
 :hidden:
 
 Tasks Examples <../examples/tasks_arduino.md>
+../examples/village_arduino.md
 ../examples/arduino_1_habituation.md
 ../examples/arduino_2_passive.md
 ../examples/arduino_3_active.md

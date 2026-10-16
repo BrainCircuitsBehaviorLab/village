@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
@@ -566,7 +567,9 @@ data-aria-dark="Switch to auto color mode">
 <p>The <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a> panel opens the valves through a
 built-in Bpod sequence. With an Arduino (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> set to <code class="docutils literal notranslate"><span class="pre">OTHER</span></code>), the
 project needs a task that inherits from <code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> and runs the same
-sequence on the board. This page gives one, ready to use: the task and its firmware.</p>
+sequence on the board. This page gives one, ready to use, for the firmware of the
+Arduino examples, <a class="reference internal" href="../examples/village_arduino.html"><span class="std std-doc">village_arduino.ino</span></a>, which already
+understands the message it sends.</p>
 <hr class="docutils" />
 <section id="how-it-works">
 <h2>How It Works</h2>
@@ -578,33 +581,23 @@ sequence on the board. This page gives one, ready to use: the task and its firmw
 <li><p><code class="docutils literal notranslate"><span class="pre">maximum_number_of_trials</span></code>: the number of iterations.</p></li>
 </ul>
 <p>Every trial opens each valve for its time, one after the other, with 0.1 s in between,
-as the Bpod sequence does. The Arduino times each opening itself, in microseconds, so
-the USB latency does not change the volume delivered.</p>
+as the Bpod sequence does. To open a valve, the task sends a single message,
+<code class="docutils literal notranslate"><span class="pre">CMD_OPEN_VALVE</span></code> (the port and the time in microseconds), and waits for the reply,
+<code class="docutils literal notranslate"><span class="pre">EVENT_VALVE_CLOSED</span></code>. The Arduino times each opening itself, so the USB latency does not
+change the volume delivered.</p>
 </section>
 <section id="installing-it">
 <h2>Installing It</h2>
 <ol class="arabic simple">
-<li><p>Download both files below. Copy <code class="docutils literal notranslate"><span class="pre">water_calibration_arduino.py</span></code> to your project’s
-<code class="docutils literal notranslate"><span class="pre">code</span></code> directory.</p></li>
-<li><p>In <code class="docutils literal notranslate"><span class="pre">water_calibration_arduino.ino</span></code>, set <code class="docutils literal notranslate"><span class="pre">valvePins</span></code> to the pins of your valves, and
-upload it to the board.</p></li>
+<li><p>Download <code class="docutils literal notranslate"><span class="pre">water_calibration_arduino.py</span></code> below and copy it to your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code>
+directory.</p></li>
+<li><p>Make sure the board runs a firmware that understands <code class="docutils literal notranslate"><span class="pre">CMD_OPEN_VALVE</span></code>: the firmware
+of the Arduino examples does (see below). If you use your own, add the same message
+to it, so that one firmware serves for the tasks and for the calibration.</p></li>
 <li><p>Check that <code class="docutils literal notranslate"><span class="pre">CONTROLLER_PORT</span></code> (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CONTROLLER</span> <span class="pre">SETTINGS</span></code>) is the board’s port,
-and that the baud rate is the same in both files (9600).</p></li>
+and that the baud rate is the same in the task and in the firmware (9600).</p></li>
 <li><p>Restart the Training Village, so that it finds the new class.</p></li>
 </ol>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Keep only one <code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> subclass in a project. It is used even if the
-controller is Bpod, instead of the built-in sequence, so do not copy it to a Bpod
-project. That is also why this example is not part of the demo project.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The firmware below only opens valves, so you would have to upload it to calibrate and
-upload the task firmware back afterwards. If your task firmware already listens for
-commands, add <code class="docutils literal notranslate"><span class="pre">CMD_OPEN_VALVE</span></code> to it instead: the same sketch then serves for the tasks
-and for the calibration.</p>
-</div>
 </section>
 <hr class="docutils" />
 <section id="the-task">
@@ -623,12 +616,12 @@ and for the calibration.</p>
 </span><span data-line="11">
 </span><span data-line="12"><span class="c1"># Water calibration with an Arduino instead of Bpod.</span>
 </span><span data-line="13"><span class="c1">#</span>
-</span><span data-line="14"><span class="c1"># Copy this file to your project's code directory and upload</span>
-</span><span data-line="15"><span class="c1"># water_calibration_arduino.ino to the board: the Water Calibration panel</span>
-</span><span data-line="16"><span class="c1"># then runs this class instead of the built-in Bpod sequence. Keep only one</span>
-</span><span data-line="17"><span class="c1"># WaterCalibrationTaskBase subclass in the project.</span>
+</span><span data-line="14"><span class="c1"># Copy this file to your project's code directory: the Water Calibration</span>
+</span><span data-line="15"><span class="c1"># panel then runs this class instead of the built-in Bpod sequence. Keep only</span>
+</span><span data-line="16"><span class="c1"># one WaterCalibrationTaskBase subclass in the project. The board must</span>
+</span><span data-line="17"><span class="c1"># understand CMD_OPEN_VALVE, as the firmware of the Arduino examples does.</span>
 </span><span data-line="18"><span class="c1">#</span>
-</span><span data-line="19"><span class="c1"># Protocol (see water_calibration_arduino.ino):</span>
+</span><span data-line="19"><span class="c1"># Protocol (see openValve() in village_arduino/village_arduino.ino):</span>
 </span><span data-line="20"><span class="c1">#</span>
 </span><span data-line="21"><span class="c1"># Pi -&gt; Arduino, 6 raw bytes, once per valve opening:</span>
 </span><span data-line="22"><span class="c1">#   [CMD_OPEN_VALVE, port, time_us (uint32, little-endian)]</span>
@@ -639,7 +632,7 @@ and for the calibration.</p>
 </span><span data-line="27"><span class="c1"># Arduino -&gt; Pi, 6 raw bytes, once the valve is closed again:</span>
 </span><span data-line="28"><span class="c1">#   [EVENT_VALVE_CLOSED, port, elapsed_us (uint32, little-endian)]</span>
 </span><span data-line="29"><span class="c1">#   elapsed_us is how long the valve was actually open.</span>
-</span><span data-line="30"><span class="n">CMD_OPEN_VALVE</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span data-line="30"><span class="n">CMD_OPEN_VALVE</span> <span class="o">=</span> <span class="mi">20</span>
 </span><span data-line="31"><span class="n">EVENT_VALVE_CLOSED</span> <span class="o">=</span> <span class="mi">4</span>
 </span><span data-line="32">
 </span><span data-line="33"><span class="n">BAUDRATE</span> <span class="o">=</span> <span class="mi">9600</span>  <span class="c1"># must match the Arduino sketch's Serial.begin(...)</span>
@@ -709,80 +702,31 @@ and for the calibration.</p>
 </section>
 <section id="the-firmware">
 <h2>The Firmware</h2>
-<p><a class="reference download internal" download="" href="../_downloads/f228868949bd4ca68bc2ec4828c1a5b6/water_calibration_arduino.ino"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">water_calibration_arduino.ino</span></code></a></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1">// Water calibration firmware.</span>
-</span><span data-line="2"><span class="c1">// Companion sketch for water_calibration_arduino.py.</span>
-</span><span data-line="3"><span class="c1">//</span>
-</span><span data-line="4"><span class="c1">// The Pi asks this sketch to open one valve for a given time; this sketch</span>
-</span><span data-line="5"><span class="c1">// times the opening itself, with micros(), so the USB latency does not</span>
-</span><span data-line="6"><span class="c1">// change the volume delivered, and reports back when the valve is closed.</span>
-</span><span data-line="7"><span class="c1">//</span>
-</span><span data-line="8"><span class="c1">// Protocol:</span>
-</span><span data-line="9"><span class="c1">//   Pi -&gt; Arduino, 6 raw bytes, once per valve opening:</span>
-</span><span data-line="10"><span class="c1">//     [CMD_OPEN_VALVE, port, time_us (uint32, little-endian)]</span>
-</span><span data-line="11"><span class="c1">//   Arduino -&gt; Pi, 6 raw bytes, once the valve is closed again:</span>
-</span><span data-line="12"><span class="c1">//     [EVENT_VALVE_CLOSED, port, elapsed_us (uint32, little-endian)]</span>
-</span><span data-line="13"><span class="c1">//       -- elapsed_us is how long the valve was actually open (0 if the</span>
-</span><span data-line="14"><span class="c1">//          port has no valve).</span>
-</span><span data-line="15"><span class="c1">//</span>
-</span><span data-line="16"><span class="c1">// Baud rate must match BAUDRATE in water_calibration_arduino.py (9600).</span>
-</span><span data-line="17"><span class="c1">//</span>
-</span><span data-line="18"><span class="c1">// If your task firmware already listens for commands, you can add</span>
-</span><span data-line="19"><span class="c1">// CMD_OPEN_VALVE to it instead, so the same sketch serves for the tasks and</span>
-</span><span data-line="20"><span class="c1">// for the calibration.</span>
-</span><span data-line="21">
-</span><span data-line="22"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CMD_OPEN_VALVE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-</span><span data-line="23"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">EVENT_VALVE_CLOSED</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
-</span><span data-line="24">
-</span><span data-line="25"><span class="c1">// Valve pin of each port (port 1 = valvePins[0]...). Ports 1 and 3 are</span>
-</span><span data-line="26"><span class="c1">// wired as in the arduino_* examples; adapt the pins to your board.</span>
-</span><span data-line="27"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">NUM_PORTS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-</span><span data-line="28"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">valvePins</span><span class="p">[</span><span class="n">NUM_PORTS</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">41</span><span class="p">,</span><span class="w"> </span><span class="mi">43</span><span class="p">};</span>
-</span><span data-line="29">
-</span><span data-line="30"><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="31"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
-</span><span data-line="32"><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NUM_PORTS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="33"><span class="w">    </span><span class="n">pinMode</span><span class="p">(</span><span class="n">valvePins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
-</span><span data-line="34"><span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">valvePins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="35"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="36"><span class="p">}</span>
-</span><span data-line="37">
-</span><span data-line="38"><span class="kt">void</span><span class="w"> </span><span class="nf">sendEvent</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">eventCode</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">elapsed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="39"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">eventCode</span><span class="p">);</span>
-</span><span data-line="40"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
-</span><span data-line="41"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)(</span><span class="n">elapsed</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="42"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsed</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="43"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsed</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="44"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsed</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">24</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="45"><span class="p">}</span>
-</span><span data-line="46">
-</span><span data-line="47"><span class="kt">void</span><span class="w"> </span><span class="nf">openValve</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">timeUs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="48"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">port</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NUM_PORTS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="49"><span class="w">    </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_VALVE_CLOSED</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-</span><span data-line="50"><span class="w">    </span><span class="k">return</span><span class="p">;</span>
-</span><span data-line="51"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="52"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">valvePin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valvePins</span><span class="p">[</span><span class="n">port</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
-</span><span data-line="53"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">micros</span><span class="p">();</span>
-</span><span data-line="54"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">valvePin</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
-</span><span data-line="55"><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">micros</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">timeUs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="56"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="57"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">valvePin</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="58"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_VALVE_CLOSED</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">micros</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
-</span><span data-line="59"><span class="p">}</span>
-</span><span data-line="60">
-</span><span data-line="61"><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="62"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="63"><span class="w">    </span><span class="kt">byte</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-</span><span data-line="64"><span class="w">    </span><span class="kt">byte</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-</span><span data-line="65"><span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">timeUs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span data-line="66"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="67"><span class="w">      </span><span class="n">timeUs</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="mi">8</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
-</span><span data-line="68"><span class="w">    </span><span class="p">}</span>
-</span><span data-line="69"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">command</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CMD_OPEN_VALVE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="70"><span class="w">      </span><span class="n">openValve</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">timeUs</span><span class="p">);</span>
-</span><span data-line="71"><span class="w">    </span><span class="p">}</span>
-</span><span data-line="72"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="73"><span class="p">}</span>
+<p>In <a class="reference internal" href="../examples/village_arduino.html"><span class="std std-doc">village_arduino.ino</span></a>, the firmware of the Arduino
+examples, <code class="docutils literal notranslate"><span class="pre">CMD_OPEN_VALVE</span></code> is handled by <code class="docutils literal notranslate"><span class="pre">openValve()</span></code>. The valve pins are the ones of
+the side ports (<code class="docutils literal notranslate"><span class="pre">valvePinLeft</span></code>, <code class="docutils literal notranslate"><span class="pre">valvePinRight</span></code>); a port without a valve replies at once
+with an elapsed time of 0:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1">// === Water calibration (water_calibration_arduino.py) =====================</span>
+</span><span data-line="2"><span class="c1">//</span>
+</span><span data-line="3"><span class="c1">// [CMD_OPEN_VALVE, port, time_us (uint32, LE)]</span>
+</span><span data-line="4"><span class="c1">// Opens the valve of that port for time_us microseconds, timed with</span>
+</span><span data-line="5"><span class="c1">// micros() so the USB latency does not change the volume delivered, and</span>
+</span><span data-line="6"><span class="c1">// reports [EVENT_VALVE_CLOSED, port, elapsed_us] once it is closed again</span>
+</span><span data-line="7"><span class="c1">// (elapsed_us is 0 if the port has no valve).</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="kt">void</span><span class="w"> </span><span class="nf">openValve</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">timeUs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="10"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">port</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">LEFT_PORT</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">RIGHT_PORT</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="11"><span class="w">    </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_VALVE_CLOSED</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</span><span data-line="12"><span class="w">    </span><span class="k">return</span><span class="p">;</span>
+</span><span data-line="13"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="14"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">valvePin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valvePinOf</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>
+</span><span data-line="15"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">micros</span><span class="p">();</span>
+</span><span data-line="16"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">valvePin</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
+</span><span data-line="17"><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">micros</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">timeUs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="18"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="19"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">valvePin</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
+</span><span data-line="20"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_VALVE_CLOSED</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">micros</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+</span><span data-line="21"><span class="p">}</span>
 </span></pre></div>
 </div>
 </section>
@@ -825,7 +769,7 @@ and for the calibration.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

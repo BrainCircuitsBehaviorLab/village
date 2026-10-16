@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
@@ -562,24 +563,25 @@ data-aria-dark="Switch to auto color mode">
 <p>Calibrates the relationship between how long a valve (or a pump) is open and how much
 water it actually delivers, per behavior port — so tasks can request a volume in
 microliters instead of a raw opening time.</p>
-<p>Always available in the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen:</p>
+<p>Always available in the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen.</p>
+<p>Every time you click <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span></code> or <code class="docutils literal notranslate"><span class="pre">TEST</span></code>, the panel runs a small task that opens each
+selected valve for its time, one after the other, and repeats the whole sequence the
+number of iterations you entered. That task depends on the controller:</p>
 <ul class="simple">
-<li><p><strong>With Bpod</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> → <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>), the CALIBRATE/TEST sequence runs
-through a built-in Bpod state machine, with nothing to set up.</p></li>
-<li><p><strong>With any other controller</strong>, the project’s code directory must define a class
-inheriting from <code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code>
-(<code class="docutils literal notranslate"><span class="pre">village.custom_classes.water_calibration_task_base</span></code>) that runs the same sequence
-on that controller. For an Arduino, a ready-to-use one is in
-<a class="reference internal" href="../advanced_customization/water_calibration_arduino.html"><span class="std std-doc">Water Calibration with Arduino</span></a>.
-Without it, clicking CALIBRATE or TEST shows a message explaining what’s missing.</p></li>
+<li><p><strong>With Bpod</strong> (<code class="docutils literal notranslate"><span class="pre">BEHAVIOR_CONTROLLER</span></code> → <code class="docutils literal notranslate"><span class="pre">BPOD</span></code>), it is built in: there is nothing to
+set up.</p></li>
+<li><p><strong>With any other controller</strong>, you have to write it: a class inheriting from
+<code class="docutils literal notranslate"><span class="pre">WaterCalibrationTaskBase</span></code> (<code class="docutils literal notranslate"><span class="pre">village.custom_classes.water_calibration_task_base</span></code>), in
+the project’s code directory, that runs the same sequence on that controller. For an
+Arduino, a ready-to-use example is in
+<a class="reference internal" href="../advanced_customization/water_calibration_arduino.html"><span class="std std-doc">Water Calibration with Arduino</span></a>.</p></li>
 </ul>
-<p>If a project defines such a class, it is used instead of the Bpod default even when the
-controller is Bpod.</p>
 <section id="calibrating">
 <h2>Calibrating</h2>
-<p>You can calibrate one port at a time or several at once. For each active port
-(<code class="docutils literal notranslate"><span class="pre">BPOD_BEHAVIOR_PORTS</span></code>) you want to calibrate, enter a valve opening time and a shared
-number of iterations, then click <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span></code> — the selected valves each open that many
+<p>You can calibrate one port at a time or several at once. If you are using Bpod, only the
+ports enabled in <code class="docutils literal notranslate"><span class="pre">BPOD_BEHAVIOR_PORTS</span></code> appear in the panel.
+For each port you want to calibrate, enter a valve opening time and a shared number of
+iterations, then click <code class="docutils literal notranslate"><span class="pre">CALIBRATE</span></code> — the selected valves each open that many
 times for that long. Weigh the total water collected per port and enter it back; the
 panel converts the weight to microliters delivered per iteration (assuming a water
 density of 1 g/ml) and shows it next to each port. Click <code class="docutils literal notranslate"><span class="pre">ADD</span></code> to save the point — it’s
@@ -587,8 +589,7 @@ added to the calibration curve, plotted immediately, and listed under
 <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span> <span class="pre">POINTS</span></code>, where each point can be removed individually with its
 <code class="docutils literal notranslate"><span class="pre">-</span></code> button if it turns out to be an outlier. Repeat with a few different opening times
 per port (at least two points are required) to build a time → volume curve.</p>
-<p>Once you’re happy with the curve, click <code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">CALIBRATION</span></code> to persist it. Any port left
-with fewer than two points is dropped from the save, with a warning listing which ones.
+<p>Once you’re happy with the curve, click <code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">CALIBRATION</span></code> to persist it.
 Saved calibrations are never overwritten — every save gets a new <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>
 and the full history is kept, but tasks and the <code class="docutils literal notranslate"><span class="pre">TESTING</span></code> panel always use the most
 recent one per port. <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">CALIBRATION</span></code> discards the points collected so far (after
@@ -627,8 +628,6 @@ needs calibrating or the requested volume needs adjusting.</p>
 <p>Data is stored in <code class="docutils literal notranslate"><span class="pre">water_calibration.csv</span></code> (columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">port_number</span></code>,
 <code class="docutils literal notranslate"><span class="pre">time(s)</span></code>, <code class="docutils literal notranslate"><span class="pre">water_delivered(ul)</span></code>, <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>, <code class="docutils literal notranslate"><span class="pre">water_expected(ul)</span></code>,
 <code class="docutils literal notranslate"><span class="pre">error(%)</span></code>).</p>
-<hr class="docutils" />
-<p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> and the <a class="reference internal" href="../examples/led_calibration.html"><span class="std std-doc">led_calibration.py</span></a> example.</p>
 </section>
 </section>
 
@@ -669,7 +668,7 @@ needs calibrating or the requested volume needs adjusting.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

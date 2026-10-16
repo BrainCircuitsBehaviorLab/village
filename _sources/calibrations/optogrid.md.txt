@@ -2,9 +2,10 @@
 
 ![OptoGrid calibration screen](/_static/optogrid_calibration.webp)
 
-Provides a visual map of the OptoGrid optogenetic stimulation device (a wireless,
-64-LED array) for composing an LED selection and inspecting the device over
-Bluetooth.
+[OptoGrid](https://github.com/erlichlab/optogrid) is a wireless, head-mounted
+optogenetic stimulation device: a 64-µLED array over the brain, controlled over
+Bluetooth, with an IMU that records head movements. This panel provides a visual map of
+its LEDs for composing an LED selection and inspecting the device over Bluetooth.
 
 Always available in the `CALIBRATION` screen.
 

@@ -12,8 +12,12 @@ Arduino version of [bpod_4_center_initiated.py](bpod_4_center_initiated.md): the
 
 ### Arduino firmware
 
-{download}`Download arduino_4_center_initiated.ino <files/arduino_firmware/arduino_4_center_initiated.ino>`
+All the Arduino examples use the same firmware, [village_arduino.ino](village_arduino.md),
+uploaded once to the board. This task starts every trial with the `CMD_CENTER_INITIATED` command, and
+the trial runs in `runCenterInitiated()`:
 
-```{literalinclude} files/arduino_firmware/arduino_4_center_initiated.ino
+```{literalinclude} files/village_arduino/village_arduino.ino
 :language: cpp
+:start-at: "// === Center initiated ("
+:end-before: "// === Introduce penalty ("
 ```

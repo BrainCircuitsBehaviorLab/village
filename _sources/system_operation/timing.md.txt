@@ -1,44 +1,49 @@
 ## Timing, Clocks & Latencies
 
-### Absolute Time (Unix Epoch)
+### Timestamps
 
-All timestamps across the platform use standard **Unix Epoch Time** — a floating-point
-value representing the total seconds elapsed since January 1, 1970, 00:00:00 UTC:
+All timestamps on the platform are **Unix epoch time**: a `float` with the number of
+seconds elapsed since 1970-01-01 00:00:00 UTC. For example, `1748300000.123` is
+2025-05-26 22:53:20.123 UTC. Epoch time is always UTC, so it does not depend on the
+timezone or on daylight saving time.
 
-$$\text{Timestamp} = 1748300000.123 \longrightarrow \text{Precise calendar moment in time}$$
+### `time_utils` on the Raspberry Pi
 
+On the Raspberry Pi, every timestamp must come from `time_utils`:
 
-### Raspberry Pi Monotonic Clock (`time_utils`)
+- `time_utils.now_timestamp()` returns a `float` epoch timestamp (use it instead of `time.time()`).
+- `time_utils.now()` returns a `datetime.datetime` (use it instead of `datetime.now()`).
 
-On the Raspberry Pi, all timestamps must use the synchronized **monotonic clock**
-exposed through `time_utils`:
+`time_utils` reads the system clock once, right before each session starts, and from
+then on advances that reference with the monotonic clock. The reference never changes
+in the middle of a session. For implementation details, see `village/scripts/time_utils.py`.
 
-- `time_utils.now_timestamp()` — returns a `float` Unix epoch timestamp (replaces `time.time()`).
-- `time_utils.now()` — returns a `datetime.datetime` object (replaces `datetime.now()`).
+```{admonition} Why a monotonic clock?
+:class: note
+The system clock (wall clock) can be stepped forward or backward at any time, for example by:
 
+- **NTP synchronization**, when the system corrects accumulated drift.
+- Daylight Saving Time (DST) & timezone changes: Seasonal or location-based hour shifts.
+- **Manual changes** to the date or time by a user or a script.
+
+A monotonic clock only moves forward at a steady rate and is never stepped, so event
+order and elapsed times stay consistent for the whole session.
+```
 
 ```{admonition} Important
 :class: warning
-Do not use `time.time()` or `datetime.now()`. Always use `time_utils.now_timestamp()` and `time_utils.now()`.
+Never use `time.time()` or `datetime.now()` on the Raspberry Pi. Always use
+`time_utils.now_timestamp()` and `time_utils.now()`.
 
 Everything the system records (trial starts and ends, events, values, video frames) is
-timestamped with `time_utils`. The system clock and `time_utils` normally agree to the
-millisecond, but if the system clock jumps (an NTP correction, a manual change, a
-daylight saving time change), timestamps taken with `time.time()` or `datetime.now()`
-are shifted by that jump relative to everything else, and durations measured across the
-jump are wrong. Nothing fails or warns about it: the data are just silently misaligned.
+timestamped with `time_utils`. Normally the system clock and `time_utils` agree to within
+a millisecond, but if the system clock is stepped during a session, any timestamp taken
+with `time.time()` or `datetime.now()` is shifted by that step relative to all other data,
+and any duration measured across the step is wrong. In addition, `datetime.now()` returns
+local time, which also jumps by one hour when daylight saving time changes.
 ```
 
-```{admonition} What is a monotonic clock?
-:class: note
-Unlike the system wall clock, a monotonic clock guarantees that time always advances steadily and never jumps forward or steps backward. Wall clocks are prone to sudden time shifts caused by:
-* Network Time Protocol (NTP): Automated network syncs that correct internal clock drift.
-* Daylight Saving Time (DST) & timezone changes: Seasonal or location-based hour shifts.
-* Leap seconds: Occasional single-second adjustments to match Earth's astronomical rotation.
-* Manual modifications: Manual date/time changes made by a user or system script.
-By avoiding these external adjustments, a monotonic clock ensures that event ordering and elapsed-time calculations remain strictly consistent throughout a session.
-`time_utils` takes a reference from the wall clock and then advances it with the monotonic clock. The reference is retaken right before every session starts, so it never changes in the middle of a session. For implementation details, see `village/scripts/time_utils.py`.
-```
+
 
 ### Hardware Synchronization
 
@@ -47,9 +52,7 @@ Depending on your setup, hardware timing is managed through one of two pathways.
 #### 1. Raspberry Pi only (native execution)
 
 Timestamps are derived from the Raspberry Pi master clock via
-`time_utils.now_timestamp()` (see [Raspberry Pi Monotonic Clock](#raspberry-pi-monotonic-clock-time-utils)
-above), which tracks the Linux system clock and is resynchronized between
-sessions.
+`time_utils.now_timestamp()`.
 
 #### 2. Controller-integrated setups (Bpod or Arduino)
 
@@ -112,8 +115,13 @@ overhead. The dominant source of latency is therefore the USB polling interval i
 which explains the measured **mean = 4.1 ms, SD = 2.4 ms**.
 
 **Camera trigger**
-When a frame is captured by the camera sensor, it passes through the internal
-picamera2 pipeline before being handed to the callback, where the detection algorithm runs. The total camera trigger latency is **mean = 22.3 ms, SD = 6.3 ms**.
+Measured from the moment an LED turns on in front of the box camera until the detection
+runs: **mean = 22.3 ms, SD = 9.8 ms** (box camera, 640×480 at 30 FPS). Most of it is the
+wait for the next frame: the camera takes one picture every 1/FPS seconds, so an event
+that happens at a random moment waits, on average, half a frame period until a frame
+captures it (about 16.7 ms at 30 FPS). The rest, a few milliseconds, is the capture and
+processing: the frame is exposed and read from the sensor, goes through the picamera2
+pipeline, and is handed to the callback, where the detection algorithm runs.
 
 #### Communication
 
@@ -189,7 +197,7 @@ total latency = trigger latency + communication latency + action latency
 |---|---|---|---|---|
 | Controller | 0 ± 0 | 7.0 ± 0.4 | 4.4 ± 0.9 | 26.1 ± 7.5 |
 | Touchscreen | 5.3 ± 2.4 | 9.9 ± 2.4 | 7.3 ± 2.6 | 29.0 ± 7.9 |
-| Camera | 23.5 ± 6.3 | 28.1 ± 6.3 | 25.5 ± 6.4 | 47.2 ± 9.8 |
+| Camera | 23.5 ± 9.8 | 28.1 ± 9.8 | 25.5 ± 9.9 | 47.2 ± 13.2 |
 
 #### Summary Table (unmodified firmware, Bpod 2.0 to 2.4)
 

@@ -77,7 +77,7 @@ code/
 ├── online_plot.py, session_plot.py, subject_plot.py
 ├── after_session.py, change_cycle.py, telegram_commands.py
 ├── led_calibration.py, auto_follow_the_light.py
-└── arduino_firmware/
+└── village_arduino/                             # firmware for the Arduino examples
 ```
 
 ```{admonition} File and class names

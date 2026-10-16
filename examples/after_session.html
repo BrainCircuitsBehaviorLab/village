@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_3_active.html">arduino_3_active.py</a></li>
@@ -559,38 +560,37 @@ data-aria-dark="Switch to auto color mode">
 <h1>after_session.py</h1>
 <p>Keeps the default data sync after every session and sends an alarm if it took longer than 10 minutes.</p>
 <p><a class="reference download internal" download="" href="../_downloads/8af4a7bafe73f9edc8957f3607d86a72/after_session.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">after_session.py</span></code></a></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.after_session_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AfterSessionBase</span>
-</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.after_session_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AfterSessionBase</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="4">
 </span><span data-line="5">
-</span><span data-line="6">
-</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">AfterSession</span><span class="p">(</span><span class="n">AfterSessionBase</span><span class="p">):</span>
-</span><span data-line="8"><span class="w">    </span><span class="sd">"""Runs every time a session ends, once the animal is back home.</span>
-</span><span data-line="9">
-</span><span data-line="10"><span class="sd">    It keeps the default behavior (super().run() syncs the data to the hard</span>
-</span><span data-line="11"><span class="sd">    drive or the server, depending on SYNC_TYPE in SETTINGS) and adds one</span>
-</span><span data-line="12"><span class="sd">    thing: it measures how long the sync took and, if it took longer than</span>
-</span><span data-line="13"><span class="sd">    SLOW_SYNC_MINUTES, sends an alarm (shown in the events and sent through</span>
-</span><span data-line="14"><span class="sd">    Telegram). A sync that gets slower and slower usually means a network or</span>
-</span><span data-line="15"><span class="sd">    disk problem.</span>
-</span><span data-line="16">
-</span><span data-line="17"><span class="sd">    The system stays in the SYNC state until run() returns, and no new</span>
-</span><span data-line="18"><span class="sd">    session can start meanwhile, so keep it short.</span>
-</span><span data-line="19"><span class="sd">    """</span>
-</span><span data-line="20">
-</span><span data-line="21">    <span class="n">SLOW_SYNC_MINUTES</span> <span class="o">=</span> <span class="mi">10</span>
-</span><span data-line="22">
-</span><span data-line="23">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="24">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="25">
-</span><span data-line="26">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="27">        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-</span><span data-line="28">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># remove this line if you don't want the default sync</span>
-</span><span data-line="29">        <span class="n">minutes</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span>
-</span><span data-line="30">
-</span><span data-line="31">        <span class="k">if</span> <span class="n">minutes</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLOW_SYNC_MINUTES</span><span class="p">:</span>
-</span><span data-line="32">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The data sync after the session took </span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> min."</span><span class="p">)</span>
+</span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">AfterSession</span><span class="p">(</span><span class="n">AfterSessionBase</span><span class="p">):</span>
+</span><span data-line="7"><span class="w">    </span><span class="sd">"""Runs every time a session ends, once the animal is back home.</span>
+</span><span data-line="8">
+</span><span data-line="9"><span class="sd">    It keeps the default behavior (super().run() syncs the data to the hard</span>
+</span><span data-line="10"><span class="sd">    drive or the server, depending on SYNC_TYPE in SETTINGS) and adds one</span>
+</span><span data-line="11"><span class="sd">    thing: it measures how long the sync took and, if it took longer than</span>
+</span><span data-line="12"><span class="sd">    SLOW_SYNC_MINUTES, sends an alarm (shown in the events and sent through</span>
+</span><span data-line="13"><span class="sd">    Telegram). A sync that gets slower and slower usually means a network or</span>
+</span><span data-line="14"><span class="sd">    disk problem.</span>
+</span><span data-line="15">
+</span><span data-line="16"><span class="sd">    The system stays in the SYNC state until run() returns, and no new</span>
+</span><span data-line="17"><span class="sd">    session can start meanwhile, so keep it short.</span>
+</span><span data-line="18"><span class="sd">    """</span>
+</span><span data-line="19">
+</span><span data-line="20">    <span class="n">SLOW_SYNC_MINUTES</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span data-line="21">
+</span><span data-line="22">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="23">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="24">
+</span><span data-line="25">    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="26">        <span class="n">start</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="27">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># remove this line if you don't want the default sync</span>
+</span><span data-line="28">        <span class="n">minutes</span> <span class="o">=</span> <span class="p">(</span><span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span>
+</span><span data-line="29">
+</span><span data-line="30">        <span class="k">if</span> <span class="n">minutes</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">SLOW_SYNC_MINUTES</span><span class="p">:</span>
+</span><span data-line="31">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The data sync after the session took </span><span class="si">{</span><span class="n">minutes</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> min."</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </section>
@@ -632,7 +632,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

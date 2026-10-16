@@ -99,7 +99,7 @@ systemName/
 - **Calibration files** (`water_calibration.csv`, `sound_calibration.csv`, and one per
   custom calibration, e.g. `led_calibration.csv`): every measurement saved by each
   calibration. Their values can be retrieved and used within tasks (see
-  [Custom Calibrations](../advanced_customization/calibrations.md)).
+  [Calibrations](../calibrations/overview.md)).
 
 - **`deleted_sessions.csv`**: List of manually deleted sessions.
 
@@ -138,9 +138,7 @@ data/sessions/{subject}/
 #### 1. Raw Session (`{filename}_RAW.csv`)
 
 One row per event. During the session, the events are written as they happen to
-`data/sessions/session.csv`; when the session ends, that file is copied here. (That
-real-time file is emptied when the Training Village starts: see
-[After a Power Cut](../troubleshooting/troubleshooting.md#after-a-power-cut).)
+`data/sessions/session.csv`; when the session ends, that file is copied here.
 
 | Column | Description |
 | :--- | :--- |
@@ -203,27 +201,45 @@ subject's directory:
 
 ### Video Recordings & Frame Data
 
+Every recording produces two files with the same name: an `.mp4` video (H.264) and a
+`.csv` table with one row per frame.
+
+#### Box Videos (one per session)
+
 - **Storage path:** `data/videos/{subject}/`
-- **Filename format:** `{subject}_{task}_{timestamp}`
+- **Filename format:** `{subject}_{task}_{timestamp}`, the same as the session files.
+- **Video:** 640×480 at 30 FPS by default (`CAM_BOX_RESOLUTION` and `CAM_BOX_FRAMERATE`
+  in `SETTINGS` → `CAMERA SETTINGS`).
 
-The corridor camera records continuously, starting a new file every
-`CORRIDOR_VIDEO_DURATION` seconds (30 minutes by default): these videos are saved directly in `data/videos/`, named
-`CORRIDOR_{timestamp}`, with the same two files described below.
-
-Each recording session produces two files:
-
-- **`{filename}.mp4`**: H.264-encoded video. Default resolution is 640×480 at 30 FPS
-  (configurable via system settings).
-- **`{filename}.csv`**: Per-frame data table:
+The box camera records from the start to the end of every session with a subject. If
+the camera has to be restarted during the session, the pieces are merged back into one
+video when the session ends.
 
 | Column | Description |
 | :--- | :--- |
 | `frame` | Frame index. |
-| `trial` | Active trial number during that frame. |
-| `annotation` | Custom text string pushed dynamically from the running protocol. |
-| `timestamp` | Absolute hardware sensor capture time. |
-| `x_position` | Center-of-mass X coordinate of the animal *(tracking must be enabled)*. |
-| `y_position` | Center-of-mass Y coordinate of the animal *(tracking must be enabled)*. |
+| `trial` | Trial running during that frame. |
+| `annotation` | Text set from the task with `cam_box.write_text()` (empty if none). |
+| `timestamp` | Capture time of the frame (Unix timestamp, Raspberry Pi clock). |
+| `x_position` | X coordinate of the animal's center of mass. Only with `CAM_BOX_TRACKING_POSITION` ON. |
+| `y_position` | Y coordinate of the animal's center of mass. Only with `CAM_BOX_TRACKING_POSITION` ON. |
+
+#### Corridor Videos (continuous)
+
+- **Storage path:** `data/videos/`
+- **Filename format:** `CORRIDOR_{timestamp}`
+- **Video:** 640×480 at 10 FPS by default (`CAM_CORRIDOR_FRAMERATE` in `SETTINGS` →
+  `CAMERA SETTINGS`; the resolution is fixed).
+
+The corridor camera records 24/7, starting a new file every `CORRIDOR_VIDEO_DURATION`
+seconds (30 minutes by default). These videos are not synchronized and are deleted after
+`DAYS_OF_VIDEO_STORAGE` days (see [Data Persistence & Backups](../preparation/backup.md)).
+
+| Column | Description |
+| :--- | :--- |
+| `frame` | Frame index. |
+| `annotation` | The most recent system event (the same text shown on the video). |
+| `timestamp` | Capture time of the frame (Unix timestamp, Raspberry Pi clock). |
 
 ### Frame Annotations & On-Screen Overlays
 
@@ -237,8 +253,7 @@ Both cameras render diagnostic text overlays burnt directly into the video frame
 
 **Corridor camera:**
 - **Top row:** `<filename>  <annotation text>` — filename and the timestamp and
-  description of the most recent system event (no trial number, as the corridor is not
-  trial-structured).
+  description of the most recent system event.
 - **Bottom row:** `<duration>  frame: N  area1: N  area2: N...` — same format as above.
 
 In addition to the text overlays, when `VIEW_DETECTION` is enabled the system draws two
@@ -269,7 +284,7 @@ See the [Custom Camera Drawing][CAMERA] section for how this `draw` (disk + scre
 
 ---
 
-### Understanding the Automated Training Loop
+### How the Data Files Drive Automated Training
 
 The Training Village uses a closed-loop parameter cycle to drive fully autonomous
 training progression across days without requiring human intervention:
@@ -283,7 +298,7 @@ training progression across days without requiring human intervention:
                      │
        (Saves parameters actually used)
                      ▼
-             [ {filename}.json ]
+  [ {filename}.json + sessions_summary.csv ]
                      │
        (Session ends → training_protocol.py
         evaluates performance history)
@@ -294,7 +309,8 @@ training progression across days without requiring human intervention:
 1. **Initialization:** When an animal is recognized, its profile variables are loaded
    from the `next_settings` field in `subjects.csv`.
 2. **Archiving:** The parameters used for the current session are saved to
-   `{filename}.json`.
+   `{filename}.json`, and also, as a JSON string, to the `settings` column of that
+   session's row in `sessions_summary.csv`.
 3. **Evaluation:** At the end of the session, `training_protocol.py` runs automatically
    and analyzes the animal's historical performance trends from `{subject}.csv`.
 4. **Update:** The script computes the adjusted parameters for the next session

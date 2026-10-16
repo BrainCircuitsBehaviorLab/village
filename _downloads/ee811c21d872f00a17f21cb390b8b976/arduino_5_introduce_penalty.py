@@ -7,7 +7,7 @@ from village.custom_classes.task_base import TaskBase
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
-# Protocol (see arduino_5_introduce_penalty.ino):
+# Protocol (see runIntroducePenalty() in village_arduino/village_arduino.ino):
 #
 # Pi -> Arduino, 8 raw bytes, sent once at the start of each trial:
 #   [CMD_START_TRIAL, correct_port,
@@ -35,7 +35,7 @@ from village.settings import settings
 #   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller
 #   timestamp (register_controller_event / register_enter_state), so the two
 #   clocks never need to be synchronized.
-CMD_START_TRIAL = 1
+CMD_START_TRIAL = 15  # CMD_INTRODUCE_PENALTY in village_arduino.ino
 
 EVENT_POKE = 1
 EVENT_TRIAL_END = 2

@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
@@ -480,8 +481,8 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#absolute-time-unix-epoch">Absolute Time (Unix Epoch)</a></li>
-<li><a class="reference internal" href="#raspberry-pi-monotonic-clock-time-utils">Raspberry Pi Monotonic Clock (<code class="docutils literal notranslate"><span class="pre">time_utils</span></code>)</a></li>
+<li><a class="reference internal" href="#timestamps">Timestamps</a></li>
+<li><a class="reference internal" href="#time-utils-on-the-raspberry-pi"><code class="docutils literal notranslate"><span class="pre">time_utils</span></code> on the Raspberry Pi</a></li>
 <li><a class="reference internal" href="#hardware-synchronization">Hardware Synchronization</a><ul>
 <li><a class="reference internal" href="#raspberry-pi-only-native-execution">1. Raspberry Pi only (native execution)</a></li>
 <li><a class="reference internal" href="#controller-integrated-setups-bpod-or-arduino">2. Controller-integrated setups (Bpod or Arduino)</a></li>
@@ -570,44 +571,44 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="timing-clocks-latencies">
 <h1>Timing, Clocks &amp; Latencies</h1>
-<section id="absolute-time-unix-epoch">
-<h2>Absolute Time (Unix Epoch)</h2>
-<p>All timestamps across the platform use standard <strong>Unix Epoch Time</strong> — a floating-point
-value representing the total seconds elapsed since January 1, 1970, 00:00:00 UTC:</p>
-<div class="math-wrapper docutils container">
-<div class="math notranslate nohighlight">
-\[\text{Timestamp} = 1748300000.123 \longrightarrow \text{Precise calendar moment in time}\]</div>
-</div>
+<section id="timestamps">
+<h2>Timestamps</h2>
+<p>All timestamps on the platform are <strong>Unix epoch time</strong>: a <code class="docutils literal notranslate"><span class="pre">float</span></code> with the number of
+seconds elapsed since 1970-01-01 00:00:00 UTC. For example, <code class="docutils literal notranslate"><span class="pre">1748300000.123</span></code> is
+2025-05-26 22:53:20.123 UTC. Epoch time is always UTC, so it does not depend on the
+timezone or on daylight saving time.</p>
 </section>
-<section id="raspberry-pi-monotonic-clock-time-utils">
-<h2>Raspberry Pi Monotonic Clock (<code class="docutils literal notranslate"><span class="pre">time_utils</span></code>)</h2>
-<p>On the Raspberry Pi, all timestamps must use the synchronized <strong>monotonic clock</strong>
-exposed through <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>:</p>
+<section id="time-utils-on-the-raspberry-pi">
+<h2><code class="docutils literal notranslate"><span class="pre">time_utils</span></code> on the Raspberry Pi</h2>
+<p>On the Raspberry Pi, every timestamp must come from <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> — returns a <code class="docutils literal notranslate"><span class="pre">float</span></code> Unix epoch timestamp (replaces <code class="docutils literal notranslate"><span class="pre">time.time()</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code> — returns a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object (replaces <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> returns a <code class="docutils literal notranslate"><span class="pre">float</span></code> epoch timestamp (use it instead of <code class="docutils literal notranslate"><span class="pre">time.time()</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code> returns a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> (use it instead of <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>).</p></li>
 </ul>
+<p><code class="docutils literal notranslate"><span class="pre">time_utils</span></code> reads the system clock once, right before each session starts, and from
+then on advances that reference with the monotonic clock. The reference never changes
+in the middle of a session. For implementation details, see <code class="docutils literal notranslate"><span class="pre">village/scripts/time_utils.py</span></code>.</p>
+<div class="note admonition">
+<p class="admonition-title">Why a monotonic clock?</p>
+<p>The system clock (wall clock) can be stepped forward or backward at any time, for example by:</p>
+<ul class="simple">
+<li><p><strong>NTP synchronization</strong>, when the system corrects accumulated drift.</p></li>
+<li><p>Daylight Saving Time (DST) &amp; timezone changes: Seasonal or location-based hour shifts.</p></li>
+<li><p><strong>Manual changes</strong> to the date or time by a user or a script.</p></li>
+</ul>
+<p>A monotonic clock only moves forward at a steady rate and is never stepped, so event
+order and elapsed times stay consistent for the whole session.</p>
+</div>
 <div class="warning admonition">
 <p class="admonition-title">Important</p>
-<p>Do not use <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>. Always use <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> and <code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code>.</p>
+<p>Never use <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code> on the Raspberry Pi. Always use
+<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> and <code class="docutils literal notranslate"><span class="pre">time_utils.now()</span></code>.</p>
 <p>Everything the system records (trial starts and ends, events, values, video frames) is
-timestamped with <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>. The system clock and <code class="docutils literal notranslate"><span class="pre">time_utils</span></code> normally agree to the
-millisecond, but if the system clock jumps (an NTP correction, a manual change, a
-daylight saving time change), timestamps taken with <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code>
-are shifted by that jump relative to everything else, and durations measured across the
-jump are wrong. Nothing fails or warns about it: the data are just silently misaligned.</p>
-</div>
-<div class="note admonition">
-<p class="admonition-title">What is a monotonic clock?</p>
-<p>Unlike the system wall clock, a monotonic clock guarantees that time always advances steadily and never jumps forward or steps backward. Wall clocks are prone to sudden time shifts caused by:</p>
-<ul class="simple">
-<li><p>Network Time Protocol (NTP): Automated network syncs that correct internal clock drift.</p></li>
-<li><p>Daylight Saving Time (DST) &amp; timezone changes: Seasonal or location-based hour shifts.</p></li>
-<li><p>Leap seconds: Occasional single-second adjustments to match Earth’s astronomical rotation.</p></li>
-<li><p>Manual modifications: Manual date/time changes made by a user or system script.
-By avoiding these external adjustments, a monotonic clock ensures that event ordering and elapsed-time calculations remain strictly consistent throughout a session.
-<code class="docutils literal notranslate"><span class="pre">time_utils</span></code> takes a reference from the wall clock and then advances it with the monotonic clock. The reference is retaken right before every session starts, so it never changes in the middle of a session. For implementation details, see <code class="docutils literal notranslate"><span class="pre">village/scripts/time_utils.py</span></code>.</p></li>
-</ul>
+timestamped with <code class="docutils literal notranslate"><span class="pre">time_utils</span></code>. Normally the system clock and <code class="docutils literal notranslate"><span class="pre">time_utils</span></code> agree to within
+a millisecond, but if the system clock is stepped during a session, any timestamp taken
+with <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> or <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code> is shifted by that step relative to all other data,
+and any duration measured across the step is wrong. In addition, <code class="docutils literal notranslate"><span class="pre">datetime.now()</span></code> returns
+local time, which also jumps by one hour when daylight saving time changes.</p>
 </div>
 </section>
 <section id="hardware-synchronization">
@@ -616,9 +617,7 @@ By avoiding these external adjustments, a monotonic clock ensures that event ord
 <section id="raspberry-pi-only-native-execution">
 <h3>1. Raspberry Pi only (native execution)</h3>
 <p>Timestamps are derived from the Raspberry Pi master clock via
-<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> (see <a class="reference internal" href="#raspberry-pi-monotonic-clock-time-utils"><span class="std std-ref">Raspberry Pi Monotonic Clock</span></a>
-above), which tracks the Linux system clock and is resynchronized between
-sessions.</p>
+<code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code>.</p>
 </section>
 <section id="controller-integrated-setups-bpod-or-arduino">
 <h3>2. Controller-integrated setups (Bpod or Arduino)</h3>
@@ -681,8 +680,13 @@ kernel then delivers the event through the <code class="docutils literal notrans
 overhead. The dominant source of latency is therefore the USB polling interval itself,
 which explains the measured <strong>mean = 4.1 ms, SD = 2.4 ms</strong>.</p>
 <p><strong>Camera trigger</strong>
-When a frame is captured by the camera sensor, it passes through the internal
-picamera2 pipeline before being handed to the callback, where the detection algorithm runs. The total camera trigger latency is <strong>mean = 22.3 ms, SD = 6.3 ms</strong>.</p>
+Measured from the moment an LED turns on in front of the box camera until the detection
+runs: <strong>mean = 22.3 ms, SD = 9.8 ms</strong> (box camera, 640×480 at 30 FPS). Most of it is the
+wait for the next frame: the camera takes one picture every 1/FPS seconds, so an event
+that happens at a random moment waits, on average, half a frame period until a frame
+captures it (about 16.7 ms at 30 FPS). The rest, a few milliseconds, is the capture and
+processing: the frame is exposed and read from the sensor, goes through the picamera2
+pipeline, and is handed to the callback, where the detection algorithm runs.</p>
 </section>
 <section id="communication">
 <h3>Communication</h3>
@@ -769,10 +773,10 @@ above:</p>
 <td><p>29.0 ± 7.9</p></td>
 </tr>
 <tr class="row-even"><td><p>Camera</p></td>
-<td><p>23.5 ± 6.3</p></td>
-<td><p>28.1 ± 6.3</p></td>
-<td><p>25.5 ± 6.4</p></td>
-<td><p>47.2 ± 9.8</p></td>
+<td><p>23.5 ± 9.8</p></td>
+<td><p>28.1 ± 9.8</p></td>
+<td><p>25.5 ± 9.9</p></td>
+<td><p>47.2 ± 13.2</p></td>
 </tr>
 </tbody>
 </table>
@@ -849,13 +853,11 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
-      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
       <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
 </html>

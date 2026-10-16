@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
@@ -495,9 +496,13 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#aggregate-history-file">Aggregate History File</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#video-recordings-frame-data">Video Recordings &amp; Frame Data</a></li>
+<li><a class="reference internal" href="#video-recordings-frame-data">Video Recordings &amp; Frame Data</a><ul>
+<li><a class="reference internal" href="#box-videos-one-per-session">Box Videos (one per session)</a></li>
+<li><a class="reference internal" href="#corridor-videos-continuous">Corridor Videos (continuous)</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#frame-annotations-on-screen-overlays">Frame Annotations &amp; On-Screen Overlays</a></li>
-<li><a class="reference internal" href="#understanding-the-automated-training-loop">Understanding the Automated Training Loop</a></li>
+<li><a class="reference internal" href="#how-the-data-files-drive-automated-training">How the Data Files Drive Automated Training</a></li>
 </ul>
 </div></div>
   </aside>
@@ -666,7 +671,7 @@ at each moment.</p></li>
 <li><p><strong>Calibration files</strong> (<code class="docutils literal notranslate"><span class="pre">water_calibration.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">sound_calibration.csv</span></code>, and one per
 custom calibration, e.g. <code class="docutils literal notranslate"><span class="pre">led_calibration.csv</span></code>): every measurement saved by each
 calibration. Their values can be retrieved and used within tasks (see
-<a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a>).</p></li>
+<a class="reference internal" href="../calibrations/overview.html"><span class="std std-doc">Calibrations</span></a>).</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">deleted_sessions.csv</span></code></strong>: List of manually deleted sessions.</p>
 <div class="warning admonition">
 <p class="admonition-title">Important</p>
@@ -706,9 +711,7 @@ created once a line threshold is exceeded. Older event records are archived here
 <section id="raw-session-filename-raw-csv">
 <h3>1. Raw Session (<code class="docutils literal notranslate"><span class="pre">{filename}_RAW.csv</span></code>)</h3>
 <p>One row per event. During the session, the events are written as they happen to
-<code class="docutils literal notranslate"><span class="pre">data/sessions/session.csv</span></code>; when the session ends, that file is copied here. (That
-real-time file is emptied when the Training Village starts: see
-<a class="reference internal" href="../troubleshooting/troubleshooting.html#after-a-power-cut"><span class="std std-ref">After a Power Cut</span></a>.)</p>
+<code class="docutils literal notranslate"><span class="pre">data/sessions/session.csv</span></code>; when the session ends, that file is copied here.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -787,19 +790,19 @@ subject’s directory:</p>
 <hr class="docutils" />
 <section id="video-recordings-frame-data">
 <h2>Video Recordings &amp; Frame Data</h2>
+<p>Every recording produces two files with the same name: an <code class="docutils literal notranslate"><span class="pre">.mp4</span></code> video (H.264) and a
+<code class="docutils literal notranslate"><span class="pre">.csv</span></code> table with one row per frame.</p>
+<section id="box-videos-one-per-session">
+<h3>Box Videos (one per session)</h3>
 <ul class="simple">
 <li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/videos/{subject}/</span></code></p></li>
-<li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code></p></li>
+<li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code>, the same as the session files.</p></li>
+<li><p><strong>Video:</strong> 640×480 at 30 FPS by default (<code class="docutils literal notranslate"><span class="pre">CAM_BOX_RESOLUTION</span></code> and <code class="docutils literal notranslate"><span class="pre">CAM_BOX_FRAMERATE</span></code>
+in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>).</p></li>
 </ul>
-<p>The corridor camera records continuously, starting a new file every
-<code class="docutils literal notranslate"><span class="pre">CORRIDOR_VIDEO_DURATION</span></code> seconds (30 minutes by default): these videos are saved directly in <code class="docutils literal notranslate"><span class="pre">data/videos/</span></code>, named
-<code class="docutils literal notranslate"><span class="pre">CORRIDOR_{timestamp}</span></code>, with the same two files described below.</p>
-<p>Each recording session produces two files:</p>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">{filename}.mp4</span></code></strong>: H.264-encoded video. Default resolution is 640×480 at 30 FPS
-(configurable via system settings).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code></strong>: Per-frame data table:</p></li>
-</ul>
+<p>The box camera records from the start to the end of every session with a subject. If
+the camera has to be restarted during the session, the pieces are merged back into one
+video when the session ends.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -812,23 +815,56 @@ subject’s directory:</p>
 <td class="text-left"><p>Frame index.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">trial</span></code></p></td>
-<td class="text-left"><p>Active trial number during that frame.</p></td>
+<td class="text-left"><p>Trial running during that frame.</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">annotation</span></code></p></td>
-<td class="text-left"><p>Custom text string pushed dynamically from the running protocol.</p></td>
+<td class="text-left"><p>Text set from the task with <code class="docutils literal notranslate"><span class="pre">cam_box.write_text()</span></code> (empty if none).</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></td>
-<td class="text-left"><p>Absolute hardware sensor capture time.</p></td>
+<td class="text-left"><p>Capture time of the frame (Unix timestamp, Raspberry Pi clock).</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">x_position</span></code></p></td>
-<td class="text-left"><p>Center-of-mass X coordinate of the animal <em>(tracking must be enabled)</em>.</p></td>
+<td class="text-left"><p>X coordinate of the animal’s center of mass. Only with <code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code> ON.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">y_position</span></code></p></td>
-<td class="text-left"><p>Center-of-mass Y coordinate of the animal <em>(tracking must be enabled)</em>.</p></td>
+<td class="text-left"><p>Y coordinate of the animal’s center of mass. Only with <code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code> ON.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
+<section id="corridor-videos-continuous">
+<h3>Corridor Videos (continuous)</h3>
+<ul class="simple">
+<li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/videos/</span></code></p></li>
+<li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">CORRIDOR_{timestamp}</span></code></p></li>
+<li><p><strong>Video:</strong> 640×480 at 10 FPS by default (<code class="docutils literal notranslate"><span class="pre">CAM_CORRIDOR_FRAMERATE</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> →
+<code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>; the resolution is fixed).</p></li>
+</ul>
+<p>The corridor camera records 24/7, starting a new file every <code class="docutils literal notranslate"><span class="pre">CORRIDOR_VIDEO_DURATION</span></code>
+seconds (30 minutes by default). These videos are not synchronized and are deleted after
+<code class="docutils literal notranslate"><span class="pre">DAYS_OF_VIDEO_STORAGE</span></code> days (see <a class="reference internal" href="../preparation/backup.html"><span class="std std-doc">Data Persistence &amp; Backups</span></a>).</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Column</p></th>
+<th class="head text-left"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">frame</span></code></p></td>
+<td class="text-left"><p>Frame index.</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">annotation</span></code></p></td>
+<td class="text-left"><p>The most recent system event (the same text shown on the video).</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">timestamp</span></code></p></td>
+<td class="text-left"><p>Capture time of the frame (Unix timestamp, Raspberry Pi clock).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 <section id="frame-annotations-on-screen-overlays">
 <h2>Frame Annotations &amp; On-Screen Overlays</h2>
@@ -843,8 +879,7 @@ frame number, and pixel counts for each active tracking area.</p></li>
 <p><strong>Corridor camera:</strong></p>
 <ul class="simple">
 <li><p><strong>Top row:</strong> <code class="docutils literal notranslate"><span class="pre">&lt;filename&gt;</span>&#160; <span class="pre">&lt;annotation</span> <span class="pre">text&gt;</span></code> — filename and the timestamp and
-description of the most recent system event (no trial number, as the corridor is not
-trial-structured).</p></li>
+description of the most recent system event.</p></li>
 <li><p><strong>Bottom row:</strong> <code class="docutils literal notranslate"><span class="pre">&lt;duration&gt;</span>&#160; <span class="pre">frame:</span> <span class="pre">N</span>&#160; <span class="pre">area1:</span> <span class="pre">N</span>&#160; <span class="pre">area2:</span> <span class="pre">N...</span></code> — same format as above.</p></li>
 </ul>
 <p>In addition to the text overlays, when <code class="docutils literal notranslate"><span class="pre">VIEW_DETECTION</span></code> is enabled the system draws two
@@ -872,8 +907,8 @@ downside to leaving it permanently enabled too — it only adds a live visual ai
 <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> (screen only) split also applies to overlays you add yourself.</p>
 </section>
 <hr class="docutils" />
-<section id="understanding-the-automated-training-loop">
-<h2>Understanding the Automated Training Loop</h2>
+<section id="how-the-data-files-drive-automated-training">
+<h2>How the Data Files Drive Automated Training</h2>
 <p>The Training Village uses a closed-loop parameter cycle to drive fully autonomous
 training progression across days without requiring human intervention:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">              [ subjects.csv ]
@@ -884,7 +919,7 @@ training progression across days without requiring human intervention:</p>
 </span><span data-line="6">                     │
 </span><span data-line="7">       (Saves parameters actually used)
 </span><span data-line="8">                     ▼
-</span><span data-line="9">             [ {filename}.json ]
+</span><span data-line="9">  [ {filename}.json + sessions_summary.csv ]
 </span><span data-line="10">                     │
 </span><span data-line="11">       (Session ends → training_protocol.py
 </span><span data-line="12">        evaluates performance history)
@@ -896,7 +931,8 @@ training progression across days without requiring human intervention:</p>
 <li><p><strong>Initialization:</strong> When an animal is recognized, its profile variables are loaded
 from the <code class="docutils literal notranslate"><span class="pre">next_settings</span></code> field in <code class="docutils literal notranslate"><span class="pre">subjects.csv</span></code>.</p></li>
 <li><p><strong>Archiving:</strong> The parameters used for the current session are saved to
-<code class="docutils literal notranslate"><span class="pre">{filename}.json</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">{filename}.json</span></code>, and also, as a JSON string, to the <code class="docutils literal notranslate"><span class="pre">settings</span></code> column of that
+session’s row in <code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code>.</p></li>
 <li><p><strong>Evaluation:</strong> At the end of the session, <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code> runs automatically
 and analyzes the animal’s historical performance trends from <code class="docutils literal notranslate"><span class="pre">{subject}.csv</span></code>.</p></li>
 <li><p><strong>Update:</strong> The script computes the adjusted parameters for the next session
@@ -943,7 +979,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

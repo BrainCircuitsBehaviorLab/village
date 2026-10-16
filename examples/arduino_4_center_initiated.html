@@ -125,6 +125,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village_arduino.html">village_arduino.ino</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_1_habituation.html">arduino_1_habituation.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_2_passive.html">arduino_2_passive.py</a></li>
 <li class="toctree-l4"><a class="reference internal" href="arduino_3_active.html">arduino_3_active.py</a></li>
@@ -575,7 +576,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
 </span><span data-line="9"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 </span><span data-line="10">
-</span><span data-line="11"><span class="c1"># Protocol (see arduino_4_center_initiated.ino):</span>
+</span><span data-line="11"><span class="c1"># Protocol (see runCenterInitiated() in village_arduino/village_arduino.ino):</span>
 </span><span data-line="12"><span class="c1">#</span>
 </span><span data-line="13"><span class="c1"># Pi -&gt; Arduino, 8 raw bytes, sent once at the start of each trial:</span>
 </span><span data-line="14"><span class="c1">#   [CMD_START_TRIAL, correct_port,</span>
@@ -607,7 +608,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="40"><span class="c1">#   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller</span>
 </span><span data-line="41"><span class="c1">#   timestamp (register_controller_event / register_enter_state), so the two</span>
 </span><span data-line="42"><span class="c1">#   clocks never need to be synchronized.</span>
-</span><span data-line="43"><span class="n">CMD_START_TRIAL</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span data-line="43"><span class="n">CMD_START_TRIAL</span> <span class="o">=</span> <span class="mi">14</span>  <span class="c1"># CMD_CENTER_INITIATED in village_arduino.ino</span>
 </span><span data-line="44">
 </span><span data-line="45"><span class="n">EVENT_POKE</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span data-line="46"><span class="n">EVENT_TRIAL_END</span> <span class="o">=</span> <span class="mi">2</span>
@@ -839,209 +840,82 @@ data-aria-dark="Switch to auto color mode">
 </section>
 <section id="arduino-firmware">
 <h2>Arduino firmware</h2>
-<p><a class="reference download internal" download="" href="../_downloads/078db366ddb6aa3e40a78d6e36791e5b/arduino_4_center_initiated.ino"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">arduino_4_center_initiated.ino</span></code></a></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1">// Center-Initiated Side Alternation Task firmware.</span>
-</span><span data-line="2"><span class="c1">// Companion sketch for arduino_4_center_initiated.py.</span>
-</span><span data-line="3"><span class="c1">//</span>
-</span><span data-line="4"><span class="c1">// The Pi tells this sketch which side is correct and the three timings it</span>
-</span><span data-line="5"><span class="c1">// needs at the start of the trial; from there this sketch runs the whole</span>
-</span><span data-line="6"><span class="c1">// trial (center poke, side poke, valve) by itself and only reports back</span>
-</span><span data-line="7"><span class="c1">// what happened, with its own millis()-based timing.</span>
-</span><span data-line="8"><span class="c1">//</span>
-</span><span data-line="9"><span class="c1">// Protocol:</span>
-</span><span data-line="10"><span class="c1">//   Pi -&gt; Arduino, 8 raw bytes, once per trial:</span>
-</span><span data-line="11"><span class="c1">//     [CMD_START_TRIAL, correct_port,</span>
-</span><span data-line="12"><span class="c1">//      c_led_on_timeout_ms (uint16, little-endian),</span>
-</span><span data-line="13"><span class="c1">//      led_on_timeout_ms (uint16, little-endian),</span>
-</span><span data-line="14"><span class="c1">//      valve_time_ms (uint16, little-endian)]</span>
-</span><span data-line="15"><span class="c1">//   Arduino -&gt; Pi, 6 raw bytes per message:</span>
-</span><span data-line="16"><span class="c1">//     [EVENT_POKE, port, elapsed_ms (uint32, little-endian)]</span>
-</span><span data-line="17"><span class="c1">//       -- once for the center poke, then once per poke seen on EITHER</span>
-</span><span data-line="18"><span class="c1">//          side port during the response window. Only a poke on the</span>
-</span><span data-line="19"><span class="c1">//          correct side ends that window early; a poke on the wrong side</span>
-</span><span data-line="20"><span class="c1">//          is reported too, but this sketch keeps waiting.</span>
-</span><span data-line="21"><span class="c1">//     [EVENT_STATE, state, elapsed_ms (uint32, little-endian)]</span>
-</span><span data-line="22"><span class="c1">//       -- every time this sketch enters a new state (see the STATE_*</span>
-</span><span data-line="23"><span class="c1">//          constants), so the Pi can register it with register_enter_state.</span>
-</span><span data-line="24"><span class="c1">//     [EVENT_TRIAL_END, result, elapsed_ms (uint32, little-endian)]</span>
-</span><span data-line="25"><span class="c1">//       -- once, when the trial is over. RESULT_OMISSION if the center</span>
-</span><span data-line="26"><span class="c1">//          port was never poked (side LEDs never turned on); otherwise</span>
-</span><span data-line="27"><span class="c1">//          RESULT_GOT_CORRECT if the correct side was poked before its</span>
-</span><span data-line="28"><span class="c1">//          timeout (whether or not a wrong poke happened earlier), or</span>
-</span><span data-line="29"><span class="c1">//          RESULT_TIMEOUT if it never was.</span>
-</span><span data-line="30"><span class="c1">//   elapsed_ms is milliseconds since this sketch received CMD_START_TRIAL</span>
-</span><span data-line="31"><span class="c1">//   for the current trial (its own timer, reset every trial). It is the</span>
-</span><span data-line="32"><span class="c1">//   controller clock: the Pi registers the trial start as controller time 0</span>
-</span><span data-line="33"><span class="c1">//   at the moment it sent that command, and every elapsed_ms as a</span>
-</span><span data-line="34"><span class="c1">//   controller timestamp, so the two clocks never need to be synchronized.</span>
-</span><span data-line="35"><span class="c1">//</span>
-</span><span data-line="36"><span class="c1">// 3 ports are wired: 1 (left), 2 (center), 3 (right). Baud rate must match</span>
-</span><span data-line="37"><span class="c1">// BAUDRATE in arduino_4_center_initiated.py (9600).</span>
+<p>All the Arduino examples use the same firmware, <a class="reference internal" href="village_arduino.html"><span class="std std-doc">village_arduino.ino</span></a>,
+uploaded once to the board. This task starts every trial with the <code class="docutils literal notranslate"><span class="pre">CMD_CENTER_INITIATED</span></code> command, and
+the trial runs in <code class="docutils literal notranslate"><span class="pre">runCenterInitiated()</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1">// === Center initiated (arduino_4_center_initiated.py) =====================</span>
+</span><span data-line="2"><span class="c1">//</span>
+</span><span data-line="3"><span class="c1">// [CMD_CENTER_INITIATED, correct_port, c_led_on_timeout_ms (uint16, LE),</span>
+</span><span data-line="4"><span class="c1">//  led_on_timeout_ms (uint16, LE), valve_time_ms (uint16, LE)]</span>
+</span><span data-line="5"><span class="c1">// Waits for a center poke (center LED on), then turns the LED of the</span>
+</span><span data-line="6"><span class="c1">// correct side on and waits for a poke there; a poke on the wrong side is</span>
+</span><span data-line="7"><span class="c1">// reported but doesn't end the wait. Reports [EVENT_TRIAL_END,</span>
+</span><span data-line="8"><span class="c1">// CENTER_OMISSION (no center poke), CENTER_GOT_CORRECT or CENTER_TIMEOUT].</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CENTER_C_LED_ON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span data-line="11"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CENTER_SIDE_LED_ON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span><span data-line="12"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CENTER_WATER_DELIVERY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+</span><span data-line="13"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CENTER_OMISSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span data-line="14"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CENTER_GOT_CORRECT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span><span data-line="15"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CENTER_TIMEOUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="kt">void</span><span class="w"> </span><span class="nf">runCenterInitiated</span><span class="p">(</span>
+</span><span data-line="18"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">correctPort</span><span class="p">,</span>
+</span><span data-line="19"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">cLedOnTimeoutMs</span><span class="p">,</span>
+</span><span data-line="20"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ledOnTimeoutMs</span><span class="p">,</span>
+</span><span data-line="21"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">valveTimeMs</span>
+</span><span data-line="22"><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="23"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+</span><span data-line="24">
+</span><span data-line="25"><span class="w">  </span><span class="c1">// --- center poke ---</span>
+</span><span data-line="26"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_STATE</span><span class="p">,</span><span class="w"> </span><span class="n">CENTER_C_LED_ON</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</span><span data-line="27"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
+</span><span data-line="28"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">gotCenterPoke</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+</span><span data-line="29"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cLedOnStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+</span><span data-line="30"><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cLedOnStart</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cLedOnTimeoutMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="31"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pokedCenter</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="32"><span class="w">      </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_POKE</span><span class="p">,</span><span class="w"> </span><span class="n">CENTER_PORT</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+</span><span data-line="33"><span class="w">      </span><span class="n">gotCenterPoke</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+</span><span data-line="34"><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+</span><span data-line="35"><span class="w">    </span><span class="p">}</span>
+</span><span data-line="36"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="37"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
 </span><span data-line="38">
-</span><span data-line="39"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CMD_START_TRIAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span><span data-line="40">
-</span><span data-line="41"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">EVENT_POKE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span><span data-line="42"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">EVENT_TRIAL_END</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-</span><span data-line="43"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">EVENT_STATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-</span><span data-line="44">
-</span><span data-line="45"><span class="c1">// States (same names as bpod_4_center_initiated.py; the ITI is done by the Pi)</span>
-</span><span data-line="46"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">STATE_C_LED_ON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span><span data-line="47"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">STATE_SIDE_LED_ON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-</span><span data-line="48"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">STATE_WATER_DELIVERY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-</span><span data-line="49">
-</span><span data-line="50"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">RESULT_OMISSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span data-line="51"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">RESULT_GOT_CORRECT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span><span data-line="52"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">RESULT_TIMEOUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-</span><span data-line="53">
-</span><span data-line="54"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">LEFT_PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-</span><span data-line="55"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">CENTER_PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-</span><span data-line="56"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">RIGHT_PORT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-</span><span data-line="57">
-</span><span data-line="58"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokePinLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span><span class="p">;</span>
-</span><span data-line="59"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokePinCenter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
-</span><span data-line="60"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokePinRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span>
-</span><span data-line="61"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">valvePinLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">39</span><span class="p">;</span>
-</span><span data-line="62"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">valvePinRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">43</span><span class="p">;</span>
-</span><span data-line="63"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">ledPinLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">;</span>
-</span><span data-line="64"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">ledPinCenter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
-</span><span data-line="65"><span class="k">const</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">ledPinRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">;</span>
-</span><span data-line="66">
-</span><span data-line="67"><span class="c1">// Edge state for each side poke pin, so a poke that's held down only</span>
-</span><span data-line="68"><span class="c1">// reports once, and a second, separate poke on the same pin still gets</span>
-</span><span data-line="69"><span class="c1">// reported. The center pin doesn't need this: it's only ever checked</span>
-</span><span data-line="70"><span class="c1">// once per trial, and the loop exits as soon as it's seen.</span>
-</span><span data-line="71"><span class="kt">bool</span><span class="w"> </span><span class="n">lastPokeLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-</span><span data-line="72"><span class="kt">bool</span><span class="w"> </span><span class="n">lastPokeRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-</span><span data-line="73">
-</span><span data-line="74"><span class="kt">void</span><span class="w"> </span><span class="nf">setup</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="75"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
-</span><span data-line="76"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pokePinLeft</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT</span><span class="p">);</span>
-</span><span data-line="77"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pokePinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT</span><span class="p">);</span>
-</span><span data-line="78"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">pokePinRight</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT</span><span class="p">);</span>
-</span><span data-line="79"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">valvePinLeft</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
-</span><span data-line="80"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">valvePinRight</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
-</span><span data-line="81"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">ledPinLeft</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
-</span><span data-line="82"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">ledPinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
-</span><span data-line="83"><span class="w">  </span><span class="n">pinMode</span><span class="p">(</span><span class="n">ledPinRight</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">);</span>
-</span><span data-line="84"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">valvePinLeft</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="85"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">valvePinRight</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="86"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPinLeft</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="87"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="88"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPinRight</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="89"><span class="p">}</span>
-</span><span data-line="90">
-</span><span data-line="91"><span class="kt">void</span><span class="w"> </span><span class="nf">sendEvent</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">eventCode</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">elapsedMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="92"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">eventCode</span><span class="p">);</span>
-</span><span data-line="93"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
-</span><span data-line="94"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)(</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="95"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="96"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="97"><span class="w">  </span><span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">((</span><span class="kt">byte</span><span class="p">)((</span><span class="n">elapsedMs</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">24</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">));</span>
-</span><span data-line="98"><span class="p">}</span>
-</span><span data-line="99">
-</span><span data-line="100"><span class="kt">bool</span><span class="w"> </span><span class="nf">pokedCenter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="101"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinCenter</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">;</span>
-</span><span data-line="102"><span class="p">}</span>
-</span><span data-line="103">
-</span><span data-line="104"><span class="c1">// Rising-edge check on both side poke pins -- see arduino_3_active.ino</span>
-</span><span data-line="105"><span class="c1">// for the full explanation; reports at most one newly-poked port per</span>
-</span><span data-line="106"><span class="c1">// call, but is meant to be called every loop iteration.</span>
-</span><span data-line="107"><span class="kt">bool</span><span class="w"> </span><span class="nf">readNewSidePoke</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="o">&amp;</span><span class="n">port</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="108"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinLeft</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">;</span>
-</span><span data-line="109"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinRight</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">;</span>
-</span><span data-line="110"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-</span><span data-line="111"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">lastPokeLeft</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="112"><span class="w">    </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LEFT_PORT</span><span class="p">;</span>
-</span><span data-line="113"><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-</span><span data-line="114"><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">lastPokeRight</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="115"><span class="w">    </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RIGHT_PORT</span><span class="p">;</span>
-</span><span data-line="116"><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-</span><span data-line="117"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="118"><span class="w">  </span><span class="n">lastPokeLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">left</span><span class="p">;</span>
-</span><span data-line="119"><span class="w">  </span><span class="n">lastPokeRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">right</span><span class="p">;</span>
-</span><span data-line="120"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-</span><span data-line="121"><span class="p">}</span>
-</span><span data-line="122">
-</span><span data-line="123"><span class="kt">void</span><span class="w"> </span><span class="nf">runTrial</span><span class="p">(</span>
-</span><span data-line="124"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">correctPort</span><span class="p">,</span>
-</span><span data-line="125"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">cLedOnTimeoutMs</span><span class="p">,</span>
-</span><span data-line="126"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ledOnTimeoutMs</span><span class="p">,</span>
-</span><span data-line="127"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">valveTimeMs</span>
-</span><span data-line="128"><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="129"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
-</span><span data-line="130">
-</span><span data-line="131"><span class="w">  </span><span class="c1">// --- center poke ---</span>
-</span><span data-line="132"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_STATE</span><span class="p">,</span><span class="w"> </span><span class="n">STATE_C_LED_ON</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-</span><span data-line="133"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
-</span><span data-line="134"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">gotCenterPoke</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-</span><span data-line="135"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">cLedOnStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
-</span><span data-line="136"><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cLedOnStart</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cLedOnTimeoutMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="137"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pokedCenter</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="138"><span class="w">      </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_POKE</span><span class="p">,</span><span class="w"> </span><span class="n">CENTER_PORT</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
-</span><span data-line="139"><span class="w">      </span><span class="n">gotCenterPoke</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-</span><span data-line="140"><span class="w">      </span><span class="k">break</span><span class="p">;</span>
-</span><span data-line="141"><span class="w">    </span><span class="p">}</span>
-</span><span data-line="142"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="143"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">ledPinCenter</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="144">
-</span><span data-line="145"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">gotCenterPoke</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="146"><span class="w">    </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_TRIAL_END</span><span class="p">,</span><span class="w"> </span><span class="n">RESULT_OMISSION</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
-</span><span data-line="147"><span class="w">    </span><span class="k">return</span><span class="p">;</span>
-</span><span data-line="148"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="149">
-</span><span data-line="150"><span class="w">  </span><span class="c1">// --- side response: a wrong poke is reported but doesn't end the</span>
-</span><span data-line="151"><span class="w">  </span><span class="c1">// window -- only the correct side (or running out of time) does ---</span>
-</span><span data-line="152"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">correctLedPin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">correctPort</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">LEFT_PORT</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">ledPinLeft</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ledPinRight</span><span class="p">;</span>
-</span><span data-line="153"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">correctValvePin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">correctPort</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">LEFT_PORT</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">valvePinLeft</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">valvePinRight</span><span class="p">;</span>
-</span><span data-line="154">
-</span><span data-line="155"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_STATE</span><span class="p">,</span><span class="w"> </span><span class="n">STATE_SIDE_LED_ON</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
-</span><span data-line="156"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">correctLedPin</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
-</span><span data-line="157"><span class="w">  </span><span class="n">lastPokeLeft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinLeft</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">;</span>
-</span><span data-line="158"><span class="w">  </span><span class="n">lastPokeRight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">digitalRead</span><span class="p">(</span><span class="n">pokePinRight</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HIGH</span><span class="p">;</span>
-</span><span data-line="159"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">gotCorrect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-</span><span data-line="160"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokedPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</span><span data-line="161"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">ledOnStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
-</span><span data-line="162"><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ledOnStart</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ledOnTimeoutMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="163"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">readNewSidePoke</span><span class="p">(</span><span class="n">pokedPort</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="164"><span class="w">      </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_POKE</span><span class="p">,</span><span class="w"> </span><span class="n">pokedPort</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
-</span><span data-line="165"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pokedPort</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">correctPort</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="166"><span class="w">        </span><span class="n">gotCorrect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-</span><span data-line="167"><span class="w">        </span><span class="k">break</span><span class="p">;</span>
-</span><span data-line="168"><span class="w">      </span><span class="p">}</span>
-</span><span data-line="169"><span class="w">    </span><span class="p">}</span>
-</span><span data-line="170"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="171"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">correctLedPin</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="172">
-</span><span data-line="173"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">gotCorrect</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="174"><span class="w">    </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_STATE</span><span class="p">,</span><span class="w"> </span><span class="n">STATE_WATER_DELIVERY</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
-</span><span data-line="175"><span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">correctValvePin</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
-</span><span data-line="176"><span class="w">    </span><span class="n">delay</span><span class="p">(</span><span class="n">valveTimeMs</span><span class="p">);</span>
-</span><span data-line="177"><span class="w">    </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">correctValvePin</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
-</span><span data-line="178"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="179">
-</span><span data-line="180"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span>
-</span><span data-line="181"><span class="w">    </span><span class="n">EVENT_TRIAL_END</span><span class="p">,</span>
-</span><span data-line="182"><span class="w">    </span><span class="n">gotCorrect</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">RESULT_GOT_CORRECT</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">RESULT_TIMEOUT</span><span class="p">,</span>
-</span><span data-line="183"><span class="w">    </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span>
-</span><span data-line="184"><span class="w">  </span><span class="p">);</span>
-</span><span data-line="185"><span class="p">}</span>
-</span><span data-line="186">
-</span><span data-line="187"><span class="kt">void</span><span class="w"> </span><span class="nf">loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="188"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="189"><span class="w">    </span><span class="kt">byte</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-</span><span data-line="190"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">command</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CMD_START_TRIAL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span data-line="191"><span class="w">      </span><span class="kt">byte</span><span class="w"> </span><span class="n">correctPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-</span><span data-line="192"><span class="w">      </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">cLedOnTimeoutMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-</span><span data-line="193"><span class="w">      </span><span class="n">cLedOnTimeoutMs</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
-</span><span data-line="194"><span class="w">      </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ledOnTimeoutMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-</span><span data-line="195"><span class="w">      </span><span class="n">ledOnTimeoutMs</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
-</span><span data-line="196"><span class="w">      </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">valveTimeMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
-</span><span data-line="197"><span class="w">      </span><span class="n">valveTimeMs</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
-</span><span data-line="198">
-</span><span data-line="199"><span class="w">      </span><span class="n">runTrial</span><span class="p">(</span><span class="n">correctPort</span><span class="p">,</span><span class="w"> </span><span class="n">cLedOnTimeoutMs</span><span class="p">,</span><span class="w"> </span><span class="n">ledOnTimeoutMs</span><span class="p">,</span><span class="w"> </span><span class="n">valveTimeMs</span><span class="p">);</span>
-</span><span data-line="200"><span class="w">    </span><span class="p">}</span>
-</span><span data-line="201"><span class="w">  </span><span class="p">}</span>
-</span><span data-line="202"><span class="p">}</span>
+</span><span data-line="39"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">gotCenterPoke</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="40"><span class="w">    </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_TRIAL_END</span><span class="p">,</span><span class="w"> </span><span class="n">CENTER_OMISSION</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+</span><span data-line="41"><span class="w">    </span><span class="k">return</span><span class="p">;</span>
+</span><span data-line="42"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="43">
+</span><span data-line="44"><span class="w">  </span><span class="c1">// --- side response ---</span>
+</span><span data-line="45"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">correctLedPin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ledPinOf</span><span class="p">(</span><span class="n">correctPort</span><span class="p">);</span>
+</span><span data-line="46"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_STATE</span><span class="p">,</span><span class="w"> </span><span class="n">CENTER_SIDE_LED_ON</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+</span><span data-line="47"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">correctLedPin</span><span class="p">,</span><span class="w"> </span><span class="n">HIGH</span><span class="p">);</span>
+</span><span data-line="48"><span class="w">  </span><span class="n">resetSidePokes</span><span class="p">();</span>
+</span><span data-line="49"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">gotCorrect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+</span><span data-line="50"><span class="w">  </span><span class="kt">byte</span><span class="w"> </span><span class="n">pokedPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span data-line="51"><span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">ledOnStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">millis</span><span class="p">();</span>
+</span><span data-line="52"><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ledOnStart</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ledOnTimeoutMs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="53"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">readNewSidePoke</span><span class="p">(</span><span class="n">pokedPort</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="54"><span class="w">      </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_POKE</span><span class="p">,</span><span class="w"> </span><span class="n">pokedPort</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+</span><span data-line="55"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pokedPort</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">correctPort</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="56"><span class="w">        </span><span class="n">gotCorrect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+</span><span data-line="57"><span class="w">        </span><span class="k">break</span><span class="p">;</span>
+</span><span data-line="58"><span class="w">      </span><span class="p">}</span>
+</span><span data-line="59"><span class="w">    </span><span class="p">}</span>
+</span><span data-line="60"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="61"><span class="w">  </span><span class="n">digitalWrite</span><span class="p">(</span><span class="n">correctLedPin</span><span class="p">,</span><span class="w"> </span><span class="n">LOW</span><span class="p">);</span>
+</span><span data-line="62">
+</span><span data-line="63"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">gotCorrect</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span data-line="64"><span class="w">    </span><span class="n">sendEvent</span><span class="p">(</span><span class="n">EVENT_STATE</span><span class="p">,</span><span class="w"> </span><span class="n">CENTER_WATER_DELIVERY</span><span class="p">,</span><span class="w"> </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+</span><span data-line="65"><span class="w">    </span><span class="n">deliverWater</span><span class="p">(</span><span class="n">correctPort</span><span class="p">,</span><span class="w"> </span><span class="n">valveTimeMs</span><span class="p">);</span>
+</span><span data-line="66"><span class="w">  </span><span class="p">}</span>
+</span><span data-line="67">
+</span><span data-line="68"><span class="w">  </span><span class="n">sendEvent</span><span class="p">(</span>
+</span><span data-line="69"><span class="w">    </span><span class="n">EVENT_TRIAL_END</span><span class="p">,</span>
+</span><span data-line="70"><span class="w">    </span><span class="n">gotCorrect</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">CENTER_GOT_CORRECT</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">CENTER_TIMEOUT</span><span class="p">,</span>
+</span><span data-line="71"><span class="w">    </span><span class="n">millis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span>
+</span><span data-line="72"><span class="w">  </span><span class="p">);</span>
+</span><span data-line="73"><span class="p">}</span>
 </span></pre></div>
 </div>
 </section>
@@ -1084,7 +958,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=8fa77496"></script>
+      <script src="../_static/documentation_options.js?v=3710f61c"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

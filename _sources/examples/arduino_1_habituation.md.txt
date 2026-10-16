@@ -12,8 +12,12 @@ Arduino version of [bpod_1_habituation.py](bpod_1_habituation.md): the same task
 
 ### Arduino firmware
 
-{download}`Download arduino_1_habituation.ino <files/arduino_firmware/arduino_1_habituation.ino>`
+All the Arduino examples use the same firmware, [village_arduino.ino](village_arduino.md),
+uploaded once to the board. This task starts every trial with the `CMD_HABITUATION` command, and
+the trial runs in `runHabituation()`:
 
-```{literalinclude} files/arduino_firmware/arduino_1_habituation.ino
+```{literalinclude} files/village_arduino/village_arduino.ino
 :language: cpp
+:start-at: "// === Habituation ("
+:end-before: "// === Passive ("
 ```
