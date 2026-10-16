@@ -236,7 +236,12 @@ def system_run() -> None:
         time.sleep(0.1)
 
         if manager.online_plot.active:
-            if manager.task.current_trial > trial and plot_timer.has_elapsed():
+            # With refresh_period, the plot window redraws it itself instead
+            if (
+                not getattr(manager.online_plot, "refresh_period", None)
+                and manager.task.current_trial > trial
+                and plot_timer.has_elapsed()
+            ):
                 trial = manager.task.current_trial
                 try:
                     manager.online_plot.update_canvas(manager.task.session_df.copy())

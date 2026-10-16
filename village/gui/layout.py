@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from PyQt5.QtCore import Qt, QTime
+from PyQt5.QtCore import Qt, QTime, QTimer
 from PyQt5.QtGui import QCloseEvent, QFont, QPixmap, QWheelEvent
 from PyQt5.QtWidgets import (
     QComboBox,
@@ -1091,8 +1091,24 @@ class OnlinePlotDialog(QDialog):
                 self.canvas.draw_idle()
             except Exception:
                 pass
+        # Periodic redraw, if the online plot asks for it (refresh_period)
+        self.timer: QTimer | None = None
+        period = getattr(manager.online_plot, "refresh_period", None)
+        if period:
+            self.timer = QTimer(self)
+            self.timer.timeout.connect(self.refresh)
+            self.timer.start(int(period * 1000))
+
+    def refresh(self) -> None:
+        """Redraws the online plot (every refresh_period seconds)."""
+        try:
+            manager.online_plot.update_canvas(manager.task.session_df.copy())
+        except Exception:
+            pass
 
     def closeEvent(self, event) -> None:
         """Handles the close event to ensure the plot is properly closed."""
+        if self.timer is not None:
+            self.timer.stop()
         manager.online_plot.close()
         super().closeEvent(event)

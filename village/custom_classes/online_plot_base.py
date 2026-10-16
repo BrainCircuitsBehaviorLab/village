@@ -12,6 +12,11 @@ class OnlinePlotBase:
 
     Subclasses should override `create_figure_and_axes` (to create axes) and
     `update_plot` (to draw on existing axes).
+
+    By default the plot is redrawn when a new trial has finished. Set
+    `self.refresh_period` (seconds) in `__init__` to redraw it periodically
+    instead, while its window is open (e.g. to show data that change during a
+    trial); the redraw then runs in the GUI thread.
     """
 
     def __init__(self) -> None:
@@ -20,6 +25,9 @@ class OnlinePlotBase:
         self.fig: Figure | None = None
         self.active = False
         self.window_geometry: tuple[int, int, int, int] | None = None
+        # Seconds between periodic redraws, or None to redraw only when a new
+        # trial has finished
+        self.refresh_period: float | None = None
 
     def create_figure_and_axes(self) -> None:
         """Creates the figure and axes. Should be overridden by subclasses."""

@@ -22,6 +22,16 @@ default. Only one subclass of each base class is used per project.
 separate window, opened with the `ONLINE PLOTS` button of the toolbar, and updated when
 new trials have finished (at most every `UPDATE_TIME_TABLE` seconds).
 
+To redraw it periodically instead, also in the middle of a trial (e.g. to show data that
+change during long trials), set `self.refresh_period` to the number of seconds between
+redraws in `__init__`, after `super().__init__()`:
+
+```python
+def __init__(self) -> None:
+    super().__init__()
+    self.refresh_period = 1  # redraw every second
+```
+
 Override two methods:
 
 - **`create_figure_and_axes()`** — called once when the figure is first needed.
