@@ -600,12 +600,19 @@ graphics — see <a class="reference internal" href="#custom-camera-drawing"><sp
 <hr class="docutils" />
 <section id="reacting-to-the-animals-position">
 <h2>Reacting to the Animal’s Position</h2>
-<p>Every time a frame is captured from the box camera, if <code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code> is
-enabled and a task is running,
-the (x, y) position of the animal inside the operant box is computed and the <code class="docutils literal notranslate"><span class="pre">trigger</span></code>
-method of <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code> is called.</p>
+<p>While a task is running, the <code class="docutils literal notranslate"><span class="pre">trigger</span></code> method of <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code> is called on
+every frame of the box camera. Before each call the camera updates, for each of the four areas:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areaN_is_triggered</span></code> — <code class="docutils literal notranslate"><span class="pre">True</span></code> if area N is a TRIGGER area and the tracked
+(x, y) position of the animal is inside it. It needs <code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code>
+ON, and it is <code class="docutils literal notranslate"><span class="pre">False</span></code> on frames where no animal is tracked.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.areaN_animals</span></code> — how many animals are in area N, from its pixel count and
+the two limits of <code class="docutils literal notranslate"><span class="pre">DETECTION_OF_MOUSE_BOX</span></code>: <code class="docutils literal notranslate"><span class="pre">0</span></code> (below <code class="docutils literal notranslate"><span class="pre">empty_limit</span></code>), <code class="docutils literal notranslate"><span class="pre">1</span></code>
+(below <code class="docutils literal notranslate"><span class="pre">subject_limit</span></code>), <code class="docutils literal notranslate"><span class="pre">2</span></code> (two or more) or <code class="docutils literal notranslate"><span class="pre">-1</span></code> (the area is OFF). It works for
+any active area (ALLOWED, NOT_ALLOWED or TRIGGER) and does not need tracking.</p></li>
+</ul>
 <p>The default implementation checks each of the four configurable areas (the rectangles
-defined in the GUI). For any area set to TRIGGER status, if the animal is detected
+defined in the GUI). For any area set to TRIGGER status, if the animal is tracked
 inside it, the text “Area X triggered” is overlaid on the camera feed.</p>
 <p>You can override this behavior by creating a custom class in your project.
 Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (e.g. <code class="docutils literal notranslate"><span class="pre">camera_trigger.py</span></code>) and define
@@ -643,45 +650,49 @@ resets every trial).</p>
 </span><span data-line="17">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cam</span><span class="p">:</span> <span class="n">Camera</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span data-line="18"><span class="w">        </span><span class="sd">"""Evaluates camera triggers and performs corresponding actions.</span>
 </span><span data-line="19">
-</span><span data-line="20"><span class="sd">        Called on every frame to check whether the subject has entered any</span>
-</span><span data-line="21"><span class="sd">        defined area or reached a specific position in the camera feed.</span>
+</span><span data-line="20"><span class="sd">        Called on every frame of the box camera while the task is running,</span>
+</span><span data-line="21"><span class="sd">        also when no animal is detected.</span>
 </span><span data-line="22">
-</span><span data-line="23"><span class="sd">        Available area triggers (return True if the area is marked as a TRIGGER area</span>
-</span><span data-line="24"><span class="sd">        and a subject is detected within it):</span>
-</span><span data-line="25"><span class="sd">        - cam.area1_is_triggered</span>
-</span><span data-line="26"><span class="sd">        - cam.area2_is_triggered</span>
-</span><span data-line="27"><span class="sd">        - cam.area3_is_triggered</span>
-</span><span data-line="28"><span class="sd">        - cam.area4_is_triggered</span>
-</span><span data-line="29">
-</span><span data-line="30"><span class="sd">        Available position properties:</span>
-</span><span data-line="31"><span class="sd">        - cam.x_position, cam.y_position (subject position in pixels)</span>
-</span><span data-line="32"><span class="sd">        - cam.width, cam.height (camera feed dimensions in pixels)</span>
-</span><span data-line="33">
-</span><span data-line="34"><span class="sd">        Other:</span>
-</span><span data-line="35"><span class="sd">        - cam.write_text("text") to overlay text on the camera feed</span>
+</span><span data-line="23"><span class="sd">        Available area triggers (True if the area is a TRIGGER area and the</span>
+</span><span data-line="24"><span class="sd">        tracked position of the subject is inside it; False when no animal is</span>
+</span><span data-line="25"><span class="sd">        tracked):</span>
+</span><span data-line="26"><span class="sd">        - cam.area1_is_triggered ... cam.area4_is_triggered</span>
+</span><span data-line="27">
+</span><span data-line="28"><span class="sd">        Available area occupancy (any active area, from its pixel count):</span>
+</span><span data-line="29"><span class="sd">        - cam.area1_animals ... cam.area4_animals: 0, 1, 2 (two or more)</span>
+</span><span data-line="30"><span class="sd">          or -1 (the area is OFF)</span>
+</span><span data-line="31">
+</span><span data-line="32"><span class="sd">        Available position properties:</span>
+</span><span data-line="33"><span class="sd">        - cam.x_position, cam.y_position (subject position in pixels, -1 if</span>
+</span><span data-line="34"><span class="sd">          no animal is tracked)</span>
+</span><span data-line="35"><span class="sd">        - cam.width, cam.height (camera feed dimensions in pixels)</span>
 </span><span data-line="36">
-</span><span data-line="37"><span class="sd">        Args:</span>
-</span><span data-line="38"><span class="sd">            cam (Camera): The camera instance providing trigger status</span>
-</span><span data-line="39"><span class="sd">            and position data.</span>
-</span><span data-line="40"><span class="sd">        """</span>
-</span><span data-line="41">
-</span><span data-line="42">        <span class="c1"># Check if the animal is in some of the defined areas</span>
-</span><span data-line="43">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area1_is_triggered</span><span class="p">:</span>
-</span><span data-line="44">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"Area 1 triggered"</span><span class="p">)</span> <span class="c1"># write an annotation text to the cam</span>
+</span><span data-line="37"><span class="sd">        Other:</span>
+</span><span data-line="38"><span class="sd">        - cam.write_text("text") to overlay text on the camera feed</span>
+</span><span data-line="39"><span class="sd">        - self.task.system_state: the current state of the Village system</span>
+</span><span data-line="40">
+</span><span data-line="41"><span class="sd">        Args:</span>
+</span><span data-line="42"><span class="sd">            cam (Camera): The camera instance providing trigger status</span>
+</span><span data-line="43"><span class="sd">            and position data.</span>
+</span><span data-line="44"><span class="sd">        """</span>
 </span><span data-line="45">
-</span><span data-line="46">        <span class="c1"># Execute the direct function number 2 once, when the animal enters Area2</span>
-</span><span data-line="47">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area2_is_triggered</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_area2</span><span class="p">:</span>
-</span><span data-line="48">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</span><span data-line="49">        <span class="bp">self</span><span class="o">.</span><span class="n">in_area2</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">area2_is_triggered</span>
-</span><span data-line="50">
-</span><span data-line="51">        <span class="c1"># Execute the direct function number 6 once, when the animal gets within a</span>
-</span><span data-line="52">        <span class="c1"># 50-pixel radius of the center</span>
-</span><span data-line="53">        <span class="n">distance</span> <span class="o">=</span> <span class="p">((</span><span class="n">cam</span><span class="o">.</span><span class="n">x_position</span> <span class="o">-</span> <span class="n">cam</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
-</span><span data-line="54">                    <span class="p">(</span><span class="n">cam</span><span class="o">.</span><span class="n">y_position</span> <span class="o">-</span> <span class="n">cam</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
-</span><span data-line="55">        <span class="n">in_center</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="mi">50</span>
-</span><span data-line="56">        <span class="k">if</span> <span class="n">in_center</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_center</span><span class="p">:</span>
-</span><span data-line="57">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">in_center</span> <span class="o">=</span> <span class="n">in_center</span>
+</span><span data-line="46">        <span class="c1"># Check if the animal is in some of the defined areas</span>
+</span><span data-line="47">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area1_is_triggered</span><span class="p">:</span>
+</span><span data-line="48">            <span class="n">cam</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"Area 1 triggered"</span><span class="p">)</span> <span class="c1"># write an annotation text to the cam</span>
+</span><span data-line="49">
+</span><span data-line="50">        <span class="c1"># Execute the direct function number 2 once, when the animal enters Area2</span>
+</span><span data-line="51">        <span class="k">if</span> <span class="n">cam</span><span class="o">.</span><span class="n">area2_is_triggered</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_area2</span><span class="p">:</span>
+</span><span data-line="52">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span data-line="53">        <span class="bp">self</span><span class="o">.</span><span class="n">in_area2</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">area2_is_triggered</span>
+</span><span data-line="54">
+</span><span data-line="55">        <span class="c1"># Execute the direct function number 6 once, when the animal gets within a</span>
+</span><span data-line="56">        <span class="c1"># 50-pixel radius of the center</span>
+</span><span data-line="57">        <span class="n">distance</span> <span class="o">=</span> <span class="p">((</span><span class="n">cam</span><span class="o">.</span><span class="n">x_position</span> <span class="o">-</span> <span class="n">cam</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+</span><span data-line="58">                    <span class="p">(</span><span class="n">cam</span><span class="o">.</span><span class="n">y_position</span> <span class="o">-</span> <span class="n">cam</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+</span><span data-line="59">        <span class="n">in_center</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">x_position</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="mi">50</span>
+</span><span data-line="60">        <span class="k">if</span> <span class="n">in_center</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_center</span><span class="p">:</span>
+</span><span data-line="61">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</span><span data-line="62">        <span class="bp">self</span><span class="o">.</span><span class="n">in_center</span> <span class="o">=</span> <span class="n">in_center</span>
 </span></pre></div>
 </div>
 <div class="note admonition">
@@ -888,7 +899,11 @@ the <code class="docutils literal notranslate"><span class="pre">CameraAreaBase<
 <p><strong>Detection results</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.masks</span></code> — grayscale numpy arrays with the thresholded mask per area.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.counts</span></code> — detected pixel count per area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.counts</span></code> — detected pixel count per area (<code class="docutils literal notranslate"><span class="pre">-1</span></code> if the area is OFF).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.area1_is_triggered</span></code> … <code class="docutils literal notranslate"><span class="pre">cam.area4_is_triggered</span></code> — tracked position inside
+a TRIGGER area. BOX only.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.area1_animals</span></code> … <code class="docutils literal notranslate"><span class="pre">cam.area4_animals</span></code> — animals in each area from its
+pixel count: <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code> (two or more) or <code class="docutils literal notranslate"><span class="pre">-1</span></code> (OFF). BOX only.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.x_position</span></code>, <code class="docutils literal notranslate"><span class="pre">cam.y_position</span></code> — tracked animal position in pixels (<code class="docutils literal notranslate"><span class="pre">-1</span></code> if not detected).</p></li>
 </ul>
 <p><strong>Task access</strong></p>
@@ -937,7 +952,7 @@ the <code class="docutils literal notranslate"><span class="pre">CameraAreaBase<
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=52ca2a4f"></script>
+      <script src="../_static/documentation_options.js?v=e124d4e0"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

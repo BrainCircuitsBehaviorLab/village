@@ -101,16 +101,22 @@ These conditions must remain stable for a minimum hold-duration of **500 ms**, a
 The system supports the definition of up to four custom zones within the operant chamber. Each configured area can be assigned one of three operational behaviors:
 
 
-*   **`ALLOWED`:** A zone where the animal is expected to be. An alarm will trigger if the detected pixels exceed the `subject_limit`, indicating the possibility that two animals may have entered the operant box simultaneously by mistake.
-*   **`NOT_ALLOWED`:** A zone where the animal should not be. If pixel counts exceed the `empty_limit` within these regions, the system immediately sends an alarm via Telegram.
-*   **`TRIGGER`:** Advanced behavioral zones linked to the real-time centroid tracking module rather than simple pixel counting. When the system detects the animal’s coordinates $(x, y)$ entering a `TRIGGER` zone, it instantly fires a user-defined Python callback function (see [Camera](../devices/camera.md)). This can be customized to deliver real-time experimental events, such as playing a visual or auditory cue, lighting a LED, or transitioning the behavioral task state.
+*   **`ALLOWED`:** A zone where the animal is expected to be. The pixels of all `ALLOWED` areas are added together. If the total stays above the `subject_limit`, an alarm is sent via Telegram, because two animals may have entered the box by mistake.
+*   **`NOT_ALLOWED`:** A zone where the animal should not be. The pixels of all `NOT_ALLOWED` areas are added together. If the total stays above the `empty_limit`, an alarm is sent via Telegram.
+*   **`TRIGGER`:** A zone that lets your code react to the animal's position (using the advanced tracking algorithm and not the simple pixel count). When the tracked coordinates $(x, y)$ of the animal are inside the zone, its `areaN_is_triggered` variable is `True`, and a user-defined Python class can react to it (see [Camera](../devices/camera.md)): playing a visual or auditory cue, lighting a LED, or moving the task to its next state. `TRIGGER` zones need `CAM_BOX_TRACKING_POSITION` ON.
+
+If `CAM_BOX_TRACKING_POSITION` is ON, the animal's position is tracked only inside the union of the active areas (those not set to `OFF`). Every part of the box the animal can reach must therefore be covered by at least one active area.
+
+**Combining areas.** The simplest setup is one large `ALLOWED` area covering the whole image, with `NOT_ALLOWED` or `TRIGGER` areas placed inside it.
+
+If part of the image contains something that would be detected as an animal, such as dark objects outside the box, leave it out by using several `ALLOWED` areas instead (for example, one for each arm of a T-maze). These areas should not overlap: their pixels are added, so an animal in the overlap would be counted twice and could look like two animals.
 
 In the reference image above, the corridor and the touchscreen area are elevated and represent the zones where animals are expected to be. The blue and red zones, on the floor, should remain free of animals unless one has jumped into them.
 
 
 ```{admonition} Note
 :class: note
-Every time the detection algorithm processes a frame and extracts the animal's $(x, y)$ coordinates, it passes them to a customizable tracking function. While this is primarily used to fire actions when entering a designated `TRIGGER` zone, you can also write custom code that depends entirely on the continuous coordinate stream to log trajectories or trigger position-dependent stimuli.
+While a task is running, a customizable function is called on every frame of the box camera. Besides `areaN_is_triggered` and the animal's $(x, y)$ coordinates, it receives `areaN_animals` for every active area: `0`, `1` or `2` (two or more) animals, computed from the area's pixel count and the `empty_limit` and `subject_limit` thresholds, without tracking (`-1` if the area is `OFF`). This makes it possible to act both when an animal is in an area and when the area is empty (for example, closing a door only when nothing is under it), and to write code that depends on the continuous coordinate stream to log trajectories or trigger position-dependent stimuli. See [Reacting to the Animal's Position](../devices/camera.md#reacting-to-the-animals-position).
 ```
 
 ---

@@ -48,5 +48,6 @@ TaskBase
       :no-index:
    
       ~TaskBase.should_stop
+      ~TaskBase.system_state
    
    

@@ -43,13 +43,19 @@ graphics — see [Custom Camera Drawing](#custom-camera-drawing) below.
 
 ### Reacting to the Animal's Position
 
-Every time a frame is captured from the box camera, if `CAM_BOX_TRACKING_POSITION` is
-enabled and a task is running,
-the (x, y) position of the animal inside the operant box is computed and the `trigger`
-method of `CameraTriggerBase` is called.
+While a task is running, the `trigger` method of `CameraTriggerBase` is called on
+every frame of the box camera. Before each call the camera updates, for each of the four areas:
+
+- `cam.areaN_is_triggered` — `True` if area N is a TRIGGER area and the tracked
+  (x, y) position of the animal is inside it. It needs `CAM_BOX_TRACKING_POSITION`
+  ON, and it is `False` on frames where no animal is tracked.
+- `cam.areaN_animals` — how many animals are in area N, from its pixel count and
+  the two limits of `DETECTION_OF_MOUSE_BOX`: `0` (below `empty_limit`), `1`
+  (below `subject_limit`), `2` (two or more) or `-1` (the area is OFF). It works for
+  any active area (ALLOWED, NOT_ALLOWED or TRIGGER) and does not need tracking.
 
 The default implementation checks each of the four configurable areas (the rectangles
-defined in the GUI). For any area set to TRIGGER status, if the animal is detected
+defined in the GUI). For any area set to TRIGGER status, if the animal is tracked
 inside it, the text "Area X triggered" is overlaid on the camera feed.
 
 You can override this behavior by creating a custom class in your project.
@@ -92,22 +98,26 @@ class CameraTrigger(CameraTriggerBase):
     def trigger(self, cam: Camera) -> None:
         """Evaluates camera triggers and performs corresponding actions.
 
-        Called on every frame to check whether the subject has entered any
-        defined area or reached a specific position in the camera feed.
+        Called on every frame of the box camera while the task is running,
+        also when no animal is detected.
 
-        Available area triggers (return True if the area is marked as a TRIGGER area
-        and a subject is detected within it):
-        - cam.area1_is_triggered
-        - cam.area2_is_triggered
-        - cam.area3_is_triggered
-        - cam.area4_is_triggered
+        Available area triggers (True if the area is a TRIGGER area and the
+        tracked position of the subject is inside it; False when no animal is
+        tracked):
+        - cam.area1_is_triggered ... cam.area4_is_triggered
+
+        Available area occupancy (any active area, from its pixel count):
+        - cam.area1_animals ... cam.area4_animals: 0, 1, 2 (two or more)
+          or -1 (the area is OFF)
 
         Available position properties:
-        - cam.x_position, cam.y_position (subject position in pixels)
+        - cam.x_position, cam.y_position (subject position in pixels, -1 if
+          no animal is tracked)
         - cam.width, cam.height (camera feed dimensions in pixels)
 
         Other:
         - cam.write_text("text") to overlay text on the camera feed
+        - self.task.system_state: the current state of the Village system
 
         Args:
             cam (Camera): The camera instance providing trigger status
@@ -127,7 +137,7 @@ class CameraTrigger(CameraTriggerBase):
         # 50-pixel radius of the center
         distance = ((cam.x_position - cam.width / 2) ** 2 +
                     (cam.y_position - cam.height / 2) ** 2) ** 0.5
-        in_center = distance < 50
+        in_center = cam.x_position != -1 and distance < 50
         if in_center and not self.in_center:
             self.task.execute_function(6)
         self.in_center = in_center
@@ -344,7 +354,11 @@ Both methods `draw` and `draw_preview` receive these attributes on `cam`
 **Detection results**
 
 - `cam.masks` — grayscale numpy arrays with the thresholded mask per area.
-- `cam.counts` — detected pixel count per area.
+- `cam.counts` — detected pixel count per area (`-1` if the area is OFF).
+- `cam.area1_is_triggered` ... `cam.area4_is_triggered` — tracked position inside
+  a TRIGGER area. BOX only.
+- `cam.area1_animals` ... `cam.area4_animals` — animals in each area from its
+  pixel count: `0`, `1`, `2` (two or more) or `-1` (OFF). BOX only.
 - `cam.x_position`, `cam.y_position` — tracked animal position in pixels (`-1` if not detected).
 
 **Task access**

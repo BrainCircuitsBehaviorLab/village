@@ -48,5 +48,6 @@ CalibrationTaskBase
       :no-index:
    
       ~CalibrationTaskBase.should_stop
+      ~CalibrationTaskBase.system_state
    
    

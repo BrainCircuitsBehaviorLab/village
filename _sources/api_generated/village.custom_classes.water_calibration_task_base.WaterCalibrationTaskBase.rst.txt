@@ -48,5 +48,6 @@ WaterCalibrationTaskBase
       :no-index:
    
       ~WaterCalibrationTaskBase.should_stop
+      ~WaterCalibrationTaskBase.system_state
    
    

@@ -578,19 +578,36 @@ task can be used to specify the actions to perform.</p>
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">trigger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Camera</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/village/custom_classes/camera_trigger_base.html#CameraTriggerBase.trigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Evaluates camera triggers and performs corresponding actions.</p>
-<p>Called on every frame to check whether the subject has entered any
-defined area or reached a specific position in the camera feed.</p>
-<p>Available area triggers (return True if the area is marked as a TRIGGER area
-and a subject is detected within it):
+<p>Called on every frame of the box camera while the task is running,
+also when no animal is detected, so it can act both when an area is
+occupied and when it is empty.</p>
+<p>Available area triggers (True if the area is a TRIGGER area and the
+tracked position of the subject is inside it; False when no animal is
+tracked, so tracking must be ON):
 - cam.area1_is_triggered
 - cam.area2_is_triggered
 - cam.area3_is_triggered
 - cam.area4_is_triggered</p>
+<p>Available area occupancy (any active area, from its pixel count and
+the two limits of DETECTION_OF_MOUSE_BOX; works without tracking):
+- cam.area1_animals … cam.area4_animals: 0 (empty), 1 (one animal),</p>
+<blockquote>
+<div><p>2 (two or more animals) or -1 (the area is OFF)</p>
+</div></blockquote>
 <p>Available position properties:
-- cam.x_position, cam.y_position (subject position in pixels)
-- cam.width, cam.height (camera feed dimensions in pixels)</p>
+- cam.x_position, cam.y_position (subject position in pixels, -1 if</p>
+<blockquote>
+<div><p>no animal is tracked)</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>cam.width, cam.height (camera feed dimensions in pixels)</p></li>
+</ul>
 <p>Other:
-- cam.write_text(“text”) to overlay text on the camera feed</p>
+- cam.write_text(“text”) to overlay text on the camera feed
+- self.task.system_state: the current state of the Village system</p>
+<blockquote>
+<div><p>(see TaskBase)</p>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>cam</strong> (<em>Camera</em>) – The camera instance providing trigger status
@@ -640,7 +657,7 @@ and position data.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=52ca2a4f"></script>
+      <script src="../_static/documentation_options.js?v=e124d4e0"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
