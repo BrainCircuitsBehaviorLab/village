@@ -344,6 +344,10 @@ class Camera:
         self.area2_is_triggered = False
         self.area3_is_triggered = False
         self.area4_is_triggered = False
+        self.area1_animals = -1
+        self.area2_animals = -1
+        self.area3_animals = -1
+        self.area4_animals = -1
 
         if self.name == "CORRIDOR":
             self.areas_active = [True, True, True, True]
@@ -630,6 +634,10 @@ class Camera:
         self.area2_is_triggered = False
         self.area3_is_triggered = False
         self.area4_is_triggered = False
+        self.area1_animals = -1
+        self.area2_animals = -1
+        self.area3_animals = -1
+        self.area4_animals = -1
         self.camera_timestamp = time_utils.now_timestamp()
 
     def save_csv(self) -> None:
@@ -864,27 +872,30 @@ class Camera:
 
     # @time_utils.measure_time
     def detect_and_trigger(self) -> None:
-        """Performs detection based on color settings and position tracking."""
+        """Performs detection based on color settings and position tracking.
+
+        For the BOX camera, trigger() runs on every frame, also when no animal
+        is detected, so the camera trigger can act on an empty area too.
+        """
         if self.color == Color.BLACK:
             if self.tracking:
                 self.detect_black_position_contours()
-                if self.x_position != -1:
-                    self.trigger_event.set()
-                    self.trigger()
-                else:
-                    self.trigger_event.clear()
             else:
                 self.detect_black()
         else:
             if self.tracking:
                 self.detect_white_position_contours()
-                if self.x_position != -1:
-                    self.trigger_event.set()
-                    self.trigger()
-                else:
-                    self.trigger_event.clear()
             else:
                 self.detect_white()
+
+        if self.tracking:
+            if self.x_position != -1:
+                self.trigger_event.set()
+            else:
+                self.trigger_event.clear()
+
+        if self.name == "BOX":
+            self.trigger()
 
     def _area_is_triggered(self, index: int) -> bool:
         """True if the tracked position is inside area `index`.
@@ -899,16 +910,45 @@ class Camera:
         x1, y1, x2, y2 = self.areas[index]
         return x1 <= self.x_position <= x2 and y1 <= self.y_position <= y2
 
+    def _animals_in_area(self, index: int) -> int:
+        """How many animals area `index` holds, from its pixel count and the
+        two detection limits (DETECTION_OF_MOUSE_BOX): 0, 1, 2 (two or more),
+        or -1 if the area is OFF."""
+        count = self.counts[index]
+        if count < 0:
+            return -1
+        if count <= self.zero_or_one_mouse:
+            return 0
+        if count <= self.one_or_two_mice:
+            return 1
+        return 2
+
     def trigger(self) -> None:
-        """Checks if detection zones are triggered and notifies the manager."""
-        if self.areas_trigger[0]:
-            self.area1_is_triggered = self._area_is_triggered(0)
-        if self.areas_trigger[1]:
-            self.area2_is_triggered = self._area_is_triggered(1)
-        if self.areas_trigger[2]:
-            self.area3_is_triggered = self._area_is_triggered(2)
-        if self.areas_trigger[3]:
-            self.area4_is_triggered = self._area_is_triggered(3)
+        """Updates the state of the areas and calls the camera trigger.
+
+        areaN_animals: 0, 1 or 2 (two or more) animals in area N, from its
+        pixel count; -1 if the area is OFF. areaN_is_triggered: True if area
+        N is a TRIGGER area and the tracked position is inside it (False when
+        no animal is tracked).
+        """
+        self.area1_animals = self._animals_in_area(0)
+        self.area2_animals = self._animals_in_area(1)
+        self.area3_animals = self._animals_in_area(2)
+        self.area4_animals = self._animals_in_area(3)
+
+        tracked = self.x_position != -1
+        self.area1_is_triggered = (
+            self.areas_trigger[0] and tracked and self._area_is_triggered(0)
+        )
+        self.area2_is_triggered = (
+            self.areas_trigger[1] and tracked and self._area_is_triggered(1)
+        )
+        self.area3_is_triggered = (
+            self.areas_trigger[2] and tracked and self._area_is_triggered(2)
+        )
+        self.area4_is_triggered = (
+            self.areas_trigger[3] and tracked and self._area_is_triggered(3)
+        )
 
         if self.task_is_running:
             manager.camera_trigger.trigger(self)

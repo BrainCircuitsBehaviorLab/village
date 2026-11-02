@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 import pandas as pd
 
 from village.classes.calibrations import Calibrations
-from village.classes.enums import Active, ControllerEnum, Save
+from village.classes.enums import Active, ControllerEnum, Save, State
 from village.classes.null_classes import NullCamera, NullGpio
 from village.controllers.bpod_controller import bpod
 from village.controllers.trial_recorder import TrialRecorder
@@ -293,6 +293,19 @@ class TaskBase:
     self.chrono: Chrono
         Using self.chrono.get_time() you can get the time in seconds since the
         task started.
+
+    self.system_state: State (read-only)
+        The current state of the Village system, e.g. State.RUN_CLOSED (Auto
+        mode, the subject cannot leave yet), State.RUN_OPEN (Auto mode, the
+        subject can leave) or State.RUN_MANUAL (Manual mode). Import State
+        from village.classes.enums to compare against it.
+
+        Example::
+
+            from village.classes.enums import State
+
+            if self.system_state == State.RUN_OPEN:
+                ...  # the subject can leave the box now
     """
 
     def __init__(self) -> None:
@@ -519,6 +532,13 @@ class TaskBase:
             or self.force_stop
             or self.stop_button_pressed
         )
+
+    @property
+    def system_state(self) -> State:
+        """The current state of the Village system (manager.state)."""
+        from village.manager import manager  # imported here: manager imports tasks
+
+        return manager.state
 
     def run(self) -> None:
         """Runs the task in the main thread until completion or forced stop."""
