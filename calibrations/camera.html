@@ -212,10 +212,6 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.html">camera_calibration_grid</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.camera_calibration_grid.make_circle_grid.html">make_circle_grid</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.html">corridor_threshold_detection</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.area_count.html">area_count</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.scan_video.html">scan_video</a></li>
@@ -481,8 +477,13 @@ data-aria-dark="Switch to auto color mode">
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
-<li><a class="reference internal" href="#calibrating">Calibrating</a></li>
+<li><a class="reference internal" href="#how-it-works">How It Works</a></li>
+<li><a class="reference internal" href="#panel-fields">Panel Fields</a></li>
+<li><a class="reference internal" href="#preparing-the-grid">Preparing the Grid</a></li>
+<li><a class="reference internal" href="#capturing-frames">Capturing Frames</a></li>
+<li><a class="reference internal" href="#reading-the-results">Reading the Results</a></li>
 <li><a class="reference internal" href="#result">Result</a></li>
+<li><a class="reference internal" href="#using-the-calibration">Using the Calibration</a></li>
 </ul>
 </div></div>
   </aside>
@@ -558,31 +559,252 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="camera-calibration">
 <h1>Camera Calibration</h1>
-<p>Generates a printable symmetric circle grid and uses it to calibrate lens distortion
-for the system cameras — the standard OpenCV checkerboard/grid calibration workflow,
-adapted to a circle grid.</p>
-<p>Always available in the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen.</p>
-<section id="calibrating">
-<h2>Calibrating</h2>
+<p><img alt="Camera calibration screen" src="_static/camera_calibration.webp" /></p>
+<p>The box camera uses a wide-angle lens, which distorts the image: straight lines look
+curved, especially near the edges, and a centimetre does not cover the same number of
+pixels in the centre of the image as in a corner. This panel measures that distortion
+with a printed grid of dots, so that you can correct it in your analyses, for example
+before converting the tracked positions of the animal into real distances. It also
+measures how tilted the camera is with respect to a surface, which helps to align it.</p>
+<p>Always available in the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen. It calibrates the box camera; the
+images of any other camera can be calibrated by loading them as files.</p>
+<section id="how-it-works">
+<h2>How It Works</h2>
+<p>The grid is a sheet of black dots at a known, exact spacing. The calibration compares
+where the dots really are (a perfect grid) with where the camera sees them, and works
+out the lens model that explains the difference: the camera matrix (focal length and
+optical centre) and the distortion coefficients. It uses the standard OpenCV
+calibration (<code class="docutils literal notranslate"><span class="pre">calibrateCamera</span></code>), adapted to a grid of circles.</p>
+<p>A single image is not enough, because the tilt of the sheet (perspective) and the
+lens distortion look alike. With several images of the grid at different angles and
+positions, the two can be separated. Dots are used instead of the classic chessboard
+because the centre of a circle can be located with sub-pixel precision even in a
+slightly blurred image. The white crosses inside the dots and the grey lines between
+them are not used by the detection: they help to measure the sheet with a ruler and to
+align several sheets.</p>
+</section>
+<section id="panel-fields">
+<h2>Panel Fields</h2>
+<p>The fields keep their values: each one is saved in a hidden setting
+(<code class="docutils literal notranslate"><span class="pre">CAMERA_CALIBRATION_...</span></code>) as soon as it holds a valid value, so the panel opens with
+the last values used.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">GENERATION</span></code></strong>: the printable grid.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PAGE</span> <span class="pre">W</span> <span class="pre">(mm)</span></code></p></td>
+<td><p>210</p></td>
+<td><p>Page width (A4).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PAGE</span> <span class="pre">H</span> <span class="pre">(mm)</span></code></p></td>
+<td><p>297</p></td>
+<td><p>Page height (A4).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SPACING</span> <span class="pre">(mm)</span></code></p></td>
+<td><p>50</p></td>
+<td><p>Centre-to-centre distance between dots. It is also the real spacing used to calibrate.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DOT</span> <span class="pre">RADIUS</span> <span class="pre">(mm)</span></code></p></td>
+<td><p>10</p></td>
+<td><p>Radius of each dot.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MARGIN</span> <span class="pre">(mm)</span></code></p></td>
+<td><p>15</p></td>
+<td><p>Empty border around the grid. With at least the dot radius all dots are complete; with <code class="docutils literal notranslate"><span class="pre">0</span></code> the dots on the edges are cut, to join several sheets.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong><code class="docutils literal notranslate"><span class="pre">CALIBRATION</span> <span class="pre">DETECTION</span></code></strong>: the grid in front of the camera.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">COLS</span></code></p></td>
+<td><p>4</p></td>
+<td><p>Columns of dots to detect. Filled in when the PDF is generated.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">ROWS</span></code></p></td>
+<td><p>6</p></td>
+<td><p>Rows of dots to detect. Filled in when the PDF is generated.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SPACING</span> <span class="pre">(px)</span></code></p></td>
+<td><p>blank</p></td>
+<td><p>Expected spacing between dots in the image, in pixels. It restricts the detection to dots of that size; blank accepts dots of any usual size.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MEASURED</span> <span class="pre">SPACING</span> <span class="pre">(mm)</span></code></p></td>
+<td><p>blank</p></td>
+<td><p>Spacing measured on the printed sheet with a ruler. Only used for the px/cm heatmap; blank uses <code class="docutils literal notranslate"><span class="pre">SPACING</span> <span class="pre">(mm)</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The fields are read on every capture, so they can be changed between captures.</p>
+</section>
+<section id="preparing-the-grid">
+<h2>Preparing the Grid</h2>
 <ol class="arabic simple">
-<li><p>Print the generated circle grid (saved as <code class="docutils literal notranslate"><span class="pre">calibration_grid.pdf</span></code> in the project’s <code class="docutils literal notranslate"><span class="pre">data</span></code> folder) and mount it flat.</p></li>
-<li><p>Hold it in front of the camera at different angles and distances while the panel
-detects the grid live and captures frames.</p></li>
-<li><p>Once enough frames have been captured (at least 4), run the calibration. It
-computes the camera matrix and distortion coefficients in a background thread, so
-the panel stays responsive.</p></li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">GENERATE</span> <span class="pre">GRID</span> <span class="pre">PDF</span></code>. The grid is saved as <code class="docutils literal notranslate"><span class="pre">calibration_grid.pdf</span></code> in the
+project’s <code class="docutils literal notranslate"><span class="pre">data</span></code> folder, and <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">COLS</span></code> and <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">ROWS</span></code> are filled in with its size:
+4 x 6 dots with the default values.</p></li>
+<li><p>Print it at 100% scale, not “fit to page”, on matte paper (glossy paper can reflect
+the light and hide dots).</p></li>
+<li><p>Check the spacing with a ruler. If it is not exactly the one requested, enter the real
+value in <code class="docutils literal notranslate"><span class="pre">MEASURED</span> <span class="pre">SPACING</span> <span class="pre">(mm)</span></code>. Only the px/cm heatmap depends on it: the lens
+distortion does not depend on the size of the grid.</p></li>
+<li><p>Mount it flat on a rigid surface, such as a piece of cardboard or a board.</p></li>
 </ol>
-<p>The panel reports the reprojection error (in pixels) and other diagnostics for the
-result, so you can judge whether it’s good enough before saving.</p>
+<p>To cover a larger area, for example the whole floor of the box, build a bigger grid
+from several sheets: set <code class="docutils literal notranslate"><span class="pre">MARGIN</span> <span class="pre">(mm)</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span></code>, so that the dots on the left and bottom
+edges of each sheet are cut in half and are completed by the next sheet when the sheets
+overlap. Use the grey lines to align them, and enter the total number of dots of the
+assembled grid in <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">COLS</span></code> and <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">ROWS</span></code>.</p>
+</section>
+<section id="capturing-frames">
+<h2>Capturing Frames</h2>
+<ol class="arabic simple">
+<li><p>Hold the grid in front of the box camera, with all its dots visible, and press
+<code class="docutils literal notranslate"><span class="pre">CAPTURE</span> <span class="pre">FRAME</span></code>. The detected grid is drawn on the preview for 2 seconds, and then
+the preview goes back to the live image.</p></li>
+<li><p>Repeat with the grid at different positions, distances and angles. Cover the
+whole image, including the corners and edges, where the distortion is larger, and
+tilt the sheet in different directions.</p></li>
+<li><p>From the fourth frame on, each capture runs the calibration with all the frames
+captured so far, in the background. More frames give a more reliable result: 10 to
+15 well distributed frames are a good target.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">LOAD</span> <span class="pre">IMAGE</span></code> uses an image file as a frame instead of the live camera, and
+<code class="docutils literal notranslate"><span class="pre">CLEAR</span> <span class="pre">FRAMES</span></code> discards all the frames to start over. All the frames of a calibration
+must have the same size. The frames are discarded when you leave the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code>
+screen; save the result before leaving.</p>
+<p>If the grid is not detected:</p>
+<ul class="simple">
+<li><p>Check that <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">COLS</span></code> and <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">ROWS</span></code> match your grid, and that all its dots are
+visible and in focus.</p></li>
+<li><p>Leave <code class="docutils literal notranslate"><span class="pre">SPACING</span> <span class="pre">(px)</span></code> blank: a wrong value makes the detector reject the dots.</p></li>
+<li><p>Avoid reflections and strong shadows on the sheet.</p></li>
+</ul>
+<div class="note admonition">
+<p class="admonition-title">Top of the image</p>
+<p>The frames include the status bar that the camera draws at the top of the image
+(about 1/12 of its height), so the dots under it are not detected. Keep the grid
+below it.</p>
+</div>
+</section>
+<section id="reading-the-results">
+<h2>Reading the Results</h2>
+<p>After each calibration the panel shows:</p>
+<ul class="simple">
+<li><p><strong>Calib reproj error</strong>: the mean distance, in pixels, between the detected dots and
+where the calibrated model places them. Below 1 px is good; with good frames it is
+usually between 0.1 and 0.5 px. A high value usually means blurred or badly detected
+frames: clear them and capture new ones.</p></li>
+<li><p><strong>Distortion</strong>: the type and strength of the radial distortion, from <code class="docutils literal notranslate"><span class="pre">k1</span></code>. Negative
+is barrel distortion (edges bulging outwards, typical of wide-angle lenses), positive
+is pincushion.</p></li>
+<li><p><strong>k1, k2, p1, p2</strong>: the distortion coefficients. <code class="docutils literal notranslate"><span class="pre">k</span></code> are radial and <code class="docutils literal notranslate"><span class="pre">p</span></code> tangential
+(a lens not exactly parallel to the sensor); <code class="docutils literal notranslate"><span class="pre">p</span></code> are usually close to zero.</p></li>
+<li><p><strong>Principal pt offset</strong>: how far the optical centre is from the centre of the image.</p></li>
+</ul>
+<p>Once there is a result, each new capture also shows <strong>Physical adjustment</strong>: the tilt
+(left/right and front/back) and the roll of the grid with respect to the camera, with
+hints such as “raise right”. The tilt is rated <code class="docutils literal notranslate"><span class="pre">GOOD</span></code> below 2° and <code class="docutils literal notranslate"><span class="pre">OK</span></code> below 5°, and
+the roll <code class="docutils literal notranslate"><span class="pre">GOOD</span></code> below 1° and <code class="docutils literal notranslate"><span class="pre">OK</span></code> below 3°; anything else is <code class="docutils literal notranslate"><span class="pre">POOR</span></code>. To
+check that the camera looks straight down at the floor of the box, lay the grid flat on
+the floor and adjust the camera until the tilt is <code class="docutils literal notranslate"><span class="pre">GOOD</span></code>.</p>
+<p>The four plots on the right show:</p>
+<ul class="simple">
+<li><p><strong>Residual error</strong>: the reprojection error of every dot used. If it is concentrated
+in one area, capture more frames there.</p></li>
+<li><p><strong>Lens distortion field</strong>: how much, and in which direction, each part of the image
+moves when the distortion is corrected.</p></li>
+<li><p><strong>Tilt and roll</strong>: the shape of the grid in the last frame (red) compared with the
+same grid seen straight on (green).</p></li>
+<li><p><strong>px/cm</strong>: how many pixels a centimetre covers across the grid in the last frame.</p></li>
+</ul>
 </section>
 <section id="result">
 <h2>Result</h2>
-<p>The result — camera matrix, distortion coefficients, reprojection error, image size,
-number of frames used, and the grid spacing in mm — is saved with the panel’s save
-button as <code class="docutils literal notranslate"><span class="pre">camera_calibration.json</span></code>, in the project’s <code class="docutils literal notranslate"><span class="pre">data</span></code> folder. This
-calibration is not applied automatically to the live camera feed; it is meant as a
-reference (or to feed into your own undistortion/measurement code) rather than
-something the core system consumes on its own.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">JSON</span></code> saves the result as <code class="docutils literal notranslate"><span class="pre">camera_calibration.json</span></code> in <code class="docutils literal notranslate"><span class="pre">data/&lt;SYSTEM_NAME&gt;/</span></code>,
+next to the other calibrations of the system, replacing the previous one. Besides the lens model, it records everything
+needed to understand the calibration later, even if the panel’s values change
+afterwards:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">village_version</span></code></p></td>
+<td><p>When, on which system and with which version of Village it was made.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">camera_matrix</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[[fx,</span> <span class="pre">0,</span> <span class="pre">cx],</span> <span class="pre">[0,</span> <span class="pre">fy,</span> <span class="pre">cy],</span> <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]]</span></code>, in pixels: focal lengths and optical centre.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dist_coeffs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">[k1,</span> <span class="pre">k2,</span> <span class="pre">p1,</span> <span class="pre">p2,</span> <span class="pre">k3]</span></code>: the distortion coefficients, in OpenCV order.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reprojection_error_px</span></code></p></td>
+<td><p>The mean reprojection error, in pixels.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">image_size_wh</span></code></p></td>
+<td><p>Size of the calibrated frames. The calibration is only valid at this resolution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">n_images_used</span></code></p></td>
+<td><p>Number of frames used.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spacing_mm</span></code>, <code class="docutils literal notranslate"><span class="pre">measured_spacing_mm</span></code>, <code class="docutils literal notranslate"><span class="pre">spacing_px</span></code></p></td>
+<td><p>The grid and detector values (<code class="docutils literal notranslate"><span class="pre">null</span></code> when blank).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frames</span></code></p></td>
+<td><p>Every frame used: its source (the box camera, with its resolution and lens position, or an image file), the grid size, the spacing and the number of dots found.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">description</span></code></p></td>
+<td><p>What each of these fields means.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="using-the-calibration">
+<h2>Using the Calibration</h2>
+<p>The calibration is not applied automatically: the camera, the tracking and the videos
+keep working with the original image. Use it in your own analyses, for example to
+correct the positions of the animal saved in the CSV file of each video. The positions
+must come from a video recorded at the resolution in <code class="docutils literal notranslate"><span class="pre">image_size_wh</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"data/my_system/camera_calibration.json"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>  <span class="c1"># data/&lt;SYSTEM_NAME&gt;/</span>
+</span><span data-line="8">    <span class="n">calibration</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</span><span data-line="9"><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calibration</span><span class="p">[</span><span class="s2">"camera_matrix"</span><span class="p">])</span>
+</span><span data-line="10"><span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calibration</span><span class="p">[</span><span class="s2">"dist_coeffs"</span><span class="p">])</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="n">frames</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"video.csv"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">";"</span><span class="p">)</span>
+</span><span data-line="13"><span class="n">tracked</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[(</span><span class="n">frames</span><span class="p">[</span><span class="s2">"x_position"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">frames</span><span class="p">[</span><span class="s2">"y_position"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)]</span>
+</span><span data-line="14"><span class="n">points</span> <span class="o">=</span> <span class="n">tracked</span><span class="p">[[</span><span class="s2">"x_position"</span><span class="p">,</span> <span class="s2">"y_position"</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span><span data-line="15">
+</span><span data-line="16"><span class="c1"># positions as they would be seen through a lens without distortion, in pixels</span>
+</span><span data-line="17"><span class="n">corrected</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistortPoints</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>To correct whole images, use <code class="docutils literal notranslate"><span class="pre">cv2.undistort(image,</span> <span class="pre">K,</span> <span class="pre">dist)</span></code>.</p>
 <hr class="docutils" />
 <p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> and the <a class="reference internal" href="../examples/led_calibration.html"><span class="std std-doc">led_calibration.py</span></a> example.</p>
 </section>
@@ -625,7 +847,7 @@ something the core system consumes on its own.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=e124d4e0"></script>
+      <script src="../_static/documentation_options.js?v=13f4e3a5"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
