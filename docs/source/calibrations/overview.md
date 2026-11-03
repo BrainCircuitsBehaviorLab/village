@@ -4,13 +4,15 @@ The `CALIBRATION` screen has a dedicated panel for each calibration of the syste
 left-side menu lists every calibration relevant to your current hardware configuration;
 selecting an entry opens its panel on the right. Every saved calibration is kept in its
 own `.csv` file in `data/<SYSTEM_NAME>/`, and can also be browsed and plotted from the
-`DATA` screen.
+`DATA` screen. The camera calibration is the exception: it is saved as a JSON file in
+the same folder and is not shown in the `DATA` screen (see
+[Camera Calibration](camera.md)).
 
 *   **`WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. Always available: with Bpod it works out of the box; with any other controller, it needs a water calibration task written for that controller. See [Water Calibration](water.md).
 
 *   **`SOUND_CALIBRATION`:** Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. Only available when `USE_SOUNDCARD` is **ON**. See [Sound Calibration](sound.md).
 
-*   **`CAMERA_CALIBRATION`:** Generates a printable symmetric circle grid used to calibrate lens distortion for the system cameras. Always available. See [Camera Calibration](camera.md).
+*   **`CAMERA_CALIBRATION`:** Generates a printable symmetric circle grid used to calibrate the lens distortion of the box camera. Always available. See [Camera Calibration](camera.md).
 
 *   **`CORRIDOR_THRESHOLD_CALIBRATION`:** Lets you position the four corridor detection areas and tune their day/night pixel-detection thresholds while previewing the result against a recorded corridor video. Only available when `USE_CORRIDOR` is **ON**. See [Corridor Threshold Calibration](thresholds.md).
 

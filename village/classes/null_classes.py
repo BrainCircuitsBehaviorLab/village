@@ -183,7 +183,7 @@ class NullTempSensor:
         Returns:
             tuple[float, float, str]: Temperature, humidity, and formatted string.
         """
-        return 0.0, 0.0, ""
+        return 0.0, 0.0, "0.0"
 
 
 class NullChip:

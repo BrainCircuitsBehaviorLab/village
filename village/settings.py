@@ -1139,6 +1139,64 @@ versions downloaded it from GitHub, hence the name).""",
         float,
         """Factor to transform electric signal to grams, for the box scale.""",
     ),
+    Setting(
+        "CAMERA_CALIBRATION_PAGE_W",
+        210,
+        float,
+        "Camera calibration: page width in mm of the printable grid.",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_PAGE_H",
+        297,
+        float,
+        "Camera calibration: page height in mm of the printable grid.",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_SPACING",
+        50,
+        float,
+        """Camera calibration: centre-to-centre distance between dots in mm, of
+the printable grid and of the grid used to calibrate.""",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_DOT_RADIUS",
+        10,
+        float,
+        "Camera calibration: radius in mm of the printed dots.",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_MARGIN",
+        15,
+        float,
+        """Camera calibration: empty border in mm around the printable grid (0 to
+overlap several sheets into a bigger grid).""",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_GRID_COLS",
+        4,
+        int,
+        "Camera calibration: columns of dots of the grid to detect.",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_GRID_ROWS",
+        6,
+        int,
+        "Camera calibration: rows of dots of the grid to detect.",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_SPACING_PX",
+        0,
+        float,
+        """Camera calibration: expected dot spacing in pixels, to tune the blob
+detector (0 = dots of any usual size).""",
+    ),
+    Setting(
+        "CAMERA_CALIBRATION_MEASURED_SPACING",
+        0,
+        float,
+        """Camera calibration: printed dot spacing in mm measured with a ruler, for
+the px/cm heatmap (0 = CAMERA_CALIBRATION_SPACING).""",
+    ),
     Setting("RFID_READER", "ON", Active, "The RFID reader status."),
     Setting("VISIBLE_BOX", "ON", Cycle, "The visible light of the box."),
     Setting("IR_BOX", "OFF", Cycle, "The infrared light of the box."),
