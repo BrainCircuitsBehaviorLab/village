@@ -565,25 +565,29 @@ data-aria-dark="Switch to auto color mode">
 <p>The box camera uses a wide-angle lens, which distorts the image: straight lines look
 curved, especially near the edges, and a centimetre does not cover the same number of
 pixels in the centre of the image as in a corner. This panel measures that distortion
-with a printed grid of dots, so that you can correct it in your analyses, for example
-before converting the tracked positions of the animal into real distances. It also
-measures how tilted the camera is with respect to a surface, which helps to align it.</p>
+with a printed grid of dots laid on the floor of the box, so that the tracked positions
+of the animal can be corrected and converted into millimetres on the floor. It also
+measures how tilted the camera is with respect to the floor, which helps to align it.</p>
 <p>Always available in the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen. It calibrates the box camera; the
 images of any other camera can be calibrated by loading them as files.</p>
 <section id="how-it-works">
 <h2>How It Works</h2>
-<p>The grid is a sheet of black dots at a known, exact spacing. The calibration compares
-where the dots really are (a perfect grid) with where the camera sees them, and works
-out the lens model that explains the difference: the camera matrix (focal length and
-optical centre) and the distortion coefficients. It uses the standard OpenCV
-calibration (<code class="docutils literal notranslate"><span class="pre">calibrateCamera</span></code>), adapted to a grid of circles.</p>
-<p>A single image is not enough, because the tilt of the sheet (perspective) and the
-lens distortion look alike. With several images of the grid at different angles and
-positions, the two can be separated. Dots are used instead of the classic chessboard
-because the centre of a circle can be located with sub-pixel precision even in a
-slightly blurred image. The white crosses inside the dots and the grey lines between
-them are not used by the detection: they help to measure the sheet with a ruler and to
-align several sheets.</p>
+<p>The grid is a sheet of black dots at a known, exact spacing, lying flat on the floor of
+the box. The calibration compares where the dots really are (a perfect grid) with where
+the camera sees them, and works out the lens model that explains the difference: the
+camera matrix (focal length and optical centre) and the distortion coefficients. It
+uses the standard OpenCV calibration (<code class="docutils literal notranslate"><span class="pre">calibrateCamera</span></code>), adapted to a grid of circles.
+Since the grid lies on the floor, the same frame also gives the conversion from pixels
+to millimetres on the floor, the px/cm scale across the floor and the alignment of the
+camera.</p>
+<p>A single frame is enough: it already contains every dot of the grid. The correction is
+only reliable over the part of the floor that the grid covers, so the grid must cover
+the whole surface you want to measure: one sheet for a small area, or several sheets
+joined into a bigger grid for the whole floor.</p>
+<p>Dots are used instead of the classic chessboard because the centre of a circle can be
+located with sub-pixel precision even in a slightly blurred image. The white crosses
+inside the dots and the grey lines between them are not used by the detection: they
+help to measure the sheet with a ruler and to align several sheets.</p>
 </section>
 <section id="panel-fields">
 <h2>Panel Fields</h2>
@@ -623,7 +627,7 @@ the last values used.</p>
 </tbody>
 </table>
 </div>
-<p><strong><code class="docutils literal notranslate"><span class="pre">CALIBRATION</span> <span class="pre">DETECTION</span></code></strong>: the grid in front of the camera.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">CALIBRATION</span> <span class="pre">DETECTION</span></code></strong>: the grid lying on the floor.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -647,7 +651,7 @@ the last values used.</p>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MEASURED</span> <span class="pre">SPACING</span> <span class="pre">(mm)</span></code></p></td>
 <td><p>blank</p></td>
-<td><p>Spacing measured on the printed sheet with a ruler. Only used for the px/cm heatmap; blank uses <code class="docutils literal notranslate"><span class="pre">SPACING</span> <span class="pre">(mm)</span></code>.</p></td>
+<td><p>Spacing measured on the printed sheet with a ruler. Used for the px/cm scale and the millimetres on the floor; blank uses <code class="docutils literal notranslate"><span class="pre">SPACING</span> <span class="pre">(mm)</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -663,33 +667,34 @@ project’s <code class="docutils literal notranslate"><span class="pre">data</s
 <li><p>Print it at 100% scale, not “fit to page”, on matte paper (glossy paper can reflect
 the light and hide dots).</p></li>
 <li><p>Check the spacing with a ruler. If it is not exactly the one requested, enter the real
-value in <code class="docutils literal notranslate"><span class="pre">MEASURED</span> <span class="pre">SPACING</span> <span class="pre">(mm)</span></code>. Only the px/cm heatmap depends on it: the lens
+value in <code class="docutils literal notranslate"><span class="pre">MEASURED</span> <span class="pre">SPACING</span> <span class="pre">(mm)</span></code>: the millimetres on the floor depend on it. The lens
 distortion does not depend on the size of the grid.</p></li>
-<li><p>Mount it flat on a rigid surface, such as a piece of cardboard or a board.</p></li>
 </ol>
-<p>To cover a larger area, for example the whole floor of the box, build a bigger grid
-from several sheets: set <code class="docutils literal notranslate"><span class="pre">MARGIN</span> <span class="pre">(mm)</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span></code>, so that the dots on the left and bottom
-edges of each sheet are cut in half and are completed by the next sheet when the sheets
-overlap. Use the grey lines to align them, and enter the total number of dots of the
-assembled grid in <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">COLS</span></code> and <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">ROWS</span></code>.</p>
+<p>If one sheet does not cover the surface you want to measure, build a bigger grid from
+several sheets: set <code class="docutils literal notranslate"><span class="pre">MARGIN</span> <span class="pre">(mm)</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span></code> before generating the PDF, so that the dots on
+the left and bottom edges of each sheet are cut in half and are completed by the next
+sheet when the sheets overlap. Use the grey lines to align them, tape them together and
+enter the total number of dots of the assembled grid in <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">COLS</span></code> and <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">ROWS</span></code>.</p>
 </section>
 <section id="capturing-frames">
 <h2>Capturing Frames</h2>
 <ol class="arabic simple">
-<li><p>Hold the grid in front of the box camera, with all its dots visible, and press
-<code class="docutils literal notranslate"><span class="pre">CAPTURE</span> <span class="pre">FRAME</span></code>. The detected grid is drawn on the preview for 2 seconds, and then
-the preview goes back to the live image.</p></li>
-<li><p>Repeat with the grid at different positions, distances and angles. Cover the
-whole image, including the corners and edges, where the distortion is larger, and
-tilt the sheet in different directions.</p></li>
-<li><p>From the fourth frame on, each capture runs the calibration with all the frames
-captured so far, in the background. More frames give a more reliable result: 10 to
-15 well distributed frames are a good target.</p></li>
+<li><p>Lay the grid flat on the floor of the box, covering the surface you want to measure,
+with all its dots visible to the camera. Tape it down if it does not lie flat.</p></li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">CAPTURE</span> <span class="pre">FRAME</span></code>. The detected grid is drawn on the preview for 2 seconds, and
+then the preview goes back to the live image. The calibration runs in the background
+as soon as the grid is detected.</p></li>
+<li><p>Optionally, capture a few more frames without moving anything: they average the
+noise of the image.</p></li>
 </ol>
 <p><code class="docutils literal notranslate"><span class="pre">LOAD</span> <span class="pre">IMAGE</span></code> uses an image file as a frame instead of the live camera, and
 <code class="docutils literal notranslate"><span class="pre">CLEAR</span> <span class="pre">FRAMES</span></code> discards all the frames to start over. All the frames of a calibration
 must have the same size. The frames are discarded when you leave the <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code>
 screen; save the result before leaving.</p>
+<p>If you cannot build a grid as big as the surface, you can also move a single sheet
+around the floor and capture it in each position: the lens correction then covers all
+the positions together. It is less precise than a single grid covering everything, and
+the floor coordinates are those of the last position captured.</p>
 <p>If the grid is not detected:</p>
 <ul class="simple">
 <li><p>Check that <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">COLS</span></code> and <code class="docutils literal notranslate"><span class="pre">GRID</span> <span class="pre">ROWS</span></code> match your grid, and that all its dots are
@@ -699,9 +704,10 @@ visible and in focus.</p></li>
 </ul>
 <div class="note admonition">
 <p class="admonition-title">Top of the image</p>
-<p>The frames include the status bar that the camera draws at the top of the image
-(about 1/12 of its height), so the dots under it are not detected. Keep the grid
-below it.</p>
+<p>The panel shows and captures the image of the camera without the status bar that is
+drawn at the top of it (and without any custom camera drawing), so the dots under it
+are detected too. The video and the camera preview of the other screens keep the
+status bar.</p>
 </div>
 </section>
 <section id="reading-the-results">
@@ -709,28 +715,31 @@ below it.</p>
 <p>After each calibration the panel shows:</p>
 <ul class="simple">
 <li><p><strong>Calib reproj error</strong>: the mean distance, in pixels, between the detected dots and
-where the calibrated model places them. Below 1 px is good; with good frames it is
-usually between 0.1 and 0.5 px. A high value usually means blurred or badly detected
-frames: clear them and capture new ones.</p></li>
+where the calibrated model places them. Below 1 px is good. A high value usually means
+a badly detected grid, or a sheet that is not flat: clear the frames and capture again.</p></li>
 <li><p><strong>Distortion</strong>: the type and strength of the radial distortion, from <code class="docutils literal notranslate"><span class="pre">k1</span></code>. Negative
 is barrel distortion (edges bulging outwards, typical of wide-angle lenses), positive
 is pincushion.</p></li>
 <li><p><strong>k1, k2, p1, p2</strong>: the distortion coefficients. <code class="docutils literal notranslate"><span class="pre">k</span></code> are radial and <code class="docutils literal notranslate"><span class="pre">p</span></code> tangential
 (a lens not exactly parallel to the sensor); <code class="docutils literal notranslate"><span class="pre">p</span></code> are usually close to zero.</p></li>
 <li><p><strong>Principal pt offset</strong>: how far the optical centre is from the centre of the image.</p></li>
+<li><p><strong>Floor scale</strong>: how many pixels a centimetre of the floor covers, on average and its
+range across the grid.</p></li>
 </ul>
-<p>Once there is a result, each new capture also shows <strong>Physical adjustment</strong>: the tilt
-(left/right and front/back) and the roll of the grid with respect to the camera, with
-hints such as “raise right”. The tilt is rated <code class="docutils literal notranslate"><span class="pre">GOOD</span></code> below 2° and <code class="docutils literal notranslate"><span class="pre">OK</span></code> below 5°, and
-the roll <code class="docutils literal notranslate"><span class="pre">GOOD</span></code> below 1° and <code class="docutils literal notranslate"><span class="pre">OK</span></code> below 3°; anything else is <code class="docutils literal notranslate"><span class="pre">POOR</span></code>. To
-check that the camera looks straight down at the floor of the box, lay the grid flat on
-the floor and adjust the camera until the tilt is <code class="docutils literal notranslate"><span class="pre">GOOD</span></code>.</p>
+<p><strong>Camera alignment with the floor</strong> shows the tilt (left/right and front/back) and the
+roll of the camera with respect to the grid, with hints such as “raise right”. The tilt
+is rated <code class="docutils literal notranslate"><span class="pre">GOOD</span></code> below 2° and <code class="docutils literal notranslate"><span class="pre">OK</span></code> below 5°, and the roll <code class="docutils literal notranslate"><span class="pre">GOOD</span></code> below 1° and <code class="docutils literal notranslate"><span class="pre">OK</span></code> below
+3°; anything else is <code class="docutils literal notranslate"><span class="pre">POOR</span></code>. The roll is measured along the rows of dots, so it only
+means something if the grid is aligned with the walls of the box. To align the camera,
+adjust it until the tilt is <code class="docutils literal notranslate"><span class="pre">GOOD</span></code>, then press <code class="docutils literal notranslate"><span class="pre">CLEAR</span> <span class="pre">FRAMES</span></code> and capture again: a
+calibration is only valid for the position of the camera it was made with.</p>
 <p>The four plots on the right show:</p>
 <ul class="simple">
 <li><p><strong>Residual error</strong>: the reprojection error of every dot used. If it is concentrated
-in one area, capture more frames there.</p></li>
+in one area, the sheet may not lie flat there.</p></li>
 <li><p><strong>Lens distortion field</strong>: how much, and in which direction, each part of the image
-moves when the distortion is corrected.</p></li>
+moves when the distortion is corrected. The dashed line is the area covered by the
+grid, where the correction is reliable.</p></li>
 <li><p><strong>Tilt and roll</strong>: the shape of the grid in the last frame (red) compared with the
 same grid seen straight on (green).</p></li>
 <li><p><strong>px/cm</strong>: how many pixels a centimetre covers across the grid in the last frame.</p></li>
@@ -739,9 +748,9 @@ same grid seen straight on (green).</p></li>
 <section id="result">
 <h2>Result</h2>
 <p><code class="docutils literal notranslate"><span class="pre">SAVE</span> <span class="pre">JSON</span></code> saves the result as <code class="docutils literal notranslate"><span class="pre">camera_calibration.json</span></code> in <code class="docutils literal notranslate"><span class="pre">data/&lt;SYSTEM_NAME&gt;/</span></code>,
-next to the other calibrations of the system, replacing the previous one. Besides the lens model, it records everything
-needed to understand the calibration later, even if the panel’s values change
-afterwards:</p>
+next to the other calibrations of the system, replacing the previous one. Besides the
+corrections, it records everything needed to understand the calibration later, even if
+the panel’s values change afterwards:</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -771,6 +780,24 @@ afterwards:</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spacing_mm</span></code>, <code class="docutils literal notranslate"><span class="pre">measured_spacing_mm</span></code>, <code class="docutils literal notranslate"><span class="pre">spacing_px</span></code></p></td>
 <td><p>The grid and detector values (<code class="docutils literal notranslate"><span class="pre">null</span></code> when blank).</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tangential</span></code>, <code class="docutils literal notranslate"><span class="pre">principal_point_offset_px</span></code></p></td>
+<td><p>The size of the tangential distortion and the offset of the optical centre, as shown in the panel.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alignment</span></code></p></td>
+<td><p>Tilt left/right, front/back and total, and roll of the camera with respect to the floor, in degrees.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">px_per_cm</span></code></p></td>
+<td><p>Mean, minimum and maximum pixels per centimetre of the floor.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">floor_homography</span></code></p></td>
+<td><p>3 x 3 matrix that converts undistorted pixels into millimetres on the floor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">floor_origin</span></code></p></td>
+<td><p>The floor coordinates: millimetres from the dot of the grid nearest the top-left corner of the image, with x along the rows of dots and y along the columns.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">calibrated_region_px</span></code></p></td>
+<td><p>Polygon, in pixels, of the area covered by the grid: the correction is only reliable inside it.</p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frames</span></code></p></td>
 <td><p>Every frame used: its source (the box camera, with its resolution and lens position, or an image file), the grid size, the spacing and the number of dots found.</p></td>
 </tr>
@@ -785,8 +812,10 @@ afterwards:</p>
 <h2>Using the Calibration</h2>
 <p>The calibration is not applied automatically: the camera, the tracking and the videos
 keep working with the original image. Use it in your own analyses, for example to
-correct the positions of the animal saved in the CSV file of each video. The positions
-must come from a video recorded at the resolution in <code class="docutils literal notranslate"><span class="pre">image_size_wh</span></code>.</p>
+convert the positions of the animal saved in the CSV file of each video into
+millimetres on the floor. The positions must come from a video recorded at the
+resolution in <code class="docutils literal notranslate"><span class="pre">image_size_wh</span></code>, with the camera in the same position as when the
+calibration was made.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
@@ -797,16 +826,21 @@ must come from a video recorded at the resolution in <code class="docutils liter
 </span><span data-line="8">    <span class="n">calibration</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </span><span data-line="9"><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calibration</span><span class="p">[</span><span class="s2">"camera_matrix"</span><span class="p">])</span>
 </span><span data-line="10"><span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calibration</span><span class="p">[</span><span class="s2">"dist_coeffs"</span><span class="p">])</span>
-</span><span data-line="11">
-</span><span data-line="12"><span class="n">frames</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"video.csv"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">";"</span><span class="p">)</span>
-</span><span data-line="13"><span class="n">tracked</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[(</span><span class="n">frames</span><span class="p">[</span><span class="s2">"x_position"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">frames</span><span class="p">[</span><span class="s2">"y_position"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)]</span>
-</span><span data-line="14"><span class="n">points</span> <span class="o">=</span> <span class="n">tracked</span><span class="p">[[</span><span class="s2">"x_position"</span><span class="p">,</span> <span class="s2">"y_position"</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-</span><span data-line="15">
-</span><span data-line="16"><span class="c1"># positions as they would be seen through a lens without distortion, in pixels</span>
-</span><span data-line="17"><span class="n">corrected</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistortPoints</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span data-line="11"><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">calibration</span><span class="p">[</span><span class="s2">"floor_homography"</span><span class="p">])</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="n">frames</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"video.csv"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">";"</span><span class="p">)</span>
+</span><span data-line="14"><span class="n">tracked</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[(</span><span class="n">frames</span><span class="p">[</span><span class="s2">"x_position"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">frames</span><span class="p">[</span><span class="s2">"y_position"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)]</span>
+</span><span data-line="15"><span class="n">points</span> <span class="o">=</span> <span class="n">tracked</span><span class="p">[[</span><span class="s2">"x_position"</span><span class="p">,</span> <span class="s2">"y_position"</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="c1"># positions as they would be seen through a lens without distortion, in pixels</span>
+</span><span data-line="18"><span class="n">undistorted</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistortPoints</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+</span><span data-line="19"><span class="c1"># positions on the floor, in mm (see floor_origin)</span>
+</span><span data-line="20"><span class="n">floor_mm</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">perspectiveTransform</span><span class="p">(</span><span class="n">undistorted</span><span class="p">,</span> <span class="n">H</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p>To correct whole images, use <code class="docutils literal notranslate"><span class="pre">cv2.undistort(image,</span> <span class="pre">K,</span> <span class="pre">dist)</span></code>.</p>
+<p>Converting a point takes a few microseconds, so the same two lines can also be used
+in real time, for example in a camera trigger, with <code class="docutils literal notranslate"><span class="pre">cam.x_position</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cam.y_position</span></code>. To correct whole images, use <code class="docutils literal notranslate"><span class="pre">cv2.undistort(image,</span> <span class="pre">K,</span> <span class="pre">dist)</span></code>.</p>
 <hr class="docutils" />
 <p>Want to write your own calibration panel? See <a class="reference internal" href="../advanced_customization/calibrations.html"><span class="std std-doc">Custom Calibrations</span></a> and the <a class="reference internal" href="../examples/led_calibration.html"><span class="std std-doc">led_calibration.py</span></a> example.</p>
 </section>
@@ -849,7 +883,7 @@ must come from a video recorded at the resolution in <code class="docutils liter
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=a2e68eda"></script>
+      <script src="../_static/documentation_options.js?v=1e87a915"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
