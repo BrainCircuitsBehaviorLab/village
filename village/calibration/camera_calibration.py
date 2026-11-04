@@ -1,8 +1,11 @@
 """Camera calibration: the CAMERA_CALIBRATION panel of the CALIBRATION screen.
 
-Prints a sheet with a grid of dots (make_circle_grid), detects it in frames of the
-box camera, and calibrates the lens from them with OpenCV (calibrateCamera): the
-camera matrix and the distortion coefficients, saved to camera_calibration.json.
+Prints a sheet with a grid of dots (make_circle_grid). The grid (one sheet, or
+several joined for a bigger surface) lies on the floor of the box, and the panel
+detects it in frames of the box camera and calibrates the lens from them with
+OpenCV (calibrateCamera): the camera matrix and the distortion coefficients, the
+alignment of the camera with the floor, the px/cm scale and the conversion from
+pixels to millimetres on the floor, saved to camera_calibration.json.
 
 - CameraCalibration: the calibration itself (frames, detection, results).
 - CameraCalibrationPanel: the widgets of the panel.
@@ -39,6 +42,16 @@ if TYPE_CHECKING:
 # How long a captured frame stays on the preview before it goes back to live.
 CAPTURED_FRAME_SECONDS = 2.0
 
+# Frames needed to calibrate. The grid lies on the floor, so one frame already
+# has the whole floor surface it covers; more frames only average the noise.
+MIN_FRAMES = 1
+
+# Initial focal length of the calibration, as a fraction of the image width. With
+# the grid flat on the floor, the focal length can hardly be told apart from the
+# height of the camera, so it starts from a typical value for the box camera
+# instead of from OpenCV's own guess, which can then end up far away.
+FOCAL_GUESS = 0.6
+
 # Settings whose field can be left blank, saved as 0.
 OPTIONAL_SETTINGS = (
     "CAMERA_CALIBRATION_SPACING_PX",
@@ -60,9 +73,27 @@ JSON_DESCRIPTION = {
     "heatmap (null = spacing_mm)",
     "spacing_px": "expected dot spacing in pixels given to the detector "
     "(null = dots of any usual size)",
+    "tangential": "size of the tangential distortion, sqrt(p1^2 + p2^2)",
+    "principal_point_offset_px": "[cx - width/2, cy - height/2]: distance from the "
+    "optical centre to the centre of the image",
+    "alignment": "position of the camera with respect to the floor, from the last "
+    "frame: tilt left/right (x), front/back (y) and total, and roll, in degrees",
+    "px_per_cm": "pixels per cm on the floor across the grid in the last frame "
+    "(mean, min, max), from measured_spacing_mm or spacing_mm",
+    "floor_homography": "3x3 matrix from undistorted pixels (cv2.undistortPoints "
+    "with P=camera_matrix) to mm on the floor, from the last frame",
+    "floor_origin": "the floor coordinates of floor_homography",
+    "calibrated_region_px": "polygon (pixels) covered by the grid in the frames: "
+    "the correction is only reliable inside it",
     "frames": "the frames used, in order: their source (and the box camera "
     "settings that change the calibration), grid size, spacing and dots found",
 }
+
+FLOOR_ORIGIN = (
+    "mm from the centre of the dot of the grid nearest the top-left corner of the "
+    "image (last frame); x along the rows of dots (GRID COLS dots), y along the "
+    "columns: with the rows horizontal in the image, x goes right and y down"
+)
 
 
 class CameraCalibration(CalibrationBase):
@@ -151,10 +182,6 @@ class CameraCalibration(CalibrationBase):
             )
             _draw_grid(annotated, img_pts, self.grid_size)
             self.last_spacing_px = _compute_spacing_px(img_pts, self.grid_size)
-            if self.result is not None:
-                K = np.array(self.result["camera_matrix"])
-                dist = np.array(self.result["dist_coeffs"])
-                self.live_metrics = _compute_live_metrics(obj_pts, img_pts, K, dist)
 
         return annotated, found
 
@@ -168,7 +195,7 @@ class CameraCalibration(CalibrationBase):
         self.live_metrics = None
 
     def calibrate_in_thread(self) -> None:
-        if self.running or self.n_detected < 4:
+        if self.running or self.n_detected < MIN_FRAMES:
             return
         self.running = True
         self.error = False
@@ -190,6 +217,13 @@ class CameraCalibration(CalibrationBase):
             "spacing_mm",
             "measured_spacing_mm",
             "spacing_px",
+            "tangential",
+            "principal_point_offset_px",
+            "alignment",
+            "px_per_cm",
+            "floor_homography",
+            "floor_origin",
+            "calibrated_region_px",
             "frames",
         )
         data = {k: self.result[k] for k in keys if k in self.result}
@@ -208,6 +242,33 @@ class CameraCalibration(CalibrationBase):
             d = dist.ravel()
             w, h = self._image_size
             _tang = float(np.sqrt(d[2] ** 2 + d[3] ** 2)) if len(d) >= 4 else 0.0
+            spacing = self.measured_spacing_mm or self.spacing_mm
+            last_obj, last_img = self._obj_points[-1], self._img_points[-1]
+            live = _compute_live_metrics(last_obj, last_img, K, dist, self.grid_size)
+            diag = _compute_diagnostic_data(
+                self._obj_points,
+                self._img_points,
+                K,
+                dist,
+                rvecs,
+                tvecs,
+                self._image_size,
+                spacing_mm=spacing,
+                grid_size=self.grid_size,
+            )
+            scale = diag["scale_data"]
+            px_per_cm = (
+                {
+                    "mean": round(float(np.mean(scale["vals"])), 3),
+                    "min": round(float(np.min(scale["vals"])), 3),
+                    "max": round(float(np.max(scale["vals"])), 3),
+                }
+                if scale is not None and len(scale["vals"])
+                else None
+            )
+            region = cv2.convexHull(
+                np.concatenate([p.reshape(-1, 2) for p in self._img_points])
+            )
             self.result = {
                 "date": time_utils.now_string(),
                 "system_name": settings.get("SYSTEM_NAME"),
@@ -225,19 +286,26 @@ class CameraCalibration(CalibrationBase):
                 "tangential": _tang,
                 "cx_offset_px": float(K[0, 2] - w / 2),
                 "cy_offset_px": float(K[1, 2] - h / 2),
+                "principal_point_offset_px": [
+                    round(float(K[0, 2] - w / 2), 2),
+                    round(float(K[1, 2] - h / 2), 2),
+                ],
+                "alignment": {
+                    "tilt_x_deg": round(live["tilt_x_deg"], 2),
+                    "tilt_y_deg": round(live["tilt_y_deg"], 2),
+                    "tilt_total_deg": round(live["tilt_deg"], 2),
+                    "roll_deg": round(live["roll_deg"], 2),
+                },
+                "px_per_cm": px_per_cm,
+                "floor_homography": _floor_homography(
+                    last_obj * (spacing / self.spacing_mm), last_img, K, dist
+                ).tolist(),
+                "floor_origin": FLOOR_ORIGIN,
+                "calibrated_region_px": region.reshape(-1, 2).round(1).tolist(),
             }
-
-            self.diagnostic_data = _compute_diagnostic_data(
-                self._obj_points,
-                self._img_points,
-                K,
-                dist,
-                rvecs,
-                tvecs,
-                self._image_size,
-                spacing_mm=self.measured_spacing_mm or self.spacing_mm,
-                grid_size=self.grid_size,
-            )
+            diag["region"] = region.reshape(-1, 2)
+            self.diagnostic_data = diag
+            self.live_metrics = live
         except Exception:
             log.error("Camera calibration error", exception=traceback.format_exc())
             self.error = True
@@ -296,9 +364,24 @@ def _detect_grid(
         cols, rows = grid_size
         obj_pts = np.zeros((cols * rows, 3), np.float32)
         obj_pts[:, :2] = np.mgrid[0:cols, 0:rows].T.reshape(-1, 2) * spacing_mm
-        return obj_pts, corners
+        return obj_pts, _orient_grid(corners, cols, rows)
 
     return _cluster_grid(gray, detector, spacing_mm)
+
+
+def _orient_grid(corners: np.ndarray, cols: int, rows: int) -> np.ndarray:
+    """Reorders the dots found by findCirclesGrid, which can start from any
+    corner, so that the first one is the dot nearest the top-left corner of the
+    image (the origin of the floor coordinates, see FLOOR_ORIGIN)."""
+    pg = corners.reshape(rows, cols, 2)
+    if cols == rows:
+        # a square grid can also come transposed: keep its rows horizontal
+        d = pg[0, -1] - pg[0, 0]
+        if abs(d[1]) > abs(d[0]):
+            pg = pg.transpose(1, 0, 2)
+    options = [pg, pg[:, ::-1], pg[::-1], pg[::-1, ::-1]]
+    pg = min(options, key=lambda g: float(g[0, 0].sum()))
+    return np.ascontiguousarray(pg, dtype=np.float32).reshape(-1, 1, 2)
 
 
 def _cluster_grid(
@@ -357,8 +440,16 @@ def _run_calibration(
     img_points: list[np.ndarray],
     image_size: tuple[int, int],
 ) -> tuple[np.ndarray, np.ndarray, list, list, float]:
+    w, h = image_size
+    f = FOCAL_GUESS * w
+    K0 = np.array([[f, 0, w / 2], [0, f, h / 2], [0, 0, 1]], dtype=np.float64)
     _, K, dist, rvecs, tvecs = cv2.calibrateCamera(
-        obj_points, img_points, image_size, None, None
+        obj_points,
+        img_points,
+        image_size,
+        K0,
+        None,
+        flags=cv2.CALIB_USE_INTRINSIC_GUESS,
     )
     total = sum(
         cv2.norm(ip, cv2.projectPoints(op, rv, tv, K, dist)[0], cv2.NORM_L2) / len(ip)
@@ -408,16 +499,8 @@ def _compute_diagnostic_data(
     tilt_x_deg = float(np.degrees(np.arcsin(np.clip(R[0, 2], -1.0, 1.0))))
     tilt_y_deg = float(np.degrees(np.arcsin(np.clip(R[1, 2], -1.0, 1.0))))
 
-    y_min, y_max = last_ip[:, 1].min(), last_ip[:, 1].max()
-    top_row = last_ip[last_ip[:, 1] < y_min + (y_max - y_min) * 0.2]
-    if len(top_row) >= 2:
-        top_row = top_row[np.argsort(top_row[:, 0])]
-        dx, dy = top_row[-1] - top_row[0]
-        roll_rad = float(np.arctan2(dy, dx))
-        roll_deg = float(abs(np.degrees(roll_rad)))
-    else:
-        roll_rad, roll_deg = 0.0, 0.0
-    roll_top_row = top_row if len(top_row) >= 2 else None
+    roll_rad, roll_top_row = _grid_roll(last_ip, grid_size)
+    roll_deg = float(np.degrees(roll_rad))
 
     # px/cm scale heatmap data
     scale_data = None
@@ -460,8 +543,34 @@ def _compute_diagnostic_data(
     }
 
 
+def _grid_roll(
+    img_pts: np.ndarray, grid_size: tuple[int, int] | None
+) -> tuple[float, np.ndarray | None]:
+    """The roll (rad) of the grid in the image, from its first row of dots, and
+    that row. Wrapped to +-45 degrees: a grid lying across the image has the
+    same roll as one lying along it."""
+    pts = img_pts.reshape(-1, 2)
+    if grid_size is not None:
+        cols, rows = grid_size
+        row = pts.reshape(rows, cols, 2)[0]
+    else:
+        # no grid size: the dots near the top of the image
+        y_min, y_max = pts[:, 1].min(), pts[:, 1].max()
+        row = pts[pts[:, 1] < y_min + (y_max - y_min) * 0.2]
+        row = row[np.argsort(row[:, 0])]
+    if len(row) < 2:
+        return 0.0, None
+    dx, dy = row[-1] - row[0]
+    angle = float(np.arctan2(dy, dx))
+    return (angle + np.pi / 4) % (np.pi / 2) - np.pi / 4, row
+
+
 def _compute_live_metrics(
-    obj_pts: np.ndarray, img_pts: np.ndarray, K: np.ndarray, dist: np.ndarray
+    obj_pts: np.ndarray,
+    img_pts: np.ndarray,
+    K: np.ndarray,
+    dist: np.ndarray,
+    grid_size: tuple[int, int] | None = None,
 ) -> dict:
     _, rvec, tvec = cv2.solvePnP(obj_pts, img_pts, K, dist)
 
@@ -475,15 +584,7 @@ def _compute_live_metrics(
     tilt_x_deg = float(np.degrees(np.arcsin(np.clip(R[0, 2], -1.0, 1.0))))
     tilt_y_deg = float(np.degrees(np.arcsin(np.clip(R[1, 2], -1.0, 1.0))))
 
-    flat = img_pts.reshape(-1, 2)
-    y_min, y_max = flat[:, 1].min(), flat[:, 1].max()
-    top_row = flat[flat[:, 1] < y_min + (y_max - y_min) * 0.2]
-    if len(top_row) >= 2:
-        top_row = top_row[np.argsort(top_row[:, 0])]
-        dx, dy = top_row[-1] - top_row[0]
-        roll_deg = float(abs(np.degrees(np.arctan2(dy, dx))))
-    else:
-        roll_deg = 0.0
+    roll_deg = float(np.degrees(_grid_roll(img_pts, grid_size)[0]))
 
     return {
         "reproj_err": reproj_err,
@@ -492,6 +593,27 @@ def _compute_live_metrics(
         "tilt_y_deg": tilt_y_deg,
         "roll_deg": roll_deg,
     }
+
+
+def _floor_homography(
+    obj_pts: np.ndarray, img_pts: np.ndarray, K: np.ndarray, dist: np.ndarray
+) -> np.ndarray:
+    """The 3x3 matrix from undistorted pixels to mm on the floor (the plane of
+    the grid), fitted on the dots of one frame."""
+    und = cv2.undistortPoints(img_pts.reshape(-1, 1, 2), K, dist, P=K)
+    H, _ = cv2.findHomography(und.reshape(-1, 2), obj_pts[:, :2].astype(np.float32))
+    return H
+
+
+def pixels_to_floor_mm(points: np.ndarray, calibration: dict) -> np.ndarray:
+    """Converts image points (Nx2, pixels of the box camera) to mm on the floor
+    with a saved calibration (the content of camera_calibration.json)."""
+    K = np.array(calibration["camera_matrix"])
+    dist = np.array(calibration["dist_coeffs"])
+    H = np.array(calibration["floor_homography"])
+    pts = np.array(points, dtype=np.float32).reshape(-1, 1, 2)
+    und = cv2.undistortPoints(pts, K, dist, P=K)
+    return cv2.perspectiveTransform(und, H).reshape(-1, 2)
 
 
 def undistort_image(img: np.ndarray, K: np.ndarray, dist: np.ndarray) -> np.ndarray:
@@ -524,7 +646,21 @@ class CameraCalibrationPanel:
         self._calib = calib
         self.layout = calib.layout
         self._cam_box = cam_box if isinstance(cam_box, Camera) else None
+        self._camera_frame()  # starts the copies without the status bar
         self.draw()
+
+    def _camera_frame(self) -> np.ndarray | None:
+        """The last frame of the box camera without the status bar (the dots
+        under it are needed), or with it until the first copy arrives. Each
+        call asks the camera to keep making the copies a little longer: they
+        stop by themselves once the panel is no longer shown."""
+        if self._cam_box is None:
+            return None
+        # update_gui calls this once every UPDATE_TIME_TABLE seconds
+        seconds = 3 * float(settings.get("UPDATE_TIME_TABLE")) + 1
+        self._cam_box.request_clean_frame(seconds)
+        frame = self._cam_box.clean_frame
+        return frame if frame is not None else getattr(self._cam_box, "frame", None)
 
     def draw(self) -> None:
         self._result_path: Path = default_result_path()
@@ -660,7 +796,7 @@ class CameraCalibrationPanel:
             50,
             2,
             "black",
-            description="Parameters of the real grid in front of the camera.\n"
+            description="Parameters of the grid lying on the floor of the box.\n"
             "Rows/cols may differ from the printed sheet if stitched several.",
         )
         self.layout.create_and_add_label(
@@ -732,7 +868,7 @@ class CameraCalibrationPanel:
             bold=False,
             description="Actual printed dot spacing measured with a ruler.\n"
             "Leave blank to use SPACING (mm) above.\n"
-            "Only affects the px/cm scale heatmap.",
+            "Only affects the px/cm scale and the mm on the floor.",
         )
         self.measured_spacing_edit = self.layout.create_and_add_line_edit(
             _setting_text("CAMERA_CALIBRATION_MEASURED_SPACING"),
@@ -752,8 +888,8 @@ class CameraCalibrationPanel:
             26,
             2,
             self._capture_clicked,
-            "Grab the current frame and detect the grid.\n"
-            "From the 4th frame on, it also runs the calibration.",
+            "Grab the current frame, detect the grid and run the calibration\n"
+            "with all the frames captured so far.",
             "powderblue",
         )
         self.load_image_button = self.layout.create_and_add_button(
@@ -785,11 +921,11 @@ class CameraCalibrationPanel:
         )
 
         self.result_label = self.layout.create_and_add_label(
-            "", 25, 1, 80, 6, "black", bold=False
+            "", 25, 1, 80, 7, "black", bold=False
         )
 
         self.metrics_label = self.layout.create_and_add_label(
-            "", 31, 1, 80, 10, "black", bold=False
+            "", 32, 1, 80, 9, "black", bold=False
         )
 
         self.save_button = self.layout.create_and_add_button(
@@ -879,7 +1015,7 @@ class CameraCalibrationPanel:
     def _capture_clicked(self) -> None:
         if self._calib.running:
             return
-        frame = getattr(self._cam_box, "frame", None)
+        frame = self._camera_frame()
         if frame is None:
             self.calib_status_label.setText("No frame available")
             self.calib_status_label.setStyleSheet(
@@ -928,9 +1064,9 @@ class CameraCalibrationPanel:
 
         n = self._calib.n_detected
         self.frames_label.setText(f"Frames: {n}")
-        if n < 4:
+        if n < MIN_FRAMES:
             self.calib_status_label.setText(
-                f"Grid detected, need {4 - n} more frame(s) to calibrate"
+                f"Grid detected, need {MIN_FRAMES - n} more frame(s) to calibrate"
             )
             self.calib_status_label.setStyleSheet(
                 "QLabel {color: gray; font-weight: normal}"
@@ -1020,7 +1156,6 @@ class CameraCalibrationPanel:
         err = result["reprojection_error_px"]
         quality = "good" if err < 1.0 else "high -> retake frames"
         text = (
-            f"Frames used: {result['n_images_used']}\n"
             f"Calib reproj error (all frames): {err:.4f} px  ({quality})\n"
             f"Distortion: {level} {dtype}  (k1={k1:+.4f})\n"
             f"k1={d[0]:+.4f}  k2={d[1]:+.4f}  "
@@ -1030,6 +1165,12 @@ class CameraCalibrationPanel:
             f"{result['cy_offset_px']:+.1f} px)  "
             f"tangential: {result['tangential']:.5f}"
         )
+        scale = result.get("px_per_cm")
+        if scale is not None:
+            text += (
+                f"\nFloor scale: {scale['mean']:.2f} px/cm "
+                f"({scale['min']:.2f} - {scale['max']:.2f})"
+            )
         self.result_label.setText(text)
         self.calib_status_label.setText("Calibration complete")
         self.calib_status_label.setStyleSheet(
@@ -1062,15 +1203,15 @@ class CameraCalibrationPanel:
         ty = m.get("tilt_y_deg", 0.0)
         roll = m["roll_deg"]
         lines = [
-            "Physical adjustment",
+            "Camera alignment with the floor",
             f"  Tilt total:       {m['tilt_deg']:5.2f}°  "
             f"[{tag(m['tilt_deg'], 2.0, 5.0)}]  (good<2°, ok<5°)",
             f"    Tilt X (L/R):   {tx:+6.2f}°  "
             f"[{tag(abs(tx), 2.0, 5.0)}]  {hint_x(tx)}",
             f"    Tilt Y (F/B):   {ty:+6.2f}°  "
             f"[{tag(abs(ty), 2.0, 5.0)}]  {hint_y(ty)}",
-            f"  Roll:             {roll:5.2f}°  "
-            f"[{tag(roll, 1.0, 3.0)}]  {hint_roll(roll)}",
+            f"  Roll:             {roll:+6.2f}°  "
+            f"[{tag(abs(roll), 1.0, 3.0)}]  {hint_roll(roll)}",
             "Pose quality (latest frame vs calibrated model)",
             f"  Reproj error:     {m['reproj_err']:5.3f} px  "
             f"[{tag(m['reproj_err'], 0.5, 1.5)}]  (good<0.5, ok<1.5)",
@@ -1082,10 +1223,9 @@ class CameraCalibrationPanel:
             time.monotonic() >= self._annotated_until
         ):
             self._last_annotated = None
-        if self._last_annotated is None:
-            frame = getattr(self._cam_box, "frame", None)
-            if frame is not None:
-                self._show_frame(frame)
+        frame = self._camera_frame()  # also while a capture is shown: keeps copies
+        if self._last_annotated is None and frame is not None:
+            self._show_frame(frame)
 
         if self._calib.live_metrics is not None:
             self._show_live_metrics(self._calib.live_metrics)
@@ -1193,6 +1333,10 @@ def _make_diagnostic_plots(diag: dict, width_in: float, height_in: float) -> plt
         scale=0.3,
     )
     fig.colorbar(q2, ax=ax, label="displacement (px)", **cb_args)
+    region = diag.get("region")
+    if region is not None:
+        # the correction is only reliable where the grid was
+        ax.plot(*np.vstack([region, region[:1]]).T, "k--", lw=1)
     ax.set_xlim(0, w)
     ax.set_ylim(h, 0)
     ax.set_aspect("equal")

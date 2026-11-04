@@ -258,6 +258,11 @@ class Camera:
         self.y_positions: list[int] = []
         self.camera_timestamps: list[float] = []
         self.items_to_draw: dict[str, Any] = {}
+        # A copy of each frame before anything is drawn on it (status bar,
+        # camera draw), kept only while requested with request_clean_frame:
+        # the camera calibration needs the dots under the status bar.
+        self.clean_frame: np.ndarray | None = None
+        self._clean_frame_until = 0.0  # monotonic time
         # video segments for the current session (BOX only): the watchdog
         # restart appends a new segment path here instead of starting a
         # brand new session file; they get merged back into segments[0] by
@@ -837,6 +842,10 @@ class Camera:
         with MappedArray(request, "main") as m:
             self.frame = m.array
             if self.frame is not None:
+                if time.monotonic() < self._clean_frame_until:
+                    self.clean_frame = self.frame.copy()
+                elif self.clean_frame is not None:
+                    self.clean_frame = None
                 metadata = request.get_metadata()
                 sensor_timestamp = metadata["SensorTimestamp"]
                 self.camera_timestamp = time_utils.monotonic_ns_to_timestamps(
@@ -865,6 +874,18 @@ class Camera:
                     self.area_extra_total += 1
                     if self.counts[4] > self.area_extra_empty_limit:
                         self.area_extra_occupied += 1
+
+    def request_clean_frame(self, seconds: float) -> None:
+        """Keeps self.clean_frame, a copy of every frame before the status bar
+        and the camera draw are drawn on it, for the next `seconds`. Call it
+        again before they run out to keep it; afterwards the copy stops, so it
+        costs nothing when nobody needs it. The video and the screen still get
+        the frame with everything drawn.
+
+        Args:
+            seconds (float): How long to keep the copies.
+        """
+        self._clean_frame_until = time.monotonic() + seconds
 
     def get_gray_frame(self) -> None:
         """Converts the current frame to grayscale."""
