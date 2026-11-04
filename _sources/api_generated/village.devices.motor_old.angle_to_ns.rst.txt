@@ -1,0 +1,6 @@
+angle\_to\_ns
+=============
+
+.. currentmodule:: village.devices.motor_old
+
+.. autofunction:: angle_to_ns

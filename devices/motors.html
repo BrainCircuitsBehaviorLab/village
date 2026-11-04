@@ -351,6 +351,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.parse_motor_values.html">parse_motor_values</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.gpio.html">gpio</a><ul>
@@ -362,8 +363,9 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.angle_to_ns.html">angle_to_ns</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.PwmPin.html">PwmPin</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
@@ -763,9 +765,10 @@ see <a class="reference internal" href="../troubleshooting/troubleshooting.html"
 <p class="admonition-title">Note</p>
 <p>Systems using the legacy corridor board (<code class="docutils literal notranslate"><span class="pre">OLD_VERSION</span></code> enabled in
 <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>) drive the corridor doors straight from the
-Raspberry Pi’s hardware PWM instead of a PCA9685. Those motors move instantly, ignore
-travel times, and have no <code class="docutils literal notranslate"><span class="pre">hold</span></code> option: their dialog shows no <code class="docutils literal notranslate"><span class="pre">Hold</span> <span class="pre">position</span></code>
-checkbox, and only <code class="docutils literal notranslate"><span class="pre">open()</span></code> and <code class="docutils literal notranslate"><span class="pre">close()</span></code> are available.</p>
+Raspberry Pi’s hardware PWM instead of a PCA9685. Only corridor doors 1 and 2 exist
+there, but they work like any other motor: travel times, <code class="docutils literal notranslate"><span class="pre">hold</span></code> and the same methods.
+Their angles keep the pulse range of the old board, so the saved angles of an old
+system stay valid.</p>
 </div>
 </section>
 </section>
@@ -808,7 +811,7 @@ checkbox, and only <code class="docutils literal notranslate"><span class="pre">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=13f4e3a5"></script>
+      <script src="../_static/documentation_options.js?v=a2e68eda"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

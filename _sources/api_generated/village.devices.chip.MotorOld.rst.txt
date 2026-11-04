@@ -1,7 +1,7 @@
 MotorOld
 ========
 
-.. currentmodule:: village.devices.motor_old
+.. currentmodule:: village.devices.chip
 
 .. autoclass:: MotorOld
    :members:
@@ -18,10 +18,10 @@ MotorOld
    
       ~MotorOld.__init__
       ~MotorOld.close
-      ~MotorOld.enable
+      ~MotorOld.disable
+      ~MotorOld.move
       ~MotorOld.open
-      ~MotorOld.set
-      ~MotorOld.transform
+      ~MotorOld.servo_pulse
    
    
 

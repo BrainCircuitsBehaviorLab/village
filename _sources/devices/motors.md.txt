@@ -143,7 +143,8 @@ see [Troubleshooting](../troubleshooting/troubleshooting.md).
 :class: note
 Systems using the legacy corridor board (`OLD_VERSION` enabled in
 `SETTINGS` → `ADVANCED SETTINGS`) drive the corridor doors straight from the
-Raspberry Pi's hardware PWM instead of a PCA9685. Those motors move instantly, ignore
-travel times, and have no `hold` option: their dialog shows no `Hold position`
-checkbox, and only `open()` and `close()` are available.
+Raspberry Pi's hardware PWM instead of a PCA9685. Only corridor doors 1 and 2 exist
+there, but they work like any other motor: travel times, `hold` and the same methods.
+Their angles keep the pulse range of the old board, so the saved angles of an old
+system stay valid.
 ```

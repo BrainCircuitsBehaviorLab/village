@@ -1,0 +1,27 @@
+PwmPin
+======
+
+.. currentmodule:: village.devices.motor_old
+
+.. autoclass:: PwmPin
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~PwmPin.__init__
+      ~PwmPin.enable
+      ~PwmPin.set
+   
+   
+
+   
+   
+   

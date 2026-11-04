@@ -351,6 +351,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.parse_motor_values.html">parse_motor_values</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.LED.html">LED</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.chip.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.chip.MotorOld.html">MotorOld</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.gpio.html">gpio</a><ul>
@@ -362,8 +363,9 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.angle_to_ns.html">angle_to_ns</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
-<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.MotorOld.html">MotorOld</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.motor_old.PwmPin.html">PwmPin</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.optogrid.html">optogrid</a><ul>
@@ -560,8 +562,8 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_motor_if_active</span></code>(key, index_key, ...)</p></td>
 <td><p>Builds a Motor from its settings if the <cite>key</cite> presence flag is ON.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_motor_old</span></code>(channel, angles)</p></td>
-<td><p>Factory function to create and initialize a Motor instance.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_motor_old</span></code>(channel, values)</p></td>
+<td><p>Factory function to create and initialize a MotorOld instance.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_motor_values</span></code>(values)</p></td>
 <td><p>Unpack MOTOR*_VALUES into (open, close, time_open, time_close, hold).</p></td>
@@ -578,6 +580,9 @@ data-aria-dark="Switch to auto color mode">
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Motor</span></code>(channel, values, pwm, worker)</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MotorOld</span></code>(pin, values, worker)</p></td>
+<td><p>A corridor door servo of the old HAT (OLD_VERSION), wired directly to a hardware PWM pin (12 or 13) instead of a PCA9685 channel.</p></td>
 </tr>
 </tbody>
 </table>
@@ -621,7 +626,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=13f4e3a5"></script>
+      <script src="../_static/documentation_options.js?v=a2e68eda"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
