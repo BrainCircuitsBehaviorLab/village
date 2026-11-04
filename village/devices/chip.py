@@ -8,7 +8,7 @@ from PCA9685_smbus2 import PCA9685  # type: ignore
 
 from village.classes.enums import Active, OldVersion
 from village.classes.null_classes import NullChip, NullMotor
-from village.devices.motor_old import MotorOld
+from village.devices.motor_old import PwmPin, angle_to_ns
 from village.scripts.log import log
 from village.settings import settings
 
@@ -88,7 +88,7 @@ chip_box_worker = _ChipWorker("motor_box_worker")
 chip_corridor_worker = _ChipWorker("motor_corridor_worker")
 
 
-# Servo motion ramp (normal PCA9685 Motor only -- MotorOld is untouched).
+# Servo motion ramp (Motor and MotorOld).
 # move() steps the angle in MOTOR_STEP_DEGREES-degree increments so the door
 # travels smoothly instead of snapping. The MOTOR*_VALUES settings give the
 # TOTAL time (ms) to open and to close; move() splits that time evenly across
@@ -248,6 +248,26 @@ class Motor:
         self._submit(self.close_angle, self.time_close, hold, settle_ms)
 
 
+class MotorOld(Motor):
+    """A corridor door servo of the old HAT (OLD_VERSION), wired directly to a
+    hardware PWM pin (12 or 13) instead of a PCA9685 channel.
+
+    It moves, ramps (time_open/time_close) and holds exactly like Motor; only
+    the writes to the hardware differ. Its angles keep the old pulse range
+    (0-180 deg -> 0.5-2.5 ms), so the saved angles of old setups still work.
+    """
+
+    def __init__(self, pin: int, values: list[int], worker: _ChipWorker) -> None:
+        super().__init__(channel=pin, values=values, pwm=None, worker=worker)
+        self.pwm_pin = PwmPin(pin)
+
+    def _write_angle(self, angle: int) -> None:
+        self.pwm_pin.set(angle_to_ns(angle))
+
+    def _disable_sync(self) -> None:
+        self.pwm_pin.enable(False)
+
+
 class LED:
     def __init__(self, channel: int, n_channels: int, pwm) -> None:
         self.channel = channel
@@ -296,15 +316,17 @@ def get_motor(channel: int, values: list[int], pwm, worker: _ChipWorker) -> Moto
     return motor
 
 
-def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
-    """Factory function to create and initialize a Motor instance.
+def get_motor_old(channel: int, values: list[int]) -> MotorOld | NullMotor:
+    """Factory function to create and initialize a MotorOld instance.
 
     Args:
-        channel (int): The GPIO channel number.
-        angles (list[int]): A list containing [open_angle, close_angle].
+        channel (int): The GPIO pin number (12 or 13).
+        values (list[int]): [open, close, time_open, time_close, hold], as in
+            get_motor. Shorter legacy values are accepted.
 
     Returns:
-        Motor: An initialized Motor instance.
+        MotorOld | NullMotor: An initialized MotorOld, or a NullMotor if the
+            corridor is not used or the PWM pin could not be set up.
     """
 
     if not use_of_corridor:
@@ -312,7 +334,7 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
         null_motor.error = ""
         return null_motor
     try:
-        motor = MotorOld(pin=channel, angles=angles)
+        motor = MotorOld(pin=channel, values=values, worker=chip_corridor_worker)
         return motor
     except Exception:
         null_motor = NullMotor()
@@ -322,10 +344,10 @@ def get_motor_old(channel: int, angles: list[int]) -> MotorOld | NullMotor:
         return null_motor
 
 
-motor_corridor1: Motor | MotorOld | NullMotor
-motor_corridor2: Motor | MotorOld | NullMotor
-motor_corridor3: Motor | MotorOld | NullMotor
-motor_corridor4: Motor | MotorOld | NullMotor
+motor_corridor1: Motor | NullMotor
+motor_corridor2: Motor | NullMotor
+motor_corridor3: Motor | NullMotor
+motor_corridor4: Motor | NullMotor
 
 
 def get_motor_if_active(

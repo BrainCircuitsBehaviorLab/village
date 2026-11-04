@@ -70,7 +70,6 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.classes.null_classes import NullMotor
-    from village.devices.motor_old import MotorOld
     from village.gui.gui_window import GuiWindow
 
 
@@ -86,15 +85,12 @@ def show_motor_edit_dialog(
     to values_key and the motor; DISCARD restores the motor's original values
     (undoing anything OPEN/CLOSE tested) and leaves the setting untouched.
 
-    Works for both Motor (ramped, supports timing and hold) and MotorOld
-    (instant, neither) since it only calls the .open()/.close() interface both
-    implement, never .move() directly (MotorOld has no .move()), and hides the
-    hold checkbox when the motor has no such attribute.
+    Works for any Motor (MotorOld included); it only calls .open()/.close(),
+    and hides the hold checkbox when the motor has no such attribute.
     """
     open_a, close_a, time_o, time_c, hold = parse_motor_values(settings.get(values_key))
-    # MotorOld has neither time_open/time_close (it moves instantly, no ramping)
-    # nor hold (no way to cut its PWM) -- read those defensively so this dialog
-    # works for it too, and only show the hold checkbox for a real Motor.
+    # A NullMotor has neither times nor hold -- read those defensively, and
+    # only show the hold checkbox for a real Motor.
     orig = (
         motor.open_angle,
         motor.close_angle,
@@ -834,7 +830,7 @@ class CorridorLayout(Layout):
         )
 
     def draw_motor_buttons(
-        self, name: str, row: int, column: int, motor: Motor | MotorOld | NullMotor
+        self, name: str, row: int, column: int, motor: Motor | NullMotor
     ) -> None:
         """Draws buttons for a specific motor.
 
@@ -842,7 +838,7 @@ class CorridorLayout(Layout):
             name (str): The motor name.
             row (int): The row position.
             column (int): The column position.
-            motor (Motor | MotorOld | NullMotor): The motor object.
+            motor (Motor | NullMotor): The motor object (MotorOld is a Motor).
         """
         open_name: str = "OPEN " + name
         open_door: PushButton = self.create_and_add_button(

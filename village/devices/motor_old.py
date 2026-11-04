@@ -29,34 +29,42 @@ def find_pwmchip(target_device="1f00098000.pwm") -> str:
     raise RuntimeError("No valid PWM chip found! Update target_device if needed.")
 
 
-class MotorOld:
-    """Controls a motor via PWM.
+def angle_to_ns(angle: int) -> int:
+    """Transforms an angle to the PWM high time of the old HAT servos.
+
+    Args:
+        angle (int): The angle in degrees (0-180).
+
+    Returns:
+        int: The high time in nanoseconds (500000 - 2500000).
+    """
+    # 0 to 180 degrees -> 500000 to 2500000 ns
+    return int(angle / 180 * 2000000 + 500000)
+
+
+class PwmPin:
+    """One servo output of the old HAT (OLD_VERSION): a hardware PWM pin
+    driven through sysfs. The servo itself (angles, ramps, hold) is MotorOld,
+    in chip.py.
 
     Attributes:
         pin (int): The GPIO pin number used for the motor.
         pinIdx (int): The index of the pin in the internal configuration lists.
         pwmx (list[int]): Mapping of pin indices to PWM channels.
-        flag (bool): State flag indicating if the motor is enabled.
-        open_angle (int): The angle for the open position.
-        close_angle (int): The angle for the close position.
-        error (str): Error message if any.
+        flag (bool): State flag indicating if the PWM is enabled.
         chip (str): The path to the PWM chip.
     """
 
-    def __init__(self, pin: int, angles: list[int]) -> None:
-        """Initializes the Motor.
+    def __init__(self, pin: int) -> None:
+        """Initializes the pin, with the PWM disabled.
 
         Args:
             pin (int): The GPIO pin number.
-            angles (list[int]): A list containing [open_angle, close_angle].
         """
         self.pin = 0
         self.pinIdx = 0
         self.pwmx = [0, 1, 2, 3, 2, 3]
         self.flag = False
-        self.open_angle = angles[0]
-        self.close_angle = angles[1]
-        self.error = ""
         pins = [12, 13, 14, 15, 18, 19]
         afunc = ["a0", "a0", "a0", "a0", "a3", "a3"]
 
@@ -83,7 +91,8 @@ class MotorOld:
             raise ValueError(f"Invalid pin: {pin}. Must be one of {pins}.")
 
     def enable(self, flag) -> None:
-        """Enables or disables the motor PWM.
+        """Enables or disables the PWM. Disabled, the servo gets no pulses
+        and releases its holding torque.
 
         Args:
             flag (bool): True to enable, False to disable.
@@ -107,7 +116,7 @@ class MotorOld:
             pass
 
     def set(self, on_time_ns) -> None:
-        """Sets the duty cycle in nanoseconds.
+        """Sets the duty cycle in nanoseconds, enabling the PWM if needed.
 
         Args:
             on_time_ns (int): The high time in nanoseconds.
@@ -117,23 +126,3 @@ class MotorOld:
         Path(self.chip, f"pwm{self.pwmx[self.pinIdx]}", "duty_cycle").write_text(
             f"{on_time_ns}\n"
         )
-
-    def transform(self, value: int) -> int:
-        """Transforms an angle to a PWM duty cycle in nanoseconds.
-
-        Args:
-            value (int): The angle in degrees (0-180).
-
-        Returns:
-            int: The duty cycle in nanoseconds (500000 - 2500000).
-        """
-        # 0 to 180 degrees -> 500000 to 2500000 ns
-        return int(value / 180 * 2000000 + 500000)
-
-    def open(self) -> None:
-        """Moves the motor to the open position."""
-        self.set(self.transform(self.open_angle))
-
-    def close(self) -> None:
-        """Moves the motor to the close position."""
-        self.set(self.transform(self.close_angle))
