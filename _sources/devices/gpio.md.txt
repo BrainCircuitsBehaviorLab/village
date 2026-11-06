@@ -18,8 +18,9 @@ tolerant** — connecting a 5 V signal directly to an input pin can damage the
 Pi. If your external hardware works at 5 V or higher, use a level shifter, a
 relay, or an optocoupler between it and the Pi rather than wiring it directly.
 
-- **Input**: reads HIGH (~3.3 V) or LOW (~0 V). The pin is configured with an
-  internal pull-down, so an unconnected input reads LOW by default.
+- **Input**: reads HIGH (~3.3 V) or LOW (~0 V). By default the pin is configured
+  with an internal pull-down, so an unconnected input reads LOW (see
+  [Pull-down or pull-up](#pull-down-or-pull-up)).
 - **Output**: drives HIGH (3.3 V) or LOW (0 V). Like all Raspberry Pi GPIO
   pins, it can only source a small current (a few mA) — enough to trigger a
   relay, optocoupler, or logic-level input on another device, but not enough
@@ -58,6 +59,29 @@ released, without any extra wiring. See
 [Satellite Board 2: The Box Board](../overview/system.md#satellite-board-2-the-box-board)
 for the full list of Box Board connectors.
 
+#### Pull-down or pull-up
+
+`GPIO_IN_PULL` (`SETTINGS` → `ADVANCED SETTINGS`) chooses the internal resistor of
+`GPIO_IN`, and with it what turns the input ON:
+
+| `GPIO_IN_PULL` | Nothing connected | ON when | Use it for |
+|---|---|---|---|
+| `DOWN` (default) | LOW, OFF | the pin receives 3.3 V | the Switch Connector of the Box Board, a TTL signal |
+| `UP` | HIGH, OFF | the pin is connected to ground | a switch between the pin and ground |
+
+In both cases `trigger_on` is called when the input turns ON and `trigger_off` when
+it turns OFF. A change is applied from the next task.
+
+```{admonition} Note
+:class: note
+If your hardware already has its own resistor on that line, choose the setting
+that matches it: an internal pull-up fighting an external pull-down (or the other
+way around) leaves the pin at an intermediate level. To check what is wired,
+run `python3 village/scripts/check_gpio_in.py` on the Raspberry Pi with Village
+closed: it prints every change of the pin, with the resistor of `GPIO_IN_PULL`
+(or another one, with `--pull up`, `--pull down` or `--pull none`).
+```
+
 ---
 
 ### Using It in Tasks
@@ -78,8 +102,10 @@ gpio.set_off()  # drives GPIO_OUT LOW
 ### Reacting to the Input Pin
 
 The system watches an input pin (`GPIO_IN`) while a task is running. Every time
-it goes from OFF (low) to ON (high) the `trigger_on` method of `GpioTriggerBase`
-is called; every time it goes from ON back to OFF, `trigger_off` is called. By
+it goes from OFF to ON the `trigger_on` method of `GpioTriggerBase` is called;
+every time it goes from ON back to OFF, `trigger_off` is called. ON is HIGH by
+default, or LOW with `GPIO_IN_PULL` set to `UP` (see
+[Pull-down or pull-up](#pull-down-or-pull-up)). By
 default both do nothing. You can override them to react to an external signal
 (an optogenetics TTL, a lickometer, another box, ...).
 

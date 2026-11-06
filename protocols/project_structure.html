@@ -237,6 +237,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PullResistor.html">PullResistor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
@@ -413,6 +414,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.scripts.html">scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
 </ul>
 </li>
@@ -582,7 +584,7 @@ automatically with working example code you can use as a reference (see
 <hr class="docutils" />
 <section id="code-organization">
 <h2>Code Organization</h2>
-<p>A training protocol consists of one or more Python task scripts plus a mandatory
+<p>A project consists of one or more Python task scripts plus a mandatory
 <code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code> file. The training protocol runs automatically every time a
 subject finishes a session and contains the logic to advance or regress the subject
 through the training stages — changing tasks, adjusting parameters, or both.</p>
@@ -631,16 +633,6 @@ example, the <code class="docutils literal notranslate"><span class="pre">code/<
 </span><span data-line="12">└── village_arduino/                             # firmware for the Arduino examples
 </span></pre></div>
 </div>
-<div class="note admonition">
-<p class="admonition-title">File and class names</p>
-<p>Except for tasks, the names of these files and classes are up to you: when Village
-starts, it reads every <code class="docutils literal notranslate"><span class="pre">.py</span></code> file in <code class="docutils literal notranslate"><span class="pre">code/</span></code> and recognizes each class by the base class
-it inherits from (<code class="docutils literal notranslate"><span class="pre">TrainingProtocolBase</span></code>, <code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code>, <code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code>…).
-Only one class of each kind is used per project. Tasks are the exception, in the sense
-that the class name is the name of the task. The other exception is
-<code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code>, which must have exactly that name (see
-<a class="reference internal" href="functions.html"><span class="std std-doc">Direct Functions</span></a>).</p>
-</div>
 </section>
 </section>
 </section>
@@ -682,7 +674,7 @@ that the class name is the name of the task. The other exception is
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1e87a915"></script>
+      <script src="../_static/documentation_options.js?v=7b82f8dc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -25,7 +25,7 @@ automatically with working example code you can use as a reference (see
 
 ### Code Organization
 
-A training protocol consists of one or more Python task scripts plus a mandatory
+A project consists of one or more Python task scripts plus a mandatory
 `training_protocol.py` file. The training protocol runs automatically every time a
 subject finishes a session and contains the logic to advance or regress the subject
 through the training stages — changing tasks, adjusting parameters, or both.
@@ -78,15 +78,4 @@ code/
 ├── after_session.py, change_cycle.py, telegram_commands.py
 ├── led_calibration.py, auto_follow_the_light.py
 └── village_arduino/                             # firmware for the Arduino examples
-```
-
-```{admonition} File and class names
-:class: note
-Except for tasks, the names of these files and classes are up to you: when Village
-starts, it reads every `.py` file in `code/` and recognizes each class by the base class
-it inherits from (`TrainingProtocolBase`, `CameraTriggerBase`, `OnlinePlotBase`...).
-Only one class of each kind is used per project. Tasks are the exception, in the sense
-that the class name is the name of the task. The other exception is
-`sound_functions.py`, which must have exactly that name (see
-[Direct Functions](functions.md)).
 ```

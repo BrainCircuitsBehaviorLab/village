@@ -1,0 +1,36 @@
+PullResistor
+============
+
+.. currentmodule:: village.classes.enums
+
+.. autoclass:: PullResistor
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~PullResistor.keys
+      ~PullResistor.values
+      ~PullResistor.get_index_from_value
+      ~PullResistor.get_index_from_string
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~PullResistor.DOWN
+      ~PullResistor.UP
+   
+   

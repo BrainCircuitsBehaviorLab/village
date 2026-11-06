@@ -237,6 +237,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PullResistor.html">PullResistor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
@@ -413,6 +414,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.scripts.html">scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
 </ul>
 </li>
@@ -576,8 +578,10 @@ range of weights with <code class="docutils literal notranslate"><span class="pr
 (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>).</p></li>
 <li><p><strong>The box scale</strong>, optional, connected to the Box Board, for your tasks (a platform,
 a lever…). It is available when <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> and <code class="docutils literal notranslate"><span class="pre">SCALE_BOX</span></code> are ON (in
-<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>). Tare and calibrate it from <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span></code> before
-using it.</p></li>
+<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>). Calibrate it from <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span></code> before using it.
+In automatic mode it is tared before every session, just before door 2 opens, while
+the box is still empty. In manual mode it is not, since the animal may already be
+inside: tare it from <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span></code> (<code class="docutils literal notranslate"><span class="pre">TARE</span> <span class="pre">SCALE</span></code>) with the box empty.</p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -691,7 +695,7 @@ same value. The minimum accepted is 0.02 s.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1e87a915"></script>
+      <script src="../_static/documentation_options.js?v=7b82f8dc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

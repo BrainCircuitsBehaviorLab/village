@@ -237,6 +237,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Info.html">Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.OldVersion.html">OldVersion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.enums.PullResistor.html">PullResistor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Samplerate.html">Samplerate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.enums.ScreenActive.html">ScreenActive</a></li>
@@ -413,6 +414,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.scripts.html">scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.check_gpio_in.main.html">main</a></li>
 </ul>
 </li>
@@ -565,10 +567,11 @@ data-aria-dark="Switch to auto color mode">
 GPIO_IN and GPIO_OUT settings, in DEVICE ADDRESSES):</p>
 <ul class="simple">
 <li><p>Input (GPIO_IN, default 26): while a task is running the pin is watched
-and self.trigger.trigger_on() is called when it goes from OFF (low) to
-ON (high), and self.trigger.trigger_off() when it goes from ON to OFF.
-The watching runs only while a task is active. See GpioTriggerBase to
-customize what happens on trigger_on/trigger_off.</p></li>
+and self.trigger.trigger_on() is called when it goes from OFF to ON, and
+self.trigger.trigger_off() when it goes from ON to OFF. GPIO_IN_PULL
+decides what ON is: HIGH with the pull-down (DOWN, the default), LOW
+with the pull-up (UP). The watching runs only while a task is active.
+See GpioTriggerBase to customize what happens on trigger_on/trigger_off.</p></li>
 <li><p>Output (GPIO_OUT, default 27): set_on() drives the pin HIGH and set_off()
 drives it LOW. Call them from anywhere (a task, a trigger, direct
 functions, the screen sync…); they work regardless of the input.</p></li>
@@ -645,7 +648,7 @@ functions, the screen sync…); they work regardless of the input.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1e87a915"></script>
+      <script src="../_static/documentation_options.js?v=7b82f8dc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

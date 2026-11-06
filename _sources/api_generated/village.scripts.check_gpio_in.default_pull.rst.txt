@@ -1,0 +1,6 @@
+default\_pull
+=============
+
+.. currentmodule:: village.scripts.check_gpio_in
+
+.. autofunction:: default_pull

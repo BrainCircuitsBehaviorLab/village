@@ -33,6 +33,7 @@ enums
       Info
       OldVersion
       PixelType
+      PullResistor
       Samplerate
       Save
       ScreenActive

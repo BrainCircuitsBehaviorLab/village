@@ -237,6 +237,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PullResistor.html">PullResistor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
@@ -413,6 +414,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_generated/village.scripts.html">scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
 </ul>
 </li>
@@ -483,6 +485,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#voltage">Voltage</a></li>
 <li><a class="reference internal" href="#where-to-connect">Where to connect</a></li>
 <li><a class="reference internal" href="#pins">Pins</a></li>
+<li><a class="reference internal" href="#pull-down-or-pull-up">Pull-down or pull-up</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#using-it-in-tasks">Using It in Tasks</a></li>
@@ -581,8 +584,9 @@ tolerant</strong> — connecting a 5 V signal directly to an input pin can damag
 Pi. If your external hardware works at 5 V or higher, use a level shifter, a
 relay, or an optocoupler between it and the Pi rather than wiring it directly.</p>
 <ul class="simple">
-<li><p><strong>Input</strong>: reads HIGH (~3.3 V) or LOW (~0 V). The pin is configured with an
-internal pull-down, so an unconnected input reads LOW by default.</p></li>
+<li><p><strong>Input</strong>: reads HIGH (~3.3 V) or LOW (~0 V). By default the pin is configured
+with an internal pull-down, so an unconnected input reads LOW (see
+<a class="reference internal" href="#pull-down-or-pull-up"><span class="std std-ref">Pull-down or pull-up</span></a>).</p></li>
 <li><p><strong>Output</strong>: drives HIGH (3.3 V) or LOW (0 V). Like all Raspberry Pi GPIO
 pins, it can only source a small current (a few mA) — enough to trigger a
 relay, optocoupler, or logic-level input on another device, but not enough
@@ -617,6 +621,45 @@ released, without any extra wiring. See
 <a class="reference internal" href="../overview/system.html#satellite-board-2-the-box-board"><span class="std std-ref">Satellite Board 2: The Box Board</span></a>
 for the full list of Box Board connectors.</p>
 </section>
+<section id="pull-down-or-pull-up">
+<h3>Pull-down or pull-up</h3>
+<p><code class="docutils literal notranslate"><span class="pre">GPIO_IN_PULL</span></code> (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>) chooses the internal resistor of
+<code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code>, and with it what turns the input ON:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">GPIO_IN_PULL</span></code></p></th>
+<th class="head"><p>Nothing connected</p></th>
+<th class="head"><p>ON when</p></th>
+<th class="head"><p>Use it for</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DOWN</span></code> (default)</p></td>
+<td><p>LOW, OFF</p></td>
+<td><p>the pin receives 3.3 V</p></td>
+<td><p>the Switch Connector of the Box Board, a TTL signal</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">UP</span></code></p></td>
+<td><p>HIGH, OFF</p></td>
+<td><p>the pin is connected to ground</p></td>
+<td><p>a switch between the pin and ground</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In both cases <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> is called when the input turns ON and <code class="docutils literal notranslate"><span class="pre">trigger_off</span></code> when
+it turns OFF. A change is applied from the next task.</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>If your hardware already has its own resistor on that line, choose the setting
+that matches it: an internal pull-up fighting an external pull-down (or the other
+way around) leaves the pin at an intermediate level. To check what is wired,
+run <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">village/scripts/check_gpio_in.py</span></code> on the Raspberry Pi with Village
+closed: it prints every change of the pin, with the resistor of <code class="docutils literal notranslate"><span class="pre">GPIO_IN_PULL</span></code>
+(or another one, with <code class="docutils literal notranslate"><span class="pre">--pull</span> <span class="pre">up</span></code>, <code class="docutils literal notranslate"><span class="pre">--pull</span> <span class="pre">down</span></code> or <code class="docutils literal notranslate"><span class="pre">--pull</span> <span class="pre">none</span></code>).</p>
+</div>
+</section>
 </section>
 <hr class="docutils" />
 <section id="using-it-in-tasks">
@@ -635,8 +678,10 @@ anywhere: a task, a trigger, a direct function, the screen sync, and so on.</p>
 <section id="reacting-to-the-input-pin">
 <h2>Reacting to the Input Pin</h2>
 <p>The system watches an input pin (<code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code>) while a task is running. Every time
-it goes from OFF (low) to ON (high) the <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> method of <code class="docutils literal notranslate"><span class="pre">GpioTriggerBase</span></code>
-is called; every time it goes from ON back to OFF, <code class="docutils literal notranslate"><span class="pre">trigger_off</span></code> is called. By
+it goes from OFF to ON the <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> method of <code class="docutils literal notranslate"><span class="pre">GpioTriggerBase</span></code> is called;
+every time it goes from ON back to OFF, <code class="docutils literal notranslate"><span class="pre">trigger_off</span></code> is called. ON is HIGH by
+default, or LOW with <code class="docutils literal notranslate"><span class="pre">GPIO_IN_PULL</span></code> set to <code class="docutils literal notranslate"><span class="pre">UP</span></code> (see
+<a class="reference internal" href="#pull-down-or-pull-up"><span class="std std-ref">Pull-down or pull-up</span></a>). By
 default both do nothing. You can override them to react to an external signal
 (an optogenetics TTL, a lickometer, another box, …).</p>
 <section id="creating-a-custom-gpiotrigger">
@@ -720,7 +765,7 @@ thread. Keep them fast and avoid blocking calls.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1e87a915"></script>
+      <script src="../_static/documentation_options.js?v=7b82f8dc"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
