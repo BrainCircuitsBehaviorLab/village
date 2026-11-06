@@ -1,26 +1,40 @@
 ## The Training Protocol
 
-The training protocol is a class that inherits from `TrainingProtocolBase`, usually
-`TrainingProtocol` in a file named `training_protocol.py` inside your `code/` folder
-(the names are up to you; only one training protocol is used per project).
+The purpose of the training protocol is to move the subjects forward through their
+training. It is a class named `TrainingProtocol` that inherits from
+`TrainingProtocolBase`, in a file named `training_protocol.py` inside your `code/`
+folder, and it must define three methods:
+
+- `__init__`, which only needs to call `super().__init__()`.
+- `default_training_settings`, which sets the settings a subject has by default when
+  it is created.
+- `update_training_settings`, which runs after every session and updates the settings
+  of the subject, for example to move it to the next stage.
+
+A fourth method, `define_gui_tabs`, is optional.
 
 The code on this page is taken from the training protocol of the example tasks
 ([training_protocol.py](../examples/training_protocol.md)), which moves each subject
 through the six Bpod stages of *Follow the Light*, a 2AFC task, from habituation to a
-delay discrimination task:
+delay discrimination task.
 
-<!-- The code on this page is included from docs/source/examples/files/training_protocol.py,
-selected by method name (pyobject) and by some lines of text (start-at / end-before).
-If those lines change there, update them here too, and check the page: a block whose
-text is not found can come out empty. -->
+### Creating the class
 
-```{literalinclude} ../examples/files/training_protocol.py
-:language: python
-:end-before: "    def default_training_settings"
+```python
+from village.custom_classes.training_protocol_base import TrainingProtocolBase
+
+
+class TrainingProtocol(TrainingProtocolBase):
+    """Moves each subject through the 6 Bpod training stages of Follow the Light,
+    a 2AFC task in which the animal pokes the side port that lights up first,
+    one after another:
+    Bpod1Habituation -> Bpod2Passive -> Bpod3Active -> Bpod4CenterInitiated ->
+    Bpod5IntroducePenalty -> Bpod6Delay
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
 ```
-
-Every `TrainingProtocol` must define `default_training_settings` and
-`update_training_settings`; `define_gui_tabs` is optional.
 
 ---
 
@@ -46,11 +60,34 @@ After creation, a subject's settings can be modified in three ways: manually fro
 within a running task; or automatically by `update_training_settings()` at the end of
 each session.
 
-```{literalinclude} ../examples/files/training_protocol.py
-:language: python
-:pyobject: TrainingProtocol.default_training_settings
-:start-at: "# Required parameters"
-:dedent: 8
+```python
+def default_training_settings(self) -> None:
+    # Required parameters
+    self.settings.next_task = "Bpod1Habituation"
+    self.settings.refractory_period = 4 * 60 * 60  # 4 hours between sessions
+    self.settings.minimum_duration = 10 * 60
+    self.settings.maximum_duration = 15 * 60  # habituation lasts 15 min
+
+    # Task-specific parameters (for bpod_1..6 or arduino 1..6, read the respective
+    # task code to understand their usage)
+    self.settings.reward_volume = 2  # microliters
+    self.settings.reward_volume_large = 6  # microliters
+    self.settings.led_intensity = 255  # 0-255
+    self.settings.led_on_time = 5 * 60  # seconds
+    self.settings.c_led_on_time = 5 * 60  # seconds
+    self.settings.iti_time = 1  # seconds
+    self.settings.timeout = 5  # seconds
+    self.settings.noise_time = 1.5  # seconds
+    self.settings.p = 0.0
+    self.settings.curve_power = 3
+    self.settings.delay_thresholds = {
+        0: 0.75,
+        0.1: 0.65,
+        0.25: 0.50,
+        0.5: 0.25,
+        1: 0.001,
+        40: 0.0,
+    }
 ```
 
 The first four settings are required. `next_task` determines the first task run for a
@@ -63,7 +100,7 @@ animal to return home (door 2 is already open at this point, so
 `maximum_duration` ≥ `minimum_duration` always).
 
 The rest are the settings your tasks read — here, the ones used by the six example
-tasks (each task lists the ones it needs in its own code).
+tasks.
 
 ---
 
@@ -108,12 +145,45 @@ sessions" is computed by filtering rows:
 The first three stages of the example protocol show the usual kinds of criteria, from
 the simplest to the most complete:
 
-```{literalinclude} ../examples/files/training_protocol.py
-:language: python
-:pyobject: TrainingProtocol.update_training_settings
-:start-at: if self.last_task == "Bpod1Habituation":
-:end-before: elif self.last_task == "Bpod4CenterInitiated":
-:dedent: 8
+```python
+def update_training_settings(self) -> None:
+    if self.last_task == "Bpod1Habituation":
+        # If the session we just completed is habituation, move to the next task.
+        self.settings.next_task = "Bpod2Passive"
+        self.settings.minimum_duration = 25 * 60
+        self.settings.maximum_duration = 45 * 60
+
+    elif self.last_task == "Bpod2Passive":
+        # At least 2 passive sessions, and 100 trials in the last two.
+        df2 = self.df[self.df["task"] == "Bpod2Passive"]
+        n_sessions = len(df2["session"].unique())
+        last_2_sessions = df2["session"].unique()[-2:]
+        df2_last_2 = df2[df2["session"].isin(last_2_sessions)]
+        trials_last_2_sessions = df2_last_2.shape[0]
+
+        if n_sessions >= 2 and trials_last_2_sessions >= 100:
+            self.settings.next_task = "Bpod3Active"
+            self.settings.minimum_duration = 25 * 60
+            self.settings.maximum_duration = 45 * 60
+
+    elif self.last_task == "Bpod3Active":
+        # At least 2 active sessions, and in the last two: 100 trials and
+        # 70% of them correct.
+        df3 = self.df[self.df["task"] == "Bpod3Active"]
+        n_sessions = len(df3["session"].unique())
+        last_2_sessions = df3["session"].unique()[-2:]
+        df3_last_2 = df3[df3["session"].isin(last_2_sessions)]
+        trials_last_2_sessions = df3_last_2.shape[0]
+        correct_last_2_sessions = (df3_last_2["outcome"] == "correct").mean()
+
+        if (
+            n_sessions >= 2
+            and trials_last_2_sessions >= 100
+            and correct_last_2_sessions >= 0.70
+        ):
+            self.settings.next_task = "Bpod4CenterInitiated"
+            self.settings.minimum_duration = 30 * 60
+            self.settings.maximum_duration = 45 * 60
 ```
 
 - **After habituation**, the subject always moves on: one session is enough.
@@ -130,11 +200,20 @@ The last stage shows another use: carrying a value over from one session to the 
 The delay task adapts its difficulty `p` during the session and registers it in every
 trial; the protocol makes the next session start from the last value, minus 0.05:
 
-```{literalinclude} ../examples/files/training_protocol.py
-:language: python
-:pyobject: TrainingProtocol.update_training_settings
-:start-at: elif self.last_task == "Bpod6Delay":
-:dedent: 8
+```python
+def update_training_settings(self) -> None:
+    # ... stages 1 to 5 ...
+    elif self.last_task == "Bpod6Delay":
+        # Last stage: the subject stays here. The next session starts from
+        # the difficulty p reached in this one, minus 0.05.
+        last_session = self.df["session"].max()
+        df_last_session = self.df[self.df["session"] == last_session]
+        p_values = df_last_session["p"].dropna()
+        if len(p_values) > 0:
+            p_next = max(float(p_values.iloc[-1]) - 0.05, 0.0)
+            self.settings.p = round(p_next, 2)
+
+    # Any other task was run manually: next_task is left as it was.
 ```
 
 Any other task (one run manually, outside the progression) does not match any branch,
@@ -150,10 +229,32 @@ in the GUI panel that appears when launching a task manually. Variables not assi
 any tab are placed in a default **General** tab. You can also use the reserved `"Hide"`
 tab name to suppress a variable from the GUI entirely.
 
-```{literalinclude} ../examples/files/training_protocol.py
-:language: python
-:pyobject: TrainingProtocol.define_gui_tabs
-:dedent: 4
+```python
+def define_gui_tabs(self) -> None:
+    self.gui_tabs = {
+        "Reward": [
+            "reward_volume",
+            "reward_volume_large",
+        ],
+        "Timing": [
+            "led_intensity",
+            "led_on_time",
+            "c_led_on_time",
+            "iti_time",
+            "timeout",
+            "noise_time",
+        ],
+        "Delay task (stage 6)": [
+            "p",
+            "curve_power",
+            "delay_thresholds",
+        ],
+        "Touchscreen demo": [
+            "long_duration",
+            "short_duration",
+        ],
+    }
+    self.gui_tabs_restricted = {}
 ```
 
 You can additionally restrict the allowed values of a variable in

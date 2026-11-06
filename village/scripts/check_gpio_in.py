@@ -2,12 +2,12 @@
 
 For testing what is wired to GPIO_IN (a switch, a TTL, ...). It uses the same
 logic as village/devices/gpio.py: a gpiozero DigitalInputDevice with the
-internal pull-down, and callbacks on OFF -> ON (trigger_on) and ON -> OFF
-(trigger_off).
+internal resistor of GPIO_IN_PULL, and callbacks on OFF -> ON (trigger_on) and
+ON -> OFF (trigger_off).
 
 Village must not be running (the pin would be busy). Run it on the Raspberry:
 
-    python3 village/scripts/check_gpio_in.py            # pin 26, like GPIO_IN
+    python3 village/scripts/check_gpio_in.py            # GPIO_IN and GPIO_IN_PULL
     python3 village/scripts/check_gpio_in.py --pin 17
     python3 village/scripts/check_gpio_in.py --pull up  # internal pull-up
 
@@ -24,6 +24,17 @@ import signal
 import time
 
 
+def default_pull() -> str:
+    """The pull set in GPIO_IN_PULL, as gpio.py uses it ("down" if the
+    settings cannot be read)."""
+    try:
+        from village.settings import settings
+
+        return settings.get("GPIO_IN_PULL").value.lower()
+    except Exception:
+        return "down"
+
+
 def main() -> None:
     """Parses the arguments and watches the pin until Ctrl+C."""
     from gpiozero import DigitalInputDevice
@@ -38,8 +49,8 @@ def main() -> None:
     parser.add_argument(
         "--pull",
         choices=["down", "up", "none"],
-        default="down",
-        help="internal resistor (default: down, as in gpio.py)",
+        default=default_pull(),
+        help="internal resistor (default: the one in GPIO_IN_PULL, as gpio.py)",
     )
     parser.add_argument(
         "--status",
@@ -49,9 +60,10 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    # gpiozero: pull_up=False -> pull-down, active when HIGH (as in gpio.py).
-    # pull_up=True -> pull-up, active when LOW. pull_up=None -> no internal
-    # resistor (needs an external one), active_state chosen explicitly.
+    # gpiozero: pull_up=False -> pull-down, active when HIGH (GPIO_IN_PULL
+    # DOWN). pull_up=True -> pull-up, active when LOW (GPIO_IN_PULL UP).
+    # pull_up=None -> no internal resistor (needs an external one),
+    # active_state chosen explicitly.
     if args.pull == "down":
         device = DigitalInputDevice(args.pin, pull_up=False)
     elif args.pull == "up":

@@ -16,8 +16,10 @@ an optional one in the box, for your tasks.
   (`SETTINGS` → `CORRIDOR SETTINGS`).
 - **The box scale**, optional, connected to the Box Board, for your tasks (a platform,
   a lever...). It is available when `USE_BOX_BOARD` and `SCALE_BOX` are ON (in
-  `SETTINGS` → `BOX SETTINGS`). Tare and calibrate it from `MONITOR` → `BOX` before
-  using it.
+  `SETTINGS` → `BOX SETTINGS`). Calibrate it from `MONITOR` → `BOX` before using it.
+  In automatic mode it is tared before every session, just before door 2 opens, while
+  the box is still empty. In manual mode it is not, since the animal may already be
+  inside: tare it from `MONITOR` → `BOX` (`TARE SCALE`) with the box empty.
 
 ---
 

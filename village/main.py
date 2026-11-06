@@ -321,6 +321,9 @@ def system_run() -> None:
             case State.ACCESS:
                 # Closing door1, opening door2
                 gc.disable()
+                # The box is still empty (door2 has not opened yet): tare its
+                # scale now, before the doors move
+                scale_box.tare()
                 motor_corridor1.close()
                 motor_corridor2.open()
                 manager.state = State.LAUNCH_AUTO

@@ -13,6 +13,7 @@ from village.classes.enums import (
     Info,
     OldVersion,
     PixelType,
+    PullResistor,
     Samplerate,
     ScreenActive,
     SuperEnum,
@@ -297,6 +298,8 @@ class Settings:
                 return OldVersion(str_value)
             elif value_type == PixelType:
                 return PixelType(str_value)
+            elif value_type == PullResistor:
+                return PullResistor(str_value)
             elif value_type == Samplerate:
                 return int(str_value)
             elif value_type == list[str]:

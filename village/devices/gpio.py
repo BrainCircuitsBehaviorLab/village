@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
+from village.classes.enums import PullResistor
 from village.scripts.log import log
 from village.settings import settings
 
@@ -19,10 +20,11 @@ class Gpio:
     GPIO_IN and GPIO_OUT settings, in DEVICE ADDRESSES):
 
     - Input (GPIO_IN, default 26): while a task is running the pin is watched
-      and self.trigger.trigger_on() is called when it goes from OFF (low) to
-      ON (high), and self.trigger.trigger_off() when it goes from ON to OFF.
-      The watching runs only while a task is active. See GpioTriggerBase to
-      customize what happens on trigger_on/trigger_off.
+      and self.trigger.trigger_on() is called when it goes from OFF to ON, and
+      self.trigger.trigger_off() when it goes from ON to OFF. GPIO_IN_PULL
+      decides what ON is: HIGH with the pull-down (DOWN, the default), LOW
+      with the pull-up (UP). The watching runs only while a task is active.
+      See GpioTriggerBase to customize what happens on trigger_on/trigger_off.
 
     - Output (GPIO_OUT, default 27): set_on() drives the pin HIGH and set_off()
       drives it LOW. Call them from anywhere (a task, a trigger, direct
@@ -44,9 +46,11 @@ class Gpio:
         if self._input is not None:
             return
         try:
-            # Explicit, not left to gpiozero's default: internal pull-down, so
-            # the pin reads LOW (OFF) when nothing drives it and ON is HIGH.
-            self._input = DigitalInputDevice(self.pin_in, pull_up=False)
+            # Explicit, not left to gpiozero's default. Pull-down: the pin
+            # reads LOW (OFF) when nothing drives it and ON is HIGH. Pull-up:
+            # it reads HIGH (OFF) and ON is LOW (gpiozero inverts it).
+            pull_up = settings.get("GPIO_IN_PULL") == PullResistor.UP
+            self._input = DigitalInputDevice(self.pin_in, pull_up=pull_up)
             self._input.when_activated = self._trigger_on  # OFF -> ON
             self._input.when_deactivated = self._trigger_off  # ON -> OFF
         except Exception:

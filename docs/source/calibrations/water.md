@@ -62,8 +62,6 @@ error compared to the target, and plots the test point against the existing curv
 
 ### Using it in tasks
 
-Every method on the panel is reachable from any task via `self.calibrations`:
-
 ```python
 time_s = self.calibrations.water_calibration.get_valve_time(port, volume_ul)
 ```

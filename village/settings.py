@@ -12,6 +12,7 @@ from village.classes.settings_class import (
     Info,
     OldVersion,
     PixelType,
+    PullResistor,
     Samplerate,
     ScreenActive,
     Setting,
@@ -678,6 +679,16 @@ then, the video continues until the task ends, so it can be longer.""",
         OldVersion,
         """Use the old version of the Hardware Attached on Top (HAT) that only has
 2 servo motors and no LEDs.""",
+    ),
+    Setting(
+        "GPIO_IN_PULL",
+        "DOWN",
+        PullResistor,
+        """Internal resistor of the GPIO input pin (GPIO_IN), which decides what
+turns it ON. DOWN: the pin is OFF when nothing drives it and ON when it receives
+3.3 V (the switch connector of the box board). UP: the pin is OFF when nothing
+drives it and ON when it is connected to ground (a switch between the pin and
+ground). Applied from the next task.""",
     ),
     Setting(
         "CORRIDOR_AREA_EXTRA",

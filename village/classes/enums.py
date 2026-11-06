@@ -94,6 +94,11 @@ class OldVersion(SuperEnum):
     V02 = "V0.2"
 
 
+class PullResistor(SuperEnum):
+    DOWN = "DOWN"
+    UP = "UP"
+
+
 class State(SuperEnum):
     """Enum representing the state of the village system."""
 
