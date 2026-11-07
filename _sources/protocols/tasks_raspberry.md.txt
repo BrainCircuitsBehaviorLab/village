@@ -2,329 +2,412 @@
 
 With `BEHAVIOR_CONTROLLER` set to `OTHER` in `SETTINGS` and no microcontroller, the
 Raspberry Pi runs the trial itself: it reacts to what it detects (the box camera
-areas, the touchscreen, the GPIO input pin, the box scale) and produces the
-stimuli (sounds, the screen, the LED strip, the GPIO output pin). Its timing is
-less precise than a microcontroller's (see
-[Timing, Clocks & Latencies](../system_operation/timing.md)): for fast and precise
-timing, use Bpod or a microcontroller.
+areas, the touchscreen, the GPIO input pin, the box scale) and produces the stimuli
+(sounds, the screen, the LED strip, the GPIO output pin). Its timing is less precise
+than a microcontroller's (see [Timing, Clocks & Latencies](../system_operation/timing.md)):
+for fast and precise timing, use Bpod or a microcontroller.
 
-The detections arrive through the triggers (camera, touchscreen, GPIO, scale), which
-run in their own threads and call your code while the task is running. The usual
-pattern is: the trigger reacts and signals the task, and the task's `create_trial`
-waits for that signal (or a timeout) to end the trial.
+A task is a class that inherits from `TaskBase`, in any `.py` file inside your
+project's `code` directory. The name of the class is the name of the task: the one
+shown in the GUI and used in `next_task` by the training protocol. The file name does
+not matter.
 
-To create a task, create a Python file inside your project's `code` directory, and
-within it, a class named after the task, inheriting from the generic `TaskBase`
-class. Naming conventions follow Python standards: CamelCase for class names,
-lower_case for filenames and function/variable names. Let's look at an example.
+### How a task runs
 
-<!-- The code on this page is included from docs/source/examples/files/raspberry_area1_sound.py and camera_trigger.py,
-selected by method name (pyobject) and by some lines of text (start-at / end-before).
-If those lines change there, update them here too, and check the page: a block whose
-text is not found can come out empty. -->
+1. `start()` is called once, when the session starts.
+2. Then, trial after trial:
+   - `create_trial()` **is** the trial: it registers the start of the trial, waits
+     for what has to happen (or a timeout), registers it, and returns when the trial
+     is over;
+   - `self.trial_data` is filled with everything registered in the trial;
+   - `after_trial()` reads it and registers the values to save, at least `water`.
+3. `close()` is called once, when the session ends.
 
-### A minimal task
+The session ends when it reaches `maximum_duration` (set in the training protocol),
+when the STOP button is pressed, or when your task sets `self.force_stop = True`. The
+system checks these conditions continuously, not only between trials: if one is met
+during a trial, the session ends at once and that trial is cut (it is not saved in the
+session file, only in the RAW file). In Manual mode the session also ends after the
+number of trials chosen when launching the task; this limit is reached at the end of
+a trial, so nothing is lost.
 
-[raspberry_area1_sound.py](../examples/raspberry_area1_sound.md): every trial
-waits for the animal to enter area 1 of the box camera; when it does, a sound is
-played and an LED of the LED strip turns on. Its top part:
+`````{admonition} Check should_stop in your waiting loops
+:class: warning
+The system ends the session, but it cannot stop your Python code: a `create_trial`
+waiting for something would keep running. Every waiting loop must check
+`self.should_stop` (and a timeout), so it can never wait forever:
 
-```{literalinclude} ../examples/files/raspberry_area1_sound.py
-:language: python
-:end-before: "class RaspberryArea1Sound"
+```python
+while not self.should_stop and time_utils.now_timestamp() < deadline:
+    ...  # wait for your own condition
 ```
+`````
 
-```{literalinclude} ../examples/files/raspberry_area1_sound.py
-:language: python
-:pyobject: RaspberryArea1Sound
-:end-before: "    def start"
-```
+**Triggers.** The detections arrive through the triggers (camera, touchscreen, GPIO,
+scale), which run in their own threads and call your code while the task is running.
+The usual pattern is: the trigger reacts and signals the task (with a
+`threading.Event`), and the loop of `create_trial` waits for that signal, or a
+timeout, to end the trial.
 
-The task is initialized with `__init__`, where it acquires all the properties of the
-generic `TaskBase` class with `super().__init__()`. `self.info` is shown to the user
-when the task is selected in the GUI to run manually.
-
-Four methods must be implemented in your class: `start`, `create_trial`,
-`after_trial`, and `close`.
-
-### The `start()` method
-
-Called once, when the task starts. Here it loads the sound (with the gain for 70 dB
-from the sound calibration), warns if the camera isn't set up for the task, and
-creates the signal (`threading.Event`) that the trigger will use:
-
-```{literalinclude} ../examples/files/raspberry_area1_sound.py
-:language: python
-:pyobject: RaspberryArea1Sound.start
-:dedent: 4
-```
-
-The most commonly used attributes available by default inside any task method
-(see [Attributes you can read](#attributes-you-can-read) below) are:
-
-- `self.settings` — the session's parameters, as defined in `training_protocol.py`
-  (e.g. `self.settings.reward_volume`).
-- `self.calibrations` — convert hardware values to real-world units, e.g.
-  `self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)`.
-- `self.cam_box`, `self.gpio`, `self.custom_areas` — the box camera, GPIO output
-  control, and any custom-shaped detection areas the project defines.
-- `self.name`, `self.subject`, `self.current_trial`, `self.system_name`, `self.date`.
-- `self.trial_data` — populated automatically after each trial, available inside
-  `after_trial` (see below).
-
-### The `create_trial()` method
-
-Called once per trial. Without Bpod, `create_trial` *is* the trial: it returns when
-the trial is over.
-
-```{literalinclude} ../examples/files/raspberry_area1_sound.py
-:language: python
-:pyobject: RaspberryArea1Sound.create_trial
-:dedent: 4
-```
-
-1. **It registers the start of the trial** with `register_start_trial`. This call
-   is **required** without Bpod. Here the Raspberry Pi is the controller, so both
-   clocks are the same and the same time is passed as both.
-2. **It waits** for the trigger's signal, up to `TRIAL_TIMEOUT` seconds, checking
-   `self.should_stop` so the task can stop at any moment.
-3. **It registers the end of the trial** with `register_end_trial`. This one is
-   optional: if `create_trial` returns without calling it, the trial is ended at
-   that moment.
-
-### The trigger
-
-The part of [camera_trigger.py](../examples/camera_trigger.md) that reacts to area 1.
-It runs on every frame of the box camera; when the animal is in area 1 and the
-task's signal isn't set yet, it registers the entry, plays the sound loaded in
-`start`, lights the LED, and sets the signal:
-
-```{literalinclude} ../examples/files/camera_trigger.py
-:language: python
-:pyobject: CameraTrigger.trigger
-:start-at: "area1_event = getattr"
-:end-before: "area2_event = getattr"
-:dedent: 8
-```
-
-The entry is registered with `register_raspberry_event`, since it is the Raspberry
-Pi that detected it.
-
-### The `after_trial()` and `close()` methods
-
-`after_trial` is called once after each trial ends, to register whatever values you
-want saved to the session's data file. `close` is called once when the task
-finishes; here there's nothing to clean up:
-
-```{literalinclude} ../examples/files/raspberry_area1_sound.py
-:language: python
-:pyobject: RaspberryArea1Sound.after_trial
-:dedent: 4
-```
-
-```{literalinclude} ../examples/files/raspberry_area1_sound.py
-:language: python
-:pyobject: RaspberryArea1Sound.close
-:dedent: 4
-```
-
-### Another example
-
-[raspberry_touchscreen.py](../examples/raspberry_touchscreen.md) follows the same
-pattern with the touchscreen: it shows 6 rectangles, and
-[touch_trigger.py](../examples/touch_trigger.md) runs a different visual stimulus
-for each one and signals the task when one is touched.
+**One clock.** Here the Raspberry Pi is also the controller, so there is only one
+clock: pass `time_utils.now_timestamp()` as every timestamp, and the same time as both
+clocks in `register_start_trial`.
 
 ---
 
-### Methods you must override
+### Reference
+
+#### The four methods you write
 
 | Method | Called | Use it to |
-|--------|--------|-----------|
-| `start(self)` | Once, before the trial loop begins. | Configure hardware, pre-compute stimuli, open files, etc. |
-| `create_trial(self)` | Once at the start of every trial. | Run the trial: register its start, wait for what has to happen, and register what happened. |
-| `after_trial(self)` | Immediately after each trial finishes. | Score performance, update adaptive parameters, call `register_value`. |
-| `close(self)` | Once after the trial loop ends (session finished, forced stop, or error). | Close files, stop hardware, release resources. |
+| :--- | :--- | :--- |
+| `start(self)` | Once, before the first trial. | Compute what the whole session needs: sounds, stimulus positions... and create the signals the triggers will use. |
+| `create_trial(self)` | Every trial. | Run the trial: call `register_start_trial`, wait for the trigger's signal or a timeout, and register what happened. |
+| `after_trial(self)` | After every trial. | Read `self.trial_data`, decide the outcome, and save values with `register_value`. Registering `water` is mandatory. |
+| `close(self)` | Once, after the last trial (session finished, stopped, or error). | Clean up: close files or connections. Usually `pass`. |
 
-```{admonition} after_trial must register "water"
+```{admonition} Register water in every trial
 :class: warning
-Always call `self.register_value("water", ...)` with the amount of water consumed
-during the trial. The system sums it across the session to get total water
-consumption — if that total falls below a configurable threshold, an alarm is
-triggered (adjustable in the Settings tab of the GUI).
+Call `self.register_value("water", ...)` in every `after_trial`, with the microliters
+delivered in the trial (`0` if none). The system adds them up to know how much each
+subject drinks, and raises an alarm if it is too little.
 ```
 
-```{admonition} What is saved when a session stops
-:class: note
-Each session saves two files:
+#### Methods you can call
 
-- The **raw** file (`<session>_RAW.csv`) has one line per event. During the session
-  the events are written as they happen to `data/sessions/session.csv`, which is
-  copied to the raw file when the session ends, so it keeps everything — including
-  the trial that was still running when the session stopped.
-- The **clean** file (`<session>.csv`) is a table with one row per trial, and a
-  trial's row is only created when the trial finishes (after `after_trial`). So
-  the trial that was still running when the session stopped never gets its row.
+| Method | Use |
+| :--- | :--- |
+| `self.register_start_trial(raspberry_timestamp, controller_timestamp)` | **Required** at the start of every trial, in `create_trial`: without it the task stops with an error. Pass `time_utils.now_timestamp()` as both. |
+| `self.register_end_trial(controller_timestamp)` | Ends the trial. Optional: if `create_trial` returns without calling it, the trial is ended at that moment. |
+| `self.register_enter_state(state_name, controller_timestamp)` | If your trial is organized in states: closes the previous state and opens this one, as Bpod does. |
+| `self.register_raspberry_event(name, timestamp)` | Records an event (a camera detection, a GPIO input...) with `time_utils.now_timestamp()` as timestamp. `register_controller_event` does exactly the same here. |
+| `self.register_value(name, value)` | Saves a value in the trial's row of the session file (a column named `name`). Call it in `after_trial`. |
+| `self.execute_function(i)` | Runs direct function `i` (1-98), see [Direct Functions](functions.md). |
 
-The session is saved if at least one trial was completed. If none was, nothing
-is saved (neither file) and the "No trials were recorded" alarm is raised (if
-`NO_TRIALS_PERFORMED` is on).
+The `register_*` methods only record what happens between `register_start_trial` and
+the end of the trial: anything registered outside that window is ignored.
 
-Because the trial in progress is always lost from the clean file, design your
-tasks so that trials keep advancing as time passes: a trial should end after a
-reasonable time even if the animal does nothing (e.g. with a timeout), instead
-of waiting indefinitely. A task that runs the whole session as a single trial
-would never be saved.
-```
-
----
-
-### Methods you can call
-
-Do not override these — call them from inside your task's own methods.
-
-#### Registering the trial, states and events
-
-| Method | Args | When to call it |
-|--------|------|------|
-| `register_start_trial` | `raspberry_timestamp: float, controller_timestamp: float` | At the beginning of each trial. **Required.** |
-| `register_end_trial` | `controller_timestamp: float` | At the end of each trial. Optional (see below). |
-| `register_enter_state` | `state_name: str, controller_timestamp: float` | Whenever you enter a state (closes the previous one). |
-| `register_controller_event` | `name: str, controller_timestamp: float` | To register an event. |
-
-Here the Raspberry Pi is the controller: pass `time_utils.now_timestamp()` as every
-timestamp, and the same time as both in `register_start_trial`.
-
-`````{admonition} register_start_trial is required
-:class: warning
-Call `register_start_trial` at the beginning of **every** trial, in
-`create_trial`. Without it **the task stops with an error**.
-
-`register_end_trial` is optional: if `create_trial` returns without calling it,
-the trial is ended at that moment.
-
-```python
-def create_trial(self):
-    t0 = time_utils.now_timestamp()
-    self.register_start_trial(raspberry_timestamp=t0, controller_timestamp=t0)
-    ...  # the trial: register_enter_state / register_raspberry_event
-```
-`````
-
-#### Registering a Raspberry-side event
-
-```python
-def register_raspberry_event(self, name: str, raspberry_timestamp: float) -> None
-```
-
-For events generated by the Raspberry Pi itself, asynchronously from the trial
-— e.g. executing a direct function, or a camera/touchscreen detection. Pass
-`time_utils.now_timestamp()` as `raspberry_timestamp`.
-
-With no external controller both clocks are the same, so `register_raspberry_event`
-and `register_controller_event` do exactly the same.
-
-#### Registering a value
-
-```python
-def register_value(self, name: str, value: Any) -> None
-```
-
-Saves a custom value to the current trial row in the CSV — call it inside
-`after_trial`.
-
-```python
-self.register_value("correct", 1)
-self.register_value("response_time", 0.432)
-```
-
-#### Executing a direct function
-
-```python
-def execute_function(self, i: int) -> None
-```
-
-Runs the direct function registered at index `i` (1-98). See
-[Direct Functions](functions.md) for how those get registered and
-the other ways they can be triggered.
-
-```python
-self.execute_function(1)  # executes the function registered at index 1
-```
-
----
-
-### Attributes you can read
+#### Attributes you can use
 
 | Attribute | Type | Description |
-|-----------|------|--------------|
-| `self.name` | `str` | Name of the task (the class name). |
-| `self.subject` | `str` | Name of the subject running the session. |
-| `self.system_name` | `str` | Name of the system, as defined in the Settings tab. |
-| `self.settings` | `Settings` | Session parameters defined in the training protocol. Read and write its attributes to implement adaptive training. |
-| `self.cam_box` | `Camera \| NullCamera` | Camera attached to the operant box (`NullCamera` if not configured). |
-| `self.gpio` | `Gpio \| NullGpio` | Output pin control (`set_on()` / `set_off()`). See [GPIO](../devices/gpio.md) for the input-pin trigger hook. |
-| `self.current_trial` | `int` | The current trial number, starting from 1. |
-| `self.date` | `str` | Date string of the current session, set once when it starts. |
-| `self.run_mode` | `str` | `"Manual"` or `"Auto"`. |
-| `self.force_stop` | `bool` | Set to `True` from your own task logic (e.g. in `after_trial`) to make the task stop. |
-| `self.stop_button_pressed` | `bool` | `True` once something external (e.g. the STOP TASK button) has asked the task to stop. Read-only — react to it, don't set it. |
-| `self.chrono` | `Chrono` | `self.chrono.get_time()` gives the time in seconds since the task started. |
+| :--- | :--- | :--- |
+| `self.settings` | `Settings` | The subject's training settings, defined in the [training protocol](creating.md) (e.g. `self.settings.reward_volume`). Changes made during the session are kept for the next one. |
+| `self.calibrations` | `Calibrations` | Calibrations, e.g. `self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)`. |
+| `self.trial_data` | `dict` | Everything registered in the trial, available in `after_trial` (see [Trial data](#trial-data)). |
+| `self.info` | `str` | Description of the task, shown when it is selected in the GUI. Set it in `__init__`. |
+| `self.name` | `str` | The name of the task, which is the name of its class (e.g. `"RaspberryArea1Sound"`). |
+| `self.subject` | `str` | The name of the subject (`"None"` when a task is launched manually without a subject). |
+| `self.current_trial` | `int` | The number of the current trial, starting from 1. |
+| `self.system_name` | `str` | The name of the system (`SYSTEM_NAME` in `SETTINGS`). |
+| `self.date` | `str` | The date and time the session started (`"2026-11-07 10:30:00"`). |
+| `self.run_mode` | `str` | `"Auto"` or `"Manual"`. |
+| `self.chrono` | `Chrono` | `self.chrono.get_time()` is the time in seconds since the session started. |
+| `self.force_stop` | `bool` | Set it to `True` to end the session (see [Ending the session from the task](#ending-the-session-from-the-task)). |
+| `self.stop_button_pressed` | `bool` | `True` once the STOP button has been pressed. Read it, don't set it. |
+| `self.should_stop` | `bool` | `True` once any stopping condition is met (read-only). Check it in every waiting loop of `create_trial`. |
+| `self.system_state` | `State` | The state of the system, e.g. `State.RUN_OPEN` (Auto mode, the subject can leave the box). Import `State` from `village.classes.enums`. |
+| `self.cam_box` | `Camera` | The box camera (see [Camera](../devices/camera.md)). |
+| `self.gpio` | `Gpio` | The GPIO output pin: `set_on()` / `set_off()` (see [GPIO](../devices/gpio.md)). |
+| `self.custom_areas` | `dict` | The detection areas with a custom shape, if the project defines any (see [Camera](../devices/camera.md#custom-detection-area)). |
 
-#### `self.info`
+You can also add your own attributes (`self.area1_event`, `self.side = "left"`...):
+they are kept from one method to the next, and the triggers and direct functions can
+read them through `self.task`.
 
-Human-readable description of the task, set once (usually in `__init__`). Shown to
-the user when selecting the task in the GUI.
+#### Triggers and devices
+
+The triggers are classes in your `code` directory; each one is called by the system
+while a task is running, and reaches the task through `self.task`:
+
+| Trigger | Inherits from | Called | See |
+| :--- | :--- | :--- | :--- |
+| Camera | `CameraTriggerBase` | On every frame, with the camera (`cam.area1_is_triggered`...). | [Camera](../devices/camera.md#reacting-to-the-animals-position) |
+| Touchscreen | `TouchTriggerBase` | On every touch, with its position. | [Screen & Touchscreen](../devices/screen.md#reacting-to-touches) |
+| GPIO input | `GpioTriggerBase` | `trigger_on` / `trigger_off`, when the input pin turns on or off. | [GPIO](../devices/gpio.md#reacting-to-the-input-pin) |
+| Box scale | `ScaleTriggerBase` | On every reading of the scale, with the weight. | [Scale](../devices/scale.md#reacting-to-the-box-scale) |
+
+The stimuli are produced with the devices of the Raspberry Pi:
+[Sound](../devices/sound.md) (`sound_device.load` and `sound_device.play`),
+[Screen](../devices/screen.md), [LED Strip](../devices/led_strip.md) and the GPIO
+output pin (`self.gpio`). They can be used from the task, from a trigger or from a
+direct function.
+
+---
+
+### Examples
+
+#### A simple task: a sound every trial
+
+Every trial plays a sound and then waits for the inter-trial interval. It shows the
+structure of every task without a controller: `create_trial` registers the start, the
+states as they are entered and the end, and every wait checks `should_stop`.
 
 ```python
-self.info = """
-My Task
--------
-Describe what the task does and how it progresses here.
-"""
+import time
+
+from sound_functions import whitenoise_generator
+
+from village.custom_classes.task_base import TaskBase
+from village.devices.sound_device import sound_device
+from village.scripts.time_utils import time_utils
+
+
+class SoundEveryTrial(TaskBase):
+    def __init__(self):
+        super().__init__()
+        self.info = """
+        Sound Every Trial
+        -----------------
+        A sound, then the inter-trial interval.
+        """
+
+    def start(self):
+        sound = whitenoise_generator(duration=0.5, gain=0.05)
+        sound_device.load(left=sound, right=sound)  # loaded once, played every trial
+
+    def create_trial(self):
+        t0 = time_utils.now_timestamp()
+        self.register_start_trial(raspberry_timestamp=t0, controller_timestamp=t0)
+
+        self.register_enter_state("sound", t0)
+        sound_device.play()
+        self.wait(0.5)
+
+        self.register_enter_state("iti", time_utils.now_timestamp())
+        self.wait(self.settings.iti_time)
+
+        self.register_end_trial(time_utils.now_timestamp())
+
+    def wait(self, seconds):
+        """Waits the given seconds, less if the task has to stop."""
+        end = time_utils.now_timestamp() + seconds
+        while not self.should_stop and time_utils.now_timestamp() < end:
+            time.sleep(0.01)
+
+    def after_trial(self):
+        self.register_value("water", 0)
+
+    def close(self):
+        pass
 ```
 
-#### `self.calibrations`
+`gain=0.05` is an arbitrary volume; to play the sound at a given level in dB, use the
+sound calibration, as in the next example (see [Sound](../devices/sound.md)).
 
-Holds the task's calibrations — call its methods to convert between hardware
-values and real-world units (see [Custom Calibrations](../advanced_customization/calibrations.md)).
+#### Reacting to the camera
+
+[raspberry_area1_sound.py](../examples/raspberry_area1_sound.md): every trial waits for
+the animal to enter area 1 of the box camera (set as a TRIGGER area, with
+`CAM_BOX_TRACKING_POSITION` ON); when it does, a sound is played and an LED of the LED
+strip turns on.
+
+The task loads the sound and creates the signal in `start`, and `create_trial` waits
+for it:
 
 ```python
-gain = self.calibrations.sound_calibration.get_sound_gain(
-    speaker=1, dB=70.0, sound_name="whitenoise"
-)
+import threading
+
+from sound_functions import whitenoise_generator
+
+from village.custom_classes.task_base import TaskBase
+from village.devices.sound_device import sound_device
+from village.scripts.time_utils import time_utils
+
+TRIAL_TIMEOUT = 60  # seconds to wait for the animal to enter area 1
+
+
+class RaspberryArea1Sound(TaskBase):
+    def __init__(self):
+        super().__init__()
+        self.info = """
+        Area 1 Sound Task
+        -----------------
+        Entering BOX area 1 plays a sound and lights an LED of the strip.
+        """
+
+    def start(self):
+        # the sound at 70 dB, from the sound calibration; loaded once, and
+        # played by camera_trigger.py every time area 1 is entered
+        gain_left = self.calibrations.sound_calibration.get_sound_gain(
+            speaker=0, dB=70, sound_name="whitenoise"
+        )
+        gain_right = self.calibrations.sound_calibration.get_sound_gain(
+            speaker=1, dB=70, sound_name="whitenoise"
+        )
+        sound_left = whitenoise_generator(duration=1, gain=gain_left)
+        sound_right = whitenoise_generator(duration=1, gain=gain_right)
+        sound_device.load(left=sound_left, right=sound_right)
+
+        # set by camera_trigger.py the moment area 1 is entered
+        self.area1_event = threading.Event()
+
+    def create_trial(self):
+        self.area1_event.clear()
+
+        t0 = time_utils.now_timestamp()
+        self.register_start_trial(raspberry_timestamp=t0, controller_timestamp=t0)
+
+        deadline = t0 + TRIAL_TIMEOUT
+        while not self.should_stop and time_utils.now_timestamp() < deadline:
+            if self.area1_event.wait(timeout=0.05):
+                break
+
+        self.register_end_trial(time_utils.now_timestamp())
+
+    def after_trial(self):
+        self.register_value("entered_area1", self.area1_event.is_set())
+        self.register_value("water", 0)
+
+    def close(self):
+        pass
 ```
 
-#### `self.should_stop` (read-only property)
-
-`True` once *any* stopping condition is met: the time limit (`maximum_duration`),
-the trial limit (`maximum_number_of_trials`, Manual mode only: Auto mode does not
-stop after a fixed number of trials), `force_stop`, or `stop_button_pressed`.
-
-`````{admonition} Poll it in your own waiting loop
-:class: warning
-Trial/time limits and `force_stop` are only checked *between* trials, by the
-task's own run loop — they can't interrupt a `create_trial` that's blocked inside
-its own waiting loop. Poll `self.should_stop` in that loop so it actually exits
-when asked to:
+The part of [camera_trigger.py](../examples/camera_trigger.md) that reacts to area 1.
+It runs on every frame of the box camera; when the animal is in area 1 and the task's
+signal is not set yet, it registers the entry, plays the sound (direct function 4,
+"Play Loaded Sound"), lights the LED and sets the signal:
 
 ```python
-def create_trial(self):
-    while not self.should_stop:
-        ...  # wait for your own condition
+        area1_event = getattr(self.task, "area1_event", None)  # only in this task
+        if (
+            cam.area1_is_triggered
+            and area1_event is not None
+            and not area1_event.is_set()
+        ):
+            self.task.register_raspberry_event(
+                "area1_entered", time_utils.now_timestamp()
+            )
+            self.task.execute_function(4)  # "Play Loaded Sound"
+
+            led_strip.set_led_color(0, 255, 255, 255)
+            led_strip.update_strip()
+
+            area1_event.set()
 ```
-`````
 
-#### Stopping the task from your own logic (`self.force_stop`)
+The original file also prints a warning in `start` if the camera is not set up for
+the task.
 
-Set `self.force_stop = True` (usually in `after_trial`) to end the session when a
-condition of your own is met. It works in both Manual and Auto mode: in Auto mode, the
-session is saved and the subject is let out, as when `maximum_duration` is reached.
+#### Reacting to the touchscreen
 
-For example, to limit the number of trials also in Auto mode (where
-`maximum_number_of_trials` does not apply), add a variable to the training protocol
-(`self.settings.max_trials = 300` in `default_training_settings`) and check it in the
-task:
+[raspberry_touchscreen.py](../examples/raspberry_touchscreen.md) follows the same
+pattern with the touchscreen: `start` draws 6 rectangles and creates
+`self.touch_event`, and `create_trial` waits for it as above. In
+[touch_trigger.py](../examples/touch_trigger.md), `trigger(self, x, y, timestamp)` is
+called on every touch; when the touch is inside one of the rectangles, it runs a
+different visual stimulus for each one and sets the signal:
+
+```python
+    def trigger(self, x: int, y: int, timestamp: float) -> None:
+        rects = getattr(self.task, "rects", None)  # only in this task
+        if rects is not None:
+            for i, rect in enumerate(rects):
+                if _inside(x, y, rect):
+                    self.task.execute_function(FUNCTION_IDS[i])
+                    self.task.touch_event.set()
+                    return
+```
+
+`_inside` checks whether a point is inside a rectangle, and `FUNCTION_IDS` are the
+direct functions of the 6 stimuli. Every touch is also recorded automatically as an
+event (see [Trial data](#trial-data)).
+
+#### Complete examples
+
+The two examples above, complete, are in
+[Task Examples (Raspberry Only)](../examples/tasks_raspberry.md).
+
+---
+
+### Trial data
+
+When a trial ends, everything registered in it is put in `self.trial_data`, a
+dictionary that `after_trial` reads to decide the outcome of the trial. Its keys:
+
+| Key | Value |
+| :--- | :--- |
+| `"date"`, `"trial"`, `"subject"`, `"task"`, `"system_name"` | Which session and trial it is. |
+| `"TRIAL_START"`, `"TRIAL_END"` | When the trial started (`register_start_trial`) and ended (`register_end_trial`, or the moment `create_trial` returned). |
+| `"STATE_<name>_START"`, `"STATE_<name>_END"` | For every state registered with `register_enter_state`, a list with the times it was entered and left (a list, because a state can be visited several times). A state ends when the next one is entered, or when the trial ends. A state that was **not visited** is not in the dictionary. |
+| `"<event>"` (`"area1_entered"`...) | For every event registered, a list with the times of each occurrence. Events that did not happen are not in the dictionary. The ones the system registers by itself are included too: `sound` when a sound starts playing, `touch_<x>_<y>` for every touch (e.g. `touch_640_360`). |
+| `"ordered_list_of_events"` | The names of all the events, in the order they happened. |
+
+All the times are in seconds (UNIX time), so they can be compared and subtracted
+directly.
+
+For example, a trial of the camera example in which the animal enters area 1 after
+8.11 seconds:
+
+```python
+{
+    "date": "2026-11-07 10:30:00",
+    "trial": 12,
+    "subject": "mouse1",
+    "task": "RaspberryArea1Sound",
+    "system_name": "village01",
+    "TRIAL_START": 1793961045.20,
+    "TRIAL_END": 1793961053.36,
+    "area1_entered": [1793961053.31],
+    "sound": [1793961053.32],
+    "ordered_list_of_events": ["area1_entered", "sound"],
+}
+```
+
+The usual questions are answered like this (the comments give the results for the
+trial above):
+
+```python
+import math
+
+def after_trial(self):
+    # Did an event happen? Its key exists: use .get with an empty list by default.
+    entries = self.trial_data.get("area1_entered", [])
+    entered = len(entries) > 0  # True
+
+    # How long did something take? Subtract two times.
+    start = self.trial_data["TRIAL_START"]
+    latency = entries[0] - start if entered else math.nan  # 8.11 s
+
+    # Was a state visited? If not, its key is missing: use a nan default.
+    t_reward = self.trial_data.get("STATE_reward_START", [math.nan])[0]
+    rewarded = not math.isnan(t_reward)  # False (this task has no states)
+
+    # Touches: one key per position, all starting with "touch_".
+    n_touches = sum(
+        len(times) for key, times in self.trial_data.items() if key.startswith("touch_")
+    )  # 0
+
+    self.register_value("latency", latency)
+    self.register_value("water", 0)
+```
+
+#### What is saved
+
+At the end of each trial, `trial_data` (with the values registered in `after_trial`)
+becomes one row of the session table. When the session ends, two files are saved:
+
+- **`<session>.csv`**: one row per trial, with a column for each key above and each
+  registered value. It is the file used for the analysis and by the training protocol
+  (`self.df`). A trial only gets its row when it finishes, so the trial that was
+  running when the session stopped is not in it.
+- **`<session>_RAW.csv`**: one line per event, written as they happen, including the
+  trial that was interrupted.
+
+The session is saved if at least one trial was completed. Design the task so that
+trials end after a reasonable time even if the animal does nothing (with a timeout,
+as in the examples): a session that is a single trial that never ends would not be
+saved.
+
+---
+
+### Ending the session from the task
+
+Set `self.force_stop = True` to end the session. The session ends at once, so set it
+in `after_trial`, when the trial is already complete: set during a trial (from a
+trigger or a direct function), it cuts that trial. It works in Auto mode too: the
+session is saved and the subject is let out, as when `maximum_duration` is reached,
+even before `minimum_duration`. For example, to stop after a maximum number of trials
+(`max_trials` defined in the training protocol):
 
 ```python
 def after_trial(self):
@@ -333,123 +416,7 @@ def after_trial(self):
         self.force_stop = True
 ```
 
-The same pattern works for any other criterion: a maximum amount of water, a number of
-correct trials, a performance threshold...
-
-#### `self.trial_data` (dict)
-
-Populated automatically at the end of each trial — available inside `after_trial`.
-
-**Keys always present:**
-
-- `"date"` (str), `"trial"` (int), `"subject"` (str), `"task"` (str), `"system_name"` (str)
-- `"TRIAL_START"` / `"TRIAL_END"` (float): absolute timestamps (UNIX epoch seconds)
-- `"ordered_list_of_events"` (list[str]): event names in the order they occurred (e.g. `["Port1In", "Port1Out", "Port1In"]`)
-
-`TRIAL_START` comes from your call to `register_start_trial`, and `TRIAL_END` from
-`register_end_trial` (or it is set automatically when `create_trial` returns if you
-didn't call it). The rest are filled automatically.
-
-**Keys added per state visited:**
-
-- `"STATE_<name>_START"` / `"STATE_<name>_END"` (list[float]): timestamps of every
-  entry/exit for that state — a list because the same state can be visited more
-  than once per trial.
-
-If your trial is organized in states, call `register_enter_state(name, timestamp)`
-every time you enter one: it closes the previous state (its end time is the new
-state's start) and opens the new one, exactly as Bpod does. The trial's end
-(`register_end_trial`, or the automatic one) closes the last one. A state that was
-not visited simply does not appear: to check whether a state was visited, look at
-its first start time with a `nan` default (see the example below).
-
-**Keys added per event type:**
-
-- `"<EventName>"` (list[float]): timestamps of every occurrence of that event
-  (e.g. `"Port1In"`, `"Port1Out"`).
-
-Register them yourself, between `register_start_trial` and the end of
-`create_trial` (anything registered outside that window is ignored). Use `register_raspberry_event` (or
-`register_controller_event`, which here is the same) with
-`time_utils.now_timestamp()`. Events registered from a trigger, while the trial is
-running, are added too.
-
-**Keys added by you:** any name passed to `register_value` inside `after_trial`.
-
-##### Example
-
-A short trial with four states: the animal pokes the right port (3) while
-waiting, starts the trial in the center port (2), and then pokes the left port
-(1), which is rewarded:
-
-```python
-{
-    "date": "2026-10-08 10:15:02",
-    "trial": 12,
-    "subject": "mouse1",
-    "task": "MyTask",
-    "system_name": "village01",
-    "TRIAL_START": 1791454502.10,
-    "TRIAL_END": 1791454506.35,
-    "STATE_WAIT_POKE_START": [1791454502.10],
-    "STATE_WAIT_POKE_END": [1791454503.20],
-    "STATE_RESPONSE_START": [1791454503.20],
-    "STATE_RESPONSE_END": [1791454504.90],
-    "STATE_REWARD_START": [1791454504.90],
-    "STATE_REWARD_END": [1791454504.95],
-    "STATE_ITI_START": [1791454504.95],
-    "STATE_ITI_END": [1791454506.35],
-    "Port3In": [1791454502.60],
-    "Port3Out": [1791454502.75],
-    "Port2In": [1791454503.20],
-    "Port2Out": [1791454503.41],
-    "Port1In": [1791454504.90],
-    "ordered_list_of_events": [
-        "Port3In", "Port3Out", "Port2In", "Port2Out", "Port1In"
-    ],
-}
-```
-
-Getting information out of it in `after_trial`:
-
-```python
-import math
-
-def after_trial(self):
-    # 1. Did the animal reach the REWARD state? A state that was not visited does not appear,
-    # so look it up with a nan default.
-    t_reward = self.trial_data.get("STATE_REWARD_START", [math.nan])[0]
-    rewarded = not math.isnan(t_reward)
-
-    # 2. First poke from the RESPONSE state onwards. Strictly after its start:
-    # the center poke that started RESPONSE has exactly that timestamp.
-    first_response_poke = "none"
-    t_response = self.trial_data.get("STATE_RESPONSE_START", [math.nan])[0]
-    if not math.isnan(t_response):
-        pokes = [
-            (t, port)
-            for port in ("Port1In", "Port2In", "Port3In")
-            for t in self.trial_data.get(port, [])
-            if t > t_response
-        ]
-        if pokes:
-            first_response_poke = min(pokes)[1]  # the earliest one
-
-    # 3. Register the results (and, as always, the water).
-    if rewarded:
-        outcome = "correct"
-    elif first_response_poke == "none":
-        outcome = "miss"
-    else:
-        outcome = "incorrect"
-    self.register_value("first_response_poke", first_response_poke)
-    self.register_value("outcome", outcome)
-    self.register_value("water", self.settings.reward_volume if rewarded else 0)
-```
-
-With the example above: `rewarded` is `True`, `first_response_poke` is
-`"Port1In"` (the `Port3In` came before RESPONSE and the `Port2In` is the one that
-started it), and `outcome` is `"correct"`.
+The same works for any criterion: an amount of water, a number of correct trials...
 
 ```{toctree}
 :hidden:

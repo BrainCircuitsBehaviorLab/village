@@ -568,8 +568,10 @@ and may optionally call helper methods and read certain attributes during
 execution.</p>
 <p>The task starts by calling <code class="docutils literal notranslate"><span class="pre">start()</span></code>, then enters a loop where it calls
 <code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> followed by <code class="docutils literal notranslate"><span class="pre">after_trial()</span></code>. The loop continues until the
-maximum number of trials is reached, the maximum duration is exceeded,
-or <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> is set to True. Finally, <code class="docutils literal notranslate"><span class="pre">close()</span></code> is called to
+maximum number of trials is reached (Manual mode), the maximum duration is
+exceeded, <code class="docutils literal notranslate"><span class="pre">force_stop</span></code> is set to True, or the STOP button is pressed. Except
+for the trial limit, these conditions end the session at once, even in the
+middle of a trial (that trial is not saved). Finally, <code class="docutils literal notranslate"><span class="pre">close()</span></code> is called to
 clean up resources.</p>
 <p>──────────────────────────────────────────────────────────
 METHODS YOU MUST OVERRIDE
@@ -758,14 +760,18 @@ states) and <code class="docutils literal notranslate"><span class="pre">registe
 </div>
 </dd>
 <dt>self.force_stop: bool</dt><dd><p>Set this to True from inside your own task logic (e.g. in after_trial,
-once some in-task condition is met) to make the task stop.</p>
+once some in-task condition is met) to make the task stop. The session
+ends at once: if it is set during a trial (from a trigger or a direct
+function), that trial is cut and not saved; set in after_trial, the
+trial is already complete.</p>
 </dd>
 <dt>self.stop_button_pressed: bool</dt><dd><p>True once something external (e.g. the STOP TASK button) has asked the
 task to stop. Unlike force_stop, you should not set this yourself –
 just read it if you want to react to it.</p>
 </dd>
-<dt>self.should_stop: bool (read-only)</dt><dd><p>True once ANY stopping condition is met: the trial/time limit (in
-Manual mode), force_stop, or stop_button_pressed. If your task does not use
+<dt>self.should_stop: bool (read-only)</dt><dd><p>True once ANY stopping condition is met: the time limit, the trial
+limit (Manual mode only), force_stop, or stop_button_pressed. If your
+task does not use
 Bpod and create_trial contains its own waiting loop, check this
 property on every iteration so the loop actually exits when the task
 is asked to stop, instead of running forever:</p>
@@ -937,11 +943,13 @@ Pass time_utils.now_timestamp() as raspberry_timestamp.</p>
 <dt class="sig sig-object py">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">should_stop</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span></dt>
 <dd><p>True once any stopping condition is met.</p>
-<p>Trial/time limits and force_stop are only checked BETWEEN trials, by
-run()’s own while loop – they cannot interrupt a create_trial() that
-is currently blocked in its own waiting loop. Tasks that do not use
-Bpod and wait on their own condition inside create_trial should poll
-this property instead, so they actually exit when asked to.</p>
+<p>The system (main.py) checks these conditions continuously and ends the
+session at once, even in the middle of a trial: Bpod is stopped and
+the trial in progress is not saved. run()’s own while loop only checks
+this property between trials, so it cannot interrupt a create_trial()
+that is blocked in its own waiting loop. Tasks that do not use Bpod
+and wait on their own condition inside create_trial should poll this
+property instead, so they actually exit when asked to.</p>
 <p>The trial limit only applies in Manual mode: Auto mode runs until the
 subject leaves the corridor, not for a fixed number of trials.</p>
 </dd></dl>
@@ -1093,7 +1101,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7b82f8dc"></script>
+      <script src="../_static/documentation_options.js?v=438e79be"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

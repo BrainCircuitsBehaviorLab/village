@@ -52,7 +52,7 @@ shown:
   is completed. It only exists for manual runs: it is not a setting of the training
   protocol, it is not saved, and it has no effect on the sessions run automatically
   (to limit the trials in those, see
-  [Stopping the task from your own logic](force-stop)).
+  [Ending the session from the task](force-stop)).
 - `maximum_duration`: The task will automatically end when this time is reached. Unlike
   the previous one, it is a setting of the training protocol, used in automatic
   sessions too.
