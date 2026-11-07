@@ -420,6 +420,10 @@ def system_run() -> None:
                     )
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
+                elif manager.task.force_stop:
+                    # The task asked to stop before minimum_duration: open door2
+                    # now; RUN_OPEN sees force_stop and saves the session
+                    manager.state = State.OPEN_DOOR2
                 elif (
                     manager.task.chrono.get_seconds()
                     >= manager.task.settings.minimum_duration

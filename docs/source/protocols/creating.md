@@ -33,6 +33,7 @@ class TrainingProtocol(TrainingProtocolBase):
     """
 
     def __init__(self) -> None:
+        """Required. It only needs to call super().__init__()."""
         super().__init__()
 ```
 
@@ -132,15 +133,6 @@ Available attributes:
   column says which task each trial belongs to, and every value the tasks registered
   with `register_value` is a column too (`outcome`, `water`...).
 
-Because `self.df` has one row per trial, a criterion like "100 trials in the last two
-sessions" is computed by filtering rows:
-
-- `df2 = self.df[self.df["task"] == "Bpod2Passive"]` — the trials of one task.
-- `df2["session"].unique()` — its sessions, in order (so `[-2:]` are the last two).
-- `df2[df2["session"].isin(last_2_sessions)]` — the trials of those sessions; its
-  number of rows is the number of trials.
-- `(df3_last_2["outcome"] == "correct").mean()` — the fraction of those trials whose
-  `outcome` was `"correct"` (a value registered by the task in `after_trial`).
 
 The first three stages of the example protocol show the usual kinds of criteria, from
 the simplest to the most complete:
@@ -156,8 +148,9 @@ def update_training_settings(self) -> None:
     elif self.last_task == "Bpod2Passive":
         # At least 2 passive sessions, and 100 trials in the last two.
         df2 = self.df[self.df["task"] == "Bpod2Passive"]
-        n_sessions = len(df2["session"].unique())
-        last_2_sessions = df2["session"].unique()[-2:]
+        sessions = df2["session"].unique()
+        n_sessions = len(sessions)
+        last_2_sessions = sessions[-2:]
         df2_last_2 = df2[df2["session"].isin(last_2_sessions)]
         trials_last_2_sessions = df2_last_2.shape[0]
 
@@ -170,8 +163,9 @@ def update_training_settings(self) -> None:
         # At least 2 active sessions, and in the last two: 100 trials and
         # 70% of them correct.
         df3 = self.df[self.df["task"] == "Bpod3Active"]
-        n_sessions = len(df3["session"].unique())
-        last_2_sessions = df3["session"].unique()[-2:]
+        sessions = df3["session"].unique()
+        n_sessions = len(sessions)
+        last_2_sessions = sessions[-2:]
         df3_last_2 = df3[df3["session"].isin(last_2_sessions)]
         trials_last_2_sessions = df3_last_2.shape[0]
         correct_last_2_sessions = (df3_last_2["outcome"] == "correct").mean()
@@ -231,6 +225,12 @@ tab name to suppress a variable from the GUI entirely.
 
 ```python
 def define_gui_tabs(self) -> None:
+    """Optional. Groups the settings into tabs in the panel shown when a
+    task is launched manually. Settings not listed in any tab go to the
+    General tab, and a tab named "Hide" hides the settings listed in it.
+    gui_tabs_restricted limits a setting to a list of values (shown as a
+    dropdown); this protocol does not need it.
+    """
     self.gui_tabs = {
         "Reward": [
             "reward_volume",

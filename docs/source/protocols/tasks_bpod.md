@@ -1,275 +1,220 @@
 ## Tasks (Bpod)
 
-With Bpod (`BEHAVIOR_CONTROLLER` set to `BPOD` in `SETTINGS`), every trial is a
-Bpod state machine: the task builds it in `create_trial`, Bpod runs it with its own
-precise timing, and everything that happened (states, pokes, timers...) is recorded
-automatically in the trial data.
+With Bpod (`BEHAVIOR_CONTROLLER` set to `BPOD` in `SETTINGS`), every trial is a Bpod
+state machine: your task describes the states of the trial, Bpod runs them with its
+own precise timing, and everything that happens (states, pokes, timers...) is recorded
+automatically.
 
-To create a task, create a Python file inside your project's `code` directory, and
-within it, a class named after the task, inheriting from the generic `TaskBase`
-class. Naming conventions follow Python standards: CamelCase for class names,
-lower_case for filenames and function/variable names. Let's look at an example.
+A task is a class that inherits from `TaskBase`, in any `.py` file inside your
+project's `code` directory. The name of the class is the name of the task: the one
+shown in the GUI and used in `next_task` by the training protocol. The file name
+does not matter.
 
-### A minimal task
+### How a task runs
 
-[bpod_1_habituation.py](../examples/bpod_1_habituation.md) is the simplest real task of the examples — the
-mouse is just left alone in the box, pokes are logged, no reward is given:
+1. `start()` is called once, when the session starts.
+2. Then, trial after trial:
+   - `create_trial()` builds the state machine of the trial;
+   - Bpod runs it, and the task waits until the trial ends;
+   - `self.trial_data` is filled with everything that happened in the trial;
+   - `after_trial()` reads it and registers the values to save, at least `water`.
+3. `close()` is called once, when the session ends.
+
+The session ends when it reaches `maximum_duration` (set in the training protocol),
+when the STOP button is pressed, or when your task sets `self.force_stop = True`. The
+system checks these conditions continuously, not only between trials: if one is met
+during a trial, the session ends at once and that trial is cut (it is not saved in the
+session file, only in the RAW file). In Manual mode the session also ends after the
+number of trials chosen when launching the task; this limit is reached at the end of
+a trial, so nothing is lost.
+
+While Bpod runs a trial your Python code is waiting, so it cannot react in the
+middle of a trial by itself. Two channels connect the Raspberry Pi and Bpod during
+the trial: **softcodes** from Bpod make the Raspberry Pi run a direct function (to
+play a sound, show an image...), and **softcodes** from the Raspberry Pi to Bpod let the
+state machine react to something only the Raspberry Pi sees (the camera, the
+touchscreen...). Both are shown in the [examples](#examples).
+
+---
+
+### Reference
+
+#### The four methods you write
+
+| Method | Called | Use it to |
+| :--- | :--- | :--- |
+| `start(self)` | Once, before the first trial. | Compute what the whole session needs: valve times, sounds, stimulus positions... |
+| `create_trial(self)` | At the start of every trial. | Build the trial's state machine with `self.bpod.add_state`. It starts empty every trial; when the method returns, it is sent to Bpod and run. |
+| `after_trial(self)` | After every trial. | Read `self.trial_data`, decide the outcome, and save values with `register_value`. Registering `water` is mandatory. |
+| `close(self)` | Once, after the last trial (session finished, stopped, or error). | Clean up: close files or connections. Usually `pass`. |
+
+```{admonition} Register water in every trial
+:class: warning
+Call `self.register_value("water", ...)` in every `after_trial`, with the microliters
+delivered in the trial (`0` if none). The system adds them up to know how much each
+subject drinks, and raises an alarm if it is too little.
+```
+
+#### Methods you can call
+
+| Method | Use |
+| :--- | :--- |
+| `self.register_value(name, value)` | Saves a value in the trial's row of the session file (a column named `name`). Call it in `after_trial`. |
+| `self.register_raspberry_event(name, timestamp)` | Records an event that happened on the Raspberry Pi (a camera detection, a touch...) with `time_utils.now_timestamp()` as timestamp. If it happens during a trial, it is added to `trial_data` like the Bpod events. |
+| `self.execute_function(i)` | Runs direct function `i` (1-98), see [Direct Functions](functions.md). |
+| `self.bpod.add_state(...)` | Adds a state to the trial's state machine (see [Bpod primitives](bpod-primitives)). |
+| `self.bpod.send_softcode_to_bpod(i)` | Sends softcode `i` from the Raspberry Pi to Bpod, usually from a trigger (camera, touchscreen...). The state machine reacts to it with `BpodEvent.SoftCode<i>`. |
+| `self.bpod.set_global_timer(...)`, `set_global_counter(...)`, `set_condition(...)` | Advanced primitives, see [Bpod primitives](bpod-primitives). |
+
+With Bpod, the start and end of every trial, state and event are recorded
+automatically: the `register_start_trial`, `register_end_trial`,
+`register_enter_state` and `register_controller_event` methods are only for tasks
+without Bpod.
+
+#### Attributes you can use
+
+| Attribute | Type | Description |
+| :--- | :--- | :--- |
+| `self.settings` | `Settings` | The subject's training settings, defined in the [training protocol](creating.md) (e.g. `self.settings.reward_volume`). Changes made during the session are kept for the next one. |
+| `self.calibrations` | `Calibrations` | Calibrations, e.g. `self.calibrations.water_calibration.get_valve_time(port, volume)` or `self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)`. |
+| `self.bpod` | `BpodController` | The Bpod interface (see the methods above). |
+| `self.trial_data` | `dict` | Everything that happened in the trial, available in `after_trial` (see [Trial data](#trial-data)). |
+| `self.info` | `str` | Description of the task, shown when it is selected in the GUI. Set it in `__init__`. |
+| `self.name` | `str` | The name of the task, which is the name of its class (e.g. `"LightAndWater"`). |
+| `self.subject` | `str` | The name of the subject (`"None"` when a task is launched manually without a subject). |
+| `self.current_trial` | `int` | The number of the current trial, starting from 1. |
+| `self.system_name` | `str` | The name of the system (`SYSTEM_NAME` in `SETTINGS`). |
+| `self.date` | `str` | The date and time the session started (`"2026-11-07 10:30:00"`). |
+| `self.run_mode` | `str` | `"Auto"` or `"Manual"`. |
+| `self.chrono` | `Chrono` | `self.chrono.get_time()` is the time in seconds since the session started. |
+| `self.force_stop` | `bool` | Set it to `True` to end the session (see [Ending the session from the task](#ending-the-session-from-the-task)). |
+| `self.stop_button_pressed` | `bool` | `True` once the STOP button has been pressed. Read it, don't set it. |
+| `self.should_stop` | `bool` | `True` once any stopping condition is met (read-only). The system checks it and ends the session; with Bpod you rarely need it. |
+| `self.system_state` | `State` | The state of the system, e.g. `State.RUN_OPEN` (Auto mode, the subject can leave the box). Import `State` from `village.classes.enums`. |
+| `self.cam_box` | `Camera` | The box camera (see [Camera](../devices/camera.md)). |
+| `self.gpio` | `Gpio` | The GPIO output pin: `set_on()` / `set_off()` (see [GPIO](../devices/gpio.md)). |
+| `self.custom_areas` | `dict` | The detection areas with a custom shape, if the project defines any (see [Camera](../devices/camera.md#custom-detection-area)). |
+
+You can also add your own attributes (`self.side = "left"`): they are kept from one
+method to the next, and the triggers and direct functions can read them through
+`self.task`.
+
+(bpod-primitives)=
+#### Bpod primitives
+
+`BpodEvent` and `BpodOutput` are imported together with `TaskBase`:
 
 ```python
 from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
-
-
-class Bpod1Habituation(TaskBase):
-    def __init__(self):
-        super().__init__()
-
-        self.info = """
-        Habituation Task (Bpod)
-        ----------------------------------------------------------
-        This task is an automatic mouse habituation to the box.
-        Nothing will happen during the task, the mouse will be left alone in the box
-        for the duration of the task.
-        Port pokes will be registered but no reward will be delivered.
-        """
 ```
 
-The task is named `Bpod1Habituation`. It's initialized with `__init__`, and we
-acquire all the properties of the generic `TaskBase` class using `super().__init__()`.
-`self.info` is shown to the user when the task is selected in the GUI to run
-manually.
-
-Four methods must be implemented in your class: `start`, `create_trial`,
-`after_trial`, and `close`.
-
-### The `start()` method
-
-Called once, when the task starts. Use it to compute anything the whole session
-needs — valve opening times, loaded sounds, opened serial connections, etc.
+A state is added with:
 
 ```python
-    def start(self):
-        """In this simple task we don't need to do anything in the start method."""
-
-        pass
+self.bpod.add_state(
+    state_name="light_on",           # any name; "exit" ends the trial
+    state_timer=5,                   # seconds until the Tup event (0: no timer)
+    state_change_conditions={        # event -> next state
+        BpodEvent.Port2In: "reward",
+        BpodEvent.Tup: "exit",
+    },
+    output_actions=[(BpodOutput.PWM2, 255)],  # what is on during the state
+)
 ```
 
-The most commonly used attributes available by default inside any task method
-(see the `TaskBase` class docstring for the full list) are:
+The trial starts in the first state added and ends when a transition goes to
+`"exit"`. Every state turns off all the outputs of the previous one and turns on only
+its own `output_actions`, so there is no need to turn anything off. A state with
+`state_timer=0` and no `Tup` condition waits for its events indefinitely; with
+`state_timer=0` and a `Tup` condition, it fires its outputs and moves on at once.
 
-- `self.bpod` — the Bpod interface, used inside `create_trial` to build the state
-  machine.
-- `self.settings` — the session's parameters, as defined in `training_protocol.py`
-  (e.g. `self.settings.reward_volume`).
-- `self.calibrations` — convert hardware values to real-world units, e.g.
-  `self.calibrations.water_calibration.get_valve_time(port, volume)` or
-  `self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)`.
-- `self.cam_box`, `self.gpio`, `self.custom_areas` — the box camera, GPIO output
-  control, and any custom-shaped detection areas the project defines.
-- `self.name`, `self.subject`, `self.current_trial`, `self.system_name`, `self.date`.
-- `self.trial_data` — populated automatically after each trial, available inside
-  `after_trial` (see below).
+**Events** (`state_change_conditions`):
 
-A task that delivers water almost always needs a valve opening time first —
-calibrate the ports from the Water Calibration panel before using this, or it
-raises an exception:
+| Event | When it happens |
+| :--- | :--- |
+| `BpodEvent.Tup` | The state's timer (`state_timer`) runs out. |
+| `BpodEvent.Port1In` ... `Port8In` | The animal pokes into port N (its infrared beam is broken). |
+| `BpodEvent.Port1Out` ... `Port8Out` | The animal leaves port N. |
+| `BpodEvent.BNC1High`, `BNC1Low`, `BNC2High`, `BNC2Low` | A TTL signal on a BNC input goes high or low. |
+| `BpodEvent.SoftCode1`, `SoftCode2`... | The Raspberry Pi sent that softcode with `self.bpod.send_softcode_to_bpod(i)`. |
+| `BpodEvent.GlobalTimer1End`... | A global timer ends (see below). |
 
-```python
-    def start(self):
-        self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
-            port=1, volume=self.settings.reward_volume
-        )
-        self.valve_r_time = self.calibrations.water_calibration.get_valve_time(
-            port=3, volume=self.settings.reward_volume
-        )
-```
+**Outputs** (`output_actions`):
 
-### The `create_trial()` method
+| Output | What it does |
+| :--- | :--- |
+| `(BpodOutput.PWM1, value)` ... `PWM8` | Turns on the LED of port N with an intensity from 0 to 255. |
+| `BpodOutput.Valve1` ... `Valve8` | Opens the valve of port N during the state: use the valve time as `state_timer`. |
+| `BpodOutput.BNC1High`, `BNC2High` | Sets a BNC output high (a TTL to another device) during the state. |
+| `BpodOutput.SoftCode1` ... `SoftCode98` | Makes the Raspberry Pi run direct function N, at the moment the state starts. |
+| `BpodOutput.GlobalTimer1Trig`, `GlobalTimer1Cancel`... | Starts or cancels a global timer. |
 
-Called once per trial. It builds the Bpod state machine for that trial (the
-machine is only sent to Bpod and actually run once `create_trial` returns).
+**Advanced primitives:**
 
-```python
-    def create_trial(self):
-        """
-        This task is very simple, the state machine has only one state
-        called "ready_to_explore". We give it a 60-second timer and a
-        timer-up condition (once the timer elapses) that takes us to "exit".
-        Also, every time there's a poke in any port, we switch to the "exit" state.
-        """
+- **Global timers**: a timer that keeps running across states, independently of each
+  state's own timer, e.g. a deadline for the whole trial. Configure it with
+  `self.bpod.set_global_timer(timer_id=1, timer_duration=10)`, start it with the
+  output `BpodOutput.GlobalTimer1Trig` and react to `BpodEvent.GlobalTimer1End`. See
+  [bpod_global_timer.py](../examples/bpod_global_timer.md).
+- **Global counters** (`self.bpod.set_global_counter(counter_number, target_event,
+  threshold)`): count an event and fire `GlobalCounterNEnd` when a threshold is
+  reached.
+- **Conditions** (`self.bpod.set_condition(condition_number, condition_channel,
+  channel_value)`): check the current level of a channel at the moment of a
+  transition, instead of reacting to a change.
 
-        self.bpod.add_state(
-            state_name="ready_to_explore",
-            state_timer=60,
-            state_change_conditions={
-                BpodEvent.Tup: "exit",
-                BpodEvent.Port1In: "exit",
-                BpodEvent.Port2In: "exit",
-                BpodEvent.Port3In: "exit",
-            },
-            output_actions=[],
-        )
-```
+For global counters, conditions and Bpod modules, see the
+[Bpod documentation](https://sanworks.github.io/Bpod_Wiki/).
+[bpod_outputs_and_events.py](../examples/bpod_outputs_and_events.md) shows every
+event and output of the tables above in a single task.
 
-`BpodEvent` and `BpodOutput` (imported from `village.custom_classes.task_base`
-alongside `TaskBase`) enumerate every Bpod input event and output action. See
-[More Bpod primitives](#more-bpod-primitives) below for a full walkthrough of
-`add_state`, LEDs, valves, softcodes and TTL.
+---
 
-### The `after_trial()` method
+### Examples
 
-Called once after each trial ends, to register whatever values you want saved
-to the session's data file. `self.trial_data` is populated automatically by
-then — `self.trial_data.get("Port1In", [])` is the list of timestamps at which
-port 1 was poked during the trial (empty if it never was), and
-`self.trial_data.get("STATE_<name>_START", [])` / `"..._END"` likewise for every
-Bpod state visited.
+#### A simple task: light and water
+
+The center port lights up; if the animal pokes it, it gets water; if not, the trial
+ends after `led_on_time` seconds. The settings it uses (`reward_volume`,
+`led_on_time`, `led_intensity`, `iti_time`) are defined in the training protocol.
 
 ```python
-    def after_trial(self):
-        """
-        Here we look at the trial_data dictionary that bpod records automatically
-        to find out which events we got.
-        """
-
-        outcome = "miss"
-
-        # for each portIn, we have a list of times at which pokes were registered,
-        # so we check that there's an entry for that port and that it isn't empty,
-        # which indicates that a poke happened.
-        if self.trial_data.get("Port1In"):
-            outcome = "left_poke"
-        if self.trial_data.get("Port2In"):
-            outcome = "center_poke"
-        if self.trial_data.get("Port3In"):
-            outcome = "right_poke"
-
-        # Register the outcome of the trial and the water consumed.
-        # Registering "water" (in microliters) is mandatory on every task --
-        # it's how the system tracks each subject's daily water intake.
-        self.register_value("outcome", outcome)
-        self.register_value("water", 0)
-```
-
-### The `close()` method
-
-Called once when the task finishes (session ends, or manually stopped). Use it
-for any cleanup — closing a serial connection, sending a Slack/email summary,
-generating a plot, etc.
-
-```python
-    def close(self):
-        """
-        We don't need to do any extra work when the task finishes.
-        """
-
-        pass
-```
-
-### A more complete example: FollowTheLight
-
-Now let's look at a task closer to a real 2-choice discrimination protocol —
-[bpod_4_center_initiated.py](../examples/bpod_4_center_initiated.md) and
-[bpod_5_introduce_penalty.py](../examples/bpod_5_introduce_penalty.md) are
-the real versions of this in the examples (respectively without and with a
-penalty for the wrong side); this walkthrough merges both into one task that
-switches behavior based on `self.settings.stage`:
-
-- The mouse initiates each trial by poking the center port (its LED turns on).
-- After the center poke, one of the two side LEDs turns on at random.
-- Poking the correct side delivers a reward.
-- In stage 1, poking the wrong side does nothing (the mouse can just try again).
-  In stage 2, it triggers a penalty (noise + timeout) instead.
-- Progression between stages is decided in `training_protocol.py`'s
-  `update_training_settings`, based on performance.
-
-```python
-import random
+import math
 
 from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
 
 
-class FollowTheLight(TaskBase):
+class LightAndWater(TaskBase):
     def __init__(self):
         super().__init__()
-
         self.info = """
-        Follow The Light Task
-        -------------------
-        The mouse pokes the center port to start a trial. One of the two side
-        ports then lights up; poking it delivers a reward. Stage 1 has no
-        penalty for the wrong side, stage 2 does (see self.settings.stage).
+        Light and Water
+        ---------------
+        The center port lights up; poking it delivers water.
         """
 
     def start(self):
-        """
-        Required settings (defined in training_protocol.py):
-        - self.settings.reward_volume: reward volume delivered on a correct poke
-        - self.settings.led_intensity: port LED brightness (0-255)
-        - self.settings.c_led_on_time: time allowed to poke the center port, seconds
-        - self.settings.led_on_time: time allowed to poke the correct side, seconds
-        - self.settings.iti_time: inter-trial interval, seconds
-        - self.settings.stage: 1 (no penalty) or 2 (penalty for the wrong side)
-        - self.settings.noise_time, self.settings.timeout: only used in stage 2
-        """
-
-        self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
-            port=1, volume=self.settings.reward_volume
-        )
-        self.valve_r_time = self.calibrations.water_calibration.get_valve_time(
-            port=3, volume=self.settings.reward_volume
+        # the time valve 2 must stay open to deliver reward_volume microliters
+        self.valve_time = self.calibrations.water_calibration.get_valve_time(
+            port=2, volume=self.settings.reward_volume
         )
 
     def create_trial(self):
-        self.side = random.choice(["left", "right"])
-
-        if self.side == "left":
-            valvetime = self.valve_l_time
-            valve_action = BpodOutput.Valve1
-            correct_led = (BpodOutput.PWM1, self.settings.led_intensity)
-            correct_side = BpodEvent.Port1In
-            wrong_side = BpodEvent.Port3In
-        else:
-            valvetime = self.valve_r_time
-            valve_action = BpodOutput.Valve3
-            correct_led = (BpodOutput.PWM3, self.settings.led_intensity)
-            correct_side = BpodEvent.Port3In
-            wrong_side = BpodEvent.Port1In
-
-        # In stage 1, a wrong poke isn't wired to any transition, so it's just
-        # ignored and the mouse can try again before "side_led_on" times out.
-        side_led_on_conditions = {
-            BpodEvent.Tup: "exit",
-            correct_side: "water_delivery",
-        }
-        if self.settings.stage == 2:
-            side_led_on_conditions[wrong_side] = "wrong_choice"
-
-        # 'c_led_on': center LED on, waits for the trial-initiating center poke
         self.bpod.add_state(
-            state_name="c_led_on",
-            state_timer=self.settings.c_led_on_time,
+            state_name="light_on",
+            state_timer=self.settings.led_on_time,
             state_change_conditions={
+                BpodEvent.Port2In: "reward",
                 BpodEvent.Tup: "exit",
-                BpodEvent.Port2In: "side_led_on",
             },
             output_actions=[(BpodOutput.PWM2, self.settings.led_intensity)],
         )
-
-        # 'side_led_on': only the correct side's LED turns on
         self.bpod.add_state(
-            state_name="side_led_on",
-            state_timer=self.settings.led_on_time,
-            state_change_conditions=side_led_on_conditions,
-            output_actions=[correct_led],
-        )
-
-        self.bpod.add_state(
-            state_name="water_delivery",
-            state_timer=valvetime,
+            state_name="reward",
+            state_timer=self.valve_time,
             state_change_conditions={BpodEvent.Tup: "iti"},
-            output_actions=[valve_action],
+            output_actions=[BpodOutput.Valve2],
         )
-
         self.bpod.add_state(
             state_name="iti",
             state_timer=self.settings.iti_time,
@@ -277,255 +222,247 @@ class FollowTheLight(TaskBase):
             output_actions=[],
         )
 
-        # Stage 2 only: noise, then a silent timeout, before exiting.
-        self.bpod.add_state(
-            state_name="wrong_choice",
-            state_timer=self.settings.noise_time,
-            state_change_conditions={BpodEvent.Tup: "timeout"},
-            output_actions=[BpodOutput.SoftCode4],
-        )
-
-        self.bpod.add_state(
-            state_name="timeout",
-            state_timer=self.settings.timeout - self.settings.noise_time,
-            state_change_conditions={BpodEvent.Tup: "exit"},
-            output_actions=[],
-        )
-
     def after_trial(self):
-        """Work out response_side and outcome for this trial.
-
-        Whichever side the animal poked first (if any) after the side LED
-        turned on determines the outcome, independently of which Bpod state
-        that poke happened to transition into -- this way stage 1 (where a
-        wrong poke isn't wired to any transition) and stage 2 (where it goes
-        to "wrong_choice") are scored the same way.
-        """
-
-        side_led_on_start = self.trial_data.get("STATE_side_led_on_START")
-        if not side_led_on_start:
-            # The center poke never happened -> side LED never turned on.
-            self.register_value("rewarded_side", self.side)
-            self.register_value("water", 0)
-            self.register_value("outcome", "omission")
-            self.register_value("response_side", "none")
-            return
-
-        t_side_led_on = side_led_on_start[0]
-
-        correct_key, wrong_key = (
-            ("Port1In", "Port3In") if self.side == "left" else ("Port3In", "Port1In")
-        )
-        correct_pokes = [
-            t for t in self.trial_data.get(correct_key, []) if t >= t_side_led_on
-        ]
-        wrong_pokes = [
-            t for t in self.trial_data.get(wrong_key, []) if t >= t_side_led_on
-        ]
-
-        if correct_pokes and (not wrong_pokes or correct_pokes[0] <= wrong_pokes[0]):
-            outcome = "correct"
-            response_side = self.side
-            water = self.settings.reward_volume
-        elif wrong_pokes:
-            outcome = "incorrect"
-            response_side = "right" if self.side == "left" else "left"
-            water = 0
-        else:
-            outcome = "miss"
-            response_side = "none"
-            water = 0
-
-        self.register_value("rewarded_side", self.side)
-        self.register_value("water", water)
-        self.register_value("outcome", outcome)
-        self.register_value("response_side", response_side)
+        # a state that was not visited appears as [nan]
+        rewarded = not math.isnan(self.trial_data["STATE_reward_START"][0])
+        self.register_value("outcome", "correct" if rewarded else "miss")
+        self.register_value("water", self.settings.reward_volume if rewarded else 0)
 
     def close(self):
         pass
 ```
 
+The water calibration must exist for port 2, or `get_valve_time` raises an error.
+
+#### Playing a sound
+
+The sound card is controlled by the Raspberry Pi, not by Bpod. The task loads the
+sound once, in `start`, and the state machine asks the Raspberry Pi to play it with
+a softcode: `BpodOutput.SoftCode1` runs direct function 1 at the moment the state
+starts.
+
+In `direct_functions.py`:
+
+```python
+from village.custom_classes.direct_functions_base import DirectFunctionsBase
+from village.devices.sound_device import sound_device
+
+
+class DirectFunctions(DirectFunctionsBase):
+    def function1(self):
+        """Play Loaded Sound"""
+        sound_device.play()
+```
+
+In the task, the sound plays when the animal pokes the center port, together with
+the water:
+
+```python
+from sound_functions import whitenoise_generator
+
+from village.custom_classes.task_base import BpodEvent, BpodOutput, TaskBase
+from village.devices.sound_device import sound_device
+
+
+class SoundAndWater(TaskBase):
+    def start(self):
+        self.valve_time = self.calibrations.water_calibration.get_valve_time(
+            port=2, volume=self.settings.reward_volume
+        )
+        sound = whitenoise_generator(duration=0.5, gain=0.05)
+        sound_device.load(left=sound, right=sound)  # loaded once, played every trial
+
+    def create_trial(self):
+        self.bpod.add_state(
+            state_name="wait_poke",
+            state_timer=60,
+            state_change_conditions={
+                BpodEvent.Port2In: "sound_and_water",
+                BpodEvent.Tup: "exit",
+            },
+            output_actions=[],
+        )
+        self.bpod.add_state(
+            state_name="sound_and_water",
+            state_timer=self.valve_time,
+            state_change_conditions={BpodEvent.Tup: "exit"},
+            output_actions=[BpodOutput.SoftCode1, BpodOutput.Valve2],
+        )
+
+    ...  # after_trial and close as in the first example
+```
+
+`gain=0.05` is an arbitrary volume; to play the sound at a given level in dB, use the
+sound calibration (see [Sound](../devices/sound.md)).
+
+#### Reacting to the camera
+
+The camera is also on the Raspberry Pi, so the information goes the other way: the
+camera trigger sends a softcode to Bpod, and the state machine waits for it. In this
+example the animal gets water when it enters box area 1 (set as a TRIGGER area, with
+`CAM_BOX_TRACKING_POSITION` ON).
+
+In `camera_trigger.py`, which runs on every camera frame:
+
+```python
+from village.custom_classes.camera_trigger_base import CameraTriggerBase
+from village.devices.camera import Camera
+from village.scripts.time_utils import time_utils
+
+
+class CameraTrigger(CameraTriggerBase):
+    def __init__(self) -> None:
+        super().__init__()
+        self.inside = False
+
+    def trigger(self, cam: Camera) -> None:
+        if cam.name != "BOX":
+            return
+        # only when the animal enters, not on every frame while it is inside
+        if cam.area1_is_triggered and not self.inside:
+            self.task.register_raspberry_event("area1_entered", time_utils.now_timestamp())
+            self.task.bpod.send_softcode_to_bpod(1)
+        self.inside = cam.area1_is_triggered
+```
+
+In the task:
+
+```python
+    def create_trial(self):
+        self.bpod.add_state(
+            state_name="wait_area1",
+            state_timer=60,
+            state_change_conditions={
+                BpodEvent.SoftCode1: "reward",  # sent by camera_trigger.py
+                BpodEvent.Tup: "exit",
+            },
+            output_actions=[],
+        )
+        self.bpod.add_state(
+            state_name="reward",
+            state_timer=self.valve_time,
+            state_change_conditions={BpodEvent.Tup: "exit"},
+            output_actions=[BpodOutput.Valve2],
+        )
+```
+
+The touchscreen works the same way: in `touch_trigger.py`, `trigger(self, x, y,
+timestamp)` is called on every touch, and it sends a softcode when the touch is
+inside a target. See [Screen & Touchscreen](../devices/screen.md#reacting-to-touches)
+and [bpod_touchscreen.py](../examples/bpod_touchscreen.md).
+
+#### Complete examples
+
+The tasks of the example project, from habituation to a full discrimination task,
+with the state machine diagram of each one, are in
+[Task Examples (Bpod)](../examples/tasks_bpod.md). Among them,
+[bpod_area2_sound.py](../examples/bpod_area2_sound.md) combines the last two
+examples: entering an area plays a sound and delivers water.
+
 ---
 
-### More Bpod primitives
+### Trial data
 
-For a runnable walkthrough of the Bpod building blocks, see two reference
-tasks of the examples (neither is a real behavioral protocol):
+When a trial ends, everything that happened in it is put in `self.trial_data`, a
+dictionary that `after_trial` reads to decide the outcome of the trial. Its keys:
 
-- [bpod_outputs_and_events.py](../examples/bpod_outputs_and_events.md) — LEDs, a valve, poke in/out,
-  softcodes in both directions, and TTL pulses in both directions.
-- [bpod_global_timer.py](../examples/bpod_global_timer.md) — a global timer: a deadline that ticks in
-  the background across every state, independently of each state's own
-  timer, until it ends or is cancelled.
+| Key | Value |
+| :--- | :--- |
+| `"date"`, `"trial"`, `"subject"`, `"task"`, `"system_name"` | Which session and trial it is. |
+| `"TRIAL_START"`, `"TRIAL_END"` | When the trial started and ended. |
+| `"STATE_<name>_START"`, `"STATE_<name>_END"` | For every state of the state machine, a list with the times it was entered and left (a list, because a state can be visited several times). A state that was **not visited** has `[nan]`. |
+| `"<event>"` (`"Port1In"`, `"Tup"`, `"SoftCode1"`...) | For every event that happened, a list with the times of each occurrence. Events that did not happen are not in the dictionary. Events registered with `register_raspberry_event` during the trial are included too, and so are the ones the system registers by itself: `sound` when a sound starts playing, `touch_<x>_<y>` for every touch. |
+| `"ordered_list_of_events"` | The names of all the events, in the order they happened. |
 
-Two more primitives exist beyond what those examples cover — global counters
-(`self.bpod.set_global_counter(counter_number, target_event, threshold)`,
-counts occurrences of an event and fires once a threshold is reached) and
-conditions (`self.bpod.set_condition(condition_number, condition_channel,
-channel_value)`, checks a channel's current level at the moment of a
-transition rather than reacting to an edge). For both, see the official Bpod
-documentation: [sanworks.github.io/Bpod_Wiki](https://sanworks.github.io/Bpod_Wiki/).
+All the times are in seconds (UNIX time, the same clock for Bpod and the Raspberry
+Pi), so they can be compared and subtracted directly.
+
+For example, a trial of the first example in which the animal pokes port 3 (which
+does nothing), then the lit port 2, and gets water:
+
+```python
+{
+    "date": "2026-11-07 10:30:00",
+    "trial": 12,
+    "subject": "mouse1",
+    "task": "LightAndWater",
+    "system_name": "village01",
+    "TRIAL_START": 1793961045.20,
+    "TRIAL_END": 1793961048.43,
+    "STATE_light_on_START": [1793961045.20],
+    "STATE_light_on_END": [1793961047.38],
+    "STATE_reward_START": [1793961047.38],
+    "STATE_reward_END": [1793961047.43],
+    "STATE_iti_START": [1793961047.43],
+    "STATE_iti_END": [1793961048.43],
+    "Port3In": [1793961046.10],
+    "Port3Out": [1793961046.31],
+    "Port2In": [1793961047.38],
+    "Tup": [1793961047.43, 1793961048.43],
+    "ordered_list_of_events": ["Port3In", "Port3Out", "Port2In", "Tup", "Tup"],
+}
+```
+
+The usual questions are answered like this (the comments give the results for the
+trial above):
+
+```python
+import math
+
+def after_trial(self):
+    # Was a state visited? Its first start time is not nan.
+    rewarded = not math.isnan(self.trial_data["STATE_reward_START"][0])  # True
+
+    # Did an event happen? Its key exists: use .get with an empty list by default.
+    poked_port3 = len(self.trial_data.get("Port3In", [])) > 0  # True
+
+    # How long did something take? Subtract two times.
+    light_on = self.trial_data["STATE_light_on_START"][0]
+    light_off = self.trial_data["STATE_light_on_END"][0]
+    response_time = light_off - light_on  # 2.18 s
+
+    # Which port was poked first after the light turned on? Compare the times.
+    pokes = [
+        (t, port)
+        for port in ("Port1In", "Port2In", "Port3In")
+        for t in self.trial_data.get(port, [])
+        if t > light_on
+    ]
+    first_poke = min(pokes)[1] if pokes else "none"  # "Port3In"
+
+    self.register_value("first_poke", first_poke)
+    self.register_value("response_time", response_time)
+    self.register_value("water", self.settings.reward_volume if rewarded else 0)
+```
+
+#### What is saved
+
+At the end of each trial, `trial_data` (with the values registered in `after_trial`)
+becomes one row of the session table. When the session ends, two files are saved:
+
+- **`<session>.csv`**: one row per trial, with a column for each key above and each
+  registered value. It is the file used for the analysis and by the training
+  protocol (`self.df`). A trial only gets its row when it finishes, so the trial
+  that was running when the session stopped is not in it.
+- **`<session>_RAW.csv`**: one line per event, written as they happen, including
+  the trial that was interrupted.
+
+The session is saved if at least one trial was completed. Design the task so that
+trials end after a reasonable time even if the animal does nothing (with a `Tup`
+condition, as in the examples): a session that is a single trial that never ends
+would not be saved.
 
 ---
-
-### Methods you must override
-
-| Method | Called | Use it to |
-|--------|--------|-----------|
-| `start(self)` | Once, before the trial loop begins. | Configure hardware, pre-compute stimuli, open files, etc. |
-| `create_trial(self)` | Once at the start of every trial. | Build the trial's state machine with `self.bpod.add_state`. |
-| `after_trial(self)` | Immediately after each trial finishes. | Score performance, update adaptive parameters, call `register_value`. |
-| `close(self)` | Once after the trial loop ends (session finished, forced stop, or error). | Close files, stop hardware, release resources. |
-
-```{admonition} create_trial with Bpod
-:class: note
-Each call starts with an empty state machine. Add states with `self.bpod.add_state`
-— when the method returns, the state machine is sent and run automatically, and
-`after_trial` is called once it finishes.
-```
-
-```{admonition} after_trial must register "water"
-:class: warning
-Always call `self.register_value("water", ...)` with the amount of water consumed
-during the trial. The system sums it across the session to get total water
-consumption — if that total falls below a configurable threshold, an alarm is
-triggered (adjustable in the Settings tab of the GUI).
-```
-
-```{admonition} What is saved when a session stops
-:class: note
-Each session saves two files:
-
-- The **raw** file (`<session>_RAW.csv`) has one line per event. During the session
-  the events are written as they happen to `data/sessions/session.csv`, which is
-  copied to the raw file when the session ends, so it keeps everything — including
-  the trial that was still running when the session stopped.
-- The **clean** file (`<session>.csv`) is a table with one row per trial, and a
-  trial's row is only created when the trial finishes (after `after_trial`). So
-  the trial that was still running when the session stopped never gets its row.
-
-The session is saved if at least one trial was completed. If none was, nothing
-is saved (neither file) and the "No trials were recorded" alarm is raised (if
-`NO_TRIALS_PERFORMED` is on).
-
-Because the trial in progress is always lost from the clean file, design your
-tasks so that trials keep advancing as time passes: a trial should end after a
-reasonable time even if the animal does nothing (e.g. with a timeout), instead
-of waiting indefinitely. A task that runs the whole session as a single trial
-would never be saved.
-```
-
----
-
-### Methods you can call
-
-Do not override these — call them from inside your task's own methods.
-
-#### Trial, states and controller events
-
-With Bpod, the start and end of every trial, every state and every Bpod event are
-registered automatically: you never need to call `register_start_trial`,
-`register_end_trial`, `register_enter_state` or `register_controller_event`.
-
-#### Registering a Raspberry-side event
-
-```python
-def register_raspberry_event(self, name: str, raspberry_timestamp: float) -> None
-```
-
-For events generated by the Raspberry Pi itself, asynchronously from the trial
-— e.g. executing a direct function, or a camera/touchscreen detection. Pass
-`time_utils.now_timestamp()` as `raspberry_timestamp`.
-
-#### Registering a value
-
-```python
-def register_value(self, name: str, value: Any) -> None
-```
-
-Saves a custom value to the current trial row in the CSV — call it inside
-`after_trial`.
-
-```python
-self.register_value("correct", 1)
-self.register_value("response_time", 0.432)
-```
-
-#### Executing a direct function
-
-```python
-def execute_function(self, i: int) -> None
-```
-
-Runs the direct function registered at index `i` (1-98). See
-[Direct Functions](functions.md) for how those get registered and
-the other ways they can be triggered.
-
-```python
-self.execute_function(1)  # executes the function registered at index 1
-```
-
----
-
-### Attributes you can read
-
-| Attribute | Type | Description |
-|-----------|------|--------------|
-| `self.name` | `str` | Name of the task (the class name). |
-| `self.subject` | `str` | Name of the subject running the session. |
-| `self.system_name` | `str` | Name of the system, as defined in the Settings tab. |
-| `self.bpod` | `BpodController` | Bpod interface — state machine construction, sending, etc. Mainly used inside `create_trial`. |
-| `self.settings` | `Settings` | Session parameters defined in the training protocol. Read and write its attributes to implement adaptive training. |
-| `self.cam_box` | `Camera \| NullCamera` | Camera attached to the operant box (`NullCamera` if not configured). |
-| `self.gpio` | `Gpio \| NullGpio` | Output pin control (`set_on()` / `set_off()`). See [GPIO](../devices/gpio.md) for the input-pin trigger hook. |
-| `self.current_trial` | `int` | The current trial number, starting from 1. |
-| `self.date` | `str` | Date string of the current session, set once when it starts. |
-| `self.run_mode` | `str` | `"Manual"` or `"Auto"`. |
-| `self.force_stop` | `bool` | Set to `True` from your own task logic (e.g. in `after_trial`) to make the task stop. |
-| `self.stop_button_pressed` | `bool` | `True` once something external (e.g. the STOP TASK button) has asked the task to stop. Read-only — react to it, don't set it. |
-| `self.chrono` | `Chrono` | `self.chrono.get_time()` gives the time in seconds since the task started. |
-
-#### `self.info`
-
-Human-readable description of the task, set once (usually in `__init__`). Shown to
-the user when selecting the task in the GUI.
-
-```python
-self.info = """
-My Task
--------
-Describe what the task does and how it progresses here.
-"""
-```
-
-#### `self.calibrations`
-
-Holds the task's calibrations — call its methods to convert between hardware
-values and real-world units (see [Custom Calibrations](../advanced_customization/calibrations.md)).
-
-```python
-gain = self.calibrations.sound_calibration.get_sound_gain(
-    speaker=1, dB=70.0, sound_name="whitenoise"
-)
-```
-
-#### `self.should_stop` (read-only property)
-
-`True` once *any* stopping condition is met: the time limit (`maximum_duration`),
-the trial limit (`maximum_number_of_trials`, Manual mode only: Auto mode does not
-stop after a fixed number of trials), `force_stop`, or `stop_button_pressed`.
 
 (force-stop)=
-#### Stopping the task from your own logic (`self.force_stop`)
+### Ending the session from the task
 
-Set `self.force_stop = True` (usually in `after_trial`) to end the session when a
-condition of your own is met. It works in both Manual and Auto mode: in Auto mode, the
-session is saved and the subject is let out, as when `maximum_duration` is reached.
-
-For example, to limit the number of trials also in Auto mode (where
-`maximum_number_of_trials` does not apply), add a variable to the training protocol
-(`self.settings.max_trials = 300` in `default_training_settings`) and check it in the
-task:
+Set `self.force_stop = True` to end the session. The session ends at once, so set it
+in `after_trial`, when the trial is already complete: set during a trial (from a
+trigger or a direct function), it cuts that trial. It works in Auto mode too: the
+session is saved and the subject is let out, as when `maximum_duration` is reached,
+even before `minimum_duration`. For example, to stop after a maximum number of trials
+(`max_trials` defined in the training protocol):
 
 ```python
 def after_trial(self):
@@ -534,117 +471,7 @@ def after_trial(self):
         self.force_stop = True
 ```
 
-The same pattern works for any other criterion: a maximum amount of water, a number of
-correct trials, a performance threshold...
-
-#### `self.trial_data` (dict)
-
-Populated automatically at the end of each trial — available inside `after_trial`.
-
-**Keys always present:**
-
-- `"date"` (str), `"trial"` (int), `"subject"` (str), `"task"` (str), `"system_name"` (str)
-- `"TRIAL_START"` / `"TRIAL_END"` (float): absolute timestamps (UNIX epoch seconds)
-- `"ordered_list_of_events"` (list[str]): event names in the order they occurred (e.g. `["Port1In", "Port1Out", "Port1In"]`)
-
-With Bpod all of them are filled automatically.
-
-**Keys added per state** (Bpod states):
-
-- `"STATE_<name>_START"` / `"STATE_<name>_END"` (list[float]): timestamps of every
-  entry/exit for that state — a list because the same state can be visited more
-  than once per trial.
-
-They are added automatically for every state of the state machine. A state that
-was **not visited** still appears, with `[nan]`: to check whether a state was
-visited, look at its first start time (see the example below).
-
-**Keys added per event type:**
-
-- `"<EventName>"` (list[float]): timestamps of every occurrence of that event
-  (e.g. `"Port1In"`, `"Port1Out"`, `"Tup"`, `"SoftCode1"`).
-
-Bpod events are added automatically. Events you register yourself with
-`register_raspberry_event` (only those registered while the trial is running) are
-added the same way, in the same absolute time as the Bpod events.
-
-**Keys added by you:** any name passed to `register_value` inside `after_trial`.
-
-##### Example
-
-A short trial with four states: the animal pokes the right port (3) while
-waiting, starts the trial in the center port (2), and then pokes the left port
-(1), which is rewarded:
-
-```python
-{
-    "date": "2026-10-08 10:15:02",
-    "trial": 12,
-    "subject": "mouse1",
-    "task": "MyTask",
-    "system_name": "village01",
-    "TRIAL_START": 1791454502.10,
-    "TRIAL_END": 1791454506.35,
-    "STATE_WAIT_POKE_START": [1791454502.10],
-    "STATE_WAIT_POKE_END": [1791454503.20],
-    "STATE_RESPONSE_START": [1791454503.20],
-    "STATE_RESPONSE_END": [1791454504.90],
-    "STATE_REWARD_START": [1791454504.90],
-    "STATE_REWARD_END": [1791454504.95],
-    "STATE_ITI_START": [1791454504.95],
-    "STATE_ITI_END": [1791454506.35],
-    "Port3In": [1791454502.60],
-    "Port3Out": [1791454502.75],
-    "Port2In": [1791454503.20],
-    "Port2Out": [1791454503.41],
-    "Port1In": [1791454504.90],
-    "Tup": [1791454504.95, 1791454506.35],
-    "ordered_list_of_events": [
-        "Port3In", "Port3Out", "Port2In", "Port2Out", "Port1In", "Tup", "Tup"
-    ],
-}
-```
-
-Getting information out of it in `after_trial`:
-
-```python
-import math
-
-def after_trial(self):
-    # 1. Did the animal reach the REWARD state? With Bpod a state that was not visited is [nan].
-    # The default makes it work as well if the key is missing.
-    t_reward = self.trial_data.get("STATE_REWARD_START", [math.nan])[0]
-    rewarded = not math.isnan(t_reward)
-
-    # 2. First poke from the RESPONSE state onwards. Strictly after its start:
-    # the center poke that started RESPONSE has exactly that timestamp.
-    first_response_poke = "none"
-    t_response = self.trial_data.get("STATE_RESPONSE_START", [math.nan])[0]
-    if not math.isnan(t_response):
-        pokes = [
-            (t, port)
-            for port in ("Port1In", "Port2In", "Port3In")
-            for t in self.trial_data.get(port, [])
-            if t > t_response
-        ]
-        if pokes:
-            first_response_poke = min(pokes)[1]  # the earliest one
-
-    # 3. Register the results (and, as always, the water).
-    if rewarded:
-        outcome = "correct"
-    elif first_response_poke == "none":
-        outcome = "miss"
-    else:
-        outcome = "incorrect"
-    self.register_value("first_response_poke", first_response_poke)
-    self.register_value("outcome", outcome)
-    self.register_value("water", self.settings.reward_volume if rewarded else 0)
-```
-
-With the example above: `rewarded` is `True`, `first_response_poke` is
-`"Port1In"` (the `Port3In` came before RESPONSE and the `Port2In` is the one that
-started it), and `outcome` is `"correct"`.
+The same works for any criterion: an amount of water, a number of correct trials...
 
 ```{toctree}
 :hidden:

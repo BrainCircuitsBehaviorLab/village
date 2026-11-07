@@ -52,8 +52,10 @@ class TaskBase:
 
     The task starts by calling ``start()``, then enters a loop where it calls
     ``create_trial()`` followed by ``after_trial()``. The loop continues until the
-    maximum number of trials is reached, the maximum duration is exceeded,
-    or ``force_stop`` is set to True. Finally, ``close()`` is called to
+    maximum number of trials is reached (Manual mode), the maximum duration is
+    exceeded, ``force_stop`` is set to True, or the STOP button is pressed. Except
+    for the trial limit, these conditions end the session at once, even in the
+    middle of a trial (that trial is not saved). Finally, ``close()`` is called to
     clean up resources.
 
 
@@ -270,7 +272,10 @@ class TaskBase:
 
     self.force_stop: bool
         Set this to True from inside your own task logic (e.g. in after_trial,
-        once some in-task condition is met) to make the task stop.
+        once some in-task condition is met) to make the task stop. The session
+        ends at once: if it is set during a trial (from a trigger or a direct
+        function), that trial is cut and not saved; set in after_trial, the
+        trial is already complete.
 
     self.stop_button_pressed: bool
         True once something external (e.g. the STOP TASK button) has asked the
@@ -278,8 +283,9 @@ class TaskBase:
         just read it if you want to react to it.
 
     self.should_stop: bool (read-only)
-        True once ANY stopping condition is met: the trial/time limit (in
-        Manual mode), force_stop, or stop_button_pressed. If your task does not use
+        True once ANY stopping condition is met: the time limit, the trial
+        limit (Manual mode only), force_stop, or stop_button_pressed. If your
+        task does not use
         Bpod and create_trial contains its own waiting loop, check this
         property on every iteration so the loop actually exits when the task
         is asked to stop, instead of running forever:
@@ -513,11 +519,13 @@ class TaskBase:
     def should_stop(self) -> bool:
         """True once any stopping condition is met.
 
-        Trial/time limits and force_stop are only checked BETWEEN trials, by
-        run()'s own while loop -- they cannot interrupt a create_trial() that
-        is currently blocked in its own waiting loop. Tasks that do not use
-        Bpod and wait on their own condition inside create_trial should poll
-        this property instead, so they actually exit when asked to.
+        The system (main.py) checks these conditions continuously and ends the
+        session at once, even in the middle of a trial: Bpod is stopped and
+        the trial in progress is not saved. run()'s own while loop only checks
+        this property between trials, so it cannot interrupt a create_trial()
+        that is blocked in its own waiting loop. Tasks that do not use Bpod
+        and wait on their own condition inside create_trial should poll this
+        property instead, so they actually exit when asked to.
 
         The trial limit only applies in Manual mode: Auto mode runs until the
         subject leaves the corridor, not for a fixed number of trials.
