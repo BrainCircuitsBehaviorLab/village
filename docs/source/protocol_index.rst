@@ -14,4 +14,5 @@ PROTOCOL & TASK DESIGN
     protocols/tasks_bpod.md
     protocols/tasks_arduino.md
     protocols/tasks_raspberry.md
+    protocols/tasks_reference.md
     protocols/functions.md
