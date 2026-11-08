@@ -26,7 +26,8 @@ an optional one in the box, for your tasks.
 ### Using It in Tasks
 
 While a task is running, the box scale is read continuously (see below), and the last
-weight read is always available, without making a new reading:
+weight read is always available, without making a new reading (outside a task the
+scale is not read, so it keeps the last value read):
 
 ```python
 from village.devices.scale import scale_box
@@ -85,7 +86,10 @@ class ScaleTrigger(ScaleTriggerBase):
 ```{admonition} Note
 :class: note
 `on_weight` runs in the scale reader thread, not in the task thread. Keep it
-fast and avoid blocking calls: the next reading waits until it returns.
+fast and avoid blocking calls: the next reading waits until it returns. It can be
+called as soon as the task starts, possibly before `start` has finished: create every
+attribute of the task it reads in the `__init__` of the task. If it raises an error,
+the error is logged and the readings go on.
 ```
 
 A complete example, which records when the animal steps on and off the scale

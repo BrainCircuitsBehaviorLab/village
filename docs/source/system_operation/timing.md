@@ -154,7 +154,8 @@ strip length at roughly 0.04 ms per LED at the default `SPI_SPEED_KHZ` = 800.
 For a 144-LED strip or matrix: **mean = 5.8 ms, SD = 0.2 ms**.
 
 **Sound playback (Raspberry Pi DAC Pro)**
-The slow part — decoding and staging the audio — happens in `load()`, ahead of time.
+The slow part — preparing the audio for the sound card — happens in `load()`, ahead
+of time.
 `play()` itself is fast, since it just wakes the primed PCM: measured at the default
 `SAMPLERATE` (96 kHz), **mean = 3.2 ms, SD = 0.6 ms**.
 

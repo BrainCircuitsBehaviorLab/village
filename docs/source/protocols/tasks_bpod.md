@@ -29,16 +29,14 @@ when the STOP button is pressed, or when your task sets `self.force_stop = True`
 system checks these conditions continuously, not only between trials: if one is met
 during a trial, the session ends at once and that trial is cut (it is not saved in the
 session file, only in the RAW file). In Manual mode the session also ends after the
-number of trials chosen when launching the task; this limit is reached at the end of
-a trial, so nothing is lost.
+number of trials chosen when launching the task.
 
-While Bpod runs a trial your Python code is waiting, so it cannot react in the
-middle of a trial by itself. Two channels connect the Raspberry Pi and Bpod during
-the trial: **softcodes** from Bpod make the Raspberry Pi run a direct function (to
-play a sound, show an image...), as in [Playing a sound](#playing-a-sound), and
-**softcodes** from the Raspberry Pi to Bpod let the state machine react to something
-only the Raspberry Pi sees (the camera, the touchscreen...), see
-[Softcodes](softcodes).
+While Bpod runs a trial your Python code is waiting. Two channels connect the Raspberry
+Pi and Bpod during the trial: **softcodes** from Bpod make the Raspberry Pi run a
+direct function (to play a sound, show an image...), as in
+[Playing a sound](#playing-a-sound), and **softcodes** from the Raspberry Pi to Bpod
+let the state machine react to something only the Raspberry Pi sees (the camera,
+the touchscreen...), see [Softcodes](softcodes).
 
 ```{admonition} Register water in every trial
 :class: warning
@@ -322,8 +320,23 @@ function: the state machine asks the Raspberry Pi to run it with a softcode.
 `BpodOutput.SoftCode4` in the `output_actions` of a state runs direct function 4 at
 the moment the state starts.
 
-In the example project, direct function 4 plays the sound that is loaded. It is
-defined in `direct_functions.py`:
+This uses two files of your project's `code` directory, written by you (the example
+project already includes both):
+
+- **`direct_functions.py`**: a class that inherits from `DirectFunctionsBase`, with
+  a method `functionN` for each direct function (N from 1 to 98). You choose what
+  each number does. Direct functions can also be run from the GUI or from the
+  triggers, and they can do anything the Raspberry Pi can: draw on the screen,
+  write on the camera image... See
+  [Writing Direct Functions](functions.md#writing-direct-functions).
+- **`sound_functions.py`**: functions that generate sounds as NumPy arrays, such as
+  `tone_generator` or `whitenoise_generator`. See
+  [Sound Functions](../devices/sound.md#sound-functions).
+
+The sound is loaded with `sound_device.load` and played with `sound_device.play`
+(see [Using It in Tasks](../devices/sound.md#using-it-in-tasks)).
+
+In the example project, direct function 4 plays the sound that is loaded:
 
 ```python
 from village.custom_classes.direct_functions_base import DirectFunctionsBase
@@ -383,16 +396,12 @@ class PokeForSound(TaskBase):
 ```
 
 - `create_trial` runs before Bpod starts the trial, so it is the place to load the
-  sound of each trial. Loading takes a few milliseconds; playing a loaded sound
-  starts at once.
+  sound of each trial. Loading takes longer the longer the sound is; playing a
+  loaded sound starts at once.
 - `self.frequency` is an attribute of the task, so `after_trial` can register it.
 - `gain=0.05` is an arbitrary volume. To play the sound at a given level in dB, use
   the sound calibration (see [Sound](../devices/sound.md)).
 - When the sound starts playing, the system adds a `sound` event to `trial_data`.
-
-Direct functions can also be run from the GUI or from the triggers, and they can do
-anything the Raspberry Pi can: draw on the screen, write on the camera image... See
-[Direct Functions](functions.md).
 
 ```{toctree}
 :hidden:

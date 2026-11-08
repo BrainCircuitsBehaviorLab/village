@@ -568,10 +568,36 @@ class Camera:
         files. Called from stop_recording, in the main loop, so the merge is
         done before anything else (rsync, a project's after_session, an app
         exit) can see the segments.
+
+        Segments that don't exist or are empty are skipped: if the camera gave
+        no frames before a restart, ffmpeg never wrote that segment. When only
+        one segment is left, it is just renamed to segments[0].
         """
         final_path = segments[0]
         list_file = final_path + ".concat.txt"
         tmp_output = final_path + ".merged.mp4"
+        existing = [
+            seg for seg in segments if Path(seg).exists() and Path(seg).stat().st_size
+        ]
+        if len(existing) <= 1:
+            try:
+                if existing and existing[0] != final_path:
+                    Path(existing[0]).replace(final_path)
+            except Exception:
+                try:
+                    error_queue.put_nowait(
+                        (
+                            "cam",
+                            "Camera "
+                            + self.name
+                            + ": failed to rename video segment after restart.",
+                            traceback.format_exc(),
+                        )
+                    )
+                except queue.Full:
+                    pass
+            return
+        segments = existing
         try:
             with Path(list_file).open("w") as f:
                 for seg in segments:
@@ -594,8 +620,9 @@ class Camera:
                 capture_output=True,
             )
             Path(tmp_output).replace(final_path)
-            for seg in segments[1:]:
-                Path(seg).unlink(missing_ok=True)
+            for seg in segments:
+                if seg != final_path:
+                    Path(seg).unlink(missing_ok=True)
             print(
                 f"Camera {self.name}: merged {len(segments)} video "
                 f"segments into {final_path}"

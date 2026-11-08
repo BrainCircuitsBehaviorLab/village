@@ -28,7 +28,7 @@ class Gpio:
 
     - Output (GPIO_OUT, default 27): set_on() drives the pin HIGH and set_off()
       drives it LOW. Call them from anywhere (a task, a trigger, direct
-      functions, the screen sync...); they work regardless of the input.
+      functions...); they work regardless of the input.
     """
 
     def __init__(self) -> None:

@@ -6,13 +6,21 @@ Each one is triggered at a different point in the data lifecycle:
 | Class | When it runs | Data available |
 |---|---|---|
 | `OnlinePlotBase` | During the session, in the window opened with `ONLINE PLOTS` | Current session trials so far |
-| `SessionPlotBase` | With `PLOT` on a session of `DATA` → `SESSIONS_SUMMARY` | Full session CSV |
-| `SubjectPlotBase` | With `PLOT` on a subject of the `SUBJECTS` screen | All sessions for that subject |
+| `SessionPlotBase` | With `PLOT SESSION` on a session of `DATA` → `SESSIONS_SUMMARY` | Full session CSV |
+| `SubjectPlotBase` | With `PLOT SUBJECT` on a subject of the `SUBJECTS` screen | All sessions for that subject |
 
 Create a file anywhere inside your project's `code` directory and define a subclass of
 the base class (e.g. `OnlinePlot` in `online_plot.py`; the file and class names are up to
 you). The system detects it automatically at startup and uses it instead of the
 default. Only one subclass of each base class is used per project.
+
+The example project already includes the three of them:
+[online_plot.py](../examples/online_plot.md),
+[session_plot.py](../examples/session_plot.md) and
+[subject_plot.py](../examples/subject_plot.md). They work with every task of the
+example project, without naming any: each panel is drawn only if the task registered
+the column it needs (`outcome`, `water`, `response_side`, `p`...), and shows "no
+outcome data" or "not applicable" otherwise.
 
 ---
 
@@ -62,26 +70,26 @@ Always clear the axes at the start of `update_plot` to avoid stacking traces.
 - One column per state (`STATE_<name>_START` / `STATE_<name>_END`) and per event
   (e.g. `Port1In`, `Port1Out`, `Tup`, ...): the ones Bpod records automatically, or the
   ones the task registers itself without Bpod. Each cell is a **list** of the
-  timestamps of that trial (see `self.trial_data` in [Tasks (Bpod)](tasks_bpod.md)).
-
-The saved session file (and so the `df` of `SessionPlotBase`) also has `run_mode`
-(`"Manual"` or `"Auto"`) and `session` (the session index within the subject's
-history), added when the session is saved; the online `df` doesn't.
+  timestamps of that trial (see the trial data in [Tasks (Bpod)](tasks_bpod.md#trial-data)).
 
 *Custom columns*
 
 Any value registered with `self.register_value(name, value)` inside `after_trial`
-appears as an additional column.
+appears as an additional column, e.g. `outcome` and `water` in all the tasks of the
+example project.
 
-**Example** — plot accuracy and reaction time trial by trial:
+**Example** — plot accuracy and reaction time trial by trial, for a task that
+registers `outcome` (`"correct"`, `"incorrect"`...) and `response_time`:
 
 ```python
+import matplotlib.pyplot as plt
+
 from village.custom_classes.online_plot_base import OnlinePlotBase
+
 
 class OnlinePlot(OnlinePlotBase):
 
     def create_figure_and_axes(self) -> None:
-        import matplotlib.pyplot as plt
         self.fig, (self.ax_acc, self.ax_rt) = plt.subplots(
             2, 1, figsize=(10, 6), sharex=True
         )
@@ -91,10 +99,11 @@ class OnlinePlot(OnlinePlotBase):
         self.ax_acc.clear()
         self.ax_rt.clear()
 
-        if df.empty or "correct" not in df.columns:
+        if df.empty or "outcome" not in df.columns:
             return
 
-        self.ax_acc.plot(df["trial"], df["correct"].rolling(10).mean(), color="steelblue")
+        correct = (df["outcome"] == "correct").astype(float)
+        self.ax_acc.plot(df["trial"], correct.rolling(10, min_periods=1).mean())
         self.ax_acc.set_ylabel("Accuracy (10-trial rolling mean)")
         self.ax_acc.set_ylim(0, 1)
 
@@ -108,33 +117,52 @@ class OnlinePlot(OnlinePlotBase):
 
 ### SessionPlotBase
 
-`SessionPlotBase` produces a static figure shown in the GUI when the user clicks on
-a finished session in the Sessions table.
+`SessionPlotBase` produces a static figure shown in the GUI when the user selects a
+finished session in `DATA` → `SESSIONS_SUMMARY` and clicks `PLOT SESSION`.
 
 Override **`create_plot(df, weight, width, height)`** and return a `matplotlib.figure.Figure`.
 
 **Arguments:**
 
-- `df` — the full session CSV as a DataFrame. Same columns as `OnlinePlotBase.df`
-  (see above) plus `run_mode` and `session`, with all trials already present.
+- `df` — the session CSV as a DataFrame, with all its trials: the same columns as the
+  `df` of `OnlinePlotBase` (see above), plus `run_mode` (`"Manual"` or `"Auto"`).
 - `weight` — body weight of the subject at the time of the session (float, grams).
   `0.0` if not recorded.
 - `width`, `height` — figure size in inches requested by the GUI.
 
-**Example** — plot trial outcome over time with body weight in the title:
+````{admonition} The state and event columns are text in the saved files
+:class: warning
+The `df` of `SessionPlotBase` and `SubjectPlotBase` is read from the saved CSV files,
+where the lists of the state and event columns are saved as text: a cell of `Port1In`
+is the string `"[1793961057.5, 1793961059.2]"`, not a list. Convert it before using
+it:
+
+```python
+import ast
+
+pokes = df["Port1In"].dropna().apply(ast.literal_eval)  # now lists of floats
+```
+
+The columns registered with `register_value` (numbers, strings) are read normally.
+````
+
+**Example** — plot the accuracy over the session with body weight in the title:
 
 ```python
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+
 from village.custom_classes.session_plot_base import SessionPlotBase
+
 
 class SessionPlot(SessionPlotBase):
 
     def create_plot(self, df, weight, width=10, height=8) -> Figure:
         fig, ax = plt.subplots(figsize=(width, height))
 
-        if "correct" in df.columns:
-            ax.plot(df["trial"], df["correct"].rolling(10).mean(), color="steelblue")
+        if "outcome" in df.columns:
+            correct = (df["outcome"] == "correct").astype(float)
+            ax.plot(df["trial"], correct.rolling(10, min_periods=1).mean())
             ax.set_ylabel("Accuracy (10-trial rolling mean)")
             ax.set_ylim(0, 1)
 
@@ -150,16 +178,18 @@ class SessionPlot(SessionPlotBase):
 
 ### SubjectPlotBase
 
-`SubjectPlotBase` produces a static figure shown when the user clicks on a subject
-in the Subjects table. It has access to the subject's full history across all sessions.
+`SubjectPlotBase` produces a static figure shown when the user selects a subject in
+the `SUBJECTS` screen and clicks `PLOT SUBJECT`. It has access to the subject's full
+history across all sessions.
 
 Override **`create_plot(df, summary_df, width, height)`** and return a `matplotlib.figure.Figure`.
 
 **Arguments:**
 
-- `df` — all trials for this subject, concatenated across sessions. Same trial-level
-  columns as above, plus a `session` column (integer, 1-based) that identifies which
-  session each trial belongs to.
+- `df` — all trials for this subject, concatenated across sessions, read from the
+  subject's CSV file. Same columns as the `df` of `SessionPlotBase` (the state and
+  event columns are text too), plus a `session` column (integer, 1-based) that
+  identifies which session each trial belongs to.
 - `summary_df` — one row per session for this subject, from `sessions_summary.csv`.
   Columns:
 
@@ -182,17 +212,21 @@ Override **`create_plot(df, summary_df, width, height)`** and return a `matplotl
 ```python
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+
 from village.custom_classes.subject_plot_base import SubjectPlotBase
+
 
 class SubjectPlot(SubjectPlotBase):
 
     def create_plot(self, df, summary_df, width=10, height=8) -> Figure:
-        fig, (ax_acc, ax_w) = plt.subplots(2, 1, figsize=(width, height), sharex=True)
+        fig, (ax_acc, ax_w) = plt.subplots(2, 1, figsize=(width, height))
 
-        if "correct" in df.columns:
+        if "outcome" in df.columns:
+            df = df.assign(correct=(df["outcome"] == "correct").astype(float))
             acc = df.groupby("session")["correct"].mean()
             ax_acc.plot(acc.index, acc.values, "o-", color="steelblue")
             ax_acc.set_ylabel("Mean accuracy per session")
+            ax_acc.set_xlabel("Session")
             ax_acc.set_ylim(0, 1)
 
         if not summary_df.empty and "weight" in summary_df.columns:

@@ -482,7 +482,6 @@ class Manager:
                 self.task.recorder = self.bpod.recorder
             sound_device.recorder = self.task.recorder
             screen.recorder = self.task.recorder
-            screen.gpio = self.gpio
             self.task.run()
         except Exception:
             if self.state.manual_task_running():

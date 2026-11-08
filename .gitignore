@@ -88,6 +88,3 @@ venv/
 
 # claude
 .claude/
-
-# remove
-_code/*

@@ -69,7 +69,7 @@ example, the `code/` folder of the demo project (shortened):
 code/
 ├── bpod_1_habituation.py ... bpod_6_delay.py    # tasks
 ├── arduino_1_habituation.py ... arduino_6_delay.py
-├── raspberry_area1_sound.py, raspberry_touchscreen.py
+├── raspberry_area1_sound.py, raspberry_stimulus_menu.py
 ├── training_protocol.py
 ├── direct_functions.py, sound_functions.py, video_functions.py
 ├── camera_trigger.py, camera_draw.py, touch_trigger.py
@@ -79,3 +79,6 @@ code/
 ├── led_calibration.py, auto_follow_the_light.py
 └── village_arduino/                             # firmware for the Arduino examples
 ```
+
+Its `media/` folder holds the image, the image with transparency and the short video
+that the screen examples show: `image.png`, `image_alpha.png` and `video.mp4`.

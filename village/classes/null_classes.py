@@ -516,9 +516,17 @@ class NullLEDStrip:
     error: str = ""
     num_leds: int = 10
 
-    def set_led_color(self, index: int, red: int, green: int, blue: int) -> None:
+    def set_led_color(
+        self, index: int, red: int, green: int, blue: int, white: int = 0
+    ) -> None:
         """Set the color of a specific LED"""
-        print(f"Dummy LED {index} changed to {(red, green, blue)}")
+        print(f"Dummy LED {index} changed to {(red, green, blue, white)}")
+
+    def fill_strip(
+        self, red: int = 0, green: int = 0, blue: int = 0, white: int = 0
+    ) -> None:
+        """Set every LED to the same color"""
+        print(f"Dummy LED strip filled with {(red, green, blue, white)}")
 
     def update_strip(self, sleep_duration: float | None = None) -> None:
         """Update the LED strip to show changes"""

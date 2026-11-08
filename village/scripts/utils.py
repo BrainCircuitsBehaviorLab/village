@@ -115,18 +115,22 @@ def create_directories_from_path(p: str) -> bool:
         return False
 
 
-# The example code shipped with Village (also shown in the documentation).
+# The example code shipped with Village (also shown in the documentation), and
+# the image, image with alpha and video its screen stimuli use.
 EXAMPLES_DIRECTORY = (
     Path(__file__).resolve().parents[2] / "docs" / "source" / "examples" / "files"
 )
+EXAMPLES_MEDIA_DIRECTORY = EXAMPLES_DIRECTORY.parent / "media"
 
 
 def copy_demo_project() -> None:
     """Copies the example code into the default project, the first time Village runs.
 
     The examples (EXAMPLES_DIRECTORY) are copied into DEFAULT_CODE_DIRECTORY
-    (village_projects/demo-village-project/code). Only once, and only into an
-    empty folder: that code is the user's to edit, so it is never overwritten.
+    (village_projects/demo-village-project/code), and their media files
+    (EXAMPLES_MEDIA_DIRECTORY) into the media folder of that project. Only once,
+    and only into an empty folder: that code is the user's to edit, so it is
+    never overwritten.
     The flag is still called GITHUB_REPOSITORIES_DOWNLOADED because older
     versions downloaded the demo project from GitHub: a system that already
     has it skips this too. If the copy fails, the default project falls back
@@ -144,6 +148,9 @@ def copy_demo_project() -> None:
             directory,
             dirs_exist_ok=True,
             ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
+        shutil.copytree(
+            EXAMPLES_MEDIA_DIRECTORY, directory.parent / "media", dirs_exist_ok=True
         )
         settings.set("GITHUB_REPOSITORIES_DOWNLOADED", "ON")
         log.info("Example project copied to " + str(directory))

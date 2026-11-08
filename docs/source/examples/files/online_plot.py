@@ -54,6 +54,10 @@ class OnlinePlot(OnlinePlotBase):
                 self.ax_accuracy.plot(acc.index + 1, acc.values, color="tab:green")
                 self.ax_accuracy.axhline(0.5, color="gray", linestyle="--", linewidth=1)
                 self.ax_accuracy.set_ylim(0, 1)
+            else:
+                self.ax_accuracy.text(
+                    0.5, 0.5, "no choice trials", ha="center", va="center"
+                )
             self.ax_accuracy.set_xlabel("Trial")
         else:
             self.ax_accuracy.text(0.5, 0.5, "no outcome data", ha="center", va="center")

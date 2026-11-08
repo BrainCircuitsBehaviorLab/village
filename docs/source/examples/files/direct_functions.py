@@ -211,7 +211,7 @@ class DirectFunctions(DirectFunctionsBase):
         # draws self.task.rects (a list of (x_pos, y_pos, width, height)
         # tuples, one per clickable zone) as same-colored rectangles that
         # stay up indefinitely -- touch_trigger.py maps a touch inside one
-        # of them to a direct function of its own (see raspberry_touchscreen.py).
+        # of them to a stimulus of its own (see raspberry_stimulus_menu.py).
         rects = self.task.rects
         duration = 100000  # indefinite, same trick as function11
         color = QColor("white")

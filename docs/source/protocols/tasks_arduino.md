@@ -14,29 +14,29 @@ registers everything it reports. So there are two pieces of code:
   (e.g. the Arduino IDE). Village doesn't upload it.
 
 They talk through the serial port set in `CONTROLLER_PORT` (`SETTINGS`). What they
-say to each other is up to you: the examples use small binary messages, described at
-the top of each file.
+say to each other is up to you: the examples use small binary messages.
 
 ### How a task runs
 
-1. `start()` is called once, when the session starts. It usually opens the serial
-   connection.
+1. `start()` is called once, when the session starts, before the first trial.
+   Open the serial connection and compute what the whole session needs: valve
+   times, sounds...
 2. Then, trial after trial:
    - `create_trial()` **is** the trial: it tells the Arduino to start, registers the
-     start of the trial, listens to the Arduino and registers everything it reports,
-     and returns when the trial is over;
-   - `self.trial_data` is filled with everything registered in the trial;
-   - `after_trial()` reads it and registers the values to save, at least `water`.
-3. `close()` is called once, when the session ends. It usually closes the serial
-   connection.
+     start of the trial, listens to the Arduino and registers everything it
+     reports, and returns when the trial is over. Then `self.trial_data` is filled
+     with everything registered in the trial;
+   - `after_trial()` is called after every trial. It reads `self.trial_data` and saves
+     values with `register_value`. Registering `water` is mandatory.
+3. `close()` is called once, when the session ends (session finished, stopped, or
+   error), after the last trial. Close the serial connection here.
 
 The session ends when it reaches `maximum_duration` (set in the training protocol),
 when the STOP button is pressed, or when your task sets `self.force_stop = True`. The
 system checks these conditions continuously, not only between trials: if one is met
 during a trial, the session ends at once and that trial is cut (it is not saved in the
 session file, only in the RAW file). In Manual mode the session also ends after the
-number of trials chosen when launching the task; this limit is reached at the end of
-a trial, so nothing is lost.
+number of trials chosen when launching the task.
 
 `````{admonition} Check should_stop in your waiting loops
 :class: warning
@@ -51,31 +51,14 @@ while not self.should_stop and time_utils.now_timestamp() < deadline:
 ```
 `````
 
-**Two clocks.** The Arduino times what it detects with its own clock, and the
-Raspberry Pi with its own. `register_start_trial` receives both at the same moment,
-and from then on every time the Arduino reports is converted to Raspberry Pi time, so
-the clocks never need to be synchronized. In the examples the Arduino counts the
-milliseconds since it received the command, so at the start of the trial its clock is
-`0`.
-
 Unlike with Bpod, the Python code is not blocked while the Arduino runs the trial: it
 is the loop of `create_trial`, so it can react in the middle of the trial to what the
-Arduino reports (playing a sound, for example), or to what only the Raspberry Pi sees
-(the camera, the touchscreen...) by sending a message to the Arduino. Both are shown in
-the [examples](#examples).
+Arduino reports (playing a sound, as in [Playing a sound](#playing-a-sound)), or to
+what only the Raspberry Pi sees (the camera, the touchscreen...) by sending a message
+to the Arduino.
 
----
-
-### Reference
-
-#### The four methods you write
-
-| Method | Called | Use it to |
-| :--- | :--- | :--- |
-| `start(self)` | Once, before the first trial. | Open the serial connection, compute what the whole session needs: valve times, sounds... |
-| `create_trial(self)` | Every trial. | Run the trial: send the command to the Arduino, call `register_start_trial`, and register everything it reports until the trial is over. |
-| `after_trial(self)` | After every trial. | Read `self.trial_data`, decide the outcome, and save values with `register_value`. Registering `water` is mandatory. |
-| `close(self)` | Once, after the last trial (session finished, stopped, or error). | Close the serial connection. |
+All the methods and attributes a task can use are in
+[Task Reference](tasks_reference.md).
 
 ```{admonition} Register water in every trial
 :class: warning
@@ -84,47 +67,15 @@ delivered in the trial (`0` if none). The system adds them up to know how much e
 subject drinks, and raises an alarm if it is too little.
 ```
 
-#### Methods you can call
+---
 
-| Method | Use |
-| :--- | :--- |
-| `self.register_start_trial(raspberry_timestamp, controller_timestamp)` | **Required** at the start of every trial, in `create_trial`: without it the task stops with an error. Pass `time_utils.now_timestamp()` and the Arduino's time at the same moment. |
-| `self.register_end_trial(controller_timestamp)` | Ends the trial, with the Arduino's time. Optional: if `create_trial` returns without calling it, the trial is ended at that moment. |
-| `self.register_enter_state(state_name, controller_timestamp)` | The Arduino entered a state: closes the previous one and opens this one, as Bpod does. |
-| `self.register_controller_event(name, controller_timestamp)` | An event detected and timed by the Arduino (e.g. `"Port1In"`). |
-| `self.register_raspberry_event(name, timestamp)` | An event detected by the Raspberry Pi (a camera detection, a touch...) with `time_utils.now_timestamp()` as timestamp. |
-| `self.register_value(name, value)` | Saves a value in the trial's row of the session file (a column named `name`). Call it in `after_trial`. |
-| `self.execute_function(i)` | Runs direct function `i` (1-98), see [Direct Functions](functions.md). |
+### A first task: habituation
 
-The `register_*` methods only record what happens between `register_start_trial` and
-the end of the trial: anything registered outside that window is ignored.
-
-#### Attributes you can use
-
-| Attribute | Type | Description |
-| :--- | :--- | :--- |
-| `self.settings` | `Settings` | The subject's training settings, defined in the [training protocol](creating.md) (e.g. `self.settings.reward_volume`). Changes made during the session are kept for the next one. |
-| `self.calibrations` | `Calibrations` | Calibrations, e.g. `self.calibrations.water_calibration.get_valve_time(port, volume)` (the time to send to the Arduino) or `self.calibrations.sound_calibration.get_sound_gain(speaker, dB, sound_name)`. |
-| `self.trial_data` | `dict` | Everything registered in the trial, available in `after_trial` (see [Trial data](#trial-data)). |
-| `self.info` | `str` | Description of the task, shown when it is selected in the GUI. Set it in `__init__`. |
-| `self.name` | `str` | The name of the task, which is the name of its class (e.g. `"Arduino1Habituation"`). |
-| `self.subject` | `str` | The name of the subject (`"None"` when a task is launched manually without a subject). |
-| `self.current_trial` | `int` | The number of the current trial, starting from 1. |
-| `self.system_name` | `str` | The name of the system (`SYSTEM_NAME` in `SETTINGS`). |
-| `self.date` | `str` | The date and time the session started (`"2026-11-07 10:30:00"`). |
-| `self.run_mode` | `str` | `"Auto"` or `"Manual"`. |
-| `self.chrono` | `Chrono` | `self.chrono.get_time()` is the time in seconds since the session started. |
-| `self.force_stop` | `bool` | Set it to `True` to end the session (see [Ending the session from the task](#ending-the-session-from-the-task)). |
-| `self.stop_button_pressed` | `bool` | `True` once the STOP button has been pressed. Read it, don't set it. |
-| `self.should_stop` | `bool` | `True` once any stopping condition is met (read-only). Check it in every waiting loop of `create_trial`. |
-| `self.system_state` | `State` | The state of the system, e.g. `State.RUN_OPEN` (Auto mode, the subject can leave the box). Import `State` from `village.classes.enums`. |
-| `self.cam_box` | `Camera` | The box camera (see [Camera](../devices/camera.md)). |
-| `self.gpio` | `Gpio` | The GPIO output pin: `set_on()` / `set_off()` (see [GPIO](../devices/gpio.md)). |
-| `self.custom_areas` | `dict` | The detection areas with a custom shape, if the project defines any (see [Camera](../devices/camera.md#custom-detection-area)). |
-
-You can also add your own attributes (`self.serial_port`, `self.side = "left"`...):
-they are kept from one method to the next, and the triggers and direct functions can
-read them through `self.task`.
+This is the first task of the example project, the Arduino version of
+[Tasks (Bpod)](tasks_bpod.md#a-first-task-habituation): the animal is left alone in
+the box to explore it. Nothing happens and no water is given, but every poke is
+recorded. Each trial waits up to 60 seconds and ends earlier if the animal pokes any
+port.
 
 #### The firmware
 
@@ -173,22 +124,9 @@ void loop() {
 }
 ```
 
-A firmware of your own can follow the same pattern: add a command, a function that
-runs the trial, and the same 6-byte messages.
-
----
-
-### Examples
-
-#### A simple task: habituation
-
-[arduino_1_habituation.py](../examples/arduino_1_habituation.md), the Arduino version
-of [bpod_1_habituation.py](../examples/bpod_1_habituation.md): the mouse is left alone
-in the box and the pokes are recorded, with no reward. Every trial lasts up to 60
-seconds and ends at the first poke.
-
-The firmware's part: it waits for a poke in any port for `durationS` seconds, and
-reports the state it enters and the result, with its own clock (`millis()`):
+The habituation trial: it reports the state it enters, waits for a poke in any port
+for `durationS` seconds, and reports the result (the port poked, or `0`), with its own
+clock (`millis()`):
 
 ```cpp
 // [CMD_HABITUATION, duration_s (uint16, LE)]
@@ -211,7 +149,10 @@ void runHabituation(unsigned int durationS) {
 }
 ```
 
-The task:
+A firmware of your own can follow the same pattern: add a command, a function that
+runs the trial, and the same 6-byte messages.
+
+#### The task
 
 ```python
 import struct
@@ -222,6 +163,25 @@ from village.custom_classes.task_base import TaskBase
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
+# Protocol (see runHabituation() in village_arduino/village_arduino.ino):
+#
+# Pi -> Arduino, 3 raw bytes, sent once at the start of each trial:
+#   [CMD_START_TRIAL, duration_s (uint16, little-endian)]
+#   Tells the Arduino how long this trial lasts. From here the Arduino
+#   watches the 3 poke sensors on its own; the Pi just listens.
+#
+# Arduino -> Pi, 6 raw bytes per message:
+#   [EVENT_STATE, state, elapsed_ms (uint32, LE)]
+#     -- every time the Arduino enters a new state (see STATE_NAMES), so it
+#        can be registered with register_enter_state, as Bpod does.
+#   [EVENT_TRIAL_END, port (0 if nobody poked), elapsed_ms (uint32, LE)]
+#     -- once, when the trial is over.
+#   elapsed_ms is milliseconds since the Arduino received CMD_START_TRIAL
+#   for THIS trial (its own timer, reset every trial). It is the controller
+#   clock: the trial start is registered as controller time 0 at the moment
+#   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller
+#   timestamp (register_controller_event / register_enter_state), so the two
+#   clocks never need to be synchronized.
 CMD_START_TRIAL = 11  # CMD_HABITUATION in village_arduino.ino
 EVENT_TRIAL_END = 2
 EVENT_STATE = 3
@@ -238,13 +198,20 @@ STATE_DURATION = 60  # seconds
 class Arduino1Habituation(TaskBase):
     def __init__(self):
         super().__init__()
+
         self.info = """
         Habituation Task
-        ----------------
-        The mouse is left alone in the box; pokes are recorded, no reward.
+        ----------------------------------------------------------
+        Lets a mouse get used to being in the box on its own. Every trial,
+        the Pi tells the Arduino how long to wait (STATE_DURATION), and the
+        Arduino watches all 3 ports for that whole window, ending the trial
+        early the moment any one of them is poked. No reward is delivered --
+        pokes are only recorded, to see the animal is exploring the box.
         """
 
     def start(self):
+        """Opens the serial connection to the Arduino."""
+
         self.serial_port = serial.Serial(
             port=settings.get("CONTROLLER_PORT"),
             baudrate=BAUDRATE,
@@ -253,14 +220,20 @@ class Arduino1Habituation(TaskBase):
         self.serial_port.reset_input_buffer()
 
     def create_trial(self):
-        # 1. Tell the Arduino to start the trial, and register the start in both
-        # clocks: the Arduino's starts at 0 when it gets the command.
+        """Tells the Arduino how long this trial should last, then waits for
+        its single reply: either a port number (whichever was poked first)
+        or 0 if the whole duration passed with no poke at all.
+
+        The deadline below is only a safety net for a lost/garbled message
+        -- in normal operation the Arduino's own reply always arrives well
+        before it.
+        """
+
         self.serial_port.write(struct.pack("<BH", CMD_START_TRIAL, STATE_DURATION))
         t_sent = time_utils.now_timestamp()
+        # The Arduino's clock (elapsed_ms) starts at 0 when it gets the command.
         self.register_start_trial(raspberry_timestamp=t_sent, controller_timestamp=0.0)
 
-        # 2. Listen to the Arduino until the trial is over, the task has to stop,
-        # or the deadline passes (a lost message).
         deadline = t_sent + STATE_DURATION + 2.0  # margin for serial/USB latency
         buffer = bytearray()
         while not self.should_stop and time_utils.now_timestamp() < deadline:
@@ -275,7 +248,6 @@ class Arduino1Habituation(TaskBase):
             buffer.clear()
             t = elapsed_ms / 1000.0  # controller clock, seconds
 
-            # 3. Register what it reports, with the Arduino's time.
             if event == EVENT_STATE:
                 self.register_enter_state(STATE_NAMES.get(value, f"state{value}"), t)
             elif event == EVENT_TRIAL_END:
@@ -287,6 +259,9 @@ class Arduino1Habituation(TaskBase):
         # message), the trial is ended automatically when this returns.
 
     def after_trial(self):
+        """Reads back whichever port event create_trial registered, if any,
+        to label the trial."""
+
         outcome = "miss"
         if self.trial_data.get("Port1In"):
             outcome = "left_poke"
@@ -299,236 +274,319 @@ class Arduino1Habituation(TaskBase):
         self.register_value("water", 0)
 
     def close(self):
+        """Closes the serial connection to the Arduino."""
+
         if self.serial_port.is_open:
             self.serial_port.close()
 ```
 
-The rest of the examples (`arduino_2` to `arduino_6`) follow the same pattern: the
-command carries more values (the correct port, the timings, the valve time), and the
-firmware reports more states and pokes.
+Step by step:
 
-#### Playing a sound
+- **The constants** at the top are the protocol: the command byte of the habituation
+  trial, the event codes the Arduino sends, and `STATE_NAMES`, which translates the
+  number of each state into the name it gets in the trial data.
+- **The class name**, `Arduino1Habituation`, is the name of the task.
+- **`__init__`** only sets `self.info`, the description shown when the task is
+  selected in the GUI. Always call `super().__init__()` first.
+- **`start`** opens the serial port and discards anything left in it.
+- **`create_trial`** runs the whole trial:
+  1. It sends the command, `[11, 60]`: run a habituation trial of 60 seconds.
+  2. It registers the start of the trial with **both clocks** at the same moment:
+     the Raspberry Pi's time (`t_sent`) and the Arduino's (`0`, since the Arduino
+     starts counting when it receives the command). From then on, every time the
+     Arduino reports is converted to Raspberry Pi time, so the two clocks never need
+     to be synchronized.
+  3. It reads the messages of the Arduino, 6 bytes each, and registers what they
+     report with the Arduino's time: the state entered with `register_enter_state`,
+     the port poked with `register_controller_event` (as `Port1In`, `Port2In` or
+     `Port3In`, the same names as Bpod), and the end of the trial with
+     `register_end_trial`.
+  4. The loop also ends if the task has to stop or the deadline passes. Then the
+     trial is ended automatically when `create_trial` returns.
 
-The sound card is on the Raspberry Pi, so the Arduino reports what happened and the
-task plays the sound. In
-[arduino_5_introduce_penalty.py](../examples/arduino_5_introduce_penalty.md), a wrong
-poke is punished with a noise: the sound is loaded before the trial (direct function 2,
-"Load Noise Sound") and, if the Arduino reports an incorrect outcome, the task plays it
-(direct function 4, "Play Loaded Sound") and registers the penalty states itself, with
-the Arduino's clock:
+  When the trial ends, the next one starts right away with a new call to
+  `create_trial`, until the session ends.
+- **`after_trial`** reads `self.trial_data` to find out how the trial ended: if there
+  is a `Port1In`, `Port2In` or `Port3In` event, the animal poked that port; if not,
+  the time ran out (`"miss"`). It saves the result with
+  `self.register_value("outcome", outcome)`, and the water given, `0`, with
+  `self.register_value("water", 0)`.
+- **`close`** closes the serial port.
 
-```python
-    def create_trial(self):
-        ...
-        self.execute_function(2)  # load the noise now, before it is needed
-        ...  # send the command and listen to the Arduino, as in the first example
-        if t_end is None:
-            return  # stopped or lost message: the trial is ended automatically
-
-        if self.outcome == "incorrect":
-            self.register_enter_state("wrong_choice", t_end)
-            self.execute_function(4)  # play the sound loaded above
-            t_end += self.wait(self.settings.noise_time)
-            if not self.should_stop:
-                self.register_enter_state("timeout", t_end)
-                t_end += self.wait(self.settings.timeout - self.settings.noise_time)
-        self.register_end_trial(t_end)
-```
-
-`self.wait` is a method of the task that waits the given seconds (less if the task has
-to stop) and returns the time actually waited. The moment the sound starts is recorded
-automatically as the event `sound`.
-
-#### Reacting to the camera
-
-The camera is on the Raspberry Pi: the camera trigger signals the task, and the task
-sends a command to the Arduino. In this example the animal gets water in port 1 when it
-enters box area 1 (set as a TRIGGER area, with `CAM_BOX_TRACKING_POSITION` ON). The
-Arduino only opens the valve, with the firmware's `CMD_OPEN_VALVE` command (the one the
-water calibration uses), so the whole trial is timed by the Raspberry Pi: the same time
-is passed as both clocks.
-
-In `camera_trigger.py`, which runs on every camera frame:
-
-```python
-from village.custom_classes.camera_trigger_base import CameraTriggerBase
-from village.devices.camera import Camera
-from village.scripts.time_utils import time_utils
-
-
-class CameraTrigger(CameraTriggerBase):
-    def trigger(self, cam: Camera) -> None:
-        if cam.name != "BOX":
-            return
-        area1_event = getattr(self.task, "area1_event", None)  # only in this task
-        if cam.area1_is_triggered and area1_event and not area1_event.is_set():
-            self.task.register_raspberry_event("area1_entered", time_utils.now_timestamp())
-            area1_event.set()
-```
-
-In the task:
-
-```python
-import struct
-import threading
-import time
-
-import serial
-
-from village.custom_classes.task_base import TaskBase
-from village.scripts.time_utils import time_utils
-from village.settings import settings
-
-CMD_OPEN_VALVE = 20  # [CMD_OPEN_VALVE, port, time_us (uint32)] in village_arduino.ino
-
-
-class Area1Water(TaskBase):
-    def start(self):
-        self.serial_port = serial.Serial(
-            port=settings.get("CONTROLLER_PORT"), baudrate=9600, timeout=0.05
-        )
-        self.valve_time = self.calibrations.water_calibration.get_valve_time(
-            port=1, volume=self.settings.reward_volume
-        )
-        self.area1_event = threading.Event()  # set by camera_trigger.py
-
-    def create_trial(self):
-        self.area1_event.clear()
-        self.rewarded = False
-        # this task does not read the Arduino's replies (EVENT_VALVE_CLOSED)
-        self.serial_port.reset_input_buffer()
-
-        # the whole trial is timed by the Raspberry Pi: the same time as both clocks
-        t0 = time_utils.now_timestamp()
-        self.register_start_trial(raspberry_timestamp=t0, controller_timestamp=t0)
-        self.register_enter_state("wait_area1", t0)
-
-        deadline = t0 + 60
-        while not self.should_stop and time_utils.now_timestamp() < deadline:
-            if self.area1_event.wait(timeout=0.05):
-                self.register_enter_state("reward", time_utils.now_timestamp())
-                time_us = int(self.valve_time * 1_000_000)
-                self.serial_port.write(struct.pack("<BBI", CMD_OPEN_VALVE, 1, time_us))
-                time.sleep(self.valve_time)  # the Arduino times the valve itself
-                self.rewarded = True
-                break
-
-        self.register_end_trial(time_utils.now_timestamp())
-
-    def after_trial(self):
-        self.register_value("water", self.settings.reward_volume if self.rewarded else 0)
-
-    def close(self):
-        if self.serial_port.is_open:
-            self.serial_port.close()
-```
-
-The touchscreen works the same way: in `touch_trigger.py`, `trigger(self, x, y,
-timestamp)` is called on every touch, and it signals the task when the touch is inside
-a target. See [Screen & Touchscreen](../devices/screen.md#reacting-to-touches).
-
-#### Complete examples
-
-The Arduino versions of the six stages of the example project, from habituation to a
-full discrimination task, are in [Task Examples (Arduino)](../examples/tasks_arduino.md),
-together with the firmware.
+The complete code of this task and the rest of the example project, from habituation
+to a full discrimination task, are in
+[Task Examples (Arduino)](../examples/tasks_arduino.md), together with the firmware.
 
 ---
 
 ### Trial data
 
 When a trial ends, everything registered in it is put in `self.trial_data`, a
-dictionary that `after_trial` reads to decide the outcome of the trial. Its keys:
+dictionary that `after_trial` reads to decide the outcome of the trial. For example,
+a trial of the habituation task in which the animal pokes the center port after
+12.3 seconds:
+
+```python
+{
+    "date": "2026-11-07 10:30:00",
+    "trial": 5,
+    "subject": "mouse1",
+    "task": "Arduino1Habituation",
+    "system_name": "village01",
+    "TRIAL_START": 1793961045.20,
+    "TRIAL_END": 1793961057.50,
+    "STATE_ready_to_explore_START": [1793961045.20],
+    "STATE_ready_to_explore_END": [1793961057.50],
+    "Port2In": [1793961057.50],
+    "ordered_list_of_events": ["Port2In"],
+}
+```
+
+If the animal does not poke, there is no `Port2In` key: the trial just ends after
+60 seconds.
+
+The keys are:
 
 | Key | Value |
 | :--- | :--- |
 | `"date"`, `"trial"`, `"subject"`, `"task"`, `"system_name"` | Which session and trial it is. |
 | `"TRIAL_START"`, `"TRIAL_END"` | When the trial started (`register_start_trial`) and ended (`register_end_trial`, or the moment `create_trial` returned). |
 | `"STATE_<name>_START"`, `"STATE_<name>_END"` | For every state registered with `register_enter_state`, a list with the times it was entered and left (a list, because a state can be visited several times). A state ends when the next one is entered, or when the trial ends. A state that was **not visited** is not in the dictionary. |
-| `"<event>"` (`"Port1In"`...) | For every event registered, a list with the times of each occurrence. Events that did not happen are not in the dictionary. The ones the system registers by itself are included too: `sound` when a sound starts playing, `touch_<x>_<y>` for every touch. |
+| `"<event>"` (`"Port1In"`...) | For every event registered, a list with the times of each occurrence. Events that did not happen are not in the dictionary. Events registered with `register_raspberry_event` during the trial are included too, and so are the ones the system registers by itself: `sound` when a sound starts playing, `touch_<x>_<y>` for every touch. |
 | `"ordered_list_of_events"` | The names of all the events, in the order they happened. |
 
 All the times are in seconds, converted to the Raspberry Pi's clock (UNIX time), so
 the Arduino's and the Raspberry Pi's can be compared and subtracted directly.
 
-For example, a trial of the habituation task in which the animal pokes the center port
-after 3.25 seconds:
+This is how to get the usual information from it in `after_trial` (the comments
+give the results for the trial above):
 
 ```python
-{
-    "date": "2026-11-07 10:30:00",
-    "trial": 12,
-    "subject": "mouse1",
-    "task": "Arduino1Habituation",
-    "system_name": "village01",
-    "TRIAL_START": 1793961045.20,
-    "TRIAL_END": 1793961048.45,
-    "STATE_ready_to_explore_START": [1793961045.20],
-    "STATE_ready_to_explore_END": [1793961048.45],
-    "Port2In": [1793961048.45],
-    "ordered_list_of_events": ["Port2In"],
-}
-```
-
-The usual questions are answered like this (the comments give the results for the
-trial above):
-
-```python
-import math
-
 def after_trial(self):
-    # Was a state visited? If not, its key is missing: use a nan default.
-    t_reward = self.trial_data.get("STATE_reward_START", [math.nan])[0]
-    rewarded = not math.isnan(t_reward)  # False
+    # Did an event happen? Its key exists.
+    center_poke = "Port2In" in self.trial_data  # True
 
-    # Did an event happen? Its key exists: use .get with an empty list by default.
-    center_pokes = self.trial_data.get("Port2In", [])
-    poked_center = len(center_pokes) > 0  # True
+    # How many times? The length of its list (an empty list if it did not happen).
+    number_of_pokes = len(self.trial_data.get("Port2In", []))  # 1
+
+    # When? The first element of its list.
+    poke_time = self.trial_data["Port2In"][0]  # 1793961057.50
 
     # How long did something take? Subtract two times.
-    start = self.trial_data["TRIAL_START"]
-    response_time = center_pokes[0] - start if poked_center else math.nan  # 3.25 s
+    trial_start = self.trial_data["TRIAL_START"]
+    reaction_time = poke_time - trial_start  # 12.3 s
 
-    self.register_value("response_time", response_time)
-    self.register_value("water", self.settings.reward_volume if rewarded else 0)
+    # Was a state visited? Its key exists.
+    explored = "STATE_ready_to_explore_START" in self.trial_data  # True
 ```
 
 #### What is saved
 
-At the end of each trial, `trial_data` (with the values registered in `after_trial`)
-becomes one row of the session table. When the session ends, two files are saved:
+At the end of each trial, `trial_data`, with the values registered in `after_trial`
+(`outcome` and `water` in the habituation task), becomes one row of the session
+table. When the session ends, two files are saved:
 
 - **`<session>.csv`**: one row per trial, with a column for each key above and each
-  registered value. It is the file used for the analysis and by the training protocol
-  (`self.df`). A trial only gets its row when it finishes, so the trial that was
-  running when the session stopped is not in it.
-- **`<session>_RAW.csv`**: one line per event, written as they happen, including the
-  trial that was interrupted.
+  registered value. It is the file used for the analysis and by the training
+  protocol (`self.df`). A trial only gets its row when it finishes, so the trial
+  that was running when the session stopped is not in it.
+- **`<session>_RAW.csv`**: one line per event, written as they happen, including
+  the trial that was interrupted.
 
 The session is saved if at least one trial was completed. Design the task so that
 trials end after a reasonable time even if the animal does nothing (with a timeout in
-the firmware and a deadline in `create_trial`, as in the examples): a session that is
-a single trial that never ends would not be saved.
+the firmware and a deadline in `create_trial`, as in the habituation task): a session
+that is a single trial that never ends would not be saved.
 
 ---
 
-### Ending the session from the task
+### Delivering water
 
-Set `self.force_stop = True` to end the session. The session ends at once, so set it
-in `after_trial`, when the trial is already complete: set during a trial (from a
-trigger or a direct function), it cuts that trial. It works in Auto mode too: the
-session is saved and the subject is let out, as when `maximum_duration` is reached,
-even before `minimum_duration`. For example, to stop after a maximum number of trials
-(`max_trials` defined in the training protocol):
+The valves are connected to the Arduino, and the firmware opens them: the valve time
+must be precise, and only the Arduino can time it to the millisecond. The task gets
+the valve time that gives a volume from the water calibration of that port, and sends
+it to the Arduino in the command of the trial.
+
+In [arduino_2_passive.py](../examples/arduino_2_passive.md), the second task of the
+example project, every trial a side port lights up and gives water at once; then the
+LED stays on until the animal pokes that port, or a timeout. The parts that deliver the
+water are:
+
+**In the task**, `start` computes the valve times once, for the whole session:
 
 ```python
-def after_trial(self):
-    ...
-    if self.current_trial >= self.settings.max_trials:
-        self.force_stop = True
+    def start(self):
+        ...  # open the serial port, as in the habituation task
+        self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
+            port=1, volume=self.settings.reward_volume
+        )
+        self.valve_r_time = self.calibrations.water_calibration.get_valve_time(
+            port=3, volume=self.settings.reward_volume
+        )
 ```
 
-The same works for any criterion: an amount of water, a number of correct trials...
+and `create_trial` chooses the port and sends the command, with the valve time in
+milliseconds:
+
+```python
+    def create_trial(self):
+        self.side = random.choice(["left", "right"])
+        if self.side == "left":
+            valvetime, port = self.valve_l_time, 1
+        else:
+            valvetime, port = self.valve_r_time, 3
+
+        valve_time_ms = int(valvetime * 1000)
+        led_on_timeout_ms = int(self.settings.led_on_time * 1000)
+        self.serial_port.write(
+            struct.pack(
+                "<BBHH", CMD_START_TRIAL, port, valve_time_ms, led_on_timeout_ms
+            )
+        )
+        ...  # register the start and listen to the Arduino, as in the habituation task
+```
+
+**In the firmware**, `runPassive` turns the LED on and opens the valve for
+`valveTimeMs` milliseconds, reporting the state it enters:
+
+```cpp
+void deliverWater(byte port, unsigned int valveTimeMs) {
+  byte valvePin = valvePinOf(port);
+  digitalWrite(valvePin, HIGH);
+  delay(valveTimeMs);
+  digitalWrite(valvePin, LOW);
+}
+
+void runPassive(byte port, unsigned int valveTimeMs, unsigned int ledOnTimeoutMs) {
+  unsigned long t0 = millis();
+  byte ledPin = ledPinOf(port);
+
+  sendEvent(EVENT_STATE, PASSIVE_WATER_DELIVERY, 0);
+  digitalWrite(ledPin, HIGH);
+  deliverWater(port, valveTimeMs);
+
+  sendEvent(EVENT_STATE, PASSIVE_LED_ON, millis() - t0);
+  ...  // wait for the poke, then send EVENT_TRIAL_END
+}
+```
+
+**In `after_trial`**, the water is registered. In this task it is given in every
+trial:
+
+```python
+        self.register_value("water", self.settings.reward_volume)
+```
+
+In a task where the water depends on the response, register `reward_volume` only if
+the reward state was visited: `"STATE_reward_START" in self.trial_data`.
+
+- `reward_volume` is a setting defined in the training protocol. The water
+  calibration must exist for the port, or `get_valve_time` raises an error. With an
+  Arduino, the calibration needs a calibration task of its own: see
+  [Water Calibration with Arduino](../advanced_customization/water_calibration_arduino.md).
+- The firmware already has a command that only opens a valve, `CMD_OPEN_VALVE`
+  (`[20, port, time_us (uint32)]`), the one the water calibration uses. A task can
+  send it to give water at any moment, e.g. when the camera trigger detects the
+  animal in an area. The firmware replies with `EVENT_VALVE_CLOSED`, when the valve
+  closes.
+
+---
+
+### Playing a sound
+
+The sound card is connected to the Raspberry Pi, not to the Arduino. So the sound is
+loaded by the task, before the trial starts, and played by the task when the Arduino
+reports what has to trigger it. This uses a file of your project's `code` directory,
+written by you (the example project already includes it): **`sound_functions.py`**,
+with functions that generate sounds as NumPy arrays, such as `tone_generator` or
+`whitenoise_generator`. See [Sound Functions](../devices/sound.md#sound-functions).
+The sound is loaded with `sound_device.load` and played with `sound_device.play` (see
+[Using It in Tasks](../devices/sound.md#using-it-in-tasks)).
+
+In this example, every trial a tone of a random frequency (5 or 10 kHz) is loaded,
+and it is played when the animal pokes the center port. It uses the habituation trial
+of the firmware, which ends at the first poke:
+
+```python
+import random
+import struct
+import time
+
+import serial
+from sound_functions import tone_generator
+
+from village.custom_classes.task_base import TaskBase
+from village.devices.sound_device import sound_device
+from village.scripts.time_utils import time_utils
+from village.settings import settings
+
+CMD_HABITUATION = 11
+EVENT_TRIAL_END = 2
+MESSAGE_SIZE = 6
+TRIAL_DURATION = 60  # seconds
+
+
+class PokeForSound(TaskBase):
+    def start(self):
+        self.serial_port = serial.Serial(
+            port=settings.get("CONTROLLER_PORT"), baudrate=9600, timeout=0.05
+        )
+        self.serial_port.reset_input_buffer()
+
+    def create_trial(self):
+        # load this trial's sound before the trial starts
+        self.frequency = random.choice([5000, 10000])
+        sound = tone_generator(duration=0.5, gain=0.05, frequency=self.frequency)
+        sound_device.load(left=sound, right=sound)
+
+        self.serial_port.write(struct.pack("<BH", CMD_HABITUATION, TRIAL_DURATION))
+        t_sent = time_utils.now_timestamp()
+        self.register_start_trial(raspberry_timestamp=t_sent, controller_timestamp=0.0)
+
+        deadline = t_sent + TRIAL_DURATION + 2.0
+        buffer = bytearray()
+        while not self.should_stop and time_utils.now_timestamp() < deadline:
+            buffer += self.serial_port.read(MESSAGE_SIZE - len(buffer))
+            if len(buffer) < MESSAGE_SIZE:
+                continue
+            event, port, elapsed_ms = struct.unpack("<BBI", bytes(buffer))
+            buffer.clear()
+            if event == EVENT_TRIAL_END:  # the state messages are not used here
+                t = elapsed_ms / 1000.0
+                if port != 0:
+                    self.register_controller_event(f"Port{port}In", t)
+                if port == 2:  # the center port: play the sound
+                    sound_device.play()
+                    time.sleep(0.5)  # the trial ends when the sound ends
+                    t += 0.5
+                self.register_end_trial(t)
+                break
+
+    def after_trial(self):
+        self.register_value("frequency", self.frequency)
+        self.register_value("water", 0)
+
+    def close(self):
+        if self.serial_port.is_open:
+            self.serial_port.close()
+```
+
+- `create_trial` loads the sound before sending the command, so it is ready when it is
+  needed. Loading takes longer the longer the sound is; playing a loaded sound starts
+  at once.
+- The sound starts a few milliseconds after the poke: the time the message takes to
+  reach the Raspberry Pi, plus the time to start the sound (see
+  [Timing, Clocks & Latencies](../system_operation/timing.md)).
+- `self.frequency` is an attribute of the task, so `after_trial` can register it.
+- `gain=0.05` is an arbitrary volume. To play the sound at a given level in dB, use
+  the sound calibration (see [Sound](../devices/sound.md)).
+- When the sound starts playing, the system adds a `sound` event to `trial_data`.
+
+The task can also play the sound with a direct function (`self.execute_function(4)`,
+"Play Loaded Sound" in the example project), as
+[arduino_5_introduce_penalty.py](../examples/arduino_5_introduce_penalty.md) does.
+Direct functions can also be run from the GUI or from the triggers: see
+[Direct Functions](functions.md).
 
 ```{toctree}
 :hidden:

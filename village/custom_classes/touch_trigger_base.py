@@ -22,6 +22,7 @@ class TouchTriggerBase:
         Args:
             x (int): Touch x position in screen pixels.
             y (int): Touch y position in screen pixels.
-            timestamp (float): Monotonic timestamp of the touch event (seconds).
+            timestamp (float): Raspberry Pi time of the touch (the same clock as
+                time_utils.now_timestamp()).
         """
         self.task.cam_box.write_text(f"Touch: {x}, {y}")

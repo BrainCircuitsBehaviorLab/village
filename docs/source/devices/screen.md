@@ -1,7 +1,8 @@
 ## Screen & Touchscreen
 
-If you plan to present visual stimuli or record touch responses, enable the screen under
-`SETTINGS` → `SCREEN SETTINGS`.
+If you plan to present visual stimuli or record touch responses, enable the screen with
+`USE_SCREEN` (`SETTINGS` → `SCREEN SETTINGS`): `SCREEN` for a screen that only shows
+stimuli, `TOUCHSCREEN` for one that also registers touches.
 
 ---
 
@@ -37,7 +38,8 @@ The system runs with two display outputs:
 sudo nano /boot/firmware/cmdline.txt
 ```
 
-Replace:
+Replace this part of the line, which comes with the
+[Raspberry Pi Disk Image](../resources/image.md):
 
 ```
 vc4.force_hotplug=1 video=HDMI-A-1:1600x900@60D
@@ -65,6 +67,7 @@ operating system for the new display configuration to take effect.
 Navigate to **Raspberry Pi menu → Preferences → Control Centre → Screens → HDMI-2**,
 set the resolution to **1280×720** or lower, and apply.
 
+(display-latency)=
 #### Resolution and display latency
 
 Keep the stimulus display at 1280×720 or below. Higher resolutions significantly
@@ -199,16 +202,18 @@ Use `start_drawing()` and `stop_drawing()` to control when the stimulus appears.
 **Displaying a static image:**
 
 ```python
-from village.devices.screen import screen
 from PyQt5.QtGui import QPainter
+
+from village.devices.screen import screen
 
 def draw():
     with QPainter(screen) as painter:
+        painter.fillRect(painter.viewport(), screen.background_color)  # background
         if screen.image:
             painter.drawPixmap(0, 0, screen.image)
 
-screen.load_image("stimulus.png")
 screen.load_draw_function(draw)
+screen.load_image("stimulus.png")
 screen.start_drawing()
 
 # ... trial runs ...
@@ -219,14 +224,19 @@ screen.stop_drawing()
 **Displaying a video:**
 
 ```python
+from PyQt5.QtGui import QPainter
+
+from village.devices.screen import screen
+
 def draw():
     frame = screen.get_video_frame()
     with QPainter(screen) as painter:
+        painter.fillRect(painter.viewport(), screen.background_color)  # background
         if frame:
             painter.drawImage(0, 0, frame)
 
-screen.load_video("movie.mp4")
 screen.load_draw_function(draw)
+screen.load_video("movie.mp4")
 screen.start_drawing()
 ```
 
@@ -255,6 +265,31 @@ attributes are updated automatically before each call:
 
 Files passed to `load_image()` and `load_video()` are looked up inside `MEDIA_DIRECTORY`
 (`~/village_projects/<project_name>/media`). Reference them by filename only.
+
+```{admonition} Errors inside draw() are silent
+:class: warning
+If the drawing function raises an error, the error is ignored and nothing is drawn
+in that frame: the stimulus just does not appear, with no message. If a stimulus
+does not show up, test the drawing function outside the task first.
+```
+
+#### Events in the trial data
+
+During a trial, the first frame that draws something new adds an event to the trial
+data, with the moment the Raspberry Pi drew it. Its name depends on the last
+`load_*` method called before that frame:
+
+| Last method called | Event |
+|--------|-------|
+| `load_image("stimulus.png")` | `screen_image_stimulus.png` |
+| `load_video("movie.mp4")` | `screen_video_movie.mp4` |
+| `load_draw_function(draw)` | `screen_draw` |
+| `start_drawing()`, with nothing new loaded | `screen_start` |
+
+So, to have the name of the file in the event, call `load_draw_function` before
+`load_image` or `load_video`, as in the examples above. The frame appears on the
+screen a little later than this moment (see
+[Resolution and display latency](display-latency)).
 
 #### Method reference
 
@@ -306,10 +341,10 @@ automatically:
 
 ### Reacting to Touches
 
-Every time a touch event passes the debounce filter, the `trigger` method of
-`TouchTriggerBase` is called. By default it writes the touch coordinates to the
-box camera feed. You can override this behavior to implement task-specific touch
-responses.
+While a task is running, every time a touch event passes the debounce filter, the
+`trigger` method of `TouchTriggerBase` is called. By default it writes the touch
+coordinates to the box camera feed. You can override this behavior to implement
+task-specific touch responses.
 
 
 ---
@@ -351,6 +386,16 @@ You don't need to register the touches yourself: every touch that arrives while 
 is running is already saved in the trial data as a Raspberry Pi event named
 `touch_<x>_<y>` (e.g. `touch_640_360`), with its time.
 
+```{admonition} trigger must never fail
+:class: warning
+An error raised inside `trigger` stops the reading of the touchscreen for the rest of
+the session: from then on no touch is registered, and only a "Touchscreen error"
+alarm is sent. The most common cause is reading an attribute of the task that does
+not exist yet: `trigger` can be called as soon as the task starts, possibly before
+`start` has finished, and always before the first `create_trial`. Create every
+attribute your trigger reads in the `__init__` of the task, as in the example below.
+```
+
 ---
 
 #### Example — checking a target area and sending a softcode to Bpod
@@ -361,7 +406,9 @@ it. The result is then sent to Bpod as a softcode so that the state machine can
 branch accordingly.
 
 **In the task**, define the target position and tolerance as instance attributes
-so the `TouchTrigger` can read them via `self.task`:
+so the `TouchTrigger` can read them via `self.task`. They are created in
+`__init__`, so they exist before the first touch, and can be changed every trial in
+`create_trial`:
 
 ```python
 from village.custom_classes.task_base import BpodEvent, TaskBase
@@ -369,14 +416,17 @@ from village.custom_classes.task_base import BpodEvent, TaskBase
 
 class MyTask(TaskBase):
 
-    def create_trial(self):
+    def __init__(self):
+        super().__init__()
         # Position and radius of the target on the stimulus screen (pixels)
         self.target_x: int = 640
         self.target_y: int = 360
         self.tolerance_px: int = 80
         self.touch_correct: bool = False
 
-        # ... build the state machine (see below) ...
+    def create_trial(self):
+        self.touch_correct = False
+        # ... move the target if needed, and build the state machine (see below) ...
 ```
 
 **In `touch_trigger.py`**, check the distance to the target and send the
@@ -398,9 +448,8 @@ class TouchTrigger(TouchTriggerBase):
         dx = x - task.target_x
         dy = y - task.target_y
         distance = (dx**2 + dy**2) ** 0.5
-        tolerance = getattr(task, "tolerance_px", 80)
 
-        if distance <= tolerance:
+        if distance <= task.tolerance_px:
             task.touch_correct = True
             task.cam_box.write_text(f"Correct touch: {x}, {y}")
             task.bpod.send_softcode_to_bpod(1)   # softcode 1 → correct

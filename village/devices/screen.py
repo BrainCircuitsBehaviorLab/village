@@ -24,7 +24,7 @@ from PyQt5.QtGui import QColor, QGuiApplication, QImage, QPainter, QPixmap
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
 
 from village.classes.enums import ScreenActive
-from village.classes.null_classes import NullGpio, NullScreen
+from village.classes.null_classes import NullScreen
 from village.devices.sound_device import sound_device
 from village.scripts.error_queue import error_queue
 from village.scripts.time_utils import time_utils
@@ -32,7 +32,6 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.controllers.trial_recorder import TrialRecorder
-    from village.devices.gpio import Gpio
 
 
 class VideoWorker(QObject):
@@ -202,10 +201,6 @@ class Screen(QOpenGLWidget):
 
         self._start_timing: float = 0.0
         self._swap_connected: bool = False
-
-        # injected by manager.run_task(); NullGpio (no-op) until then. set_on/
-        # set_off drive the GPIO_OUT pin for the sync pulse (see devices/gpio.py).
-        self.gpio: Gpio | NullGpio = NullGpio()
 
         self._video_thread: QThread | None = None
         self._video_worker: VideoWorker | None = None
@@ -414,15 +409,12 @@ class Screen(QOpenGLWidget):
             self.elapsed_time = 0.0
             return
 
-        self.gpio.set_on()
-
         now = time_utils.get_time_monotonic()
         self.elapsed_time = now - self._start_timing
         self.frame += 1
 
         # First frame that actually draws newly-requested content: record its
-        # on-screen onset (aligned with the GPIO sync pulse just set above), then
-        # clear so it is recorded once per new content.
+        # on-screen onset, then clear so it is recorded once per new content.
         rec = self.recorder
         if self._pending_onset_label is not None and rec is not None:
             try:
@@ -437,8 +429,6 @@ class Screen(QOpenGLWidget):
             self._draw_fn()
         except Exception:
             pass
-
-        self.gpio.set_off()
 
     def clear_function(self) -> None:
         """Clears the window by filling it with the background color."""
