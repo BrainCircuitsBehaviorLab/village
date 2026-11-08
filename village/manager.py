@@ -3,7 +3,7 @@ import time
 import traceback
 from collections.abc import Callable
 from pathlib import Path
-from threading import Thread
+from threading import Thread, current_thread
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -63,6 +63,10 @@ from village.settings import settings
 if TYPE_CHECKING:
     from village.devices.camera import Camera
     from village.devices.touch import Touch
+
+# Seconds to wait for the task thread to stop when a session ends, before
+# saving anyway (see Manager.stop_task_thread).
+TASK_STOP_TIMEOUT = 5
 
 
 class Manager:
@@ -547,6 +551,7 @@ class Manager:
         Args:
             run_mode (str): The mode in which the task was run (e.g., "Auto", "Manual").
         """
+        self.stop_task_thread()
         screen.load_draw_function(None)
         screen.stop_drawing()
         sound_device.stop()  # cut any sound still playing at session end
@@ -585,6 +590,31 @@ class Manager:
         log.end(task=self.task.name, subject=self.subject.name)
         self.sessions.add_timestamp()
         self.after_session_flag = True
+
+    def stop_task_thread(self) -> None:
+        """Stops the task thread and waits for it, so that nothing changes the
+        session data while it is being saved.
+
+        should_stop becomes True (stop_requested), so the run loop and the
+        task's own waiting loops exit, and the trial running at that moment is
+        not saved. With Bpod, the state machine is stopped too: pybpodapi ends
+        the thread as soon as it receives the kill.
+        """
+        self.task.stop_requested = True
+        if self.task.controller_type == ControllerEnum.BPOD:
+            self.bpod.stop()
+        process = getattr(self, "process", None)
+        if process is None or process is current_thread():
+            return
+        process.join(timeout=TASK_STOP_TIMEOUT)
+        if process.is_alive():
+            log.error(
+                "The task did not stop in "
+                + str(TASK_STOP_TIMEOUT)
+                + " seconds: check that its waiting loops check self.should_stop."
+                + " Saving the session anyway.",
+                subject=self.subject.name,
+            )
 
     def save_to_subjects(self) -> None:
         """Updates subject data, including next session time and training settings,

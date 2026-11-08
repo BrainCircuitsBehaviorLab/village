@@ -3,6 +3,8 @@ from pathlib import Path
 import fire
 import pandas as pd
 
+from village.scripts.safe_write import write_csv_atomic
+
 
 def main(
     subject: str, sessions_directory: str, deleted_sessions: list[str] | None = None
@@ -35,15 +37,28 @@ def main(
     def extract_datetime(filename) -> str:
         """Extracts the datetime timestamp from a session filename.
 
+        The filename is {subject}_{task}_{YYYYMMDD}_{HHMMSS}.csv: the date and
+        time are taken from the end, so a subject or task name with
+        underscores (e.g. the task S4_1) does not move them.
+
         Args:
             filename (str): The session filename.
 
         Returns:
-            str: The extracted timestamp string.
+            str: The extracted timestamp string, YYYYMMDDHHMMSS.
+
+        Raises:
+            ValueError: If the filename does not end with a date and a time.
         """
-        base_name = Path(filename).name
-        datetime = base_name.split("_")[2] + base_name.split("_")[3].split(".")[0]
-        return datetime
+        parts = Path(filename).stem.rsplit("_", 2)
+        if len(parts) != 3 or not (
+            len(parts[1]) == 8
+            and parts[1].isdigit()
+            and len(parts[2]) == 6
+            and parts[2].isdigit()
+        ):
+            raise ValueError("Not a session filename: " + filename)
+        return parts[1] + parts[2]
 
     sessions_datetimes = []
 
@@ -82,7 +97,7 @@ def main(
     ]
     final_df = final_df[reordered_columns]
 
-    final_df.to_csv(final_path, header=True, index=False, sep=";")
+    write_csv_atomic(final_df, final_path, header=True, index=False, sep=";")
 
 
 if __name__ == "__main__":

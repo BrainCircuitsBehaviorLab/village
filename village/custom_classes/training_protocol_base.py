@@ -215,6 +215,10 @@ class TrainingProtocolBase:
     ) -> tuple[list[str], dict[str, Any]]:
         """Ensures that dictionary values match the types of default settings.
 
+        Numbers: a setting whose default is a float is always a float; one whose
+        default is an int is an int, unless the value has decimals (then it is a
+        float, never truncated).
+
         Args:
             current_dict (dict[str, Any]): Input dictionary.
 
@@ -231,6 +235,11 @@ class TrainingProtocolBase:
                         value = value.lower() in ["true", "1", "yes"]
                     elif isinstance(default_dict[key], int | float):
                         value = float(value)
+                        # An integer setting stays an integer (for range(),
+                        # indexing...) unless it really has decimals: 2.5 is
+                        # kept, never truncated
+                        if isinstance(default_dict[key], int) and value.is_integer():
+                            value = int(value)
                     elif isinstance(default_dict[key], list | dict):
                         value = eval(value)
                 except Exception:

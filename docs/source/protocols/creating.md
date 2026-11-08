@@ -103,6 +103,17 @@ animal to return home (door 2 is already open at this point, so
 The rest are the settings your tasks read — here, the ones used by the six example
 tasks.
 
+```{admonition} The type of each setting comes from its default value
+:class: note
+The settings are saved as text (in `subjects.csv`, or typed in the GUI) and converted
+back with the type of their default value. A setting whose default is a decimal
+number (`noise_time = 1.5`) is always a `float`. One whose default is an integer
+(`led_intensity = 255`) is an `int`, so it can be used in `range()` or as an index;
+if it is given a value with decimals (`reward_volume = 2.5`), that value is kept as a
+`float`, never truncated. So write as decimals the defaults of the settings that are
+decimal by nature, like times or volumes, if your code needs them to be `float`.
+```
+
 ---
 
 ### `update_training_settings()`

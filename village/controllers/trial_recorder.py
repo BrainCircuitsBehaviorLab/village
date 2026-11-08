@@ -6,6 +6,12 @@ from typing import Any
 from village.settings import settings
 
 
+def _end_key(start_key: str) -> str:
+    """STATE_<name>_START -> STATE_<name>_END. Only the suffix is changed, so a
+    state whose name contains "START" (e.g. "START_poke") keeps its name."""
+    return start_key.removesuffix("_START") + "_END"
+
+
 class TrialRecorder:
     """Universal trial data recorder for all controller types.
 
@@ -153,12 +159,12 @@ class TrialRecorder:
             )
 
             for state, start_times in self._states_start.items():
-                end_times = self._states_end.get(state.replace("START", "END"), [])
+                end_times = self._states_end.get(_end_key(state), [])
                 for start, end in zip(start_times, end_times, strict=False):
                     self._write_csv_row(
                         f"{start:.4f}",
                         f"{end:.4f}",
-                        state.replace("_START", ""),
+                        state.removesuffix("_START"),
                         "",
                     )
 
@@ -214,7 +220,7 @@ class TrialRecorder:
             interleaved = {}
             for state, start_times in self._states_start.items():
                 interleaved[state] = start_times
-                end_key = state.replace("START", "END")
+                end_key = _end_key(state)
                 if end_key in self._states_end:
                     interleaved[end_key] = self._states_end[end_key]
 

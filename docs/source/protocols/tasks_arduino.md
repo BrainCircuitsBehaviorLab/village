@@ -40,10 +40,10 @@ number of trials chosen when launching the task.
 
 `````{admonition} Check should_stop in your waiting loops
 :class: warning
-The system ends the session, but it cannot stop your Python code: a `create_trial`
-waiting for the Arduino would keep running. Every waiting loop must check
-`self.should_stop` (and a deadline, in case a message is lost on the way), so it can
-never wait forever:
+When the session ends, the system waits up to 5 seconds for `create_trial` to return
+before saving, but it cannot stop your Python code: a `create_trial` waiting for the
+Arduino would keep running. Every waiting loop must check `self.should_stop` (and a
+deadline, in case a message is lost on the way), so it can never wait forever:
 
 ```python
 while not self.should_stop and time_utils.now_timestamp() < deadline:

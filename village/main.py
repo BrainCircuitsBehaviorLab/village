@@ -169,6 +169,9 @@ def system_run() -> None:
     trial = 0
     detection_timer = time_utils.Timer(settings.get("DETECTION_DURATION"))
     tare_timer = time_utils.Timer(settings.get("REPEAT_TARE_TIME"))
+    # door2 was opened without taring the corridor scale (OPEN_DOOR2_STOP):
+    # tare it as soon as the corridor is empty
+    tare_needed = False
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
     sound_alarm_timer = time_utils.Timer(3600)
     video_alarm_timer = time_utils.Timer(3600)
@@ -438,6 +441,7 @@ def system_run() -> None:
                 # Opening door2
                 scale.tare()
                 tare_timer.reset()
+                tare_needed = False
                 motor_corridor2.open()
                 manager.state = State.RUN_OPEN
                 log.info("Going to RUN_OPEN State")
@@ -528,6 +532,16 @@ def system_run() -> None:
                 # Task finished, waiting for the subject to leave
                 manager.getting_weights = True
                 if (
+                    cam_corridor.has_image()  # never tare with a possible animal
+                    and cam_corridor.area_2_empty()
+                    and cam_corridor.area_3_empty()
+                    and (tare_needed or tare_timer.has_elapsed())
+                ):
+                    scale.tare()
+                    tare_timer.reset()
+                    tare_needed = False
+
+                if (
                     manager.task.chrono.get_seconds()
                     > manager.task.settings.maximum_duration
                     + manager.max_time_counter * 3600
@@ -575,7 +589,10 @@ def system_run() -> None:
                 log.info("Going to SYNC State")
 
             case State.OPEN_DOOR2_STOP:
-                # Opening door2, disconnecting RFID
+                # Opening door2, disconnecting RFID. Not tared here: after an
+                # error there may be an animal in the corridor, so it is tared
+                # in WAIT_SUBJECT_EXIT once the corridor is empty
+                tare_needed = True
                 motor_corridor2.open()
                 manager.rfid_reader = Active.OFF
                 manager.rfid_changed = True

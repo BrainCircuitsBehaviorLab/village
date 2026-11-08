@@ -9,6 +9,7 @@ import pandas as pd
 
 from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.scripts.log import log
+from village.scripts.safe_write import write_csv_atomic
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -164,7 +165,7 @@ class Collection:
             directory.mkdir(parents=True, exist_ok=True)
             first_rows.to_csv(new_path, index=False, sep=";")
             last: pd.DataFrame = self._df.tail(len(self._df) - file_size)
-            last.to_csv(self.path, index=False, sep=";")
+            write_csv_atomic(last, self.path, index=False, sep=";")
             self._df = last
 
     def get_last_entry(self, column: str, value: str) -> pd.Series | None:
@@ -238,7 +239,7 @@ class Collection:
         if training is None:
             training = TrainingProtocolBase()
         new_df = self.df_from_df(self._df, training)
-        new_df.to_csv(self.path, index=False, sep=";")
+        write_csv_atomic(new_df, self.path, index=False, sep=";")
         self._df = new_df
 
     def df_from_df(

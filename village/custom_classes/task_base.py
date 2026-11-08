@@ -15,6 +15,7 @@ from village.custom_classes.training_protocol_base import Settings, TrainingProt
 from village.pybpodapi.hardware.events import EventName
 from village.pybpodapi.hardware.output_channels import OutputChannel
 from village.scripts.log import log
+from village.scripts.safe_write import write_csv_atomic
 from village.scripts.time_utils import time_utils
 from village.settings import settings
 
@@ -284,7 +285,8 @@ class TaskBase:
 
     self.should_stop: bool (read-only)
         True once ANY stopping condition is met: the time limit, the trial
-        limit (Manual mode only), force_stop, or stop_button_pressed. If your
+        limit (Manual mode only), force_stop, stop_button_pressed, or the
+        system ending the session (stop_requested). If your
         task does not use
         Bpod and create_trial contains its own waiting loop, check this
         property on every iteration so the loop actually exits when the task
@@ -352,6 +354,9 @@ class TaskBase:
         self.subject_df: pd.DataFrame = pd.DataFrame()
         self.force_stop: bool = False
         self.stop_button_pressed: bool = False
+        # Set by the system when it ends the session (manager.disconnect_and_save),
+        # whatever the reason: the trial running at that moment is not saved.
+        self.stop_requested: bool = False
         self.run_mode: str = "Manual"
         self.maximum_number_of_trials: int = 100000000
         self.chrono = time_utils.Chrono()
@@ -539,6 +544,7 @@ class TaskBase:
             or self.chrono.get_seconds() >= self.settings.maximum_duration
             or self.force_stop
             or self.stop_button_pressed
+            or self.stop_requested
         )
 
     @property
@@ -569,7 +575,10 @@ class TaskBase:
         else:
             self.cam_box.trial = self.current_trial
             self.create_trial()
-            self.close_trial_without_bpod()
+            if not self.stop_requested:
+                self.close_trial_without_bpod()
+        if self.stop_requested:
+            return  # the session ended during the trial: it is not saved
         self.trial_data = self.recorder.get_trial_data(
             self.date, self.current_trial, self.subject, self.name, self.system_name
         )
@@ -605,7 +614,10 @@ class TaskBase:
         self.trial_data = {}
 
     def disconnect_and_save(self, run_mode: str) -> tuple[Save, float, int, int, str]:
-        """Stops the task, disconnects devices, and saves session data.
+        """Closes the task, disconnects devices, and saves session data.
+
+        Called by manager.disconnect_and_save once the task thread has stopped
+        (Bpod stopped and the thread joined), so session_df no longer changes.
 
         Args:
             run_mode (str): The mode in which the task was run (e.g., "Manual").
@@ -638,8 +650,6 @@ class TaskBase:
                     exception=traceback.format_exc(),
                 )
         self.recorder.close()
-        if self.controller_type == ControllerEnum.BPOD:
-            self.bpod.stop()
         self.cam_box.stop_recording()
         if self.subject != "None":
             try:
@@ -821,7 +831,11 @@ class TaskBase:
             ]
             self.subject_df = self.subject_df[reordered_columns]
 
-            self.subject_df.to_csv(self.subject_path, header=True, index=False, sep=";")
+            # The subject's whole history: replaced atomically, so a power cut
+            # while saving never leaves it half written
+            write_csv_atomic(
+                self.subject_df, self.subject_path, header=True, index=False, sep=";"
+            )
 
             def safe_to_numeric(series) -> Any:
                 try:
