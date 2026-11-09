@@ -1,5 +1,6 @@
 import csv
 import sys
+import threading
 import traceback
 from pathlib import Path
 from typing import Any
@@ -51,6 +52,13 @@ class Collection:
             collection's own data. Internal methods on this class read and
             write the real data through self._df instead.
     """
+
+    # Serializes every change to the collections: the log (events.csv) is
+    # written from several threads at once (the main loop, the GUI, the scale,
+    # the touchscreen, the sound...). Reentrant: add_entry calls
+    # check_split_csv. One lock for all the collections, since writes are rare
+    # and short.
+    _lock = threading.RLock()
 
     def __init__(self) -> None:
         """Initializes the Collection."""
@@ -109,10 +117,11 @@ class Collection:
         ]
         new_row = pd.DataFrame([entry_str], columns=self.columns)
         new_row = self.convert_df_to_types(new_row)
-        self._df = pd.concat([self._df, new_row], ignore_index=True)
-        with self.path.open("a", encoding="utf-8", newline="") as file:
-            csv.writer(file, delimiter=";", lineterminator="\n").writerow(entry_str)
-        self.check_split_csv()
+        with self._lock:
+            self._df = pd.concat([self._df, new_row], ignore_index=True)
+            with self.path.open("a", encoding="utf-8", newline="") as file:
+                csv.writer(file, delimiter=";", lineterminator="\n").writerow(entry_str)
+            self.check_split_csv()
 
     @staticmethod
     def convert_with_default(value, target_type: Any) -> Any:
@@ -226,8 +235,9 @@ class Collection:
             column (str): The column to update.
             value (Any): The new value.
         """
-        self._df.loc[self._df.index[-1], column] = value
-        self.save_from_df()
+        with self._lock:
+            self._df.loc[self._df.index[-1], column] = value
+            self.save_from_df()
 
     def save_from_df(self, training: TrainingProtocolBase | None = None) -> None:
         """Saves values from the current DataFrame to the CSV file,
@@ -238,9 +248,10 @@ class Collection:
         """
         if training is None:
             training = TrainingProtocolBase()
-        new_df = self.df_from_df(self._df, training)
-        write_csv_atomic(new_df, self.path, index=False, sep=";")
-        self._df = new_df
+        with self._lock:
+            new_df = self.df_from_df(self._df, training)
+            write_csv_atomic(new_df, self.path, index=False, sep=";")
+            self._df = new_df
 
     def df_from_df(
         self, df: pd.DataFrame, training: TrainingProtocolBase

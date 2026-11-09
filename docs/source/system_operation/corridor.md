@@ -10,7 +10,7 @@ Several control tabs are available at the center of the screen. Which ones are s
 *   **`CORRIDOR`:** only if `USE_CORRIDOR` is ON (`SETTINGS` → `CORRIDOR SETTINGS`).
 *   **`BOX`:** only if `USE_BOX_BOARD` is ON (`SETTINGS` → `BOX SETTINGS`) or the behavioral controller is a Bpod.
 *   **`FUNCTIONS`:** always.
-*   **`VIRTUAL MOUSE`:** only if the behavioral controller is a Bpod or the box camera tracking is enabled.
+*   **`VIRTUAL MOUSE`:** only if the behavioral controller is a Bpod, the box camera tracking is enabled (`CAM_BOX_TRACKING_POSITION`), or `USE_SCREEN` is `TOUCHSCREEN`.
 
 #### `CORRIDOR`
 
@@ -116,6 +116,6 @@ Enables real-time simulation of animal behavior through software triggers—an i
 A secondary group of tabs is located at the bottom of the screen to monitor system telemetry and history:
 
 *   **`INFO`:** Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.
-*   **`PLOT`:** Only with `USE_CORRIDOR` ON. Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.
+*   **`PLOT`:** Only with `USE_CORRIDOR` ON. Shows a chart of the successful entries and the denied entry attempts of all subjects over the last three days.
 *   **`DETECTION SETTINGS`:** Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and operant box tracking systems. A comprehensive breakdown of these parameters is available in the [Animal Detection & Tracking](detection.md).
 *   **`EXTRA`:** Only with `CORRIDOR_AREA_EXTRA` ON (`SETTINGS` → `ADVANCED SETTINGS`). Configures the extra corridor area used to check that the passage between the two homecages is not blocked. See [Homecage Camera Control](../advanced_customization/homecage_camera_control.md).

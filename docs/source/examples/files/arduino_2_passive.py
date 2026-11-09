@@ -1,6 +1,7 @@
 import math
 import random
 import struct
+import time
 
 import serial
 
@@ -10,9 +11,9 @@ from village.settings import settings
 
 # Protocol (see runPassive() in village_arduino/village_arduino.ino):
 #
-# Pi -> Arduino, 6 raw bytes, sent once at the start of each trial:
+# Pi -> Arduino, 10 raw bytes, sent once at the start of each trial:
 #   [CMD_START_TRIAL, port,
-#    valve_time_ms (uint16, little-endian), led_on_timeout_ms (uint16, LE)]
+#    valve_time_ms (uint32, little-endian), led_on_timeout_ms (uint32, LE)]
 #   Tells the Arduino which port gets the reward this trial, how long to
 #   open its valve for, and how long to then wait for a poke there. From
 #   here the Arduino runs the whole trial on its own; the Pi just listens.
@@ -51,6 +52,7 @@ RESULT_GOT_CORRECT = 1
 BAUDRATE = 9600  # must match the Arduino sketch's Serial.begin(...)
 READ_TIMEOUT = 0.05  # seconds; also how often should_stop/deadlines get re-checked
 MESSAGE_SIZE = 6  # every Arduino -> Pi message is exactly this many bytes
+STARTUP_WAIT = 2.0  # seconds; opening the port resets most Arduino boards
 
 
 class Arduino2Passive(TaskBase):
@@ -94,6 +96,9 @@ class Arduino2Passive(TaskBase):
             baudrate=BAUDRATE,
             timeout=READ_TIMEOUT,
         )
+        # Opening the port resets most Arduino boards: wait for the sketch
+        # to be running, or the first command would be lost.
+        time.sleep(STARTUP_WAIT)
         self.serial_port.reset_input_buffer()
 
         self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
@@ -122,7 +127,7 @@ class Arduino2Passive(TaskBase):
 
         self.serial_port.write(
             struct.pack(
-                "<BBHH", CMD_START_TRIAL, port, valve_time_ms, led_on_timeout_ms
+                "<BBII", CMD_START_TRIAL, port, valve_time_ms, led_on_timeout_ms
             )
         )
         t_sent = time_utils.now_timestamp()

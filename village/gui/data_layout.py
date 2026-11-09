@@ -205,10 +205,12 @@ class TableView(QTableView):
                             QMessageBox.No,
                         )
                         if reply == QMessageBox.No:
+                            manager.state = State.WAIT
                             return
                     try:
                         super().mouseDoubleClickEvent(event)
                     except RuntimeError:
+                        manager.state = State.WAIT
                         return
                     self.save_changes_in_df()
             elif flags & Qt.ItemIsEditable:
@@ -234,10 +236,12 @@ class TableView(QTableView):
                         cast(pd.Series, parent.get_selected_row_series())
                     )
 
+                    # new_value is already a JSON string: written as is, like
+                    # the task writes it
                     json_path = paths[2]
                     try:
                         with Path(json_path).open("w") as file:
-                            json.dump(current_value, file)
+                            file.write(new_value)
                     except Exception:
                         log.error(
                             "Error trying to modify the json file",
@@ -301,7 +305,8 @@ class TableView(QTableView):
             if selected_days:
                 self._model().setData(index, selected_days, Qt.EditRole)
                 self.save_changes_in_df()
-                manager.state = State.WAIT
+        # back to WAIT also when cancelled, or no RFID detection would happen
+        manager.state = State.WAIT
 
 
 class DaysSelectionDialog(QDialog):
@@ -1906,6 +1911,7 @@ class DfLayout(Layout):
                 "Error reading settings",
                 exception=traceback.format_exc(),
             )
+            return current_value
 
         self.reply = QDialog()
         self.reply.setWindowTitle("Task settings")
@@ -2071,7 +2077,7 @@ class DfLayout(Layout):
         if self.reply.exec_():
             return dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
         else:
-            return ""
+            return current_value
 
     def on_data_changed(self) -> None:
         """Saves data changes to the DataFrame when modified."""

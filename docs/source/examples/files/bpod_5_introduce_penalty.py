@@ -20,7 +20,7 @@ class Bpod5IntroducePenalty(TaskBase):
               chosen at random every trial.
         - Trial logic:
             * Correct poke -> water delivery.
-            * Wrong poke -> time-out, buzzer noise, and trial termination.
+            * Wrong poke -> penalty tone, silent timeout, and trial termination.
             * After reward or time-up, a short delay before the next trial.
         """
 
@@ -38,8 +38,13 @@ class Bpod5IntroducePenalty(TaskBase):
         - self.settings.c_led_on_time: time allowed to poke the center port, seconds
         - self.settings.led_on_time: time allowed to poke the correct side, seconds
         - self.settings.iti_time: inter-trial interval, seconds
-        - self.settings.noise_time: buzzer duration after a wrong poke, seconds
-        - self.settings.timeout: total penalty duration (buzzer + silence), seconds
+        - self.settings.noise_time: penalty tone duration after a wrong poke, seconds
+        - self.settings.timeout: total penalty duration (tone + silence), seconds
+
+        Required calibrations:
+        - water, for ports 1 and 3
+        - the "tone_600" sound, for speaker 0 (left) at 70 dB: the penalty
+          tone loaded by direct_functions.function2
         """
 
         self.valve_l_time = self.calibrations.water_calibration.get_valve_time(

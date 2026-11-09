@@ -55,7 +55,7 @@ class Gpio:
             self._input.when_deactivated = self._trigger_off  # ON -> OFF
         except Exception:
             msg = "Could not open GPIO pin " + str(self.pin_in) + " as input"
-            self.error = log.clean_text(traceback.format_exc(), msg)
+            self._report_error(msg)
 
     def stop(self) -> None:
         """Stops watching the input pin and releases it."""
@@ -80,12 +80,20 @@ class Gpio:
                 self._output = DigitalOutputDevice(self.pin_out)
             except Exception:
                 msg = "Could not open GPIO pin " + str(self.pin_out) + " as output"
-                self.error = log.clean_text(traceback.format_exc(), msg)
+                self._report_error(msg)
                 return
         if high:
             self._output.on()
         else:
             self._output.off()
+
+    def _report_error(self, msg: str) -> None:
+        """Keeps the error in self.error and logs it, once: set_on/set_off retry
+        to open the pin on every call, and must not fill the log."""
+        error = log.clean_text(traceback.format_exc(), msg)
+        if error != self.error:
+            log.error(msg, exception=traceback.format_exc())
+        self.error = error
 
     def _trigger_on(self) -> None:
         if self.trigger is not None:

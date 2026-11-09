@@ -23,6 +23,12 @@ class ChangeCycleBase:
 
     def __init__(self) -> None:
         """Initializes the ChangeCycleBase instance with settings."""
+        self.read_settings()
+
+    def read_settings(self) -> None:
+        """Reads the video storage and sync settings. Called again at the start
+        of every run(), so a change made in SETTINGS is used from the next
+        day/night change, without restarting Village."""
         self.directory = settings.get("VIDEOS_DIRECTORY")
         self.days = settings.get("DAYS_OF_VIDEO_STORAGE")
         self.safe = settings.get("SAFE_DELETE") == Active.ON
@@ -43,6 +49,7 @@ class ChangeCycleBase:
         videos. Without synchronization (OFF), only the old corridor videos are
         removed: they are never synchronized, and the task videos have no backup.
         """
+        self.read_settings()
         if self.sync_type == SyncType.HD:
             safe_removal_script(
                 directory=self.directory,

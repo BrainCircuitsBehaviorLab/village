@@ -1,5 +1,6 @@
 import logging
 import os
+import shlex
 import subprocess
 from datetime import datetime
 from pathlib import Path
@@ -7,7 +8,11 @@ from pathlib import Path
 import fire
 
 from village.scripts.time_utils import time_utils
-from village.scripts.utils import setup_logging
+from village.scripts.utils import same_disk, setup_logging
+
+# Files checked in each ssh call: all of them in a single command could exceed
+# the maximum length of a command line.
+REMOTE_CHECK_BATCH = 200
 
 
 def check_files_for_backup_remote(
@@ -20,6 +25,9 @@ def check_files_for_backup_remote(
 ) -> list[str]:
     """Checks which files have been backed up on a remote server.
 
+    The files are checked in batches of REMOTE_CHECK_BATCH, one ssh call each.
+    If a call fails, its files are kept (not removed) and the error is logged.
+
     Args:
         files (list[str]): List of filenames to check.
         directory (str): The local directory containing the files.
@@ -31,37 +39,38 @@ def check_files_for_backup_remote(
     Returns:
         list[str]: List of full paths of files that can be safe to remove locally.
     """
+    ssh = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10"]
+    if port is not None:
+        ssh += ["-p", str(port)]
+    ssh.append(f"{remote_user}@{remote_host}")
+
     files_to_remove = []
-
-    if port is None:
-        ssh_command = (
-            f"ssh {remote_user}@{remote_host} "
-            f"'for file in {' '.join([str(Path(backup_dir, f)) for f in files])}; do"
-            f" if [ -e $file ]; then echo $file; fi; done'"
+    for i in range(0, len(files), REMOTE_CHECK_BATCH):
+        batch = files[i : i + REMOTE_CHECK_BATCH]
+        backup_paths = [str(Path(backup_dir, f)) for f in batch]
+        # Runs on the server: prints the backup paths that exist
+        remote_command = (
+            "for f in "
+            + " ".join(shlex.quote(b) for b in backup_paths)
+            + '; do if [ -e "$f" ]; then echo "$f"; fi; done'
         )
-    else:
-        ssh_command = (
-            f"ssh -p {port} {remote_user}@{remote_host} "
-            f"'for file in {' '.join([str(Path(backup_dir, f)) for f in files])}; do"
-            f" if [ -e $file ]; then echo $file; fi; done'"
-        )
-
-    try:
-        result = subprocess.run(
-            ssh_command,
-            shell=True,
-            capture_output=True,
-            timeout=120,
-        )
-    except Exception:
-        return []
-
-    backed_up_files = result.stdout.decode().strip().split("\n")
-
-    for file in files:
-        backup_path = str(Path(backup_dir, file))
-        if backup_path in backed_up_files:
-            files_to_remove.append(str(Path(directory, file)))
+        try:
+            result = subprocess.run(
+                [*ssh, remote_command], capture_output=True, timeout=120
+            )
+        except Exception as e:
+            logging.error(f"Could not check the backup on the server: {e}")
+            continue
+        if result.returncode != 0:
+            logging.error(
+                "Could not check the backup on the server: "
+                + result.stderr.decode(errors="replace").strip()
+            )
+            continue
+        backed_up = set(result.stdout.decode().splitlines())
+        for file, backup_path in zip(batch, backup_paths, strict=True):
+            if backup_path in backed_up:
+                files_to_remove.append(str(Path(directory, file)))
 
     return files_to_remove
 
@@ -71,6 +80,9 @@ def check_files_for_backup_local(
 ) -> list[str]:
     """Checks which files have been backed up locally (e.g., external drive).
 
+    If the backup directory is on the same disk as the files (the external
+    drive is not mounted), nothing is considered backed up.
+
     Args:
         files (list[str]): List of filenames to check.
         directory (str): The local directory containing the source files.
@@ -79,6 +91,12 @@ def check_files_for_backup_local(
     Returns:
         list[str]: List of full paths of files that can be safe to remove.
     """
+    if same_disk(backup_dir, directory):
+        logging.error(
+            f"The backup directory {backup_dir} is on the same disk as the videos,"
+            " not on an external drive: no video is removed."
+        )
+        return []
     files_to_remove = []
     for file in files:
         try:

@@ -173,9 +173,11 @@ plus the remaining portion of the current frame: **mean = 24.9 ms, SD = 7.5 ms**
 Communication and action latencies are both sensitive to CPU load. The platform
 implements several measures to keep CPU usage low during sessions:
 
-- Expensive background processes are suspended during sessions (e.g. the Python
-  garbage collector, system update checks) and re-enabled when the system returns to
-  the `WAIT` state.
+- The Python garbage collector is disabled during sessions and re-enabled when the
+  system returns to the `WAIT` state.
+- The automatic system update checks are disabled in the Raspberry Pi image (see
+  [Manual Software Installation](../resources/software_installation.md#disabling-automatic-updates)),
+  so they never run in the middle of a session.
 - Cameras are configured at 640×480 / 30 fps (operant box) and 10 fps (corridor)
   by default. If these values are increased, latencies should be re-measured
   experimentally to confirm they remain within acceptable bounds.

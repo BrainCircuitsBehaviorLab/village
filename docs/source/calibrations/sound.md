@@ -28,6 +28,14 @@ a new `calibration_number` and the full history is kept, but tasks and the testi
 panel always use the most recent one per speaker/sound pair. `DELETE CALIBRATION`
 discards the points collected so far (after confirmation) without saving them.
 
+```{admonition} The curve must always go up
+:class: warning
+A higher gain must always give a higher level in dB. If a point breaks that trend (a
+noisy measurement that gives fewer dB than a lower gain), the curve makes a bump
+there, and a level in that range can be read on the wrong side of it. Check the plot
+before saving, and remove such a point with its `-` button.
+```
+
 ### Testing
 
 Check whether the latest saved calibration for a speaker/sound pair is still accurate.
@@ -57,6 +65,10 @@ calibration curve. `dB=0` always returns a gain of `0.0` without needing a
 calibration. Otherwise, if the pair hasn't been calibrated yet, or `dB` falls outside
 the calibrated range, it raises a `ValueError` explaining the problem so it's easy to
 tell whether the sound needs calibrating or the requested dB needs adjusting.
+
+The example tasks of the demo project need two of them: `whitenoise` for both speakers
+at 70 dB, and `tone_600` for speaker 0 (left) at 70 dB, the penalty tone of the last
+two training stages (see [Task Examples (Bpod)](../examples/tasks_bpod.md)).
 
 Data is stored in `sound_calibration.csv` (columns: `date`, `speaker`, `sound_name`,
 `gain`, `dB_obtained`, `calibration_number`, `dB_expected`, `error(%)`).

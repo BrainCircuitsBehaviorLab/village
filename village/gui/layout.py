@@ -713,6 +713,14 @@ class Layout(QGridLayout):
     def stop_button_clicked(self) -> None:
         """Handles stop button click based on current button text."""
         btn_text = self.stop_button.text()
+        # The button text is refreshed only once per update tick: check that
+        # the state still matches it (e.g. the task may have just ended)
+        if btn_text == "STOP TASK" and not manager.state.task_is_running():
+            self.update_gui()
+            return
+        if btn_text == "STOP SYNC" and not manager.state.can_stop_syncing():
+            self.update_gui()
+            return
         if btn_text == "STOP TASK":
             if manager.state == State.RUN_MANUAL:
                 log.info("Task manually stopped.", subject=manager.subject.name)
@@ -745,6 +753,9 @@ class Layout(QGridLayout):
             )
             msg.addButton("Cancel", QMessageBox.RejectRole)
             msg.exec_()
+            # the state may have changed while the dialog was open
+            if manager.state != State.WAIT_SUBJECT_EXIT:
+                return
             if msg.clickedButton() == go_wait:
                 manager.getting_weights = False
                 manager.state = State.WAIT
@@ -759,6 +770,10 @@ class Layout(QGridLayout):
             )
             msg.addButton("Cancel", QMessageBox.RejectRole)
             msg.exec_()
+            # the state may have changed while the dialog was open (e.g. a
+            # detection started)
+            if manager.state != State.WAIT:
+                return
             if msg.clickedButton() == force_sync:
                 manager.detection_change = True
                 manager.after_session_flag = True
@@ -1070,9 +1085,11 @@ class Layout(QGridLayout):
     def check_errors(self) -> None:
         """Checks for errors in the manual task and displays a warning if needed."""
         if manager.error_in_manual_task:
+            # Reset before showing: the update timer keeps firing while the
+            # message box is open, and would open a new one every tick
+            manager.error_in_manual_task = False
             text = "Error in manual task"
             QMessageBox.information(self.window, "ERROR", text)
-            manager.error_in_manual_task = False
 
 
 class OnlinePlotDialog(QDialog):

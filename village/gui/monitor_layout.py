@@ -1101,7 +1101,7 @@ class BoxLayout(Layout):
                         8,
                         2,
                         partial(self.led_clicked, i + 1),
-                        "Light the LED" + str(i),
+                        "Light the LED of port " + str(i + 1) + " for 1 second",
                     )
                     self.buttons.append(button1)
 
@@ -1112,7 +1112,7 @@ class BoxLayout(Layout):
                         8,
                         2,
                         partial(self.water_clicked, i + 1),
-                        "Deliver water for 0.1 seconds" + str(i),
+                        "Open the valve of port " + str(i + 1) + " for 1 second",
                     )
                     self.buttons.append(button2)
                     row_offset += 1
@@ -1309,7 +1309,7 @@ class VirtualMouseLayout(Layout):
                     14,
                     2,
                     partial(self.poke_clicked, i + 1),
-                    "Virtual mouse poke in port" + str(i),
+                    "Virtual mouse poke in port " + str(i + 1),
                 )
                 self.buttons.append(button)
 

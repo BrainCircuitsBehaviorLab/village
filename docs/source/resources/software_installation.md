@@ -44,6 +44,32 @@ sudo apt update
 sudo apt full-upgrade
 ```
 
+### Disabling Automatic Updates
+
+Raspberry Pi OS checks for updates in the background once a day, at a random time that can fall in the middle of a session, using CPU that the cameras and the task need. An automatic update could also change a library the Training Village depends on without anyone noticing. Disable these checks and update the system by hand when no animals are training.
+
+1. Disable the daily apt timers and the PackageKit service, which the desktop uses to look for updates:
+
+```
+sudo systemctl disable --now apt-daily.timer apt-daily-upgrade.timer
+sudo systemctl mask packagekit
+```
+
+2. Remove the updates notifier from the toolbar: right-click on the toolbar, select `Add/Remove Panel Items`, select `Updater` (if present) and click `Remove`.
+
+3. Check that no apt timer is left (the command should print nothing):
+
+```
+systemctl list-timers | grep apt
+```
+
+To update the system later, run `sudo apt update` and `sudo apt full-upgrade` as above. To restore the automatic updates:
+
+```
+sudo systemctl enable --now apt-daily.timer apt-daily-upgrade.timer
+sudo systemctl unmask packagekit
+```
+
 ### Installing Needed Libraries
 
 The OS comes with Python 3.13 pre-installed.

@@ -77,9 +77,12 @@ systemName/
   for another session; it is calculated by adding `refractory_period` to the end time of
   the previous session.
 
-- **`sessions_summary.csv`**: Summary table of all completed sessions. A new row is
-  appended each time a session ends. Columns: `date`, `subject`, `tag`, `weight`,
-  `task`, `duration`, `trials`, `water`, `settings`.
+- **`sessions_summary.csv`**: Summary table of all the sessions with a subject. A new
+  row is appended each time a session ends, also when it has no completed trials (with
+  `trials` and `water` at 0 and empty `settings`) or an error happened while saving it.
+  Columns:
+  `date`, `subject`, `tag`, `weight`, `task`, `duration`, `trials`, `water`,
+  `settings`.
 
   ```{admonition} Note
   :class: warning
@@ -117,7 +120,9 @@ systemName/
 - **`data_removal_logs/`**: Log of the deletion process for videos that have already been
   synchronized to a remote server or external drive.
 - **`old_events/`**: To prevent `events.csv` from growing too large, a new file is
-  created once a line threshold is exceeded. Older event records are archived here.
+  created once a line threshold is exceeded (50,000 rows). Older event records are
+  archived here. The same applies to the other tables of this folder, such as
+  `sessions_summary.csv`, if they ever reach that size.
 
 ---
 
@@ -126,7 +131,9 @@ systemName/
 - **Storage path:** `data/sessions/{subject}/`
 - **Filename format:** `{subject}_{task}_{timestamp}`
 
-Three files are generated for every completed behavioral session:
+Three files are generated for every session with a subject and at least one completed
+trial (a session with no completed trials is not saved, and a task launched manually
+without a subject saves nothing):
 
 ```text
 data/sessions/{subject}/
@@ -150,23 +157,28 @@ One row per event. During the session, the events are written as they happen to
 
 **Message type standards (`MSG`):**
 
-- `_Transition_to_{stateName}`: State machine transition flag.
-- `STATE_{stateName}_START` / `STATE_{stateName}_END`: Structural boundaries of a
-  behavioral state.
-- *Hardware event name*: Digital input/output line transitions (e.g., photo-gate beams,
-  ports).
-- *Custom variable tag*: Any performance variable explicitly captured with
-  `register_value()` (e.g., `stimulus_side`, `correct_choice`, `rewarded`). The tag name
-  is written to `MSG` and its value to `VALUE`.
-- `TRIAL_START` / `TRIAL_END`: Absolute trial boundary markers.
+- `TRIAL_START` / `TRIAL_END`: The start and the end of the trial (in `START`).
+- `_Transition_to_{stateName}`: The moment a state is entered (in `START`).
+- *Event name* (`Port1In`, `Tup`, `sound`...): An event, at the time in `START`.
+- *Custom variable tag*: Any value registered with `register_value()` (e.g.,
+  `outcome`, `water`). The tag name is written to `MSG` and its value to `VALUE`.
+- `TRIAL`: Written when the trial ends, with its start in `START` and its end in
+  `END`.
+- `STATE_{stateName}`: Written when the trial ends, one row per visit to each state,
+  with its start in `START` and its end in `END`.
+- `date`, `trial`, `subject`, `task`, `system_name`: Which session and trial it is,
+  in `VALUE`, written when the trial is complete.
 
 #### 2. Processed Session (`{filename}.csv`)
 
 A parsed, trial-by-trial overview: instead of one row per event, this file contains one
 row per trial. Each row is built when its trial finishes (after `after_trial`), and the
-file is saved when the session ends. It begins
-with the following fixed columns: `session`, `date`, `trial`, `subject`, `task`,
-`system_name`, `run_mode`.
+file is saved when the session ends. Its columns are the keys of the trial data (see
+[Trial data](../protocols/tasks_bpod.md#trial-data)): `date`, `trial`, `subject`,
+`task`, `system_name`, `TRIAL_START`, `TRIAL_END`, one column for each state and event,
+`ordered_list_of_events`, the values registered with `register_value()`, and, at the
+end, `run_mode`. The cells of the state and event columns are lists of times, saved
+as text (`"[1793961057.5, 1793961059.2]"`).
 
 ```{admonition} run_mode
 :class: note
@@ -195,7 +207,7 @@ as this makes them directly accessible in the `.csv` file.
 In addition to the per-session files, a persistent history file is maintained in each
 subject's directory:
 
-- **`{subject}.csv`**: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. This aggregate dataset is essential for adaptive automated training (`training_protocol.py`), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved >80% accuracy over its last three sessions before advancing to the next training stage.
+- **`{subject}.csv`**: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. It has the same columns as the processed session files, plus a `session` column that numbers the sessions of the subject, and it begins with `session`, `date`, `trial`, `subject`, `task`, `system_name`, `run_mode`. This aggregate dataset is essential for adaptive automated training (`training_protocol.py`), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved >80% accuracy over its last three sessions before advancing to the next training stage.
 
 ---
 

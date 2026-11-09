@@ -41,8 +41,8 @@ class TrainingProtocol(TrainingProtocolBase):
         - iti_time: inter-trial interval, seconds.
         - timeout: punishment timeout after an incorrect response
           (introduce_penalty and delay), seconds.
-        - noise_time: white-noise punishment duration (introduce_penalty and
-          delay), seconds.
+        - noise_time: penalty tone duration (introduce_penalty and delay),
+          seconds.
         - p: difficulty of the delay task (0-1), carried over from session to
           session (see update_training_settings).
         - delay_thresholds: possible delays between the two side LEDs (seconds;

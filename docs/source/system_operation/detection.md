@@ -135,5 +135,3 @@ Below the corridor and box detection areas, the `DETECTION SETTINGS` tab also pr
 *   **`exposure`:** Exposure mode (0-2). `0` = normal auto-exposure. `1` = long-exposure mode, letting the camera use longer exposure times for a brighter, cleaner image in low light. `2` = long exposure plus extra digital gain, for the brightest (but noisiest) result.
 
 For the corridor camera, `exposure` is split into `exposure_day` and `exposure_night`, following the same `Corridor Cycle` logic as the area thresholds: the value that is not currently effective is shown greyed out, and switching between `DAY`/`NIGHT`/`AUTO` (in `AUTO`, at the `DAYTIME`/`NIGHTTIME` boundaries) applies the corresponding stored value automatically. The box camera, which has no automated day/night cycle, has a single `exposure` control instead.
-
-[GUI]: /system_operation/corridor.md

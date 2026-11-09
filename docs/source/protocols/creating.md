@@ -8,8 +8,8 @@ folder, and it must define three methods:
 - `__init__`, which only needs to call `super().__init__()`.
 - `default_training_settings`, which sets the settings a subject has by default when
   it is created.
-- `update_training_settings`, which runs after every session and updates the settings
-  of the subject, for example to move it to the next stage.
+- `update_training_settings`, which runs after every saved session and updates the
+  settings of the subject, for example to move it to the next stage.
 
 A fourth method, `define_gui_tabs`, is optional.
 
@@ -98,7 +98,9 @@ multi-animal setups to prevent individual animals from monopolizing access.
 `minimum_duration` is when door 2 opens and the animal can choose to leave;
 `maximum_duration` is when the task stops unconditionally and the system waits for the
 animal to return home (door 2 is already open at this point, so
-`maximum_duration` ≥ `minimum_duration` always).
+`maximum_duration` ≥ `minimum_duration` always). The task can also end the session
+earlier, opening door 2 before `minimum_duration`, with `self.force_stop = True` (see
+[Ending the session from the task](force-stop)).
 
 The rest are the settings your tasks read — here, the ones used by the six example
 tasks.
@@ -118,11 +120,13 @@ decimal by nature, like times or volumes, if your code needs them to be `float`.
 
 ### `update_training_settings()`
 
-This method runs automatically at the end of every session. It looks at the subject's
-history and updates whichever settings should change based on performance: typically
+This method runs automatically at the end of every session that is saved: a session
+with a subject and at least one completed trial. It looks at the subject's history and
+updates whichever settings should change based on performance: typically
 `next_task`, to move the subject to the next stage, and any setting that changes with
 it. The updated values are stored back into `subjects.csv` and used in the subject's
-next session.
+next session. After a session with no completed trials, the settings are left as they
+were (only the refractory period starts again).
 
 ```{admonition} Warning
 :class: warning
@@ -288,7 +292,7 @@ Every `TrainingProtocol` class implements these methods:
 | :--- | :--- | :--- |
 | `__init__` | At import | Initialize the class |
 | `default_training_settings` | When a new subject is created | Define initial parameter values |
-| `update_training_settings` | After every session ends | Update parameters based on performance |
+| `update_training_settings` | After every saved session (at least one trial) | Update parameters based on performance |
 | `define_gui_tabs` *(optional)* | When the settings are shown in the GUI | Organize the settings into tabs |
 
 To check a protocol against real data without changing anything, use the

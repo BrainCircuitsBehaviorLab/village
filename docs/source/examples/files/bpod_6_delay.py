@@ -50,13 +50,14 @@ class Bpod6Delay(TaskBase):
         - Middle port LED turns ON until the animal pokes the middle port,
           for up to c_led_on_time seconds. No poke: the trial ends as an
           omission (it doesn't count for the difficulty adaptation).
-        - Middle LED turns OFF. After 100 ms:
+        - Middle LED turns OFF and:
             * One lateral port LED (left/right, random) turns ON.
             * After a random delay, the opposite lateral LED turns ON too.
         - The animal has up to 40s total to respond. Correct choice: poke the
           side that was illuminated first.
             * Correct response: side LEDs OFF, reward at the reward port, 1s ITI.
-            * Incorrect response: side LEDs OFF, 3s buzzer, 3s timeout total.
+            * Incorrect response: side LEDs OFF, penalty tone, then silence
+              until the timeout is over.
             * No response: trial aborted, sequence restarts.
 
         The delay is drawn from a distribution controlled by self.p (0-1):
@@ -81,8 +82,8 @@ class Bpod6Delay(TaskBase):
         - self.settings.c_led_on_time: max wait for the center poke, seconds
         - self.settings.iti_time: inter-trial interval after a correct
           response, seconds
-        - self.settings.noise_time: buzzer duration after a wrong poke, seconds
-        - self.settings.timeout: total penalty duration (buzzer + silence),
+        - self.settings.noise_time: penalty tone duration after a wrong poke, seconds
+        - self.settings.timeout: total penalty duration (tone + silence),
           seconds
         - self.settings.p (optional, default 0.0): initial difficulty, 0-1
         - self.settings.curve_power (optional, default 3.0): shape parameter
@@ -90,6 +91,11 @@ class Bpod6Delay(TaskBase):
         - self.settings.delay_thresholds: the possible delays between the two
           side cues (seconds) and, for each one, the p from which it starts
           to appear (0: always)
+
+        Required calibrations:
+        - water, for ports 1 and 3
+        - the "tone_600" sound, for speaker 0 (left) at 70 dB: the penalty
+          tone loaded by direct_functions.function2
         """
 
         self.valve_l_time = self.calibrations.water_calibration.get_valve_time(

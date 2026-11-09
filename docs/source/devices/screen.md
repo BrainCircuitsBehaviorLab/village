@@ -302,6 +302,15 @@ screen a little later than this moment (see
 | `stop_drawing()` | — | Stops rendering and blanks the screen. |
 | `get_video_frame()` | — | Returns the current video frame as a `QImage`, or `None`. |
 
+```{admonition} A video with sound replaces the loaded sound
+:class: warning
+The soundtrack of a video is played through the sound card, like any other sound:
+`load_video()` loads it with `sound_device.load()`, `start_drawing()` plays it and
+`stop_drawing()` stops it. So it replaces the sound the task had loaded: load the
+task's sound again after the video if it is needed. With `volume_gain=0` the
+soundtrack is not loaded and the sound of the task is kept.
+```
+
 ---
 
 ### Video Functions
@@ -346,6 +355,10 @@ While a task is running, every time a touch event passes the debounce filter, th
 coordinates to the box camera feed. You can override this behavior to implement
 task-specific touch responses.
 
+If the touchscreen is disconnected while Village runs, a "Touchscreen disconnected"
+alarm is sent and it is opened again as soon as it is plugged back in (it is looked
+for every few seconds, up to every minute). If it is not connected when Village starts,
+it is not used until Village is restarted.
 
 ---
 
@@ -386,14 +399,15 @@ You don't need to register the touches yourself: every touch that arrives while 
 is running is already saved in the trial data as a Raspberry Pi event named
 `touch_<x>_<y>` (e.g. `touch_640_360`), with its time.
 
-```{admonition} trigger must never fail
+```{admonition} Errors in trigger
 :class: warning
-An error raised inside `trigger` stops the reading of the touchscreen for the rest of
-the session: from then on no touch is registered, and only a "Touchscreen error"
-alarm is sent. The most common cause is reading an attribute of the task that does
-not exist yet: `trigger` can be called as soon as the task starts, possibly before
-`start` has finished, and always before the first `create_trial`. Create every
-attribute your trigger reads in the `__init__` of the task, as in the example below.
+An error raised inside `trigger` sends an "Error in the touch trigger" alarm (at most
+one per hour) and that touch is skipped by the trigger; the touchscreen keeps being
+read and the next touches are processed normally. The most common cause is reading an
+attribute of the task that does not exist yet: `trigger` can be called as soon as the
+task starts, possibly before `start` has finished, and always before the first
+`create_trial`. Create every attribute your trigger reads in the `__init__` of the
+task, as in the example below.
 ```
 
 ---

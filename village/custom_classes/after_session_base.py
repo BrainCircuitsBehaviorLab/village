@@ -22,6 +22,13 @@ class AfterSessionBase:
 
     def __init__(self) -> None:
         """Initializes the AfterSessionBase instance with settings."""
+        self.read_settings()
+        self.cancel_event = threading.Event()
+
+    def read_settings(self) -> None:
+        """Reads the sync settings. Called again at the start of every run(),
+        so a change made in SETTINGS is used from the next sync, without
+        restarting Village."""
         self.data_directory = settings.get("DATA_DIRECTORY")
         self.sync_directory = settings.get("SYNC_DIRECTORY")
         self.server_user = settings.get("SERVER_USER")
@@ -32,13 +39,13 @@ class AfterSessionBase:
             self.port: int | None = int(settings.get("SERVER_PORT"))
         except Exception:
             self.port = None
-        self.cancel_event = threading.Event()
 
     def run(self) -> None:
         """Executes the post-session logic, primarily data synchronization.
 
         Checks the SYNC_TYPE setting and initiates either a local or remote rsync.
         """
+        self.read_settings()
         # Start each sync with a clean cancel flag. Otherwise, once STOP SYNC has
         # been pressed (which sets the event and it is never cleared elsewhere),
         # every later rsync would be terminated at once with return code -15.

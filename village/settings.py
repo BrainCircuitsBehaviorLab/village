@@ -655,9 +655,9 @@ in DATA. Setting a very low value could result in excessive CPU load.""",
         "SCREENSAVE_TIME",
         300,
         int,
-        """The time in seconds after which the system automatically returns to
-the MAIN screen if there is no user interaction. This helps reduce CPU usage by
-preventing unnecessary processing.""",
+        """The time in seconds after which the system automatically returns from
+the MONITOR screen to the MAIN screen if there is no user interaction. This helps
+reduce CPU usage by preventing unnecessary processing.""",
     ),
     Setting(
         "CORRIDOR_VIDEO_DURATION",

@@ -172,6 +172,9 @@ def system_run() -> None:
     # door2 was opened without taring the corridor scale (OPEN_DOOR2_STOP):
     # tare it as soon as the corridor is empty
     tare_needed = False
+    # monotonic time when the task ended with the subject still inside
+    # (SAVE_INSIDE), to alarm if it stays too long in WAIT_SUBJECT_EXIT
+    task_end_time = time.monotonic()
     plot_timer = time_utils.Timer(settings.get("UPDATE_TIME_TABLE"))
     sound_alarm_timer = time_utils.Timer(3600)
     video_alarm_timer = time_utils.Timer(3600)
@@ -367,13 +370,23 @@ def system_run() -> None:
                     > manager.task.settings.maximum_duration
                 ):
                     log.alarm(
-                        "Maximum time reached and areas 3 or 4 were never empty."
+                        "Maximum time reached and areas 2, 3 or 4 were never empty."
                         + " Opening door2 and disconnecting RFID reader.",
                         subject=manager.subject.name,
                         repeat=True,
                     )
                     manager.state = State.OPEN_DOOR2_STOP
                     log.info("Going to OPEN_DOOR2_STOP State")
+                elif manager.task.force_stop:
+                    # door2 is still open: save now, as RUN_OPEN does, instead of
+                    # closing door2 and opening it again
+                    manager.task.force_stop = False
+                    log.info(
+                        "Condition to stop the task met, stopping the task.",
+                        subject=manager.subject.name,
+                    )
+                    tare_needed = True  # not tared since the subject came in
+                    manager.state = State.SAVE_INSIDE
                 elif (
                     cam_corridor.has_image()  # never close door2 blind
                     and cam_corridor.area_2_empty()
@@ -525,6 +538,7 @@ def system_run() -> None:
                 # Stopping the task, saving the data; the subject is still inside
                 manager.disconnect_and_save("Auto")
                 manager.detection_change = True
+                task_end_time = time.monotonic()
                 manager.state = State.WAIT_SUBJECT_EXIT
                 log.info("Going to WAIT_SUBJECT_EXIT State")
 
@@ -541,15 +555,13 @@ def system_run() -> None:
                     tare_timer.reset()
                     tare_needed = False
 
-                if (
-                    manager.task.chrono.get_seconds()
-                    > manager.task.settings.maximum_duration
-                    + manager.max_time_counter * 3600
-                ):
+                if time.monotonic() - task_end_time > manager.max_time_counter * 3600:
+                    # one alarm per hour since the task ended (SAVE_INSIDE),
+                    # whatever ended it: maximum_duration, force_stop, STOP...
                     text = (
                         "The subject has been in the box for too long. "
-                        + str(manager.task.chrono.get_seconds())
-                        + " seconds. "
+                        + str(int(manager.task.chrono.get_seconds()))
+                        + " seconds since the task started, "
                     )
                     if manager.max_time_counter == 1:
                         text += "1 hour since the task ended."

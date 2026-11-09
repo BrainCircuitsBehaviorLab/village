@@ -86,7 +86,9 @@ The messages are:
 
 - **Raspberry Pi → Arduino**: one command per trial. Its first byte says which task
   it is for (`CMD_HABITUATION = 11`, `CMD_PASSIVE = 12`...), and the rest are the
-  values that task needs (ports, times in milliseconds...).
+  values that task needs (ports, times in milliseconds...). The times in
+  milliseconds are sent as 32-bit integers (`I` in `struct.pack`): a 16-bit one
+  only reaches 65,535 ms, about one minute.
 - **Arduino → Raspberry Pi**: messages of 6 bytes, `[event, value, elapsed_ms]`:
   `EVENT_POKE` (the port poked), `EVENT_STATE` (the state entered) and
   `EVENT_TRIAL_END` (the result of the trial). `elapsed_ms` is the Arduino's clock:
@@ -156,6 +158,7 @@ runs the trial, and the same 6-byte messages.
 
 ```python
 import struct
+import time
 
 import serial
 
@@ -192,6 +195,7 @@ STATE_NAMES = {1: "ready_to_explore"}
 BAUDRATE = 9600  # must match the Arduino sketch's Serial.begin(...)
 READ_TIMEOUT = 0.05  # seconds; also how often should_stop gets re-checked
 MESSAGE_SIZE = 6  # every Arduino -> Pi message is exactly this many bytes
+STARTUP_WAIT = 2.0  # seconds; opening the port resets most Arduino boards
 STATE_DURATION = 60  # seconds
 
 
@@ -217,6 +221,9 @@ class Arduino1Habituation(TaskBase):
             baudrate=BAUDRATE,
             timeout=READ_TIMEOUT,
         )
+        # Opening the port resets most Arduino boards: wait for the sketch
+        # to be running, or the first command would be lost.
+        time.sleep(STARTUP_WAIT)
         self.serial_port.reset_input_buffer()
 
     def create_trial(self):
@@ -288,7 +295,9 @@ Step by step:
 - **The class name**, `Arduino1Habituation`, is the name of the task.
 - **`__init__`** only sets `self.info`, the description shown when the task is
   selected in the GUI. Always call `super().__init__()` first.
-- **`start`** opens the serial port and discards anything left in it.
+- **`start`** opens the serial port, waits 2 seconds and discards anything left in
+  it. Opening the port resets most Arduino boards (Uno, Nano...), and the firmware
+  takes a moment to start again: a command sent before would be lost.
 - **`create_trial`** runs the whole trial:
   1. It sends the command, `[11, 60]`: run a habituation trial of 60 seconds.
   2. It registers the start of the trial with **both clocks** at the same moment:
@@ -440,7 +449,7 @@ milliseconds:
         led_on_timeout_ms = int(self.settings.led_on_time * 1000)
         self.serial_port.write(
             struct.pack(
-                "<BBHH", CMD_START_TRIAL, port, valve_time_ms, led_on_timeout_ms
+                "<BBII", CMD_START_TRIAL, port, valve_time_ms, led_on_timeout_ms
             )
         )
         ...  # register the start and listen to the Arduino, as in the habituation task
@@ -450,14 +459,14 @@ milliseconds:
 `valveTimeMs` milliseconds, reporting the state it enters:
 
 ```cpp
-void deliverWater(byte port, unsigned int valveTimeMs) {
+void deliverWater(byte port, unsigned long valveTimeMs) {
   byte valvePin = valvePinOf(port);
   digitalWrite(valvePin, HIGH);
   delay(valveTimeMs);
   digitalWrite(valvePin, LOW);
 }
 
-void runPassive(byte port, unsigned int valveTimeMs, unsigned int ledOnTimeoutMs) {
+void runPassive(byte port, unsigned long valveTimeMs, unsigned long ledOnTimeoutMs) {
   unsigned long t0 = millis();
   byte ledPin = ledPinOf(port);
 
@@ -531,6 +540,7 @@ class PokeForSound(TaskBase):
         self.serial_port = serial.Serial(
             port=settings.get("CONTROLLER_PORT"), baudrate=9600, timeout=0.05
         )
+        time.sleep(2.0)  # opening the port resets most Arduino boards
         self.serial_port.reset_input_buffer()
 
     def create_trial(self):

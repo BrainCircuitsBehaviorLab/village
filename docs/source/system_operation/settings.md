@@ -40,7 +40,7 @@ Some initial settings must be configured before the system can be used.  Navigat
     Never share or publish your TELEGRAM_TOKEN. To prevent accidental exposure on public GitHub repositories, all settings are stored in the user's configuration on the Raspberry Pi, outside of the repository directory.
     ```
 
-*   **`ADVANCED SETTINGS`:** Settings that rarely need to be changed, such as the favourite task preselected when opening the `TASKS` screen (`FAVOURITE_TASK`) or the time before the GUI returns to the `MAIN` screen (`SCREENSAVE_TIME`), and the `VISUAL SETTINGS` (colors used in the GUI and on the camera images).
+*   **`ADVANCED SETTINGS`:** Settings that rarely need to be changed, such as the favourite task preselected when opening the `TASKS` screen (`FAVOURITE_TASK`) or the time before the GUI returns from the `MONITOR` screen to the `MAIN` screen (`SCREENSAVE_TIME`), and the `VISUAL SETTINGS` (colors used in the GUI and on the camera images).
 
 
 [BACKUP]: /preparation/backup.md

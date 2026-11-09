@@ -50,6 +50,9 @@ These fields are found in `SETTINGS` → `SYNC SETTINGS`:
   mounted (e.g. `/media/pi/my_disk`), or a path on the server. The data are copied
   into `SYNC_DIRECTORY`, which is created automatically inside it with the project name
   followed by `_data` (in this example, `/media/pi/my_disk/demo-village-project_data`).
+  With `HD`, if the path is on the microSD card itself (the drive is not connected or
+  not mounted), the sync fails with an error instead of copying the data to the card,
+  and no task video is deleted.
 
 - **`SERVER_USER`, `SERVER_HOST`, `SERVER_PORT`:** only for `SERVER`: the user and
   hostname (or IP address) of the server, and the SSH port.

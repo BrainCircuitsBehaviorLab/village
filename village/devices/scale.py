@@ -29,6 +29,7 @@ class Scale(NullScale):
     """Interface for an I2C scale sensor.
 
     Args:
+        name (str): Which scale it is ("corridor" or "box"), shown in the log.
         address (str): The I2C address of the scale as a hex string (e.g., "0x2A").
         min_threshold (float): The minimum weight threshold for valid measurements.
         max_threshold (float): The maximum weight threshold for valid measurements.
@@ -60,6 +61,7 @@ class Scale(NullScale):
 
     def __init__(
         self,
+        name: str,
         address: str,
         min_threshold: float,
         max_threshold: float,
@@ -69,6 +71,7 @@ class Scale(NullScale):
         """Initializes the Scale.
 
         Args:
+            name (str): Which scale it is ("corridor" or "box").
             address (str): The I2C address as a hex string (e.g., "0x2A").
             min_threshold (float): The minimum weight threshold.
             max_threshold (float): The maximum weight threshold.
@@ -77,6 +80,7 @@ class Scale(NullScale):
             weight_to_calibrate_key (str): The setting key holding the known
                 weight last used to calibrate this scale.
         """
+        self.name = name
         self.min = min_threshold
         self.max = max_threshold
         self.I2C_ADDR = int(address, 16)
@@ -152,7 +156,7 @@ class Scale(NullScale):
             self.weights_list = []
             try:
                 self.offset = self.get_value()
-                log.info("The scale has been tared.")
+                log.info("The " + self.name + " scale has been tared.")
             except Exception:
                 log.error("Error taring scale", exception=traceback.format_exc())
 
@@ -242,6 +246,7 @@ class Scale(NullScale):
 
 
 def get_scale(
+    name: str,
     address: str,
     min_threshold: float,
     max_threshold: float,
@@ -252,6 +257,7 @@ def get_scale(
     """Factory function to initialize the Scale.
 
     Args:
+        name (str): Which scale it is ("corridor" or "box"), shown in the log.
         address (str): The I2C address of the scale.
         min_threshold (float): The minimum weight threshold for valid measurements.
         max_threshold (float): The maximum weight threshold for valid measurements.
@@ -272,6 +278,7 @@ def get_scale(
         return scale
     try:
         scale = Scale(
+            name=name,
             address=address,
             min_threshold=min_threshold,
             max_threshold=max_threshold,
@@ -288,6 +295,7 @@ def get_scale(
 
 
 scale = get_scale(
+    "corridor",
     settings.get("SCALE_ADDRESS"),
     float(settings.get("MIN_WEIGHT_THRESHOLD")),
     float(settings.get("MAX_WEIGHT_THRESHOLD")),
@@ -297,6 +305,7 @@ scale = get_scale(
 # Thresholds are set directly here rather than read from settings -- adjust
 # them by hand for the box scale's actual weight range.
 scale_box = get_scale(
+    "box",
     settings.get("SCALE_BOX_ADDRESS"),
     0.0,
     100000.0,

@@ -196,10 +196,8 @@ def run_rsync(
                 process_running = False
                 break  # Success
 
-            # If no progress for the timeout duration, assume it's stuck
-            if (
-                time_utils.get_time_monotonic() - last_progress_time > 600
-            ):  # 60s no progress
+            # If there has been no progress for 600 s (10 min), assume it's stuck
+            if time_utils.get_time_monotonic() - last_progress_time > 600:
                 logging.warning("rsync seems stuck! Terminating...")
                 try:
                     # kill process group

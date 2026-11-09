@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 from pathlib import Path
 
 from PyQt5.QtGui import QFont, QGuiApplication, QIcon
@@ -12,6 +13,22 @@ from village.scripts.log import log
 from village.settings import settings
 
 
+def log_uncaught_exception(exc_type, exc_value, exc_traceback) -> None:
+    """Logs an exception not caught in a GUI callback (button, timer...).
+
+    Without a custom sys.excepthook, PyQt5 aborts the whole application on
+    any exception not caught in a slot, even with a session running.
+    """
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    try:
+        text = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+        log.error("Error in the GUI", exception=text)
+    except Exception:
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+
 class Gui:
     """Main GUI application controller.
 
@@ -21,6 +38,7 @@ class Gui:
 
     def __init__(self) -> None:
         """Initializes the GUI application."""
+        sys.excepthook = log_uncaught_exception
         self.q_app = QApplication.instance()
         self.q_app.setStyle("Fusion")
         QFont.insertSubstitution("DejaVu Sans Condensed", "Cantarell")

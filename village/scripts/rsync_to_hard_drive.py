@@ -10,7 +10,7 @@ import fire
 
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
-from village.scripts.utils import setup_logging
+from village.scripts.utils import same_disk, setup_logging
 
 
 def run_rsync_local(source, destination, maximum_sync_time, cancel_event=None) -> bool:
@@ -33,6 +33,15 @@ def run_rsync_local(source, destination, maximum_sync_time, cancel_event=None) -
     # Ensure source path ends with / (rsync treats a trailing slash specially:
     # it copies the directory's contents rather than the directory itself)
     source = source.rstrip("/") + "/"
+
+    # If the drive is not mounted, the destination path falls on the microSD
+    # card itself: copying there would be no backup (and would fill the card)
+    if same_disk(destination, source):
+        logging.error(
+            f"The destination {destination} is on the same disk as the data, not on"
+            " an external drive: is the drive connected and mounted?"
+        )
+        return False
 
     # Ensure destination directory exists
     try:

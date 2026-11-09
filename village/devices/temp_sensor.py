@@ -1,3 +1,5 @@
+import math
+import time
 import traceback
 
 import smbus2
@@ -8,6 +10,8 @@ from village.scripts.log import log
 from village.settings import settings
 
 use_of_corridor: bool = settings.get("USE_CORRIDOR") == Active.ON
+
+READ_ATTEMPTS = 3
 
 
 class TempSensor:
@@ -39,12 +43,29 @@ class TempSensor:
     def get_temperature(self) -> tuple[float, float, str]:
         """Reads temperature and humidity from the sensor.
 
+        A failed I2C read is retried (the bus is shared with other devices).
+        If the sensor does not respond, an error is logged and nan is returned:
+        it is called from the hourly checks, which must never stop because of
+        a failed reading.
+
         Returns:
             tuple[float, float, str]: A tuple containing temperature (float),
                                       humidity (float), and a formatted string (str).
         """
-        self.i2cbus.write_byte_data(self.I2C_ADDR, 0xE0, 0x0)
-        data = self.i2cbus.read_i2c_block_data(self.I2C_ADDR, 0x0, 6)
+        data: list[int] = []
+        for attempt in range(READ_ATTEMPTS):
+            try:
+                self.i2cbus.write_byte_data(self.I2C_ADDR, 0xE0, 0x0)
+                data = self.i2cbus.read_i2c_block_data(self.I2C_ADDR, 0x0, 6)
+                break
+            except Exception:
+                if attempt == READ_ATTEMPTS - 1:
+                    log.error(
+                        "Temperature sensor not responding",
+                        exception=traceback.format_exc(),
+                    )
+                    return math.nan, math.nan, "temperature not available"
+                time.sleep(0.01)
         rawT = ((data[0]) << 8) | (data[1])
         rawR = ((data[3]) << 8) | (data[4])
         temp = -45 + rawT * 175 / 65535

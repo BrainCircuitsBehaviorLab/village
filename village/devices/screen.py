@@ -174,8 +174,8 @@ class VideoWorker(QObject):
 class Screen(QOpenGLWidget):
     """Window for displaying stimuli (images or video) in visual behavior tasks.
 
-    This class handles the rendering loop, GPIO synchronization (for timestamps),
-    and displaying images or video streams.
+    This class handles the rendering loop, the on-screen onset events of the
+    trial data (screen_*), and displaying images or video streams.
     """
 
     def __init__(self, geometry: QRect) -> None:

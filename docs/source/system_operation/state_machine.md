@@ -46,3 +46,18 @@ If the subject does not leave the operant box before the task’s maximum time i
 #### In Both Cases
 
 The system transitions back to the initial WAIT state, ready for the next session.
+
+### Other Ways a Session Ends
+
+- **The task sets `force_stop`** (see [Ending the session from the task](force-stop)):
+  the session ends without waiting for the minimum or the maximum time, and continues
+  as in Option B. In `RUN_CLOSED`, door 2 opens at once (`OPEN_DOOR2`) and `RUN_OPEN`
+  saves the data (`SAVE_INSIDE`). In `RUN_INITIAL`, door 2 is still open, so the data
+  is saved directly (`SAVE_INSIDE`). In `RUN_OPEN`, the data is saved as when the
+  maximum time is reached.
+- **The STOP button, an error in the task, or a wrong RFID detection** (another subject
+  detected in the corridor while one is in the box): `OPEN_DOOR2_STOP` opens door 2
+  and disconnects the RFID reader, so that no other subject can enter, and the session
+  continues as in Option B (`SAVE_INSIDE`). The errors and the wrong detections raise
+  an alarm. In the three cases, turn the RFID reader back on from the `MONITOR`
+  screen once the problem is solved.

@@ -343,14 +343,14 @@ class Manager:
         """
         # Fresh clock reference, so the whole session uses the current wall clock
         time_utils.sync()
-        self.task.create_paths()
-        self.task.cam_box = self.cam_box
-        self.task.custom_areas = self.custom_areas
-        if self.subject.name != "None":
-            self.task.cam_box.start_recording(
-                self.task.video_path, self.task.video_data_path
-            )
         try:
+            self.task.create_paths()
+            self.task.cam_box = self.cam_box
+            self.task.custom_areas = self.custom_areas
+            if self.subject.name != "None":
+                self.task.cam_box.start_recording(
+                    self.task.video_path, self.task.video_data_path
+                )
             self.weight = np.nan
             self.task.controller_type = self.controller_type
             self.task.calibrations = self.calibrations
@@ -375,6 +375,12 @@ class Manager:
                 exception=traceback.format_exc(),
             )
             self.error_in_manual_task = True
+            # The task will not run: stop the box video if it was started (a
+            # camera that is not recording does nothing here)
+            try:
+                self.cam_box.stop_recording()
+            except Exception:
+                pass
             return False
 
     def launch_task_calibration(self) -> None:

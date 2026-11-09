@@ -539,6 +539,26 @@ def transform_raw_to_clean(df: pd.DataFrame) -> pd.DataFrame:
     return df4
 
 
+def same_disk(path: str | Path, other: str | Path) -> bool:
+    """Whether `path` is on the same disk (filesystem) as `other`.
+
+    `path` does not need to exist yet: its nearest existing parent is used, so
+    a backup path on an external drive that is not mounted is correctly found
+    to be on the same disk as the data (the microSD card).
+
+    Args:
+        path (str | Path): The path to check, e.g. a backup destination.
+        other (str | Path): An existing path, e.g. the data directory.
+
+    Returns:
+        bool: True if both are on the same filesystem.
+    """
+    existing = Path(path)
+    while not existing.exists() and existing != existing.parent:
+        existing = existing.parent
+    return existing.stat().st_dev == Path(other).stat().st_dev
+
+
 def setup_logging(logs_subdirectory: str) -> tuple[str, logging.FileHandler]:
     """Configure the logging system to write to a timestamped file.
     Creates the log directory if needed, resets existing handlers, and suppresses

@@ -313,7 +313,6 @@ class SettingsLayout(Layout):
             "Restore the factory settings",
             "lightcoral",
         )
-        self.restore_button.clicked.connect(self.restore_button_clicked)
 
     def _highlight_menu(self, selected: str) -> None:
         active = self._active_sections
@@ -615,6 +614,25 @@ class SettingsLayout(Layout):
         utils.change_system_directory_settings()
         return True
 
+    @staticmethod
+    def _validated(key: str, val: Any) -> tuple[bool, Any]:
+        """Converts a value buffered from a line edit to its setting's type.
+
+        Returns (False, None) if it can't be converted, so the stored value is
+        kept, as for the line edits of the visible section.
+        """
+        value_type = settings.get_type(key)
+        try:
+            if value_type is int:
+                return True, round(float(val))
+            if value_type is float:
+                return True, float(val)
+            if value_type == list[int]:
+                return True, [int(v) for v in val]
+        except (TypeError, ValueError):
+            return False, None
+        return True, val
+
     def save(self, changing_project: bool, exiting: bool = False) -> None:
         # Flush current section's widgets into _pending so save() sees everything
         self._flush_to_pending()
@@ -623,6 +641,7 @@ class SettingsLayout(Layout):
         self.save_button.setDisabled(True)
         manager.changing_settings = False
         system_name_changed = False
+        old_cycle_times = (settings.get("DAYTIME"), settings.get("NIGHTTIME"))
 
         critical_keys = [
             "USE_SOUNDCARD",
@@ -709,6 +728,9 @@ class SettingsLayout(Layout):
                 continue
             if key == "SYSTEM_DIRECTORY":
                 continue
+            ok, val = self._validated(key, val)
+            if not ok:
+                continue
             if key in critical_keys:
                 stored = settings.get(key)
                 stored_str = stored.name if hasattr(stored, "name") else str(stored)
@@ -760,9 +782,6 @@ class SettingsLayout(Layout):
             s = self.time_edits_settings[i]
             value = time_edit.time().toString("HH:mm")
             settings.set(s.key, value)
-            manager.cycle_change_detector = time_utils.CycleChangeDetector(
-                settings.get("DAYTIME"), settings.get("NIGHTTIME")
-            )
 
         for i, toggle_button in enumerate(self.toggle_buttons):
             s = self.toggle_buttons_settings[i]
@@ -806,6 +825,11 @@ class SettingsLayout(Layout):
         # kept up to date by change_favourite_task(), not the widget.
         if "FAVOURITE_TASK" in self._pending:
             settings.set("FAVOURITE_TASK", self._pending["FAVOURITE_TASK"])
+
+        # DAYTIME/NIGHTTIME can come from the visible section or from _pending
+        cycle_times = (settings.get("DAYTIME"), settings.get("NIGHTTIME"))
+        if cycle_times != old_cycle_times:
+            manager.cycle_change_detector = time_utils.CycleChangeDetector(*cycle_times)
 
         cam_corridor.change = True
         cam_box.change = True

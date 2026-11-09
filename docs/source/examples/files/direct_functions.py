@@ -31,7 +31,7 @@ class DirectFunctions(DirectFunctionsBase):
         sound_device.play()
 
     def function2(self):
-        """Load Noise Sound"""
+        """Load Penalty Tone"""
         # loads (does not play) a 600Hz tone at a calibrated 70dB, only on the
         # left speaker (the right one stays silent). Needs the "tone_600" sound
         # to be calibrated for speaker 0 in the Sound Calibration panel, or it

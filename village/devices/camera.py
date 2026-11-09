@@ -235,8 +235,8 @@ class Camera:
         )
         self.cam.align_configuration(self.config)
         self.cam.configure(self.config)
-        self.path_video = str(Path(settings.get("VIDEOS_DIRECTORY")) / (name + ".mp4"))
-        self.path_csv = str(Path(settings.get("VIDEOS_DIRECTORY")) / (name + ".csv"))
+        self.path_video = self._placeholder_path(".mp4")
+        self.path_csv = self._placeholder_path(".csv")
         self.path_picture = str(
             Path(settings.get("SYSTEM_DIRECTORY")) / (name + ".jpg")
         )
@@ -671,10 +671,21 @@ class Camera:
         self.area3_animals = -1
         self.area4_animals = -1
         self.camera_timestamp = time_utils.now_timestamp()
+        # Back to the placeholder paths, which save_csv never writes: a later
+        # stop_recording with nothing recorded (a manual task without subject,
+        # a calibration) must not overwrite the CSV of the last session
+        self.path_video = self._placeholder_path(".mp4")
+        self.path_csv = self._placeholder_path(".csv")
+
+    def _placeholder_path(self, suffix: str) -> str:
+        """The path used while no recording has been started: <NAME><suffix>
+        in VIDEOS_DIRECTORY. save_csv does nothing with it."""
+        return str(Path(settings.get("VIDEOS_DIRECTORY")) / (self.name + suffix))
 
     def save_csv(self) -> None:
-        """Saves the recorded data frames to a CSV file."""
-        if self.path_csv == str(Path(settings.get("VIDEOS_DIRECTORY")) / "BOX.csv"):
+        """Saves the recorded data frames to a CSV file. Does nothing if no
+        recording has been started since the last one was saved."""
+        if self.path_csv == self._placeholder_path(".csv"):
             return
 
         if self.tracking:
@@ -1018,83 +1029,6 @@ class Camera:
             else:
                 self.masks[index] = -1
                 self.counts[index] = -1
-
-    def detect_black_position_components(self) -> None:
-        """Detects position of black mouse using connected components."""
-        mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
-
-        for index, (x1, y1, x2, y2) in enumerate(self.areas):
-            if self.areas_active[index]:
-                roi = self.gray_frame[y1:y2, x1:x2]
-                if roi.size == 0:
-                    self.masks[index] = -1
-                    self.counts[index] = -1
-                    continue
-                threshold = self.thresholds[index]
-                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY_INV)
-                roi_bin = np.asarray(roi_bin, dtype=np.uint8)
-                sub = mask[y1:y2, x1:x2]
-                np.maximum(sub, roi_bin, out=sub)
-                self.masks[index] = roi_bin
-                self.counts[index] = cv2.countNonZero(roi_bin)
-            else:
-                self.masks[index] = -1
-                self.counts[index] = -1
-
-        num, _, stats, centroids = cv2.connectedComponentsWithStats(
-            mask, connectivity=8
-        )
-        if num > 1:
-            areas = stats[1:, cv2.CC_STAT_AREA]
-            valid = np.where(areas >= self.zero_or_one_mouse)[0]
-
-            if valid.size > 0:
-                index = 1 + valid[np.argmax(areas[valid])]
-                cx, cy = centroids[index]
-                self.x_position = int(cx)
-                self.y_position = int(cy)
-            else:
-                self.x_position = -1
-                self.y_position = -1
-        else:
-            self.x_position = -1
-            self.y_position = -1
-
-    def detect_white_position_components(self) -> None:
-        """Detects position of white mouse using connected components."""
-        mask = np.zeros_like(self.gray_frame, dtype=np.uint8)
-
-        for index, (x1, y1, x2, y2) in enumerate(self.areas):
-            if self.areas_active[index]:
-                roi = self.gray_frame[y1:y2, x1:x2]
-                threshold = self.thresholds[index]
-                _, roi_bin = cv2.threshold(roi, threshold, 255, cv2.THRESH_BINARY)
-                sub = mask[y1:y2, x1:x2]
-                np.maximum(sub, roi_bin, out=sub)
-                self.masks[index] = roi_bin
-                self.counts[index] = cv2.countNonZero(roi_bin)
-            else:
-                self.masks[index] = -1
-                self.counts[index] = -1
-
-        num, _, stats, centroids = cv2.connectedComponentsWithStats(
-            mask, connectivity=8
-        )
-        if num > 1:
-            areas = stats[1:, cv2.CC_STAT_AREA]
-            valid = np.where(areas >= self.zero_or_one_mouse)[0]
-
-            if valid.size > 0:
-                index = 1 + valid[np.argmax(areas[valid])]
-                cx, cy = centroids[index]
-                self.x_position = int(cx)
-                self.y_position = int(cy)
-            else:
-                self.x_position = -1
-                self.y_position = -1
-        else:
-            self.x_position = -1
-            self.y_position = -1
 
     @property
     def custom_areas(self) -> dict[int, CameraAreaBase]:
