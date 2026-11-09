@@ -329,7 +329,7 @@ additional functions, such as raising or lowering a water bottle in the home cag
     ),
     Setting(
         "IR_LIGHT_BOX_INDEX",
-        9,
+        0,
         int,
         "The index of the infrared light of the box.",
     ),
