@@ -723,9 +723,11 @@ instead of the default base class. Only one such class is used per project.</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">trigger_on</span></code>/<code class="docutils literal notranslate"><span class="pre">trigger_off</span></code> run in the GPIO reader thread, not in the task
-thread. Keep them fast and avoid blocking calls. They can be called as soon as the
-task starts, possibly before <code class="docutils literal notranslate"><span class="pre">start</span></code> has finished: create every attribute of the task
-they read in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> of the task.</p>
+thread. Keep them fast and avoid blocking calls. They are only called once the
+<code class="docutils literal notranslate"><span class="pre">start</span></code> of the task has finished, so they can read any attribute <code class="docutils literal notranslate"><span class="pre">start</span></code> creates,
+and never in calibrations. An error raised inside them sends an “Error in the GPIO
+trigger” alarm (at most one per hour, with the traceback in the events log), and the
+pin keeps being watched.</p>
 </div>
 <p>A complete example, which records the pin in the trial data of any task:
 <a class="reference internal" href="../examples/gpio_trigger.html"><span class="std std-doc">gpio_trigger.py</span></a>.</p>
@@ -772,7 +774,7 @@ they read in the <code class="docutils literal notranslate"><span class="pre">__
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7cb9f1d4"></script>
+      <script src="../_static/documentation_options.js?v=8eba0a97"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

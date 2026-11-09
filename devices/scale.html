@@ -647,10 +647,10 @@ instead of the default base class. Only one such class is used per project.</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">on_weight</span></code> runs in the scale reader thread, not in the task thread. Keep it
-fast and avoid blocking calls: the next reading waits until it returns. It can be
-called as soon as the task starts, possibly before <code class="docutils literal notranslate"><span class="pre">start</span></code> has finished: create every
-attribute of the task it reads in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> of the task. If it raises an error,
-the error is logged and the readings go on.</p>
+fast and avoid blocking calls: the next reading waits until it returns. It is only
+called once the <code class="docutils literal notranslate"><span class="pre">start</span></code> of the task has finished, so it can read any attribute
+<code class="docutils literal notranslate"><span class="pre">start</span></code> creates, and never in calibrations. If it raises an error, the error is
+logged and the readings go on.</p>
 </div>
 <p>A complete example, which records when the animal steps on and off the scale
 in the trial data of any task: <a class="reference internal" href="../examples/scale_trigger.html"><span class="std std-doc">scale_trigger.py</span></a>.</p>
@@ -704,7 +704,7 @@ same value. The minimum accepted is 0.02 s.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7cb9f1d4"></script>
+      <script src="../_static/documentation_options.js?v=8eba0a97"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

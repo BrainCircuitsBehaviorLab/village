@@ -145,9 +145,11 @@ class GpioTrigger(GpioTriggerBase):
 ```{admonition} Note
 :class: note
 `trigger_on`/`trigger_off` run in the GPIO reader thread, not in the task
-thread. Keep them fast and avoid blocking calls. They can be called as soon as the
-task starts, possibly before `start` has finished: create every attribute of the task
-they read in the `__init__` of the task.
+thread. Keep them fast and avoid blocking calls. They are only called once the
+`start` of the task has finished, so they can read any attribute `start` creates,
+and never in calibrations. An error raised inside them sends an "Error in the GPIO
+trigger" alarm (at most one per hour, with the traceback in the events log), and the
+pin keeps being watched.
 ```
 
 A complete example, which records the pin in the trial data of any task:

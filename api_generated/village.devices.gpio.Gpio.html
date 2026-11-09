@@ -575,7 +575,8 @@ GPIO_IN and GPIO_OUT settings, in DEVICE ADDRESSES):</p>
 and self.trigger.trigger_on() is called when it goes from OFF to ON, and
 self.trigger.trigger_off() when it goes from ON to OFF. GPIO_IN_PULL
 decides what ON is: HIGH with the pull-down (DOWN, the default), LOW
-with the pull-up (UP). The watching runs only while a task is active.
+with the pull-up (UP). The watching runs only while a task is active,
+once its start() has finished.
 See GpioTriggerBase to customize what happens on trigger_on/trigger_off.</p></li>
 <li><p>Output (GPIO_OUT, default 27): set_on() drives the pin HIGH and set_off()
 drives it LOW. Call them from anywhere (a task, a trigger, direct
@@ -653,7 +654,7 @@ functions…); they work regardless of the input.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7cb9f1d4"></script>
+      <script src="../_static/documentation_options.js?v=8eba0a97"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

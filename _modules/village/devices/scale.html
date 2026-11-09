@@ -664,206 +664,208 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="132">            <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_weight</span><span class="p">()</span>
 </span><span data-line="133">            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
 </span><span data-line="134">            <span class="bp">self</span><span class="o">.</span><span class="n">last_weight</span> <span class="o">=</span> <span class="n">weight</span>
-</span><span data-line="135">            <span class="k">if</span> <span class="n">trigger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="136">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="137">                    <span class="n">trigger</span><span class="o">.</span><span class="n">on_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
-</span><span data-line="138">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="139">                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message_timer</span><span class="o">.</span><span class="n">has_elapsed</span><span class="p">():</span>
-</span><span data-line="140">                        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span data-line="141">                            <span class="s2">"Error in scale trigger"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
-</span><span data-line="142">                        <span class="p">)</span>
-</span><span data-line="143">            <span class="c1"># Fixed schedule so the rate doesn't drift; if a reading or the</span>
-</span><span data-line="144">            <span class="c1"># trigger took longer than the period, restart from now instead</span>
-</span><span data-line="145">            <span class="c1"># of firing a burst of readings to catch up.</span>
-</span><span data-line="146">            <span class="n">next_time</span> <span class="o">+=</span> <span class="n">period</span>
-</span><span data-line="147">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
-</span><span data-line="148">            <span class="k">if</span> <span class="n">next_time</span> <span class="o">&lt;</span> <span class="n">now</span><span class="p">:</span>
-</span><span data-line="149">                <span class="n">next_time</span> <span class="o">=</span> <span class="n">now</span>
-</span><span data-line="150">            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">next_time</span> <span class="o">-</span> <span class="n">now</span><span class="p">)</span>
-</span><span data-line="151">
-</span><span data-line="152">    <span class="c1"># @time_utils.measure_time</span>
+</span><span data-line="135">            <span class="c1"># Only once the task's start() has finished, so the trigger can use</span>
+</span><span data-line="136">            <span class="c1"># what start() defines</span>
+</span><span data-line="137">            <span class="k">if</span> <span class="n">trigger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">trigger</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">started</span><span class="p">:</span>
+</span><span data-line="138">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="139">                    <span class="n">trigger</span><span class="o">.</span><span class="n">on_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+</span><span data-line="140">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="141">                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message_timer</span><span class="o">.</span><span class="n">has_elapsed</span><span class="p">():</span>
+</span><span data-line="142">                        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span data-line="143">                            <span class="s2">"Error in scale trigger"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+</span><span data-line="144">                        <span class="p">)</span>
+</span><span data-line="145">            <span class="c1"># Fixed schedule so the rate doesn't drift; if a reading or the</span>
+</span><span data-line="146">            <span class="c1"># trigger took longer than the period, restart from now instead</span>
+</span><span data-line="147">            <span class="c1"># of firing a burst of readings to catch up.</span>
+</span><span data-line="148">            <span class="n">next_time</span> <span class="o">+=</span> <span class="n">period</span>
+</span><span data-line="149">            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+</span><span data-line="150">            <span class="k">if</span> <span class="n">next_time</span> <span class="o">&lt;</span> <span class="n">now</span><span class="p">:</span>
+</span><span data-line="151">                <span class="n">next_time</span> <span class="o">=</span> <span class="n">now</span>
+</span><span data-line="152">            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">next_time</span> <span class="o">-</span> <span class="n">now</span><span class="p">)</span>
+</span><span data-line="153">
+</span><span data-line="154">    <span class="c1"># @time_utils.measure_time</span>
 <div class="viewcode-block" id="Scale.tare">
 <a class="viewcode-back" href="../../../api_generated/village.devices.scale.Scale.html#village.devices.scale.Scale.tare">[docs]</a>
-</span><span data-line="153">    <span class="k">def</span><span class="w"> </span><span class="nf">tare</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="154"><span class="w">        </span><span class="sd">"""Tares the scale (sets the current weight as zero)."""</span>
-</span><span data-line="155">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span data-line="156">            <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="157">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="158">                <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
-</span><span data-line="159">                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"The "</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">" scale has been tared."</span><span class="p">)</span>
-</span><span data-line="160">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="161">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Error taring scale"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
+</span><span data-line="155">    <span class="k">def</span><span class="w"> </span><span class="nf">tare</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="156"><span class="w">        </span><span class="sd">"""Tares the scale (sets the current weight as zero)."""</span>
+</span><span data-line="157">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span data-line="158">            <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="159">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="160">                <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+</span><span data-line="161">                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"The "</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">" scale has been tared."</span><span class="p">)</span>
+</span><span data-line="162">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="163">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Error taring scale"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
 
-</span><span data-line="162">
+</span><span data-line="164">
 <div class="viewcode-block" id="Scale.calibrate">
 <a class="viewcode-back" href="../../../api_generated/village.devices.scale.Scale.html#village.devices.scale.Scale.calibrate">[docs]</a>
-</span><span data-line="163">    <span class="k">def</span><span class="w"> </span><span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="164"><span class="w">        </span><span class="sd">"""Calibrates the scale with a known weight.</span>
-</span><span data-line="165">
-</span><span data-line="166"><span class="sd">        Args:</span>
-</span><span data-line="167"><span class="sd">            weight (float): The known weight in grams used for calibration.</span>
-</span><span data-line="168"><span class="sd">        """</span>
-</span><span data-line="169">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span data-line="170">            <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="171">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="172">                <span class="n">raw_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
-</span><span data-line="173">                <span class="n">new_calibration</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">/</span> <span class="n">weight</span>
-</span><span data-line="174">                <span class="bp">self</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">new_calibration</span>
-</span><span data-line="175">                <span class="n">settings</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calibration_key</span><span class="p">,</span> <span class="n">new_calibration</span><span class="p">)</span>
-</span><span data-line="176">                <span class="n">settings</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_to_calibrate_key</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span>
-</span><span data-line="177">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="178">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Error calibrating scale"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
+</span><span data-line="165">    <span class="k">def</span><span class="w"> </span><span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="166"><span class="w">        </span><span class="sd">"""Calibrates the scale with a known weight.</span>
+</span><span data-line="167">
+</span><span data-line="168"><span class="sd">        Args:</span>
+</span><span data-line="169"><span class="sd">            weight (float): The known weight in grams used for calibration.</span>
+</span><span data-line="170"><span class="sd">        """</span>
+</span><span data-line="171">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span data-line="172">            <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="173">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="174">                <span class="n">raw_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+</span><span data-line="175">                <span class="n">new_calibration</span> <span class="o">=</span> <span class="p">(</span><span class="n">raw_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">/</span> <span class="n">weight</span>
+</span><span data-line="176">                <span class="bp">self</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">new_calibration</span>
+</span><span data-line="177">                <span class="n">settings</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calibration_key</span><span class="p">,</span> <span class="n">new_calibration</span><span class="p">)</span>
+</span><span data-line="178">                <span class="n">settings</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_to_calibrate_key</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span>
+</span><span data-line="179">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="180">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Error calibrating scale"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span></div>
 
-</span><span data-line="179">
+</span><span data-line="181">
 <div class="viewcode-block" id="Scale.get_value">
 <a class="viewcode-back" href="../../../api_generated/village.devices.scale.Scale.html#village.devices.scale.Scale.get_value">[docs]</a>
-</span><span data-line="180">    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span data-line="181"><span class="w">        </span><span class="sd">"""Reads one raw value from the scale (no averaging). A failed I2C read</span>
-</span><span data-line="182"><span class="sd">        is retried up to 3 attempts in total, since the bus is shared with</span>
-</span><span data-line="183"><span class="sd">        other devices and a single read can occasionally fail.</span>
-</span><span data-line="184">
-</span><span data-line="185"><span class="sd">        Returns:</span>
-</span><span data-line="186"><span class="sd">            int: The raw value (0 if the scale did not respond).</span>
-</span><span data-line="187"><span class="sd">        """</span>
-</span><span data-line="188">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span data-line="189">            <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-</span><span data-line="190">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="191">                    <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">read_i2c_block_data</span><span class="p">(</span>
-</span><span data-line="192">                        <span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_DATA_GET_RAM_DATA</span><span class="p">,</span> <span class="mi">2</span>
-</span><span data-line="193">                    <span class="p">)</span>
-</span><span data-line="194">                    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&gt;h"</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">data</span><span class="p">))[</span><span class="mi">0</span><span class="p">])</span>
-</span><span data-line="195">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="196">                    <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-</span><span data-line="197">                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.002</span><span class="p">)</span>
-</span><span data-line="198">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alarm_timer</span><span class="o">.</span><span class="n">has_elapsed</span><span class="p">():</span>
-</span><span data-line="199">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">"Scale not responding, please check the connection."</span><span class="p">)</span>
-</span><span data-line="200">        <span class="k">return</span> <span class="mi">0</span></div>
+</span><span data-line="182">    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span data-line="183"><span class="w">        </span><span class="sd">"""Reads one raw value from the scale (no averaging). A failed I2C read</span>
+</span><span data-line="184"><span class="sd">        is retried up to 3 attempts in total, since the bus is shared with</span>
+</span><span data-line="185"><span class="sd">        other devices and a single read can occasionally fail.</span>
+</span><span data-line="186">
+</span><span data-line="187"><span class="sd">        Returns:</span>
+</span><span data-line="188"><span class="sd">            int: The raw value (0 if the scale did not respond).</span>
+</span><span data-line="189"><span class="sd">        """</span>
+</span><span data-line="190">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span data-line="191">            <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+</span><span data-line="192">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="193">                    <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2cbus</span><span class="o">.</span><span class="n">read_i2c_block_data</span><span class="p">(</span>
+</span><span data-line="194">                        <span class="bp">self</span><span class="o">.</span><span class="n">I2C_ADDR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_DATA_GET_RAM_DATA</span><span class="p">,</span> <span class="mi">2</span>
+</span><span data-line="195">                    <span class="p">)</span>
+</span><span data-line="196">                    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&gt;h"</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">data</span><span class="p">))[</span><span class="mi">0</span><span class="p">])</span>
+</span><span data-line="197">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="198">                    <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+</span><span data-line="199">                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.002</span><span class="p">)</span>
+</span><span data-line="200">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alarm_timer</span><span class="o">.</span><span class="n">has_elapsed</span><span class="p">():</span>
+</span><span data-line="201">            <span class="n">log</span><span class="o">.</span><span class="n">alarm</span><span class="p">(</span><span class="s2">"Scale not responding, please check the connection."</span><span class="p">)</span>
+</span><span data-line="202">        <span class="k">return</span> <span class="mi">0</span></div>
 
-</span><span data-line="201">
+</span><span data-line="203">
 <div class="viewcode-block" id="Scale.get_weight">
 <a class="viewcode-back" href="../../../api_generated/village.devices.scale.Scale.html#village.devices.scale.Scale.get_weight">[docs]</a>
-</span><span data-line="202">    <span class="k">def</span><span class="w"> </span><span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span data-line="203"><span class="w">        </span><span class="sd">"""Gets the current weight in grams.</span>
-</span><span data-line="204">
-</span><span data-line="205"><span class="sd">        Returns:</span>
-</span><span data-line="206"><span class="sd">            float: The weight in grams.</span>
-</span><span data-line="207"><span class="sd">        """</span>
-</span><span data-line="208">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span data-line="209">            <span class="k">try</span><span class="p">:</span>
-</span><span data-line="210">                <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibration</span>
-</span><span data-line="211">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="212">                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message_timer</span><span class="o">.</span><span class="n">has_elapsed</span><span class="p">():</span>
-</span><span data-line="213">                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Error getting weight"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-</span><span data-line="214">                <span class="n">value</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span data-line="215">
-</span><span data-line="216">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">&lt;</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
-</span><span data-line="217">                <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="218">                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">:</span>
-</span><span data-line="219">                    <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span data-line="220">            <span class="k">else</span><span class="p">:</span>
-</span><span data-line="221">                <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="222">        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
+</span><span data-line="204">    <span class="k">def</span><span class="w"> </span><span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span data-line="205"><span class="w">        </span><span class="sd">"""Gets the current weight in grams.</span>
+</span><span data-line="206">
+</span><span data-line="207"><span class="sd">        Returns:</span>
+</span><span data-line="208"><span class="sd">            float: The weight in grams.</span>
+</span><span data-line="209"><span class="sd">        """</span>
+</span><span data-line="210">        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span data-line="211">            <span class="k">try</span><span class="p">:</span>
+</span><span data-line="212">                <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibration</span>
+</span><span data-line="213">            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="214">                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_message_timer</span><span class="o">.</span><span class="n">has_elapsed</span><span class="p">():</span>
+</span><span data-line="215">                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Error getting weight"</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+</span><span data-line="216">                <span class="n">value</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span data-line="217">
+</span><span data-line="218">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">&lt;</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
+</span><span data-line="219">                <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="220">                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">8</span><span class="p">:</span>
+</span><span data-line="221">                    <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="222">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="223">                <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="224">        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
 
-</span><span data-line="223">
+</span><span data-line="225">
 <div class="viewcode-block" id="Scale.real_weight_inference">
 <a class="viewcode-back" href="../../../api_generated/village.devices.scale.Scale.html#village.devices.scale.Scale.real_weight_inference">[docs]</a>
-</span><span data-line="224">    <span class="k">def</span><span class="w"> </span><span class="nf">real_weight_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-</span><span data-line="225"><span class="w">        </span><span class="sd">"""Determines if a sequence of weight measurements represents a stable weight.</span>
-</span><span data-line="226">
-</span><span data-line="227"><span class="sd">        Conditions to call it a real weight:</span>
-</span><span data-line="228"><span class="sd">        - standard deviation of the last 5 measurements is</span>
-</span><span data-line="229"><span class="sd">            smaller than 10% of the minimum threshold</span>
-</span><span data-line="230">
-</span><span data-line="231"><span class="sd">        Returns:</span>
-</span><span data-line="232"><span class="sd">            tuple[bool, float]: (True, median_weight) if stable, else (False, 0.0).</span>
-</span><span data-line="233"><span class="sd">        """</span>
-</span><span data-line="234">
-</span><span data-line="235">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
-</span><span data-line="236">            <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-</span><span data-line="237">
-</span><span data-line="238">        <span class="n">median_weight</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]),</span> <span class="mi">2</span><span class="p">)</span>
-</span><span data-line="239">        <span class="n">std_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:])</span>
-</span><span data-line="240">
-</span><span data-line="241">        <span class="k">if</span> <span class="n">std_weight</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span><span class="p">:</span>
-</span><span data-line="242">            <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="243">            <span class="k">return</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">median_weight</span><span class="p">)</span>
-</span><span data-line="244">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="245">            <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span></div>
+</span><span data-line="226">    <span class="k">def</span><span class="w"> </span><span class="nf">real_weight_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+</span><span data-line="227"><span class="w">        </span><span class="sd">"""Determines if a sequence of weight measurements represents a stable weight.</span>
+</span><span data-line="228">
+</span><span data-line="229"><span class="sd">        Conditions to call it a real weight:</span>
+</span><span data-line="230"><span class="sd">        - standard deviation of the last 5 measurements is</span>
+</span><span data-line="231"><span class="sd">            smaller than 10% of the minimum threshold</span>
+</span><span data-line="232">
+</span><span data-line="233"><span class="sd">        Returns:</span>
+</span><span data-line="234"><span class="sd">            tuple[bool, float]: (True, median_weight) if stable, else (False, 0.0).</span>
+</span><span data-line="235"><span class="sd">        """</span>
+</span><span data-line="236">
+</span><span data-line="237">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+</span><span data-line="238">            <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="239">
+</span><span data-line="240">        <span class="n">median_weight</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]),</span> <span class="mi">2</span><span class="p">)</span>
+</span><span data-line="241">        <span class="n">std_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:])</span>
+</span><span data-line="242">
+</span><span data-line="243">        <span class="k">if</span> <span class="n">std_weight</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">min</span><span class="p">:</span>
+</span><span data-line="244">            <span class="bp">self</span><span class="o">.</span><span class="n">weights_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="245">            <span class="k">return</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">median_weight</span><span class="p">)</span>
+</span><span data-line="246">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="247">            <span class="k">return</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span></div>
 </div>
 
-</span><span data-line="246">
-</span><span data-line="247">
+</span><span data-line="248">
+</span><span data-line="249">
 <div class="viewcode-block" id="get_scale">
 <a class="viewcode-back" href="../../../api_generated/village.devices.scale.get_scale.html#village.devices.scale.get_scale">[docs]</a>
-</span><span data-line="248"><span class="k">def</span><span class="w"> </span><span class="nf">get_scale</span><span class="p">(</span>
-</span><span data-line="249">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span data-line="250">    <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span data-line="251">    <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span data-line="252">    <span class="n">max_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span data-line="253">    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span data-line="254">    <span class="n">calibration_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"SCALE_CALIBRATION_VALUE"</span><span class="p">,</span>
-</span><span data-line="255">    <span class="n">weight_to_calibrate_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"SCALE_WEIGHT_TO_CALIBRATE"</span><span class="p">,</span>
-</span><span data-line="256"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scale</span> <span class="o">|</span> <span class="n">NullScale</span><span class="p">:</span>
-</span><span data-line="257"><span class="w">    </span><span class="sd">"""Factory function to initialize the Scale.</span>
-</span><span data-line="258">
-</span><span data-line="259"><span class="sd">    Args:</span>
-</span><span data-line="260"><span class="sd">        name (str): Which scale it is ("corridor" or "box"), shown in the log.</span>
-</span><span data-line="261"><span class="sd">        address (str): The I2C address of the scale.</span>
-</span><span data-line="262"><span class="sd">        min_threshold (float): The minimum weight threshold for valid measurements.</span>
-</span><span data-line="263"><span class="sd">        max_threshold (float): The maximum weight threshold for valid measurements.</span>
-</span><span data-line="264"><span class="sd">        enabled (bool): Whether this scale is physically present and should be</span>
-</span><span data-line="265"><span class="sd">            initialized at all.</span>
-</span><span data-line="266"><span class="sd">        calibration_key (str): The setting key holding this scale's</span>
-</span><span data-line="267"><span class="sd">            calibration factor.</span>
-</span><span data-line="268"><span class="sd">        weight_to_calibrate_key (str): The setting key holding the known</span>
-</span><span data-line="269"><span class="sd">            weight last used to calibrate this scale.</span>
-</span><span data-line="270">
-</span><span data-line="271"><span class="sd">    Returns:</span>
-</span><span data-line="272"><span class="sd">        Scale | NullScale: An initialized Scale instance or a null scale if</span>
-</span><span data-line="273"><span class="sd">        disabled or on failure.</span>
-</span><span data-line="274"><span class="sd">    """</span>
-</span><span data-line="275">    <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
-</span><span data-line="276">        <span class="n">scale</span> <span class="o">=</span> <span class="n">NullScale</span><span class="p">()</span>
-</span><span data-line="277">        <span class="n">scale</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">""</span>
-</span><span data-line="278">        <span class="k">return</span> <span class="n">scale</span>
-</span><span data-line="279">    <span class="k">try</span><span class="p">:</span>
-</span><span data-line="280">        <span class="n">scale</span> <span class="o">=</span> <span class="n">Scale</span><span class="p">(</span>
-</span><span data-line="281">            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-</span><span data-line="282">            <span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">,</span>
-</span><span data-line="283">            <span class="n">min_threshold</span><span class="o">=</span><span class="n">min_threshold</span><span class="p">,</span>
-</span><span data-line="284">            <span class="n">max_threshold</span><span class="o">=</span><span class="n">max_threshold</span><span class="p">,</span>
-</span><span data-line="285">            <span class="n">calibration_key</span><span class="o">=</span><span class="n">calibration_key</span><span class="p">,</span>
-</span><span data-line="286">            <span class="n">weight_to_calibrate_key</span><span class="o">=</span><span class="n">weight_to_calibrate_key</span><span class="p">,</span>
-</span><span data-line="287">        <span class="p">)</span>
-</span><span data-line="288">        <span class="k">return</span> <span class="n">scale</span>
-</span><span data-line="289">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="290">        <span class="n">null_scale</span> <span class="o">=</span> <span class="n">NullScale</span><span class="p">()</span>
-</span><span data-line="291">        <span class="n">null_scale</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span>
-</span><span data-line="292">            <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="s2">"Could not initialize scale"</span>
-</span><span data-line="293">        <span class="p">)</span>
-</span><span data-line="294">        <span class="k">return</span> <span class="n">null_scale</span></div>
+</span><span data-line="250"><span class="k">def</span><span class="w"> </span><span class="nf">get_scale</span><span class="p">(</span>
+</span><span data-line="251">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="252">    <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span data-line="253">    <span class="n">min_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="254">    <span class="n">max_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span data-line="255">    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span data-line="256">    <span class="n">calibration_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"SCALE_CALIBRATION_VALUE"</span><span class="p">,</span>
+</span><span data-line="257">    <span class="n">weight_to_calibrate_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"SCALE_WEIGHT_TO_CALIBRATE"</span><span class="p">,</span>
+</span><span data-line="258"><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scale</span> <span class="o">|</span> <span class="n">NullScale</span><span class="p">:</span>
+</span><span data-line="259"><span class="w">    </span><span class="sd">"""Factory function to initialize the Scale.</span>
+</span><span data-line="260">
+</span><span data-line="261"><span class="sd">    Args:</span>
+</span><span data-line="262"><span class="sd">        name (str): Which scale it is ("corridor" or "box"), shown in the log.</span>
+</span><span data-line="263"><span class="sd">        address (str): The I2C address of the scale.</span>
+</span><span data-line="264"><span class="sd">        min_threshold (float): The minimum weight threshold for valid measurements.</span>
+</span><span data-line="265"><span class="sd">        max_threshold (float): The maximum weight threshold for valid measurements.</span>
+</span><span data-line="266"><span class="sd">        enabled (bool): Whether this scale is physically present and should be</span>
+</span><span data-line="267"><span class="sd">            initialized at all.</span>
+</span><span data-line="268"><span class="sd">        calibration_key (str): The setting key holding this scale's</span>
+</span><span data-line="269"><span class="sd">            calibration factor.</span>
+</span><span data-line="270"><span class="sd">        weight_to_calibrate_key (str): The setting key holding the known</span>
+</span><span data-line="271"><span class="sd">            weight last used to calibrate this scale.</span>
+</span><span data-line="272">
+</span><span data-line="273"><span class="sd">    Returns:</span>
+</span><span data-line="274"><span class="sd">        Scale | NullScale: An initialized Scale instance or a null scale if</span>
+</span><span data-line="275"><span class="sd">        disabled or on failure.</span>
+</span><span data-line="276"><span class="sd">    """</span>
+</span><span data-line="277">    <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+</span><span data-line="278">        <span class="n">scale</span> <span class="o">=</span> <span class="n">NullScale</span><span class="p">()</span>
+</span><span data-line="279">        <span class="n">scale</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s2">""</span>
+</span><span data-line="280">        <span class="k">return</span> <span class="n">scale</span>
+</span><span data-line="281">    <span class="k">try</span><span class="p">:</span>
+</span><span data-line="282">        <span class="n">scale</span> <span class="o">=</span> <span class="n">Scale</span><span class="p">(</span>
+</span><span data-line="283">            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+</span><span data-line="284">            <span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">,</span>
+</span><span data-line="285">            <span class="n">min_threshold</span><span class="o">=</span><span class="n">min_threshold</span><span class="p">,</span>
+</span><span data-line="286">            <span class="n">max_threshold</span><span class="o">=</span><span class="n">max_threshold</span><span class="p">,</span>
+</span><span data-line="287">            <span class="n">calibration_key</span><span class="o">=</span><span class="n">calibration_key</span><span class="p">,</span>
+</span><span data-line="288">            <span class="n">weight_to_calibrate_key</span><span class="o">=</span><span class="n">weight_to_calibrate_key</span><span class="p">,</span>
+</span><span data-line="289">        <span class="p">)</span>
+</span><span data-line="290">        <span class="k">return</span> <span class="n">scale</span>
+</span><span data-line="291">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="292">        <span class="n">null_scale</span> <span class="o">=</span> <span class="n">NullScale</span><span class="p">()</span>
+</span><span data-line="293">        <span class="n">null_scale</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">clean_text</span><span class="p">(</span>
+</span><span data-line="294">            <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="s2">"Could not initialize scale"</span>
+</span><span data-line="295">        <span class="p">)</span>
+</span><span data-line="296">        <span class="k">return</span> <span class="n">null_scale</span></div>
 
-</span><span data-line="295">
-</span><span data-line="296">
-</span><span data-line="297"><span class="n">scale</span> <span class="o">=</span> <span class="n">get_scale</span><span class="p">(</span>
-</span><span data-line="298">    <span class="s2">"corridor"</span><span class="p">,</span>
-</span><span data-line="299">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SCALE_ADDRESS"</span><span class="p">),</span>
-</span><span data-line="300">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MIN_WEIGHT_THRESHOLD"</span><span class="p">)),</span>
-</span><span data-line="301">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MAX_WEIGHT_THRESHOLD"</span><span class="p">)),</span>
-</span><span data-line="302">    <span class="n">enabled</span><span class="o">=</span><span class="n">scale_corridor_enabled</span><span class="p">,</span>
-</span><span data-line="303"><span class="p">)</span>
-</span><span data-line="304">
-</span><span data-line="305"><span class="c1"># Thresholds are set directly here rather than read from settings -- adjust</span>
-</span><span data-line="306"><span class="c1"># them by hand for the box scale's actual weight range.</span>
-</span><span data-line="307"><span class="n">scale_box</span> <span class="o">=</span> <span class="n">get_scale</span><span class="p">(</span>
-</span><span data-line="308">    <span class="s2">"box"</span><span class="p">,</span>
-</span><span data-line="309">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SCALE_BOX_ADDRESS"</span><span class="p">),</span>
-</span><span data-line="310">    <span class="mf">0.0</span><span class="p">,</span>
-</span><span data-line="311">    <span class="mf">100000.0</span><span class="p">,</span>
-</span><span data-line="312">    <span class="n">enabled</span><span class="o">=</span><span class="n">scale_box_enabled</span><span class="p">,</span>
-</span><span data-line="313">    <span class="n">calibration_key</span><span class="o">=</span><span class="s2">"SCALE_BOX_CALIBRATION_VALUE"</span><span class="p">,</span>
-</span><span data-line="314">    <span class="n">weight_to_calibrate_key</span><span class="o">=</span><span class="s2">"SCALE_BOX_WEIGHT_TO_CALIBRATE"</span><span class="p">,</span>
-</span><span data-line="315"><span class="p">)</span>
+</span><span data-line="297">
+</span><span data-line="298">
+</span><span data-line="299"><span class="n">scale</span> <span class="o">=</span> <span class="n">get_scale</span><span class="p">(</span>
+</span><span data-line="300">    <span class="s2">"corridor"</span><span class="p">,</span>
+</span><span data-line="301">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SCALE_ADDRESS"</span><span class="p">),</span>
+</span><span data-line="302">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MIN_WEIGHT_THRESHOLD"</span><span class="p">)),</span>
+</span><span data-line="303">    <span class="nb">float</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MAX_WEIGHT_THRESHOLD"</span><span class="p">)),</span>
+</span><span data-line="304">    <span class="n">enabled</span><span class="o">=</span><span class="n">scale_corridor_enabled</span><span class="p">,</span>
+</span><span data-line="305"><span class="p">)</span>
+</span><span data-line="306">
+</span><span data-line="307"><span class="c1"># Thresholds are set directly here rather than read from settings -- adjust</span>
+</span><span data-line="308"><span class="c1"># them by hand for the box scale's actual weight range.</span>
+</span><span data-line="309"><span class="n">scale_box</span> <span class="o">=</span> <span class="n">get_scale</span><span class="p">(</span>
+</span><span data-line="310">    <span class="s2">"box"</span><span class="p">,</span>
+</span><span data-line="311">    <span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SCALE_BOX_ADDRESS"</span><span class="p">),</span>
+</span><span data-line="312">    <span class="mf">0.0</span><span class="p">,</span>
+</span><span data-line="313">    <span class="mf">100000.0</span><span class="p">,</span>
+</span><span data-line="314">    <span class="n">enabled</span><span class="o">=</span><span class="n">scale_box_enabled</span><span class="p">,</span>
+</span><span data-line="315">    <span class="n">calibration_key</span><span class="o">=</span><span class="s2">"SCALE_BOX_CALIBRATION_VALUE"</span><span class="p">,</span>
+</span><span data-line="316">    <span class="n">weight_to_calibrate_key</span><span class="o">=</span><span class="s2">"SCALE_BOX_WEIGHT_TO_CALIBRATE"</span><span class="p">,</span>
+</span><span data-line="317"><span class="p">)</span>
 </span></pre></div>
         </article><button class="back-to-top" type="button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -888,7 +890,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=7cb9f1d4"></script>
+      <script src="../../../_static/documentation_options.js?v=8eba0a97"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

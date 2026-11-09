@@ -986,11 +986,9 @@ is running is already saved in the trial data as a Raspberry Pi event named
 <p class="admonition-title">Errors in trigger</p>
 <p>An error raised inside <code class="docutils literal notranslate"><span class="pre">trigger</span></code> sends an “Error in the touch trigger” alarm (at most
 one per hour) and that touch is skipped by the trigger; the touchscreen keeps being
-read and the next touches are processed normally. The most common cause is reading an
-attribute of the task that does not exist yet: <code class="docutils literal notranslate"><span class="pre">trigger</span></code> can be called as soon as the
-task starts, possibly before <code class="docutils literal notranslate"><span class="pre">start</span></code> has finished, and always before the first
-<code class="docutils literal notranslate"><span class="pre">create_trial</span></code>. Create every attribute your trigger reads in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> of the
-task, as in the example below.</p>
+read and the next touches are processed normally. <code class="docutils literal notranslate"><span class="pre">trigger</span></code> is only called once the
+<code class="docutils literal notranslate"><span class="pre">start</span></code> of the task has finished, so it can read any attribute <code class="docutils literal notranslate"><span class="pre">start</span></code> creates (it
+can still be called before the first <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>), and never in calibrations.</p>
 </div>
 </section>
 <hr class="docutils" />
@@ -1113,7 +1111,7 @@ softcode are both non-blocking and safe to call from here.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7cb9f1d4"></script>
+      <script src="../_static/documentation_options.js?v=8eba0a97"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

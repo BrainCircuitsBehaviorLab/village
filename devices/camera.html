@@ -625,6 +625,10 @@ the two limits of <code class="docutils literal notranslate"><span class="pre">D
 (below <code class="docutils literal notranslate"><span class="pre">subject_limit</span></code>), <code class="docutils literal notranslate"><span class="pre">2</span></code> (two or more) or <code class="docutils literal notranslate"><span class="pre">-1</span></code> (the area is OFF). It works for
 any active area (ALLOWED, NOT_ALLOWED or TRIGGER) and does not need tracking.</p></li>
 </ul>
+<p><code class="docutils literal notranslate"><span class="pre">trigger</span></code> is only called once the <code class="docutils literal notranslate"><span class="pre">start</span></code> of the task has finished, so it can read
+any attribute <code class="docutils literal notranslate"><span class="pre">start</span></code> creates, and never in calibrations. An error raised inside it
+sends an “Error in the camera trigger” alarm (at most one camera alarm per hour, with
+the traceback in the events log), and the frame is still processed and recorded.</p>
 <p>The default implementation checks each of the four configurable areas (the rectangles
 defined in the GUI). For any area set to TRIGGER status, if the animal is tracked
 inside it, the text “Area X triggered” is overlaid on the camera feed.</p>
@@ -709,15 +713,6 @@ resets every trial).</p>
 </span><span data-line="61">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 </span><span data-line="62">        <span class="bp">self</span><span class="o">.</span><span class="n">in_center</span> <span class="o">=</span> <span class="n">in_center</span>
 </span></pre></div>
-</div>
-<div class="warning admonition">
-<p class="admonition-title">trigger must never fail</p>
-<p>An error raised inside <code class="docutils literal notranslate"><span class="pre">trigger</span></code> is not caught: it interrupts the processing of that
-frame (its drawing and its row in the CSV file of the camera are lost). The most
-common cause is reading an attribute of the task that does not exist yet:
-<code class="docutils literal notranslate"><span class="pre">trigger</span></code> is called from the moment the task starts, possibly before <code class="docutils literal notranslate"><span class="pre">start</span></code> has
-finished, and always before the first <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>. Create every attribute your trigger reads in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
-of the task (e.g. <code class="docutils literal notranslate"><span class="pre">self.target_x</span> <span class="pre">=</span> <span class="pre">0</span></code>), which runs before anything else.</p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
@@ -823,6 +818,10 @@ for both cameras, and for the CORRIDOR camera also draws the thresholded detecti
 mask and area rectangles (if VIEW_DETECTION is active).
 The default <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> draws those same overlays for the BOX camera via QPainter
 so they appear on screen but are not encoded into the video file.</p>
+<p><code class="docutils literal notranslate"><span class="pre">draw</span></code> runs on every frame of both cameras, also when no task is running. An error
+raised inside it sends an “Error in the camera draw” alarm (at most one camera alarm
+per hour, with the traceback in the events log), and the frame is still recorded,
+without the drawing.</p>
 <p>Create a file inside your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory (e.g. <code class="docutils literal notranslate"><span class="pre">camera_draw.py</span></code>) and define
 a class (e.g. <code class="docutils literal notranslate"><span class="pre">CameraDraw</span></code>) that inherits from <code class="docutils literal notranslate"><span class="pre">CameraDrawBase</span></code>. The file and class names are
 up to you: the system detects the class by what it inherits from, and uses it
@@ -994,7 +993,7 @@ pixel count: <code class="docutils literal notranslate"><span class="pre">0</spa
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7cb9f1d4"></script>
+      <script src="../_static/documentation_options.js?v=8eba0a97"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

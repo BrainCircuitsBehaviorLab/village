@@ -759,8 +759,8 @@ Check whether there was also a corridor camera alarm. Verify whether the animal 
 <td><p>The task (or a direct function) asked to play a sound before any sound was loaded, so nothing was played.</p></td>
 <td><p>Load the sound with <code class="docutils literal notranslate"><span class="pre">sound_device.load</span></code> before playing it (see <a class="reference internal" href="../devices/sound.html"><span class="std std-doc">Sound</span></a>).</p></td>
 </tr>
-<tr class="row-even"><td><p>Sound device: … / SOUND_DEVICE … / Could not resolve SOUND_DEVICE …</p></td>
-<td><p>A problem with the configuration of the sound card: the card in <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code> was not found (another one is used instead), it did not accept the <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code>, or it could not be prepared to play.</p></td>
+<tr class="row-even"><td><p>Sound device: …</p></td>
+<td><p>The sound card could not be prepared to play. (If the card in <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code> is not found or does not accept the <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code>, there is no alarm: it is shown when the Training Village starts, in the <code class="docutils literal notranslate"><span class="pre">Error</span> <span class="pre">connecting</span> <span class="pre">to:</span> <span class="pre">sound_device</span></code> warning.)</p></td>
 <td><p>Check <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code> and <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code> (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>) and the connection of the sound card, and restart the Training Village.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Error in video worker</p></td>
@@ -775,67 +775,79 @@ Check whether there was also a corridor camera alarm. Verify whether the animal 
 <td><p>The <code class="docutils literal notranslate"><span class="pre">trigger</span></code> method of the touch trigger of the project raised an error. That touch is skipped, and the touchscreen keeps being read.</p></td>
 <td><p>Check the events log to inspect the traceback and fix the touch trigger (see <a class="reference internal" href="../devices/screen.html#reacting-to-touches"><span class="std std-ref">Screen &amp; Touchscreen</span></a>).</p></td>
 </tr>
-<tr class="row-even"><td><p>The session file is very large…</p></td>
+<tr class="row-even"><td><p>Error in the camera trigger, camera …</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">trigger</span></code> method of the camera trigger of the project raised an error. The frame is still processed and recorded. It is called on every frame, so it usually fails again and again; this alarm shares its one-per-hour limit with the other camera alarms.</p></td>
+<td><p>Check the events log to inspect the traceback and fix the camera trigger (see <a class="reference internal" href="../devices/camera.html#reacting-to-the-animals-position"><span class="std std-ref">Camera</span></a>).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Error in the camera draw, camera …</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">draw</span></code> method of the camera draw of the project raised an error. The frame is still recorded, without the drawing. Like the camera trigger, it shares its one-per-hour limit with the other camera alarms.</p></td>
+<td><p>Check the events log to inspect the traceback and fix the camera draw (see <a class="reference internal" href="../devices/camera.html#custom-camera-drawing"><span class="std std-ref">Camera</span></a>).</p></td>
+</tr>
+<tr class="row-even"><td><p>Error in the GPIO trigger</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> or <code class="docutils literal notranslate"><span class="pre">trigger_off</span></code> method of the GPIO trigger of the project raised an error. The input pin keeps being watched. Sent at most once per hour.</p></td>
+<td><p>Check the events log to inspect the traceback and fix the GPIO trigger (see <a class="reference internal" href="../devices/gpio.html#reacting-to-the-input-pin"><span class="std std-ref">GPIO</span></a>).</p></td>
+</tr>
+<tr class="row-odd"><td><p>The session file is very large…</p></td>
 <td><p>The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.</p></td>
 <td><p>Inspect photogates, check for cable noise, and verify that no hardware component is malfunctioning.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Subjects not detected in the last 24 hours: …</p></td>
+<tr class="row-even"><td><p>Subjects not detected in the last 24 hours: …</p></td>
 <td><p>The subject has not been detected by the RFID system for the last 24 hours. This check can be turned <code class="docutils literal notranslate"><span class="pre">ON</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code> with <code class="docutils literal notranslate"><span class="pre">NO_DETECTION_SUBJECT_24H</span></code>.</p></td>
 <td><p>Check corridor access, door 1 status, and the correct functioning and power supply of the RFID system.</p></td>
 </tr>
-<tr class="row-even"><td><p>The subject has been in the box for too long.</p></td>
+<tr class="row-odd"><td><p>The subject has been in the box for too long.</p></td>
 <td><p>More than one hour has passed since the task ended, and the animal remains inside the operant box.</p></td>
 <td><p>Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Camera …: no frames in 10s. Restarting. / Camera …: ffmpeg died. Restarting.</p></td>
+<tr class="row-even"><td><p>Camera …: no frames in 10s. Restarting. / Camera …: ffmpeg died. Restarting.</p></td>
 <td><p>The camera (<code class="docutils literal notranslate"><span class="pre">BOX</span></code> or <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>) is restarted automatically because it did not deliver frames for 10 seconds (a failing camera usually delivers completely black frames, which count as no frames), or because its recording process (ffmpeg) died. This usually indicates an intermittent connection or insufficient signal quality along the camera cable. It can also be a box left completely dark: see the box lights in <a class="reference internal" href="../system_operation/corridor.html"><span class="std std-doc">Monitor &amp; Hardware Setup</span></a>. A lack of frames while the data is being saved or synced after a session is expected and is ignored. If the restart does not bring the image back, the next one waits longer (20 s, 40 s… up to 15 min). During a session, the box video continues in a new file, which is joined to the first one when the session ends.</p></td>
 <td><p>Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts. If it is the box camera, check that the box is not completely dark.</p></td>
 </tr>
-<tr class="row-even"><td><p>Camera BOX: still failing after 3 restarts…</p></td>
+<tr class="row-odd"><td><p>Camera BOX: still failing after 3 restarts…</p></td>
 <td><p>The box camera failed again after being restarted 3 times in the same session. It is not restarted again until the next session, so the rest of this session has no video.</p></td>
 <td><p>As for the previous alarm. Check the camera before the next session.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Camera …: start_encoder failed, recording off.</p></td>
+<tr class="row-even"><td><p>Camera …: start_encoder failed, recording off.</p></td>
 <td><p>The camera could not start recording: the session has no video.</p></td>
 <td><p>Check the events log to inspect the traceback, the free space of the microSD card, and the camera cable.</p></td>
 </tr>
-<tr class="row-even"><td><p>Camera BOX: failed to merge video segments after restart. / Camera BOX: failed to rename video segment after restart.</p></td>
+<tr class="row-odd"><td><p>Camera BOX: failed to merge video segments after restart. / Camera BOX: failed to rename video segment after restart.</p></td>
 <td><p>After a restart of the box camera during a session, its video is in several files, which could not be joined into one (or the only one could not be renamed) when the session ended. No video is deleted: the files keep the names <code class="docutils literal notranslate"><span class="pre">&lt;session&gt;.mp4</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;session&gt;_2.mp4</span></code>…</p></td>
 <td><p>Check the events log to inspect the traceback. The pieces can be joined by hand with <code class="docutils literal notranslate"><span class="pre">ffmpeg</span> <span class="pre">-f</span> <span class="pre">concat</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p>… occupied more than 90% of the last hour</p></td>
+<tr class="row-even"><td><p>… occupied more than 90% of the last hour</p></td>
 <td><p>One or more corridor areas were continuously occupied for more than 90% of the last hour. This may indicate an animal is sleeping in the corridor, or that a false detection is occurring due to lighting or dirt. This check can be enabled or disabled in the settings using <code class="docutils literal notranslate"><span class="pre">CORRIDOR_OCCUPATION_ALARM</span></code>.</p></td>
 <td><p>Review the corridor video for the last hour to determine whether a real animal is present or whether the detection is a false positive. If an animal is stuck, verify that door 1 and door 2 are operating correctly and that the animal can move freely. If it is a false positive, check corridor illumination, clean the floor, and adjust the detection thresholds.</p></td>
 </tr>
-<tr class="row-even"><td><p>Communication between homecages has been closed for more than … hours</p></td>
+<tr class="row-odd"><td><p>Communication between homecages has been closed for more than … hours</p></td>
 <td><p>The extra corridor area (<code class="docutils literal notranslate"><span class="pre">CORRIDOR_AREA_EXTRA</span></code>), which checks the passage between the two homecages, was occupied more than 90% of the last <code class="docutils literal notranslate"><span class="pre">AREA_EXTRA_HOURS</span></code> hours: the passage may be blocked.</p></td>
 <td><p>Check the passage between the homecages and the corridor video. If it is a false detection, check the illumination and the threshold of the extra area.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Low temperature: … / High temperature: …</p></td>
+<tr class="row-even"><td><p>Low temperature: … / High temperature: …</p></td>
 <td><p>Temperature has risen above <code class="docutils literal notranslate"><span class="pre">MAXIMUM_TEMPERATURE</span></code> or fallen below <code class="docutils literal notranslate"><span class="pre">MINIMUM_TEMPERATURE</span></code>.</p></td>
 <td><p>Verify the room temperature using an independent sensor and take the appropriate corrective measures.</p></td>
 </tr>
-<tr class="row-even"><td><p>Subjects with low water intake in the last 24 hours: …</p></td>
+<tr class="row-odd"><td><p>Subjects with low water intake in the last 24 hours: …</p></td>
 <td><p>The subject consumed less than the threshold set by <code class="docutils literal notranslate"><span class="pre">MINIMUM_WATER_SUBJECT_24H</span></code> during the last 24 hours.</p></td>
 <td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning correctly.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Subjects with no sessions in the last 24 hours: …</p></td>
+<tr class="row-even"><td><p>Subjects with no sessions in the last 24 hours: …</p></td>
 <td><p>The subject has not performed a session during the last 24 hours (this alarm is triggered only for subjects that were active during this period). This check can be turned <code class="docutils literal notranslate"><span class="pre">ON</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code> with <code class="docutils literal notranslate"><span class="pre">NO_SESSION_SUBJECT_24H</span></code>.</p></td>
 <td><p>Verify corridor access, door 1 operation, RFID functionality, and camera-based detection.</p></td>
 </tr>
-<tr class="row-even"><td><p>No data sync in the last 24 hours.</p></td>
+<tr class="row-odd"><td><p>No data sync in the last 24 hours.</p></td>
 <td><p>No data has been successfully synchronized with the external server or hard drive during the last 24 hours. Only checked while <code class="docutils literal notranslate"><span class="pre">SYNC_TYPE</span></code> is not <code class="docutils literal notranslate"><span class="pre">OFF</span></code>.</p></td>
 <td><p>Check the rsync_logs to identify the source of the error and verify network connectivity and remote storage availability.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Nobody has checked the mice today</p></td>
+<tr class="row-even"><td><p>Nobody has checked the mice today</p></td>
 <td><p>The <code class="docutils literal notranslate"><span class="pre">CHECK_MICE_TIME</span></code> deadline (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">TELEGRAM</span> <span class="pre">SETTINGS</span></code>) has passed and nobody has confirmed the mice check for the day, either by clicking <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> in the GUI toolbar or via the <code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code> Telegram command.</p></td>
 <td><p>Physically check on the mice as soon as possible, then confirm it with the <code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">MICE</span></code> button or <code class="docutils literal notranslate"><span class="pre">/mice_checked</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p>No water was drunk in task: …</p></td>
+<tr class="row-odd"><td><p>No water was drunk in task: …</p></td>
 <td><p>The subject did not drink any water during the task. This check can be turned <code class="docutils literal notranslate"><span class="pre">ON</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code> with <code class="docutils literal notranslate"><span class="pre">NO_WATER_DRUNK</span></code>.</p></td>
 <td><p>Verify that the water delivered in each trial is being correctly registered. Check water delivery, valve/solenoid calibration, and confirm that the task is functioning properly.</p></td>
 </tr>
-<tr class="row-odd"><td><p>No trials were recorded in task: …</p></td>
+<tr class="row-even"><td><p>No trials were recorded in task: …</p></td>
 <td><p>The subject did not complete any trials. This check can be turned <code class="docutils literal notranslate"><span class="pre">ON</span></code>/<code class="docutils literal notranslate"><span class="pre">OFF</span></code> with <code class="docutils literal notranslate"><span class="pre">NO_TRIALS_PERFORMED</span></code>.</p></td>
 <td><p>Confirm that the animal entered the operant box and did not fall asleep. Inspect the task logic and verify that all hardware components are functioning correctly.</p></td>
 </tr>
@@ -883,7 +895,7 @@ Check whether there was also a corridor camera alarm. Verify whether the animal 
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7cb9f1d4"></script>
+      <script src="../_static/documentation_options.js?v=8eba0a97"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

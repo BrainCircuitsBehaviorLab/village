@@ -65,6 +65,11 @@ every frame of the box camera. Before each call the camera updates, for each of 
   (below `subject_limit`), `2` (two or more) or `-1` (the area is OFF). It works for
   any active area (ALLOWED, NOT_ALLOWED or TRIGGER) and does not need tracking.
 
+`trigger` is only called once the `start` of the task has finished, so it can read
+any attribute `start` creates, and never in calibrations. An error raised inside it
+sends an "Error in the camera trigger" alarm (at most one camera alarm per hour, with
+the traceback in the events log), and the frame is still processed and recorded.
+
 The default implementation checks each of the four configurable areas (the rectangles
 defined in the GUI). For any area set to TRIGGER status, if the animal is tracked
 inside it, the text "Area X triggered" is overlaid on the camera feed.
@@ -153,16 +158,6 @@ class CameraTrigger(CameraTriggerBase):
         if in_center and not self.in_center:
             self.task.execute_function(6)
         self.in_center = in_center
-```
-
-```{admonition} trigger must never fail
-:class: warning
-An error raised inside `trigger` is not caught: it interrupts the processing of that
-frame (its drawing and its row in the CSV file of the camera are lost). The most
-common cause is reading an attribute of the task that does not exist yet:
-`trigger` is called from the moment the task starts, possibly before `start` has
-finished, and always before the first `create_trial`. Create every attribute your trigger reads in the `__init__`
-of the task (e.g. `self.target_x = 0`), which runs before anything else.
 ```
 
 ```{admonition} Note
@@ -263,6 +258,11 @@ for both cameras, and for the CORRIDOR camera also draws the thresholded detecti
 mask and area rectangles (if VIEW_DETECTION is active).
 The default `draw_preview` draws those same overlays for the BOX camera via QPainter
 so they appear on screen but are not encoded into the video file.
+
+`draw` runs on every frame of both cameras, also when no task is running. An error
+raised inside it sends an "Error in the camera draw" alarm (at most one camera alarm
+per hour, with the traceback in the events log), and the frame is still recorded,
+without the drawing.
 
 Create a file inside your project's `code` directory (e.g. `camera_draw.py`) and define
 a class (e.g. `CameraDraw`) that inherits from `CameraDrawBase`. The file and class names are
