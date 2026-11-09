@@ -154,7 +154,8 @@ strip length at roughly 0.04 ms per LED at the default `SPI_SPEED_KHZ` = 800.
 For a 144-LED strip or matrix: **mean = 5.8 ms, SD = 0.2 ms**.
 
 **Sound playback (Raspberry Pi DAC Pro)**
-The slow part — decoding and staging the audio — happens in `load()`, ahead of time.
+The slow part — preparing the audio for the sound card — happens in `load()`, ahead
+of time.
 `play()` itself is fast, since it just wakes the primed PCM: measured at the default
 `SAMPLERATE` (96 kHz), **mean = 3.2 ms, SD = 0.6 ms**.
 
@@ -172,9 +173,11 @@ plus the remaining portion of the current frame: **mean = 24.9 ms, SD = 7.5 ms**
 Communication and action latencies are both sensitive to CPU load. The platform
 implements several measures to keep CPU usage low during sessions:
 
-- Expensive background processes are suspended during sessions (e.g. the Python
-  garbage collector, system update checks) and re-enabled when the system returns to
-  the `WAIT` state.
+- The Python garbage collector is disabled during sessions and re-enabled when the
+  system returns to the `WAIT` state.
+- The automatic system update checks are disabled in the Raspberry Pi image (see
+  [Manual Software Installation](../resources/software_installation.md#disabling-automatic-updates)),
+  so they never run in the middle of a session.
 - Cameras are configured at 640×480 / 30 fps (operant box) and 10 fps (corridor)
   by default. If these values are increased, latencies should be re-measured
   experimentally to confirm they remain within acceptable bounds.

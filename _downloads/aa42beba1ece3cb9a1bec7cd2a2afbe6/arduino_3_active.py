@@ -1,6 +1,7 @@
 import math
 import random
 import struct
+import time
 
 import serial
 
@@ -10,9 +11,9 @@ from village.settings import settings
 
 # Protocol (see runActive() in village_arduino/village_arduino.ino):
 #
-# Pi -> Arduino, 6 raw bytes, sent once at the start of each trial:
+# Pi -> Arduino, 10 raw bytes, sent once at the start of each trial:
 #   [CMD_START_TRIAL, correct_port,
-#    led_on_timeout_ms (uint16, LE), valve_time_ms (uint16, LE)]
+#    led_on_timeout_ms (uint32, LE), valve_time_ms (uint32, LE)]
 #   This is everything the Arduino needs to run the whole trial on its own:
 #   which port is correct, how long to wait for a response, and how long to
 #   open the valve for a correct one. From here the Arduino owns the
@@ -53,6 +54,7 @@ RESULT_GOT_CORRECT = 1
 BAUDRATE = 9600  # must match the Arduino sketch's Serial.begin(...)
 READ_TIMEOUT = 0.05  # seconds; also how often should_stop/deadlines get re-checked
 MESSAGE_SIZE = 6  # every Arduino -> Pi message is exactly this many bytes
+STARTUP_WAIT = 2.0  # seconds; opening the port resets most Arduino boards
 
 
 class Arduino3Active(TaskBase):
@@ -98,6 +100,9 @@ class Arduino3Active(TaskBase):
             baudrate=BAUDRATE,
             timeout=READ_TIMEOUT,
         )
+        # Opening the port resets most Arduino boards: wait for the sketch
+        # to be running, or the first command would be lost.
+        time.sleep(STARTUP_WAIT)
         # Discard anything left over from before this session started (e.g.
         # a stray message the Arduino sent while nobody was listening).
         self.serial_port.reset_input_buffer()
@@ -144,7 +149,7 @@ class Arduino3Active(TaskBase):
         # Hand the whole trial over to the Arduino.
         self.serial_port.write(
             struct.pack(
-                "<BBHH", CMD_START_TRIAL, port, led_on_timeout_ms, valve_time_ms
+                "<BBII", CMD_START_TRIAL, port, led_on_timeout_ms, valve_time_ms
             )
         )
         t_sent = time_utils.now_timestamp()

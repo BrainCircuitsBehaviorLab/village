@@ -18,6 +18,7 @@ NullLEDStrip
    
       ~NullLEDStrip.__init__
       ~NullLEDStrip.clear_strip
+      ~NullLEDStrip.fill_strip
       ~NullLEDStrip.set_led_color
       ~NullLEDStrip.update_strip
    

@@ -10,3 +10,10 @@ The six training stages of the *Follow the Light* task (see [Task Examples (Bpod
 | [arduino_4_center_initiated.py](arduino_4_center_initiated.md) | Arduino version of [bpod_4_center_initiated.py](bpod_4_center_initiated.md): the same task and states (see its diagram), run by an Arduino that reports every state and poke to the Raspberry Pi. The ITI and the penalty, if any, are timed by the Raspberry Pi. |
 | [arduino_5_introduce_penalty.py](arduino_5_introduce_penalty.md) | Arduino version of [bpod_5_introduce_penalty.py](bpod_5_introduce_penalty.md): the same task and states (see its diagram), run by an Arduino that reports every state and poke to the Raspberry Pi. The ITI and the penalty, if any, are timed by the Raspberry Pi. |
 | [arduino_6_delay.py](arduino_6_delay.md) | Arduino version of [bpod_6_delay.py](bpod_6_delay.md): the same task and states (see its diagram), run by an Arduino that reports every state and poke to the Raspberry Pi. The ITI and the penalty, if any, are timed by the Raspberry Pi. |
+
+They need the same calibrations as the Bpod ones (see [Water Calibration](../calibrations/water.md) and [Sound Calibration](../calibrations/sound.md)):
+
+- **Stages 2 to 6:** water, for ports 1 and 3.
+- **Stages 5 and 6:** also the `tone_600` sound, for speaker 0 (left) at 70 dB: the penalty tone.
+
+The example [training protocol](training_protocol.md) moves the subjects through the Bpod tasks. To use it with these ones, change the task names in it (`Bpod1Habituation` → `Arduino1Habituation`, `Bpod2Passive` → `Arduino2Passive`...): they read the same settings and register the same values.

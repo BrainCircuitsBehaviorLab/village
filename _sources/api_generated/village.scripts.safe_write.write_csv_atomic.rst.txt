@@ -1,0 +1,6 @@
+write\_csv\_atomic
+==================
+
+.. currentmodule:: village.scripts.safe_write
+
+.. autofunction:: write_csv_atomic

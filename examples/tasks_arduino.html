@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -589,6 +593,12 @@ data-aria-dark="Switch to auto color mode">
 </tbody>
 </table>
 </div>
+<p>They need the same calibrations as the Bpod ones (see <a class="reference internal" href="../calibrations/water.html"><span class="std std-doc">Water Calibration</span></a> and <a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">Sound Calibration</span></a>):</p>
+<ul class="simple">
+<li><p><strong>Stages 2 to 6:</strong> water, for ports 1 and 3.</p></li>
+<li><p><strong>Stages 5 and 6:</strong> also the <code class="docutils literal notranslate"><span class="pre">tone_600</span></code> sound, for speaker 0 (left) at 70 dB: the penalty tone.</p></li>
+</ul>
+<p>The example <a class="reference internal" href="training_protocol.html"><span class="std std-doc">training protocol</span></a> moves the subjects through the Bpod tasks. To use it with these ones, change the task names in it (<code class="docutils literal notranslate"><span class="pre">Bpod1Habituation</span></code> → <code class="docutils literal notranslate"><span class="pre">Arduino1Habituation</span></code>, <code class="docutils literal notranslate"><span class="pre">Bpod2Passive</span></code> → <code class="docutils literal notranslate"><span class="pre">Arduino2Passive</span></code>…): they read the same settings and register the same values.</p>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -628,7 +638,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

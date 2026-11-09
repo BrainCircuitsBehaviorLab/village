@@ -1,13 +1,5 @@
 from village.custom_classes.touch_trigger_base import TouchTriggerBase
 
-# Direct function numbers behind each of the 6 clickable rectangles in
-# raspberry_touchscreen.py's menu, in the same order the rectangles are
-# laid out (rects[0] -> FUNCTION_IDS[0], etc.). These are exactly
-# direct_functions.py's function8/10-14 -- the 6 video_functions.py draw
-# generators, skipping function9 (the plain rectangle, since that's what
-# the menu itself is drawn with).
-FUNCTION_IDS = [8, 10, 11, 12, 13, 14]
-
 
 def _inside(x: int, y: int, rect: tuple[int, int, int, int]) -> bool:
     rx, ry, rw, rh = rect
@@ -19,9 +11,10 @@ class TouchTrigger(TouchTriggerBase):
     running, purely by which attributes it finds on self.task -- neither
     task needs to be named explicitly here.
 
-    - raspberry_touchscreen.py sets self.task.rects (a list of 6 rectangle
-      bounds, no controller involved): a touch inside rects[i] runs
-      direct_functions.py's function FUNCTION_IDS[i] directly.
+    - raspberry_stimulus_menu.py sets self.task.rects (the rectangles of its
+      menu, no controller involved): a touch inside rects[i] is reported to
+      the task in self.task.touched_index, and the task shows the stimulus
+      of that rectangle (see raspberry_stimulus_menu.py).
     - bpod_touchscreen.py sets self.task.long_rect/short_rect (Bpod-driven):
       a touch inside either one is reported to Bpod as a softcode, and the
       running state machine decides what happens (see bpod_touchscreen.py).
@@ -35,9 +28,12 @@ class TouchTrigger(TouchTriggerBase):
 
         rects = getattr(task, "rects", None)
         if rects is not None:
+            # only the first touch of each trial counts
+            if task.touch_event.is_set():
+                return
             for i, rect in enumerate(rects):
                 if _inside(x, y, rect):
-                    task.execute_function(FUNCTION_IDS[i])
+                    task.touched_index = i
                     task.touch_event.set()
                     return
             return

@@ -22,7 +22,7 @@ village
 ---
 
 ### Default Project
-The first time the Training Village (TV) is launched, a default project named `demo-village-project` is created with several example tasks, copied from the Village installation into `~/village_projects/demo-village-project/code`. They are the same example files shown in [Protocol & Task Design](../protocol_index.rst), [Plotting](../plotting_index.rst) and [Advanced Customization](../advanced_customization_index.rst).
+The first time the Training Village (TV) is launched, a default project named `demo-village-project` is created with several example tasks, copied from the Village installation into `~/village_projects/demo-village-project/code`, together with the image and video files they use, copied into its `media` folder. They are the same example files shown in [Protocol & Task Design](../protocol_index.rst), [Plotting](../plotting_index.rst) and [Advanced Customization](../advanced_customization_index.rst).
 
 ---
 
@@ -32,5 +32,5 @@ When the GUI launches, the system immediately performs an automated self-diagnos
 
 ```{admonition} Note
 :class: note
-Upon your very first boot, you will likely receive warnings stating that telegram_bot and box_chip are not functioning. This is perfectly normal if you have not configured Telegram yet or if you haven't connected the physical Box Board satellite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.
+Upon your very first boot, you will likely receive the warning `Error connecting to: chip_box, telegram_bot`. This is perfectly normal if you have not configured Telegram yet or if you haven't connected the physical Box Board satellite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.
 ```

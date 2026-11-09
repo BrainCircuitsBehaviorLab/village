@@ -33,8 +33,19 @@ self.cam_box.write_text("reward delivered")   # persists across frames until cha
 self.cam_box.write_text("")                   # clear
 ```
 
-The annotation is also saved frame-by-frame in the session CSV alongside the
-position data, so it is useful for marking task events for post-hoc analysis.
+From a trigger, the box camera is `self.task.cam_box`. From a direct function, or
+from any other file, import it:
+
+```python
+from village.devices.camera import cam_box
+
+cam_box.write_text("reward delivered")
+```
+
+The annotation is also saved frame by frame in the CSV file of the camera, saved next
+to the video in the videos directory (column `annotation`, together with the time
+and the position of the animal in each frame), so it is useful for marking task
+events for post-hoc analysis.
 
 For anything beyond plain text — shapes, coloured overlays, position-dependent
 graphics — see [Custom Camera Drawing](#custom-camera-drawing) below.
@@ -71,7 +82,8 @@ of the image.
 
 ```{admonition} trigger runs on every frame
 :class: warning
-`trigger` is called on every frame (30 times per second), and `cam.areaN_is_triggered`
+`trigger` is called on every frame (`CAM_BOX_FRAMERATE` times per second, 30 by
+default), and `cam.areaN_is_triggered`
 stays `True` the whole time the animal is inside the area. To act only once when the
 animal **enters**, remember whether it was already inside, as the example below does
 (or as [camera_trigger.py](../examples/camera_trigger.md) does with a signal the task
@@ -141,6 +153,16 @@ class CameraTrigger(CameraTriggerBase):
         if in_center and not self.in_center:
             self.task.execute_function(6)
         self.in_center = in_center
+```
+
+```{admonition} trigger must never fail
+:class: warning
+An error raised inside `trigger` is not caught: it interrupts the processing of that
+frame (its drawing and its row in the CSV file of the camera are lost). The most
+common cause is reading an attribute of the task that does not exist yet:
+`trigger` is called from the moment the task starts, possibly before `start` has
+finished, and always before the first `create_trial`. Create every attribute your trigger reads in the `__init__`
+of the task (e.g. `self.target_x = 0`), which runs before anything else.
 ```
 
 ```{admonition} Note
@@ -274,10 +296,14 @@ class CameraDraw(CameraDrawBase):
 
 **Overriding `draw_preview`** — runs at preview framerate, screen only:
 
-
 ```python
 from PyQt5.QtCore import QRect
-from PyQt5.QtGui import QBrush, QColor, QPainter
+from PyQt5.QtGui import QBrush, QColor
+
+from village.custom_classes.camera_draw_base import CameraDrawBase
+
+
+class CameraDraw(CameraDrawBase):
 
     def draw_preview(self, cam, painter) -> None:
         super().draw_preview(cam, painter)   # keep default detection overlays
@@ -294,11 +320,12 @@ from PyQt5.QtGui import QBrush, QColor, QPainter
             painter.drawRect(QRect(int(x*sx), int(y*sy), int(w*sx), int(h*sy)))
 ```
 
+Both methods can be overridden in the same class.
 
 ````{admonition} Passing data from the task
 :class: note
 `cam.items_to_draw` is a plain `dict` the task can populate at any point to pass
-coordinates, labels, or any other data (like `"reward_zone"` below).
+coordinates, labels, or any other data (like `"reward_zone"` in the example above).
 
 ```python
 # Inside the task, at any point:
@@ -311,6 +338,13 @@ self.cam_box.items_to_draw["reward_zone"] = None                  # remove
 A complete example, which draws circles requested by the task (saved in the
 video) and the animal's recent trail (on screen only):
 [camera_draw.py](../examples/camera_draw.md).
+
+```{admonition} draw must never fail
+:class: warning
+As with `trigger`, an error raised inside `draw` is not caught: that frame loses its
+row in the CSV file of the camera. Check that every value you read exists (e.g.
+`cam.items_to_draw.get("circles") or []` instead of `cam.items_to_draw["circles"]`).
+```
 
 Both methods `draw` and `draw_preview` receive these attributes on `cam`
 (updated every frame):
@@ -327,7 +361,10 @@ Both methods `draw` and `draw_preview` receive these attributes on `cam`
 
 - `cam.frame` — current frame as a BGR numpy array (read/write, cv2 only).
 - `cam.width`, `cam.height` — frame dimensions in pixels.
-- `cam.frame_number` — frames captured since recording started.
+- `cam.frame_number` — frames captured since recording started, saved in the
+  `frame` column of the CSV file of the camera. In the BOX camera it is 0 whenever
+  no task is running, so the last frames of a session (after the animal is back
+  home) are saved with 0: use the `timestamp` column to align the video.
 - `cam.timing` — milliseconds elapsed since recording started.
 
 **Session info**
@@ -339,7 +376,10 @@ Both methods `draw` and `draw_preview` receive these attributes on `cam`
 
 **Detection areas**
 
-- `cam.number_of_areas` — number of configurable areas (always 4).
+- `cam.number_of_areas` — number of configurable areas (always 4). In the CORRIDOR
+  camera with `CORRIDOR_AREA_EXTRA` ON, the lists below (`cam.areas`,
+  `cam.areas_active`... `cam.masks`, `cam.counts`) have a 5th element: the extra
+  area.
 - `cam.areas` — list of `[x1, y1, x2, y2]` pixel coordinates per area. For a
   BOX area overridden by a `CameraAreaBase`, this is the shape's bounding
   box, not a real detection rectangle.

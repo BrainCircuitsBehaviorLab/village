@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -594,7 +598,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="31">        <span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </span><span data-line="32">
 </span><span data-line="33">    <span class="k">def</span><span class="w"> </span><span class="nf">function2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="34"><span class="w">        </span><span class="sd">"""Load Noise Sound"""</span>
+</span><span data-line="34"><span class="w">        </span><span class="sd">"""Load Penalty Tone"""</span>
 </span><span data-line="35">        <span class="c1"># loads (does not play) a 600Hz tone at a calibrated 70dB, only on the</span>
 </span><span data-line="36">        <span class="c1"># left speaker (the right one stays silent). Needs the "tone_600" sound</span>
 </span><span data-line="37">        <span class="c1"># to be calibrated for speaker 0 in the Sound Calibration panel, or it</span>
@@ -774,7 +778,7 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="211">        <span class="c1"># draws self.task.rects (a list of (x_pos, y_pos, width, height)</span>
 </span><span data-line="212">        <span class="c1"># tuples, one per clickable zone) as same-colored rectangles that</span>
 </span><span data-line="213">        <span class="c1"># stay up indefinitely -- touch_trigger.py maps a touch inside one</span>
-</span><span data-line="214">        <span class="c1"># of them to a direct function of its own (see raspberry_touchscreen.py).</span>
+</span><span data-line="214">        <span class="c1"># of them to a stimulus of its own (see raspberry_stimulus_menu.py).</span>
 </span><span data-line="215">        <span class="n">rects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">rects</span>
 </span><span data-line="216">        <span class="n">duration</span> <span class="o">=</span> <span class="mi">100000</span>  <span class="c1"># indefinite, same trick as function11</span>
 </span><span data-line="217">        <span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="s2">"white"</span><span class="p">)</span>
@@ -864,7 +868,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

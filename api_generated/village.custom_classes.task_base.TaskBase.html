@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -437,6 +437,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.playground.html">playground</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.time_utils.html">time_utils</a><ul>
@@ -771,7 +775,8 @@ task to stop. Unlike force_stop, you should not set this yourself –
 just read it if you want to react to it.</p>
 </dd>
 <dt>self.should_stop: bool (read-only)</dt><dd><p>True once ANY stopping condition is met: the time limit, the trial
-limit (Manual mode only), force_stop, or stop_button_pressed. If your
+limit (Manual mode only), force_stop, stop_button_pressed, or the
+system ending the session (stop_requested). If your
 task does not use
 Bpod and create_trial contains its own waiting loop, check this
 property on every iteration so the loop actually exits when the task
@@ -997,7 +1002,9 @@ is ended now, at the Raspberry time.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">disconnect_and_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Save</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/village/custom_classes/task_base.html#TaskBase.disconnect_and_save"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Stops the task, disconnects devices, and saves session data.</p>
+<dd><p>Closes the task, disconnects devices, and saves session data.</p>
+<p>Called by manager.disconnect_and_save once the task thread has stopped
+(Bpod stopped and the thread joined), so session_df no longer changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>run_mode</strong> (<em>str</em>) – The mode in which the task was run (e.g., “Manual”).</p>
@@ -1102,7 +1109,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

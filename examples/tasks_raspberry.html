@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3 current"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -571,12 +575,16 @@ data-aria-dark="Switch to auto color mode">
 <tr class="row-even"><td class="text-left"><p><a class="reference internal" href="raspberry_area1_sound.html"><span class="std std-doc">raspberry_area1_sound.py</span></a></p></td>
 <td class="text-left"><p>No controller: entering box area 1 plays a sound and lights an LED of the LED strip, reacted to in <a class="reference internal" href="camera_trigger.html"><span class="std std-doc">camera_trigger.py</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><a class="reference internal" href="raspberry_touchscreen.html"><span class="std std-doc">raspberry_touchscreen.py</span></a></p></td>
-<td class="text-left"><p>No controller: a menu of 6 rectangles on the touchscreen, each one showing a different stimulus when touched, reacted to in <a class="reference internal" href="touch_trigger.html"><span class="std std-doc">touch_trigger.py</span></a>.</p></td>
+<tr class="row-odd"><td class="text-left"><p><a class="reference internal" href="raspberry_stimulus_menu.html"><span class="std std-doc">raspberry_stimulus_menu.py</span></a></p></td>
+<td class="text-left"><p>No controller: a demo of the screen stimuli. A menu of rectangles on the touchscreen, each one showing a different stimulus when touched, reacted to in <a class="reference internal" href="touch_trigger.html"><span class="std std-doc">touch_trigger.py</span></a>.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<p>Calibrations they need (see <a class="reference internal" href="../calibrations/sound.html"><span class="std std-doc">Sound Calibration</span></a>):</p>
+<ul class="simple">
+<li><p><strong>raspberry_area1_sound:</strong> the <code class="docutils literal notranslate"><span class="pre">whitenoise</span></code> sound, for both speakers at 70 dB.</p></li>
+</ul>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -616,7 +624,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

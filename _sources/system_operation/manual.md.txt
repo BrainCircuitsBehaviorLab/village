@@ -31,8 +31,9 @@ the Raspberry Pi itself.
 **No external controller required** (`BEHAVIOR_CONTROLLER` set to `OTHER`):
 - [raspberry_area1_sound.py](../examples/raspberry_area1_sound.md): entering box area 1
   plays a sound and lights an LED of the LED strip.
-- [raspberry_touchscreen.py](../examples/raspberry_touchscreen.md): a menu of 6
-  rectangles on the touchscreen, each one showing a different stimulus when touched.
+- [raspberry_stimulus_menu.py](../examples/raspberry_stimulus_menu.md): a demo of the
+  screen stimuli, a menu of rectangles on the touchscreen, each one showing a
+  different stimulus when touched.
 
 **Training protocol** ([training_protocol.py](../examples/training_protocol.md)):
 - Moves each subject through the six Bpod stages of *Follow the Light*, deciding the

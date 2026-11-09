@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -609,7 +613,10 @@ default.</p>
 </section>
 <section id="settings">
 <h3>Settings</h3>
-<p>Configure the LED strip under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">LED</span> <span class="pre">STRIP</span> <span class="pre">SETTINGS</span></code>.</p>
+<p>First enable the strip with <code class="docutils literal notranslate"><span class="pre">LED_STRIP_BOX</span></code> (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>): while it is
+<code class="docutils literal notranslate"><span class="pre">OFF</span></code>, the strip is not used at all (see the note in
+<a class="reference internal" href="#using-it-in-tasks"><span class="std std-ref">Using It in Tasks</span></a>). Then configure it under <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> →
+<code class="docutils literal notranslate"><span class="pre">LED</span> <span class="pre">STRIP</span> <span class="pre">SETTINGS</span></code>. Changes are applied when Village is restarted.</p>
 <section id="spi-device">
 <h4><code class="docutils literal notranslate"><span class="pre">SPI_DEVICE</span></code></h4>
 <p>Path of the SPI device node. Default: <code class="docutils literal notranslate"><span class="pre">/dev/spidev0.0</span></code>.</p>
@@ -630,8 +637,8 @@ or communication errors, try lowering this value (e.g. <code class="docutils lit
 </section>
 <section id="pixel-type">
 <h4><code class="docutils literal notranslate"><span class="pre">PIXEL_TYPE</span></code></h4>
-<p>Color channel order of the strip’s pixels. This setting must match the hardware of
-your specific LED strip:</p>
+<p>Color channel order of the strip’s pixels. Default: <code class="docutils literal notranslate"><span class="pre">RGB</span></code>. This setting must match
+the hardware of your specific LED strip:</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -676,11 +683,11 @@ your specific LED strip:</p>
 </span><span data-line="7"><span class="n">led_strip</span><span class="o">.</span><span class="n">set_led_color</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </span><span data-line="8">
 </span><span data-line="9"><span class="c1"># Apply the changes — nothing is visible until update_strip() is called</span>
-</span><span data-line="10"><span class="n">led_strip</span><span class="o">.</span><span class="n">update_strip</span><span class="p">()</span>
+</span><span data-line="10"><span class="n">led_strip</span><span class="o">.</span><span class="n">update_strip</span><span class="p">(</span><span class="n">sleep_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span><span data-line="11">
 </span><span data-line="12"><span class="c1"># Turn off all LEDs</span>
 </span><span data-line="13"><span class="n">led_strip</span><span class="o">.</span><span class="n">clear_strip</span><span class="p">()</span>
-</span><span data-line="14"><span class="n">led_strip</span><span class="o">.</span><span class="n">update_strip</span><span class="p">()</span>
+</span><span data-line="14"><span class="n">led_strip</span><span class="o">.</span><span class="n">update_strip</span><span class="p">(</span><span class="n">sleep_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span></pre></div>
 </div>
 <section id="method-reference">
@@ -694,26 +701,40 @@ your specific LED strip:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">set_led_color(index,</span> <span class="pre">red,</span> <span class="pre">green,</span> <span class="pre">blue)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">index</span></code>: int, colors: 0–255</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">set_led_color(index,</span> <span class="pre">red,</span> <span class="pre">green,</span> <span class="pre">blue,</span> <span class="pre">white=0)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">index</span></code>: int, colors: 0–255; <code class="docutils literal notranslate"><span class="pre">white</span></code> only for <code class="docutils literal notranslate"><span class="pre">RGBW</span></code>/<code class="docutils literal notranslate"><span class="pre">GRBW</span></code> strips</p></td>
 <td><p>Stages a color change for one LED.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_strip()</span></code></p></td>
-<td><p>—</p></td>
-<td><p>Sends all staged changes to the strip.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fill_strip(red,</span> <span class="pre">green,</span> <span class="pre">blue,</span> <span class="pre">white=0)</span></code></p></td>
+<td><p>colors: 0–255</p></td>
+<td><p>Stages the same color for every LED.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clear_strip()</span></code></p></td>
 <td><p>—</p></td>
-<td><p>Stages all LEDs off. Call <code class="docutils literal notranslate"><span class="pre">update_strip()</span></code> afterwards.</p></td>
+<td><p>Stages all LEDs off.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">update_strip(sleep_duration=0.1)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sleep_duration</span></code>: seconds, or <code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Sends all staged changes to the strip, then waits <code class="docutils literal notranslate"><span class="pre">sleep_duration</span></code> seconds.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="warning admonition">
+<p class="admonition-title">update_strip() waits 0.1 s by default</p>
+<p>After sending the colors, <code class="docutils literal notranslate"><span class="pre">update_strip()</span></code> waits <code class="docutils literal notranslate"><span class="pre">sleep_duration</span></code> seconds, 0.1 by
+default (a value of the Pi5Neo library). The strip does not need that wait, and it
+blocks whatever called it: a trigger or a task would lose 100 ms on every update.
+Pass <code class="docutils literal notranslate"><span class="pre">sleep_duration=None</span></code>, as in the example above, to return as soon as the colors
+are sent (a few ms, see
+<a class="reference internal" href="../system_operation/timing.html"><span class="std std-doc">Timing</span></a>).</p>
+</div>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
-<p>If the LED strip cannot be initialised (SPI not enabled, wrong device path, etc.)
-the system falls back silently to a <code class="docutils literal notranslate"><span class="pre">NullLEDStrip</span></code> instance. Calls to its methods
-have no effect, so tasks will still run without errors.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">LED_STRIP_BOX</span></code> is <code class="docutils literal notranslate"><span class="pre">OFF</span></code>, or the strip cannot be initialised (SPI not enabled, wrong
+device path, etc.), the system uses a <code class="docutils literal notranslate"><span class="pre">NullLEDStrip</span></code> instance instead: calls to its
+methods have no effect, so tasks still run without errors, but nothing lights up.
+When the initialisation fails, an error is logged at startup.</p>
 </div>
 </section>
 <section id="led-matrices">
@@ -778,7 +799,7 @@ directions, which is common in pre-assembled panels), odd rows must be mirrored:
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

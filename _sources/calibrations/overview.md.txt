@@ -2,9 +2,11 @@
 
 The `CALIBRATION` screen has a dedicated panel for each calibration of the system. A
 left-side menu lists every calibration relevant to your current hardware configuration;
-selecting an entry opens its panel on the right. Every saved calibration is kept in its
-own `.csv` or `.json` file in `data/<SYSTEM_NAME>/`, and can also be browsed and plotted from the
-`DATA` screen.
+selecting an entry opens its panel on the right. The calibrations that keep a table of
+measurements (water, sound and your own calibrations) save it in a `.csv` file in
+`data/<SYSTEM_NAME>/`, which can also be browsed and plotted from the `DATA` screen.
+The camera calibration saves a `.json` file in the same folder, the corridor thresholds
+are saved as settings, and the OptoGrid panel does not save anything.
 
 *   **`WATER_CALIBRATION`:** Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. With Bpod it works out of the box; with any other controller, it needs a water calibration task written for that controller. See [Water Calibration](water.md).
 

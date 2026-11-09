@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -570,8 +574,8 @@ folder, and it must define three methods:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>, which only needs to call <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">default_training_settings</span></code>, which sets the settings a subject has by default when
 it is created.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">update_training_settings</span></code>, which runs after every session and updates the settings
-of the subject, for example to move it to the next stage.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">update_training_settings</span></code>, which runs after every saved session and updates the
+settings of the subject, for example to move it to the next stage.</p></li>
 </ul>
 <p>A fourth method, <code class="docutils literal notranslate"><span class="pre">define_gui_tabs</span></code>, is optional.</p>
 <p>The code on this page is taken from the training protocol of the example tasks
@@ -652,18 +656,32 @@ multi-animal setups to prevent individual animals from monopolizing access.
 <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code> is when door 2 opens and the animal can choose to leave;
 <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code> is when the task stops unconditionally and the system waits for the
 animal to return home (door 2 is already open at this point, so
-<code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code> ≥ <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code> always).</p>
+<code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code> ≥ <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code> always). The task can also end the session
+earlier, opening door 2 before <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code>, with <code class="docutils literal notranslate"><span class="pre">self.force_stop</span> <span class="pre">=</span> <span class="pre">True</span></code> (see
+<a class="reference internal" href="tasks_reference.html#force-stop"><span class="std std-ref">Ending the session from the task</span></a>).</p>
 <p>The rest are the settings your tasks read — here, the ones used by the six example
 tasks.</p>
+<div class="note admonition">
+<p class="admonition-title">The type of each setting comes from its default value</p>
+<p>The settings are saved as text (in <code class="docutils literal notranslate"><span class="pre">subjects.csv</span></code>, or typed in the GUI) and converted
+back with the type of their default value. A setting whose default is a decimal
+number (<code class="docutils literal notranslate"><span class="pre">noise_time</span> <span class="pre">=</span> <span class="pre">1.5</span></code>) is always a <code class="docutils literal notranslate"><span class="pre">float</span></code>. One whose default is an integer
+(<code class="docutils literal notranslate"><span class="pre">led_intensity</span> <span class="pre">=</span> <span class="pre">255</span></code>) is an <code class="docutils literal notranslate"><span class="pre">int</span></code>, so it can be used in <code class="docutils literal notranslate"><span class="pre">range()</span></code> or as an index;
+if it is given a value with decimals (<code class="docutils literal notranslate"><span class="pre">reward_volume</span> <span class="pre">=</span> <span class="pre">2.5</span></code>), that value is kept as a
+<code class="docutils literal notranslate"><span class="pre">float</span></code>, never truncated. So write as decimals the defaults of the settings that are
+decimal by nature, like times or volumes, if your code needs them to be <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p>
+</div>
 </section>
 <hr class="docutils" />
 <section id="update-training-settings">
 <h2><code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code></h2>
-<p>This method runs automatically at the end of every session. It looks at the subject’s
-history and updates whichever settings should change based on performance: typically
+<p>This method runs automatically at the end of every session that is saved: a session
+with a subject and at least one completed trial. It looks at the subject’s history and
+updates whichever settings should change based on performance: typically
 <code class="docutils literal notranslate"><span class="pre">next_task</span></code>, to move the subject to the next stage, and any setting that changes with
 it. The updated values are stored back into <code class="docutils literal notranslate"><span class="pre">subjects.csv</span></code> and used in the subject’s
-next session.</p>
+next session. After a session with no completed trials, the settings are left as they
+were (only the refractory period starts again).</p>
 <div class="warning admonition">
 <p class="admonition-title">Warning</p>
 <p><code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code> always starts from the settings the subject had at the
@@ -831,7 +849,7 @@ The example protocol doesn’t need it; it would look like this:</p>
 <td class="text-left"><p>Define initial parameter values</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">update_training_settings</span></code></p></td>
-<td class="text-left"><p>After every session ends</p></td>
+<td class="text-left"><p>After every saved session (at least one trial)</p></td>
 <td class="text-left"><p>Update parameters based on performance</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">define_gui_tabs</span></code> <em>(optional)</em></p></td>
@@ -888,7 +906,7 @@ saving them.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

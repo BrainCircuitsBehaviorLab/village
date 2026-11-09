@@ -1,6 +1,7 @@
 ## Sound
 
-The Training Village uses the **Raspberry Pi DAC Pro** HAT for audio output. Connect it
+The Training Village uses the **Raspberry Pi DAC Pro** HAT (the Audio HAT) for audio
+output. Connect it
 directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio
 playback from within tasks is handled by the Python `pyalsaaudio` library, which talks to
 ALSA directly, without going through PortAudio.
@@ -21,8 +22,8 @@ ALSA directly, without going through PortAudio.
    the profile to **Off**. The operating system will no longer use the device, leaving it
    free for `pyalsaaudio` to access directly.
 
-5. Launch the Training Village and select your soundcard under
-   `SETTINGS` → `SOUND SETTINGS`.
+5. Launch the Training Village and select your soundcard in `SOUND_DEVICE`
+   (`SETTINGS` → `SOUND SETTINGS`).
 
 ```{admonition} Why the DAC must be released from the system before use
 :class: warning
@@ -54,14 +55,23 @@ be called again to change the sound. Calling `play` before anything has ever bee
 loaded does nothing and reports an error. `stop` is optional, only needed to cut a
 sound short before it finishes on its own.
 
-1. **`load`** — decodes the audio and stages it in the buffer. This can be a slow operation (hundreds of ms depending on audio length), so it is best called during the inter-trial interval. Only repeat it to change the sound.
-2. **`play`** — starts playback of the loaded sound from the beginning. This is fast — measured latencies are below 5 ms — with one exception (see below). Calling `play` while that same sound is still playing is ignored.
+1. **`load`** — prepares the sound for the sound card (it converts the arrays to the
+   card's format and applies the ramp, see below) and leaves the card ready, so that
+   `play` starts at once. Its time grows with the length of the sound, and if a sound
+   is playing it cuts it first, which adds some tens of ms. So call it before the
+   sound is needed: in the inter-trial interval, or in `create_trial` before the
+   trial starts. Only repeat it to change the sound.
+2. **`play`** — starts playback of the loaded sound from the beginning. This is fast — measured latencies are below 5 ms — with one exception (see below). Calling `play` while a sound is still playing is ignored.
 3. **`stop`** *(optional)* — interrupts playback mid-sound. Non-blocking (returns immediately; the sound finishes stopping in the background).
 
 To replay the same sound, just call `play` again — no reload needed. The one case
 where `play` is **not** instant is calling it right after a `stop` that hasn't
 finished yet: `play` then waits for that stop to complete and plays immediately
 after.
+
+You don't need to register when the sound plays: during a trial, every time a sound
+starts playing the system adds a `sound` event to the trial data, with the moment
+it started (see [Trial data](../protocols/tasks_bpod.md#trial-data)).
 
 ```{admonition} Fade-in / fade-out ramp
 :class: note
@@ -93,8 +103,8 @@ samplerate = 96000           # must match the SAMPLERATE setting (96000 by defau
 duration   = 0.5             # seconds
 frequency  = 5000            # Hz
 
-# volume calibrated so the tone measures 70 dB from speaker 1, using the
-# calibration of tone_5000 in sound_functions.py (the same 5000 Hz tone)
+# volume calibrated so the tone measures 70 dB from the right speaker (speaker 1),
+# using the calibration of tone_5000 in sound_functions.py (the same 5000 Hz tone)
 gain = self.calibrations.sound_calibration.get_sound_gain(
     speaker=1, dB=70.0, sound_name="tone_5000"
 )
@@ -102,9 +112,14 @@ gain = self.calibrations.sound_calibration.get_sound_gain(
 t = np.linspace(0, duration, int(samplerate * duration), endpoint=False)
 tone = (gain * np.sin(2 * np.pi * frequency * t)).astype(np.float32)
 
-sound_device.load(tone, tone)   # identical left and right channels
+sound_device.load(None, tone)   # right speaker only, the left one stays silent
 sound_device.play()
 ```
+
+In the sound calibration and in `get_sound_gain`, speaker `0` is the left speaker
+and `1` the right one. Each one is calibrated separately: to play a sound through
+both speakers at a given level, get the gain of each one and load each channel with
+its own gain.
 
 `get_sound_from_wav` resamples the audio if the WAV's sample rate does not match
 `SAMPLERATE`, and returns both channels as `float32` arrays in the range `[-1.0, 1.0]`,

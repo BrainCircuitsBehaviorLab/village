@@ -77,11 +77,13 @@ class BpodGlobalTimer(TaskBase):
         )
 
     def after_trial(self):
-        """Just records the number of pokes before the global timer ended."""
+        """Records the number of pokes before the global timer ended, and the
+        water, 0: this demo gives none."""
         # Bpod lists a state that was not visited as [nan]: count real entries only
         starts = self.trial_data.get("STATE_poked_START", [])
         pokes = sum(1 for t in starts if not math.isnan(t))
         self.register_value("pokes", pokes)
+        self.register_value("water", 0)
 
     def close(self):
         pass

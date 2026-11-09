@@ -33,7 +33,8 @@ settings.
   WEIGHTS`** the weights of the subjects.
 - **`DELETE`** marks the selected session as deleted: it disappears from the summary and
   from the subject's history, but no file is removed (see [Saved Data and Video](data.md)).
-- Click a session to edit its `observations`, a free text field saved with it.
+- Double-click the `settings` cell of a session to see the settings it ran with, and to
+  edit its `observations`, a free text field saved with it.
 
 ### TEMPERATURES
 

@@ -88,7 +88,7 @@ closed: it prints every change of the pin, with the resistor of `GPIO_IN_PULL`
 
 The output pin (`GPIO_OUT`) is available at all times via `gpio.set_on()` and
 `gpio.set_off()`, regardless of the input pin's state — call them from
-anywhere: a task, a trigger, a direct function, the screen sync, and so on.
+anywhere: a task, a trigger, a direct function, and so on.
 
 ```python
 from village.devices.gpio import gpio
@@ -145,7 +145,9 @@ class GpioTrigger(GpioTriggerBase):
 ```{admonition} Note
 :class: note
 `trigger_on`/`trigger_off` run in the GPIO reader thread, not in the task
-thread. Keep them fast and avoid blocking calls.
+thread. Keep them fast and avoid blocking calls. They can be called as soon as the
+task starts, possibly before `start` has finished: create every attribute of the task
+they read in the `__init__` of the task.
 ```
 
 A complete example, which records the pin in the trial data of any task:

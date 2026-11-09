@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -557,9 +561,11 @@ data-aria-dark="Switch to auto color mode">
 <h1>Calibration Overview</h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">CALIBRATION</span></code> screen has a dedicated panel for each calibration of the system. A
 left-side menu lists every calibration relevant to your current hardware configuration;
-selecting an entry opens its panel on the right. Every saved calibration is kept in its
-own <code class="docutils literal notranslate"><span class="pre">.csv</span></code> or <code class="docutils literal notranslate"><span class="pre">.json</span></code> file in <code class="docutils literal notranslate"><span class="pre">data/&lt;SYSTEM_NAME&gt;/</span></code>, and can also be browsed and plotted from the
-<code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen.</p>
+selecting an entry opens its panel on the right. The calibrations that keep a table of
+measurements (water, sound and your own calibrations) save it in a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file in
+<code class="docutils literal notranslate"><span class="pre">data/&lt;SYSTEM_NAME&gt;/</span></code>, which can also be browsed and plotted from the <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen.
+The camera calibration saves a <code class="docutils literal notranslate"><span class="pre">.json</span></code> file in the same folder, the corridor thresholds
+are saved as settings, and the OptoGrid panel does not save anything.</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">WATER_CALIBRATION</span></code>:</strong> Calibrates the relationship between valve opening time and the volume of water actually delivered, per behavior port, and lets you test a calibration by requesting a target volume. With Bpod it works out of the box; with any other controller, it needs a water calibration task written for that controller. See <a class="reference internal" href="water.html"><span class="std std-doc">Water Calibration</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SOUND_CALIBRATION</span></code>:</strong> Calibrates speaker output so a requested sound level corresponds to an actual, measured volume. See <a class="reference internal" href="sound.html"><span class="std std-doc">Sound Calibration</span></a>.</p></li>
@@ -608,7 +614,7 @@ alongside them — see <a class="reference internal" href="../advanced_customiza
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

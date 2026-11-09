@@ -91,11 +91,11 @@ void setup() {
 byte messageSize(byte command) {
   switch (command) {
     case CMD_HABITUATION: return 3;
-    case CMD_PASSIVE: return 6;
-    case CMD_ACTIVE: return 6;
-    case CMD_CENTER_INITIATED: return 8;
-    case CMD_INTRODUCE_PENALTY: return 8;
-    case CMD_DELAY: return 10;
+    case CMD_PASSIVE: return 10;
+    case CMD_ACTIVE: return 10;
+    case CMD_CENTER_INITIATED: return 14;
+    case CMD_INTRODUCE_PENALTY: return 14;
+    case CMD_DELAY: return 18;
     case CMD_OPEN_VALVE: return 6;
     default: return 0;
   }
@@ -177,7 +177,7 @@ byte valvePinOf(byte port) {
   return (port == LEFT_PORT) ? valvePinLeft : valvePinRight;
 }
 
-void deliverWater(byte port, unsigned int valveTimeMs) {
+void deliverWater(byte port, unsigned long valveTimeMs) {
   byte valvePin = valvePinOf(port);
   digitalWrite(valvePin, HIGH);
   delay(valveTimeMs);
@@ -211,40 +211,40 @@ void loop() {
     }
     case CMD_PASSIVE: {
       byte port = Serial.read();
-      unsigned int valveTimeMs = readUInt16();
-      unsigned int ledOnTimeoutMs = readUInt16();
+      unsigned long valveTimeMs = readUInt32();
+      unsigned long ledOnTimeoutMs = readUInt32();
       runPassive(port, valveTimeMs, ledOnTimeoutMs);
       break;
     }
     case CMD_ACTIVE: {
       byte correctPort = Serial.read();
-      unsigned int ledOnTimeoutMs = readUInt16();
-      unsigned int valveTimeMs = readUInt16();
+      unsigned long ledOnTimeoutMs = readUInt32();
+      unsigned long valveTimeMs = readUInt32();
       runActive(correctPort, ledOnTimeoutMs, valveTimeMs);
       break;
     }
     case CMD_CENTER_INITIATED: {
       byte correctPort = Serial.read();
-      unsigned int cLedOnTimeoutMs = readUInt16();
-      unsigned int ledOnTimeoutMs = readUInt16();
-      unsigned int valveTimeMs = readUInt16();
+      unsigned long cLedOnTimeoutMs = readUInt32();
+      unsigned long ledOnTimeoutMs = readUInt32();
+      unsigned long valveTimeMs = readUInt32();
       runCenterInitiated(correctPort, cLedOnTimeoutMs, ledOnTimeoutMs, valveTimeMs);
       break;
     }
     case CMD_INTRODUCE_PENALTY: {
       byte correctPort = Serial.read();
-      unsigned int cLedOnTimeoutMs = readUInt16();
-      unsigned int ledOnTimeoutMs = readUInt16();
-      unsigned int valveTimeMs = readUInt16();
+      unsigned long cLedOnTimeoutMs = readUInt32();
+      unsigned long ledOnTimeoutMs = readUInt32();
+      unsigned long valveTimeMs = readUInt32();
       runIntroducePenalty(correctPort, cLedOnTimeoutMs, ledOnTimeoutMs, valveTimeMs);
       break;
     }
     case CMD_DELAY: {
       byte firstPort = Serial.read();
-      unsigned int cLedOnTimeoutMs = readUInt16();
-      unsigned int delayMs = readUInt16();
-      unsigned int totalTimeoutMs = readUInt16();
-      unsigned int valveTimeMs = readUInt16();
+      unsigned long cLedOnTimeoutMs = readUInt32();
+      unsigned long delayMs = readUInt32();
+      unsigned long totalTimeoutMs = readUInt32();
+      unsigned long valveTimeMs = readUInt32();
       runDelay(firstPort, cLedOnTimeoutMs, delayMs, totalTimeoutMs, valveTimeMs);
       break;
     }
@@ -291,7 +291,7 @@ void runHabituation(unsigned int durationS) {
 
 // === Passive (arduino_2_passive.py) =======================================
 //
-// [CMD_PASSIVE, port, valve_time_ms (uint16, LE), led_on_timeout_ms (uint16, LE)]
+// [CMD_PASSIVE, port, valve_time_ms (uint32, LE), led_on_timeout_ms (uint32, LE)]
 // Delivers the reward up front, then keeps the LED on until that port is
 // poked or the timeout runs out. A poke on the other port is reported but
 // doesn't end the wait. Reports [EVENT_TRIAL_END, PASSIVE_GOT_CORRECT or
@@ -302,7 +302,7 @@ const byte PASSIVE_LED_ON = 2;
 const byte PASSIVE_TIMEOUT = 0;
 const byte PASSIVE_GOT_CORRECT = 1;
 
-void runPassive(byte port, unsigned int valveTimeMs, unsigned int ledOnTimeoutMs) {
+void runPassive(byte port, unsigned long valveTimeMs, unsigned long ledOnTimeoutMs) {
   unsigned long t0 = millis();
   byte ledPin = ledPinOf(port);
 
@@ -335,7 +335,7 @@ void runPassive(byte port, unsigned int valveTimeMs, unsigned int ledOnTimeoutMs
 
 // === Active (arduino_3_active.py) =========================================
 //
-// [CMD_ACTIVE, correct_port, led_on_timeout_ms (uint16, LE), valve_time_ms (uint16, LE)]
+// [CMD_ACTIVE, correct_port, led_on_timeout_ms (uint32, LE), valve_time_ms (uint32, LE)]
 // Turns the LED of the correct port on and waits for a poke there; only
 // then delivers the reward. A poke on the other port is reported but
 // doesn't end the wait. Reports [EVENT_TRIAL_END, ACTIVE_GOT_CORRECT or
@@ -346,7 +346,7 @@ const byte ACTIVE_WATER_DELIVERY = 2;
 const byte ACTIVE_TIMEOUT = 0;
 const byte ACTIVE_GOT_CORRECT = 1;
 
-void runActive(byte correctPort, unsigned int ledOnTimeoutMs, unsigned int valveTimeMs) {
+void runActive(byte correctPort, unsigned long ledOnTimeoutMs, unsigned long valveTimeMs) {
   unsigned long t0 = millis();
   byte correctLedPin = ledPinOf(correctPort);
 
@@ -380,8 +380,8 @@ void runActive(byte correctPort, unsigned int ledOnTimeoutMs, unsigned int valve
 
 // === Center initiated (arduino_4_center_initiated.py) =====================
 //
-// [CMD_CENTER_INITIATED, correct_port, c_led_on_timeout_ms (uint16, LE),
-//  led_on_timeout_ms (uint16, LE), valve_time_ms (uint16, LE)]
+// [CMD_CENTER_INITIATED, correct_port, c_led_on_timeout_ms (uint32, LE),
+//  led_on_timeout_ms (uint32, LE), valve_time_ms (uint32, LE)]
 // Waits for a center poke (center LED on), then turns the LED of the
 // correct side on and waits for a poke there; a poke on the wrong side is
 // reported but doesn't end the wait. Reports [EVENT_TRIAL_END,
@@ -396,9 +396,9 @@ const byte CENTER_TIMEOUT = 2;
 
 void runCenterInitiated(
   byte correctPort,
-  unsigned int cLedOnTimeoutMs,
-  unsigned int ledOnTimeoutMs,
-  unsigned int valveTimeMs
+  unsigned long cLedOnTimeoutMs,
+  unsigned long ledOnTimeoutMs,
+  unsigned long valveTimeMs
 ) {
   unsigned long t0 = millis();
 
@@ -454,8 +454,8 @@ void runCenterInitiated(
 
 // === Introduce penalty (arduino_5_introduce_penalty.py) ===================
 //
-// [CMD_INTRODUCE_PENALTY, correct_port, c_led_on_timeout_ms (uint16, LE),
-//  led_on_timeout_ms (uint16, LE), valve_time_ms (uint16, LE)]
+// [CMD_INTRODUCE_PENALTY, correct_port, c_led_on_timeout_ms (uint32, LE),
+//  led_on_timeout_ms (uint32, LE), valve_time_ms (uint32, LE)]
 // Like center initiated, but the first side poke decides the outcome: the
 // wrong side is an error. The penalty buzzer is played by the Pi once it
 // sees the outcome. Reports [EVENT_TRIAL_END, PENALTY_OMISSION,
@@ -471,9 +471,9 @@ const byte PENALTY_MISS = 3;
 
 void runIntroducePenalty(
   byte correctPort,
-  unsigned int cLedOnTimeoutMs,
-  unsigned int ledOnTimeoutMs,
-  unsigned int valveTimeMs
+  unsigned long cLedOnTimeoutMs,
+  unsigned long ledOnTimeoutMs,
+  unsigned long valveTimeMs
 ) {
   unsigned long t0 = millis();
 
@@ -522,9 +522,9 @@ void runIntroducePenalty(
 
 // === Delay (arduino_6_delay.py) ===========================================
 //
-// [CMD_DELAY, first_port, c_led_on_timeout_ms (uint16, LE),
-//  delay_ms (uint16, LE), total_timeout_ms (uint16, LE),
-//  valve_time_ms (uint16, LE)]
+// [CMD_DELAY, first_port, c_led_on_timeout_ms (uint32, LE),
+//  delay_ms (uint32, LE), total_timeout_ms (uint32, LE),
+//  valve_time_ms (uint32, LE)]
 // After a center poke, lights first_port alone for delay_ms, then both side
 // ports until total_timeout_ms; the first side poke decides the outcome
 // (first_port is correct). Reports [EVENT_TRIAL_END, DELAY_OMISSION,
@@ -541,10 +541,10 @@ const byte DELAY_MISS = 3;
 
 void runDelay(
   byte firstPort,
-  unsigned int cLedOnTimeoutMs,
-  unsigned int delayMs,
-  unsigned int totalTimeoutMs,
-  unsigned int valveTimeMs
+  unsigned long cLedOnTimeoutMs,
+  unsigned long delayMs,
+  unsigned long totalTimeoutMs,
+  unsigned long valveTimeMs
 ) {
   unsigned long t0 = millis();
   byte secondPort = (firstPort == LEFT_PORT) ? RIGHT_PORT : LEFT_PORT;

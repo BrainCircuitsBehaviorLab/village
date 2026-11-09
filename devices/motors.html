@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -672,11 +676,11 @@ A mechanism that latches mechanically, or that only needs to reach a position an
 then be left alone, is better off with it unchecked.</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
-<p>When <code class="docutils literal notranslate"><span class="pre">hold</span></code> is off and the travel time is <code class="docutils literal notranslate"><span class="pre">0</span></code> (an instant move), the system waits one
-second before cutting the power, so the servo has time to physically get there —
-cutting it immediately would leave the motor stranded mid-travel. This wait is the
-<code class="docutils literal notranslate"><span class="pre">MOTOR_SETTLE_MS</span></code> constant in <code class="docutils literal notranslate"><span class="pre">village/devices/chip.py</span></code>; a heavier door with a long
-travel may need it raised.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">hold</span></code> is off, the system waits one second after the movement before cutting the
+power, so the servo has time to physically get there — cutting it immediately would
+leave the motor stranded mid-travel, especially after an instant move (travel time
+<code class="docutils literal notranslate"><span class="pre">0</span></code>). A heavier door with a long travel may need a longer wait: pass it in
+milliseconds with <code class="docutils literal notranslate"><span class="pre">settle_ms</span></code> (see <a class="reference internal" href="#using-it-in-tasks"><span class="std std-ref">Using It in Tasks</span></a>).</p>
 </div>
 </section>
 </section>
@@ -716,15 +720,15 @@ travel may need it raised.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">open(hold=None,</span> <span class="pre">settle_ms=1000)</span></code></p></td>
-<td><p>—</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hold</span></code>, <code class="docutils literal notranslate"><span class="pre">settle_ms</span></code>: see below</p></td>
 <td><p>Moves to the calibrated open angle over the calibrated open time.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">close(hold=None,</span> <span class="pre">settle_ms=1000)</span></code></p></td>
-<td><p>—</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hold</span></code>, <code class="docutils literal notranslate"><span class="pre">settle_ms</span></code>: see below</p></td>
 <td><p>Moves to the calibrated close angle over the calibrated close time.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">move(angle,</span> <span class="pre">total_ms=0,</span> <span class="pre">hold=None,</span> <span class="pre">settle_ms=1000)</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: 0–180, <code class="docutils literal notranslate"><span class="pre">total_ms</span></code>: total travel time</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: 0–180, <code class="docutils literal notranslate"><span class="pre">total_ms</span></code>: total travel time in ms; <code class="docutils literal notranslate"><span class="pre">hold</span></code>, <code class="docutils literal notranslate"><span class="pre">settle_ms</span></code>: see below</p></td>
 <td><p>Moves to an arbitrary angle.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">disable()</span></code></p></td>
@@ -736,8 +740,11 @@ travel may need it raised.</p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">hold=None</span></code> (the default on all three movement methods) means <strong>use this motor’s
 saved value</strong>. Pass <code class="docutils literal notranslate"><span class="pre">hold=True</span></code> or <code class="docutils literal notranslate"><span class="pre">hold=False</span></code> to override it for that one call
-without changing the setting. <code class="docutils literal notranslate"><span class="pre">settle_ms</span></code> only has an effect when <code class="docutils literal notranslate"><span class="pre">hold</span></code> resolves to
-<code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+without changing the setting. <code class="docutils literal notranslate"><span class="pre">settle_ms</span></code> is how long to wait after the movement
+before cutting the power, and only has an effect when <code class="docutils literal notranslate"><span class="pre">hold</span></code> resolves to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p>The first movement of each motor after Village starts goes straight to its target,
+without spreading it over the travel time, because the real position of the servo is
+not known yet. Every later movement uses the travel time.</p>
 </section>
 <section id="these-calls-never-block">
 <h3>These calls never block</h3>
@@ -814,7 +821,7 @@ system stay valid.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -559,62 +563,58 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="touch-trigger-py">
 <h1>touch_trigger.py</h1>
-<p>Reacts to the touchscreen touches, for <a class="reference internal" href="bpod_touchscreen.html"><span class="std std-doc">bpod_touchscreen.py</span></a> and <a class="reference internal" href="raspberry_touchscreen.html"><span class="std std-doc">raspberry_touchscreen.py</span></a>.</p>
+<p>Reacts to the touchscreen touches, for <a class="reference internal" href="bpod_touchscreen.html"><span class="std std-doc">bpod_touchscreen.py</span></a> and <a class="reference internal" href="raspberry_stimulus_menu.html"><span class="std std-doc">raspberry_stimulus_menu.py</span></a>.</p>
 <p><a class="reference download internal" download="" href="../_downloads/0e8763cd03e2c5783b5d36b51273405d/touch_trigger.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">touch_trigger.py</span></code></a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.touch_trigger_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TouchTriggerBase</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="c1"># Direct function numbers behind each of the 6 clickable rectangles in</span>
-</span><span data-line="4"><span class="c1"># raspberry_touchscreen.py's menu, in the same order the rectangles are</span>
-</span><span data-line="5"><span class="c1"># laid out (rects[0] -&gt; FUNCTION_IDS[0], etc.). These are exactly</span>
-</span><span data-line="6"><span class="c1"># direct_functions.py's function8/10-14 -- the 6 video_functions.py draw</span>
-</span><span data-line="7"><span class="c1"># generators, skipping function9 (the plain rectangle, since that's what</span>
-</span><span data-line="8"><span class="c1"># the menu itself is drawn with).</span>
-</span><span data-line="9"><span class="n">FUNCTION_IDS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span>
-</span><span data-line="10">
-</span><span data-line="11">
-</span><span data-line="12"><span class="k">def</span><span class="w"> </span><span class="nf">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rect</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span data-line="13">    <span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">,</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span> <span class="o">=</span> <span class="n">rect</span>
-</span><span data-line="14">    <span class="k">return</span> <span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">rx</span> <span class="o">+</span> <span class="n">rw</span> <span class="ow">and</span> <span class="n">ry</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">ry</span> <span class="o">+</span> <span class="n">rh</span>
-</span><span data-line="15">
-</span><span data-line="16">
-</span><span data-line="17"><span class="k">class</span><span class="w"> </span><span class="nc">TouchTrigger</span><span class="p">(</span><span class="n">TouchTriggerBase</span><span class="p">):</span>
-</span><span data-line="18"><span class="w">    </span><span class="sd">"""Dispatches a touch to whichever of the two touchscreen tasks is</span>
-</span><span data-line="19"><span class="sd">    running, purely by which attributes it finds on self.task -- neither</span>
-</span><span data-line="20"><span class="sd">    task needs to be named explicitly here.</span>
-</span><span data-line="21">
-</span><span data-line="22"><span class="sd">    - raspberry_touchscreen.py sets self.task.rects (a list of 6 rectangle</span>
-</span><span data-line="23"><span class="sd">      bounds, no controller involved): a touch inside rects[i] runs</span>
-</span><span data-line="24"><span class="sd">      direct_functions.py's function FUNCTION_IDS[i] directly.</span>
-</span><span data-line="25"><span class="sd">    - bpod_touchscreen.py sets self.task.long_rect/short_rect (Bpod-driven):</span>
-</span><span data-line="26"><span class="sd">      a touch inside either one is reported to Bpod as a softcode, and the</span>
-</span><span data-line="27"><span class="sd">      running state machine decides what happens (see bpod_touchscreen.py).</span>
-</span><span data-line="28"><span class="sd">    """</span>
-</span><span data-line="29">
-</span><span data-line="30">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="31">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="32">
-</span><span data-line="33">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="34">        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span>
-</span><span data-line="35">
-</span><span data-line="36">        <span class="n">rects</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"rects"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="37">        <span class="k">if</span> <span class="n">rects</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="38">            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rect</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rects</span><span class="p">):</span>
-</span><span data-line="39">                <span class="k">if</span> <span class="n">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rect</span><span class="p">):</span>
-</span><span data-line="40">                    <span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="n">FUNCTION_IDS</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-</span><span data-line="41">                    <span class="n">task</span><span class="o">.</span><span class="n">touch_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-</span><span data-line="42">                    <span class="k">return</span>
-</span><span data-line="43">            <span class="k">return</span>
-</span><span data-line="44">
-</span><span data-line="45">        <span class="n">long_rect</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"long_rect"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="46">        <span class="n">short_rect</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"short_rect"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-</span><span data-line="47">        <span class="k">if</span> <span class="n">long_rect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">short_rect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="48">            <span class="k">if</span> <span class="n">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">long_rect</span><span class="p">):</span>
-</span><span data-line="49">                <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span data-line="50">            <span class="k">elif</span> <span class="n">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">short_rect</span><span class="p">):</span>
-</span><span data-line="51">                <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</span><span data-line="52">            <span class="k">return</span>
-</span><span data-line="53">
-</span><span data-line="54">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rect</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span data-line="5">    <span class="n">rx</span><span class="p">,</span> <span class="n">ry</span><span class="p">,</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span> <span class="o">=</span> <span class="n">rect</span>
+</span><span data-line="6">    <span class="k">return</span> <span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">rx</span> <span class="o">+</span> <span class="n">rw</span> <span class="ow">and</span> <span class="n">ry</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">ry</span> <span class="o">+</span> <span class="n">rh</span>
+</span><span data-line="7">
+</span><span data-line="8">
+</span><span data-line="9"><span class="k">class</span><span class="w"> </span><span class="nc">TouchTrigger</span><span class="p">(</span><span class="n">TouchTriggerBase</span><span class="p">):</span>
+</span><span data-line="10"><span class="w">    </span><span class="sd">"""Dispatches a touch to whichever of the two touchscreen tasks is</span>
+</span><span data-line="11"><span class="sd">    running, purely by which attributes it finds on self.task -- neither</span>
+</span><span data-line="12"><span class="sd">    task needs to be named explicitly here.</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="sd">    - raspberry_stimulus_menu.py sets self.task.rects (the rectangles of its</span>
+</span><span data-line="15"><span class="sd">      menu, no controller involved): a touch inside rects[i] is reported to</span>
+</span><span data-line="16"><span class="sd">      the task in self.task.touched_index, and the task shows the stimulus</span>
+</span><span data-line="17"><span class="sd">      of that rectangle (see raspberry_stimulus_menu.py).</span>
+</span><span data-line="18"><span class="sd">    - bpod_touchscreen.py sets self.task.long_rect/short_rect (Bpod-driven):</span>
+</span><span data-line="19"><span class="sd">      a touch inside either one is reported to Bpod as a softcode, and the</span>
+</span><span data-line="20"><span class="sd">      running state machine decides what happens (see bpod_touchscreen.py).</span>
+</span><span data-line="21"><span class="sd">    """</span>
+</span><span data-line="22">
+</span><span data-line="23">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="24">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="25">
+</span><span data-line="26">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="27">        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span>
+</span><span data-line="28">
+</span><span data-line="29">        <span class="n">rects</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"rects"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="30">        <span class="k">if</span> <span class="n">rects</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="31">            <span class="c1"># only the first touch of each trial counts</span>
+</span><span data-line="32">            <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">touch_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+</span><span data-line="33">                <span class="k">return</span>
+</span><span data-line="34">            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rect</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rects</span><span class="p">):</span>
+</span><span data-line="35">                <span class="k">if</span> <span class="n">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rect</span><span class="p">):</span>
+</span><span data-line="36">                    <span class="n">task</span><span class="o">.</span><span class="n">touched_index</span> <span class="o">=</span> <span class="n">i</span>
+</span><span data-line="37">                    <span class="n">task</span><span class="o">.</span><span class="n">touch_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+</span><span data-line="38">                    <span class="k">return</span>
+</span><span data-line="39">            <span class="k">return</span>
+</span><span data-line="40">
+</span><span data-line="41">        <span class="n">long_rect</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"long_rect"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="42">        <span class="n">short_rect</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"short_rect"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</span><span data-line="43">        <span class="k">if</span> <span class="n">long_rect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">short_rect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="44">            <span class="k">if</span> <span class="n">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">long_rect</span><span class="p">):</span>
+</span><span data-line="45">                <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span data-line="46">            <span class="k">elif</span> <span class="n">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">short_rect</span><span class="p">):</span>
+</span><span data-line="47">                <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span data-line="48">            <span class="k">return</span>
+</span><span data-line="49">
+</span><span data-line="50">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </section>
@@ -656,7 +656,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

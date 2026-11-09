@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -582,6 +586,13 @@ speaker/sound pair (at least two points are required) to build a gain → dB cur
 a new <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code> and the full history is kept, but tasks and the testing
 panel always use the most recent one per speaker/sound pair. <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">CALIBRATION</span></code>
 discards the points collected so far (after confirmation) without saving them.</p>
+<div class="warning admonition">
+<p class="admonition-title">The curve must always go up</p>
+<p>A higher gain must always give a higher level in dB. If a point breaks that trend (a
+noisy measurement that gives fewer dB than a lower gain), the curve makes a bump
+there, and a level in that range can be read on the wrong side of it. Check the plot
+before saving, and remove such a point with its <code class="docutils literal notranslate"><span class="pre">-</span></code> button.</p>
+</div>
 </section>
 <section id="testing">
 <h2>Testing</h2>
@@ -612,6 +623,9 @@ calibration curve. <code class="docutils literal notranslate"><span class="pre">
 calibration. Otherwise, if the pair hasn’t been calibrated yet, or <code class="docutils literal notranslate"><span class="pre">dB</span></code> falls outside
 the calibrated range, it raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> explaining the problem so it’s easy to
 tell whether the sound needs calibrating or the requested dB needs adjusting.</p>
+<p>The example tasks of the demo project need two of them: <code class="docutils literal notranslate"><span class="pre">whitenoise</span></code> for both speakers
+at 70 dB, and <code class="docutils literal notranslate"><span class="pre">tone_600</span></code> for speaker 0 (left) at 70 dB, the penalty tone of the last
+two training stages (see <a class="reference internal" href="../examples/tasks_bpod.html"><span class="std std-doc">Task Examples (Bpod)</span></a>).</p>
 <p>Data is stored in <code class="docutils literal notranslate"><span class="pre">sound_calibration.csv</span></code> (columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">speaker</span></code>, <code class="docutils literal notranslate"><span class="pre">sound_name</span></code>,
 <code class="docutils literal notranslate"><span class="pre">gain</span></code>, <code class="docutils literal notranslate"><span class="pre">dB_obtained</span></code>, <code class="docutils literal notranslate"><span class="pre">calibration_number</span></code>, <code class="docutils literal notranslate"><span class="pre">dB_expected</span></code>, <code class="docutils literal notranslate"><span class="pre">error(%)</span></code>).</p>
 <hr class="docutils" />
@@ -656,7 +670,7 @@ tell whether the sound needs calibrating or the requested dB needs adjusting.</p
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

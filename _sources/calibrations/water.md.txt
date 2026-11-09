@@ -47,6 +47,14 @@ ms). You can always delete points later that turn out to be far outside the rang
 interest for your tasks.
 ```
 
+```{admonition} The curve must always go up
+:class: warning
+A longer opening time must always deliver more water. If a point breaks that trend (a
+noisy measurement that gives less water than a shorter time), the curve makes a bump
+there, and a volume in that range can be read on the wrong side of it. Check the plot
+before saving, and remove such a point with its `-` button.
+```
+
 ### Testing
 
 Check whether the latest saved calibration for a port is still accurate. Enter a

@@ -40,7 +40,10 @@ default.
 
 #### Settings
 
-Configure the LED strip under `SETTINGS` → `LED STRIP SETTINGS`.
+First enable the strip with `LED_STRIP_BOX` (`SETTINGS` → `BOX SETTINGS`): while it is
+`OFF`, the strip is not used at all (see the note in
+[Using It in Tasks](#using-it-in-tasks)). Then configure it under `SETTINGS` →
+`LED STRIP SETTINGS`. Changes are applied when Village is restarted.
 
 ##### `SPI_DEVICE`
 
@@ -64,8 +67,8 @@ or communication errors, try lowering this value (e.g. `400`).
 
 ##### `PIXEL_TYPE`
 
-Color channel order of the strip's pixels. This setting must match the hardware of
-your specific LED strip:
+Color channel order of the strip's pixels. Default: `RGB`. This setting must match
+the hardware of your specific LED strip:
 
 | Value | Description |
 |-------|-------------|
@@ -96,26 +99,38 @@ led_strip.set_led_color(0, 255, 0, 0)
 led_strip.set_led_color(1, 0, 255, 0)
 
 # Apply the changes — nothing is visible until update_strip() is called
-led_strip.update_strip()
+led_strip.update_strip(sleep_duration=None)
 
 # Turn off all LEDs
 led_strip.clear_strip()
-led_strip.update_strip()
+led_strip.update_strip(sleep_duration=None)
 ```
 
 #### Method reference
 
 | Method | Arguments | Description |
 |--------|-----------|-------------|
-| `set_led_color(index, red, green, blue)` | `index`: int, colors: 0–255 | Stages a color change for one LED. |
-| `update_strip()` | — | Sends all staged changes to the strip. |
-| `clear_strip()` | — | Stages all LEDs off. Call `update_strip()` afterwards. |
+| `set_led_color(index, red, green, blue, white=0)` | `index`: int, colors: 0–255; `white` only for `RGBW`/`GRBW` strips | Stages a color change for one LED. |
+| `fill_strip(red, green, blue, white=0)` | colors: 0–255 | Stages the same color for every LED. |
+| `clear_strip()` | — | Stages all LEDs off. |
+| `update_strip(sleep_duration=0.1)` | `sleep_duration`: seconds, or `None` | Sends all staged changes to the strip, then waits `sleep_duration` seconds. |
+
+```{admonition} update_strip() waits 0.1 s by default
+:class: warning
+After sending the colors, `update_strip()` waits `sleep_duration` seconds, 0.1 by
+default (a value of the Pi5Neo library). The strip does not need that wait, and it
+blocks whatever called it: a trigger or a task would lose 100 ms on every update.
+Pass `sleep_duration=None`, as in the example above, to return as soon as the colors
+are sent (a few ms, see
+[Timing](../system_operation/timing.md)).
+```
 
 ```{admonition} Note
 :class: note
-If the LED strip cannot be initialised (SPI not enabled, wrong device path, etc.)
-the system falls back silently to a `NullLEDStrip` instance. Calls to its methods
-have no effect, so tasks will still run without errors.
+If `LED_STRIP_BOX` is `OFF`, or the strip cannot be initialised (SPI not enabled, wrong
+device path, etc.), the system uses a `NullLEDStrip` instance instead: calls to its
+methods have no effect, so tasks still run without errors, but nothing lights up.
+When the initialisation fails, an error is logged at startup.
 ```
 
 #### LED matrices

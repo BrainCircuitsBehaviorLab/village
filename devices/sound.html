@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -564,7 +568,8 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="sound">
 <h1>Sound</h1>
-<p>The Training Village uses the <strong>Raspberry Pi DAC Pro</strong> HAT for audio output. Connect it
+<p>The Training Village uses the <strong>Raspberry Pi DAC Pro</strong> HAT (the Audio HAT) for audio
+output. Connect it
 directly on top of the Raspberry Pi or on top of the Main HAT if one is installed. Audio
 playback from within tasks is handled by the Python <code class="docutils literal notranslate"><span class="pre">pyalsaaudio</span></code> library, which talks to
 ALSA directly, without going through PortAudio.</p>
@@ -580,8 +585,8 @@ to <strong>Stereo Output</strong>.</p></li>
 <li><p>Once confirmed, return to <strong>Device Profiles</strong>, select <strong>RPi DAC Pro</strong> again, and set
 the profile to <strong>Off</strong>. The operating system will no longer use the device, leaving it
 free for <code class="docutils literal notranslate"><span class="pre">pyalsaaudio</span></code> to access directly.</p></li>
-<li><p>Launch the Training Village and select your soundcard under
-<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>.</p></li>
+<li><p>Launch the Training Village and select your soundcard in <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code>
+(<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>).</p></li>
 </ol>
 <div class="warning admonition">
 <p class="admonition-title">Why the DAC must be released from the system before use</p>
@@ -610,14 +615,22 @@ be called again to change the sound. Calling <code class="docutils literal notra
 loaded does nothing and reports an error. <code class="docutils literal notranslate"><span class="pre">stop</span></code> is optional, only needed to cut a
 sound short before it finishes on its own.</p>
 <ol class="arabic simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">load</span></code></strong> — decodes the audio and stages it in the buffer. This can be a slow operation (hundreds of ms depending on audio length), so it is best called during the inter-trial interval. Only repeat it to change the sound.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of the loaded sound from the beginning. This is fast — measured latencies are below 5 ms — with one exception (see below). Calling <code class="docutils literal notranslate"><span class="pre">play</span></code> while that same sound is still playing is ignored.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">load</span></code></strong> — prepares the sound for the sound card (it converts the arrays to the
+card’s format and applies the ramp, see below) and leaves the card ready, so that
+<code class="docutils literal notranslate"><span class="pre">play</span></code> starts at once. Its time grows with the length of the sound, and if a sound
+is playing it cuts it first, which adds some tens of ms. So call it before the
+sound is needed: in the inter-trial interval, or in <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> before the
+trial starts. Only repeat it to change the sound.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">play</span></code></strong> — starts playback of the loaded sound from the beginning. This is fast — measured latencies are below 5 ms — with one exception (see below). Calling <code class="docutils literal notranslate"><span class="pre">play</span></code> while a sound is still playing is ignored.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">stop</span></code></strong> <em>(optional)</em> — interrupts playback mid-sound. Non-blocking (returns immediately; the sound finishes stopping in the background).</p></li>
 </ol>
 <p>To replay the same sound, just call <code class="docutils literal notranslate"><span class="pre">play</span></code> again — no reload needed. The one case
 where <code class="docutils literal notranslate"><span class="pre">play</span></code> is <strong>not</strong> instant is calling it right after a <code class="docutils literal notranslate"><span class="pre">stop</span></code> that hasn’t
 finished yet: <code class="docutils literal notranslate"><span class="pre">play</span></code> then waits for that stop to complete and plays immediately
 after.</p>
+<p>You don’t need to register when the sound plays: during a trial, every time a sound
+starts playing the system adds a <code class="docutils literal notranslate"><span class="pre">sound</span></code> event to the trial data, with the moment
+it started (see <a class="reference internal" href="../protocols/tasks_bpod.html#trial-data"><span class="std std-ref">Trial data</span></a>).</p>
 <div class="note admonition">
 <p class="admonition-title">Fade-in / fade-out ramp</p>
 <p>If the <code class="docutils literal notranslate"><span class="pre">SOUND_RAMP_MS</span></code> setting (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>) is set to a value other
@@ -646,8 +659,8 @@ disables the ramp entirely.</p>
 </span><span data-line="16"><span class="n">duration</span>   <span class="o">=</span> <span class="mf">0.5</span>             <span class="c1"># seconds</span>
 </span><span data-line="17"><span class="n">frequency</span>  <span class="o">=</span> <span class="mi">5000</span>            <span class="c1"># Hz</span>
 </span><span data-line="18">
-</span><span data-line="19"><span class="c1"># volume calibrated so the tone measures 70 dB from speaker 1, using the</span>
-</span><span data-line="20"><span class="c1"># calibration of tone_5000 in sound_functions.py (the same 5000 Hz tone)</span>
+</span><span data-line="19"><span class="c1"># volume calibrated so the tone measures 70 dB from the right speaker (speaker 1),</span>
+</span><span data-line="20"><span class="c1"># using the calibration of tone_5000 in sound_functions.py (the same 5000 Hz tone)</span>
 </span><span data-line="21"><span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
 </span><span data-line="22">    <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mf">70.0</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"tone_5000"</span>
 </span><span data-line="23"><span class="p">)</span>
@@ -655,10 +668,14 @@ disables the ramp entirely.</p>
 </span><span data-line="25"><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">*</span> <span class="n">duration</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </span><span data-line="26"><span class="n">tone</span> <span class="o">=</span> <span class="p">(</span><span class="n">gain</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </span><span data-line="27">
-</span><span data-line="28"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tone</span><span class="p">,</span> <span class="n">tone</span><span class="p">)</span>   <span class="c1"># identical left and right channels</span>
+</span><span data-line="28"><span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">tone</span><span class="p">)</span>   <span class="c1"># right speaker only, the left one stays silent</span>
 </span><span data-line="29"><span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </span></pre></div>
 </div>
+<p>In the sound calibration and in <code class="docutils literal notranslate"><span class="pre">get_sound_gain</span></code>, speaker <code class="docutils literal notranslate"><span class="pre">0</span></code> is the left speaker
+and <code class="docutils literal notranslate"><span class="pre">1</span></code> the right one. Each one is calibrated separately: to play a sound through
+both speakers at a given level, get the gain of each one and load each channel with
+its own gain.</p>
 <p><code class="docutils literal notranslate"><span class="pre">get_sound_from_wav</span></code> resamples the audio if the WAV’s sample rate does not match
 <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code>, and returns both channels as <code class="docutils literal notranslate"><span class="pre">float32</span></code> arrays in the range <code class="docutils literal notranslate"><span class="pre">[-1.0,</span> <span class="pre">1.0]</span></code>,
 scaled by <code class="docutils literal notranslate"><span class="pre">gain</span></code>.</p>
@@ -782,7 +799,7 @@ its name.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -15,6 +15,11 @@ Tasks whose trials are run by a Bpod state machine (`BEHAVIOR_CONTROLLER` set to
 | [bpod_5_introduce_penalty.py](bpod_5_introduce_penalty.md) | Like bpod_4_center_initiated, but a wrong-side poke gives a penalty sound and a time-out. |
 | [bpod_6_delay.py](bpod_6_delay.md) | Poke the side that lights up first; the other side lights up after a random delay, which adapts to the animal's performance. |
 
+Calibrations they need (see [Water Calibration](../calibrations/water.md) and [Sound Calibration](../calibrations/sound.md)):
+
+- **Stages 2 to 6:** water, for ports 1 and 3.
+- **Stages 5 and 6:** also the `tone_600` sound, for speaker 0 (left) at 70 dB: the penalty tone.
+
 ### Other tasks, demos and tools
 
 Not part of the training progression: they are run manually.
@@ -26,3 +31,8 @@ Not part of the training progression: they are run manually.
 | [bpod_global_timer.py](bpod_global_timer.md) | Demo, not a training task: a Bpod global timer bounding the whole trial. |
 | [bpod_outputs_and_events.py](bpod_outputs_and_events.md) | Demo, not a training task: the Bpod primitives step by step — LEDs, valves, softcodes, TTL outputs and inputs. |
 | [bpod_purge_ports.py](bpod_purge_ports.md) | Maintenance tool, not a training task: each valve stays open while its port is poked, to flush the water lines. |
+
+Calibrations they need:
+
+- **bpod_area2_sound:** water, for port 1, and the `whitenoise` sound, for both speakers at 70 dB.
+- **bpod_touchscreen:** water, for port 2.

@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -650,9 +654,12 @@ upcoming session, including <code class="docutils literal notranslate"><span cla
 <code class="docutils literal notranslate"><span class="pre">next_session_time</span></code> field indicates the earliest time at which the subject is eligible
 for another session; it is calculated by adding <code class="docutils literal notranslate"><span class="pre">refractory_period</span></code> to the end time of
 the previous session.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code></strong>: Summary table of all completed sessions. A new row is
-appended each time a session ends. Columns: <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">weight</span></code>,
-<code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">trials</span></code>, <code class="docutils literal notranslate"><span class="pre">water</span></code>, <code class="docutils literal notranslate"><span class="pre">settings</span></code>.</p>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code></strong>: Summary table of all the sessions with a subject. A new
+row is appended each time a session ends, also when it has no completed trials (with
+<code class="docutils literal notranslate"><span class="pre">trials</span></code> and <code class="docutils literal notranslate"><span class="pre">water</span></code> at 0 and empty <code class="docutils literal notranslate"><span class="pre">settings</span></code>) or an error happened while saving it.
+Columns:
+<code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">weight</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">trials</span></code>, <code class="docutils literal notranslate"><span class="pre">water</span></code>,
+<code class="docutils literal notranslate"><span class="pre">settings</span></code>.</p>
 <div class="warning admonition">
 <p class="admonition-title">Note</p>
 <p>For the <code class="docutils literal notranslate"><span class="pre">water</span></code> column to be populated, water intake must be explicitly recorded within
@@ -691,7 +698,9 @@ server or external drive, regardless of whether it succeeded or failed.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">data_removal_logs/</span></code></strong>: Log of the deletion process for videos that have already been
 synchronized to a remote server or external drive.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">old_events/</span></code></strong>: To prevent <code class="docutils literal notranslate"><span class="pre">events.csv</span></code> from growing too large, a new file is
-created once a line threshold is exceeded. Older event records are archived here.</p></li>
+created once a line threshold is exceeded (50,000 rows). Older event records are
+archived here. The same applies to the other tables of this folder, such as
+<code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code>, if they ever reach that size.</p></li>
 </ul>
 </section>
 </section>
@@ -702,7 +711,9 @@ created once a line threshold is exceeded. Older event records are archived here
 <li><p><strong>Storage path:</strong> <code class="docutils literal notranslate"><span class="pre">data/sessions/{subject}/</span></code></p></li>
 <li><p><strong>Filename format:</strong> <code class="docutils literal notranslate"><span class="pre">{subject}_{task}_{timestamp}</span></code></p></li>
 </ul>
-<p>Three files are generated for every completed behavioral session:</p>
+<p>Three files are generated for every session with a subject and at least one completed
+trial (a session with no completed trials is not saved, and a task launched manually
+without a subject saves nothing):</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">data/sessions/{subject}/
 </span><span data-line="2">├── {filename}_RAW.csv
 </span><span data-line="3">├── {filename}.csv
@@ -741,24 +752,29 @@ created once a line threshold is exceeded. Older event records are archived here
 </div>
 <p><strong>Message type standards (<code class="docutils literal notranslate"><span class="pre">MSG</span></code>):</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">_Transition_to_{stateName}</span></code>: State machine transition flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_START</span></code> / <code class="docutils literal notranslate"><span class="pre">STATE_{stateName}_END</span></code>: Structural boundaries of a
-behavioral state.</p></li>
-<li><p><em>Hardware event name</em>: Digital input/output line transitions (e.g., photo-gate beams,
-ports).</p></li>
-<li><p><em>Custom variable tag</em>: Any performance variable explicitly captured with
-<code class="docutils literal notranslate"><span class="pre">register_value()</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">stimulus_side</span></code>, <code class="docutils literal notranslate"><span class="pre">correct_choice</span></code>, <code class="docutils literal notranslate"><span class="pre">rewarded</span></code>). The tag name
-is written to <code class="docutils literal notranslate"><span class="pre">MSG</span></code> and its value to <code class="docutils literal notranslate"><span class="pre">VALUE</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> / <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code>: Absolute trial boundary markers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code> / <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code>: The start and the end of the trial (in <code class="docutils literal notranslate"><span class="pre">START</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_Transition_to_{stateName}</span></code>: The moment a state is entered (in <code class="docutils literal notranslate"><span class="pre">START</span></code>).</p></li>
+<li><p><em>Event name</em> (<code class="docutils literal notranslate"><span class="pre">Port1In</span></code>, <code class="docutils literal notranslate"><span class="pre">Tup</span></code>, <code class="docutils literal notranslate"><span class="pre">sound</span></code>…): An event, at the time in <code class="docutils literal notranslate"><span class="pre">START</span></code>.</p></li>
+<li><p><em>Custom variable tag</em>: Any value registered with <code class="docutils literal notranslate"><span class="pre">register_value()</span></code> (e.g.,
+<code class="docutils literal notranslate"><span class="pre">outcome</span></code>, <code class="docutils literal notranslate"><span class="pre">water</span></code>). The tag name is written to <code class="docutils literal notranslate"><span class="pre">MSG</span></code> and its value to <code class="docutils literal notranslate"><span class="pre">VALUE</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRIAL</span></code>: Written when the trial ends, with its start in <code class="docutils literal notranslate"><span class="pre">START</span></code> and its end in
+<code class="docutils literal notranslate"><span class="pre">END</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">STATE_{stateName}</span></code>: Written when the trial ends, one row per visit to each state,
+with its start in <code class="docutils literal notranslate"><span class="pre">START</span></code> and its end in <code class="docutils literal notranslate"><span class="pre">END</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">system_name</span></code>: Which session and trial it is,
+in <code class="docutils literal notranslate"><span class="pre">VALUE</span></code>, written when the trial is complete.</p></li>
 </ul>
 </section>
 <section id="processed-session-filename-csv">
 <h3>2. Processed Session (<code class="docutils literal notranslate"><span class="pre">{filename}.csv</span></code>)</h3>
 <p>A parsed, trial-by-trial overview: instead of one row per event, this file contains one
 row per trial. Each row is built when its trial finishes (after <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>), and the
-file is saved when the session ends. It begins
-with the following fixed columns: <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>,
-<code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>.</p>
+file is saved when the session ends. Its columns are the keys of the trial data (see
+<a class="reference internal" href="../protocols/tasks_bpod.html#trial-data"><span class="std std-ref">Trial data</span></a>): <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>,
+<code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">TRIAL_START</span></code>, <code class="docutils literal notranslate"><span class="pre">TRIAL_END</span></code>, one column for each state and event,
+<code class="docutils literal notranslate"><span class="pre">ordered_list_of_events</span></code>, the values registered with <code class="docutils literal notranslate"><span class="pre">register_value()</span></code>, and, at the
+end, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>. The cells of the state and event columns are lists of times, saved
+as text (<code class="docutils literal notranslate"><span class="pre">&quot;[1793961057.5,</span> <span class="pre">1793961059.2]&quot;</span></code>).</p>
 <div class="note admonition">
 <p class="admonition-title">run_mode</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> field is set to <code class="docutils literal notranslate"><span class="pre">Manual</span></code> if the session was launched manually from the
@@ -784,7 +800,7 @@ as this makes them directly accessible in the <code class="docutils literal notr
 <p>In addition to the per-session files, a persistent history file is maintained in each
 subject’s directory:</p>
 <ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">{subject}.csv</span></code></strong>: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. This aggregate dataset is essential for adaptive automated training (<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved &gt;80% accuracy over its last three sessions before advancing to the next training stage.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">{subject}.csv</span></code></strong>: Compiles every historical session completed by that animal. New session rows are appended each time a session ends. It has the same columns as the processed session files, plus a <code class="docutils literal notranslate"><span class="pre">session</span></code> column that numbers the sessions of the subject, and it begins with <code class="docutils literal notranslate"><span class="pre">session</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">trial</span></code>, <code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">system_name</span></code>, <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>. This aggregate dataset is essential for adaptive automated training (<code class="docutils literal notranslate"><span class="pre">training_protocol.py</span></code>), allowing the system to evaluate progression milestones — for example, verifying whether an animal achieved &gt;80% accuracy over its last three sessions before advancing to the next training stage.</p></li>
 </ul>
 </section>
 </section>
@@ -980,7 +996,7 @@ writes them back to the <code class="docutils literal notranslate"><span class="
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

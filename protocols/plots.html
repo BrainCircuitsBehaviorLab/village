@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -576,11 +580,11 @@ Each one is triggered at a different point in the data lifecycle:</p>
 <td><p>Current session trials so far</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code></p></td>
-<td><p>With <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> on a session of <code class="docutils literal notranslate"><span class="pre">DATA</span></code> → <code class="docutils literal notranslate"><span class="pre">SESSIONS_SUMMARY</span></code></p></td>
+<td><p>With <code class="docutils literal notranslate"><span class="pre">PLOT</span> <span class="pre">SESSION</span></code> on a session of <code class="docutils literal notranslate"><span class="pre">DATA</span></code> → <code class="docutils literal notranslate"><span class="pre">SESSIONS_SUMMARY</span></code></p></td>
 <td><p>Full session CSV</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SubjectPlotBase</span></code></p></td>
-<td><p>With <code class="docutils literal notranslate"><span class="pre">PLOT</span></code> on a subject of the <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> screen</p></td>
+<td><p>With <code class="docutils literal notranslate"><span class="pre">PLOT</span> <span class="pre">SUBJECT</span></code> on a subject of the <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> screen</p></td>
 <td><p>All sessions for that subject</p></td>
 </tr>
 </tbody>
@@ -590,6 +594,13 @@ Each one is triggered at a different point in the data lifecycle:</p>
 the base class (e.g. <code class="docutils literal notranslate"><span class="pre">OnlinePlot</span></code> in <code class="docutils literal notranslate"><span class="pre">online_plot.py</span></code>; the file and class names are up to
 you). The system detects it automatically at startup and uses it instead of the
 default. Only one subclass of each base class is used per project.</p>
+<p>The example project already includes the three of them:
+<a class="reference internal" href="../examples/online_plot.html"><span class="std std-doc">online_plot.py</span></a>,
+<a class="reference internal" href="../examples/session_plot.html"><span class="std std-doc">session_plot.py</span></a> and
+<a class="reference internal" href="../examples/subject_plot.html"><span class="std std-doc">subject_plot.py</span></a>. They work with every task of the
+example project, without naming any: each panel is drawn only if the task registered
+the column it needs (<code class="docutils literal notranslate"><span class="pre">outcome</span></code>, <code class="docutils literal notranslate"><span class="pre">water</span></code>, <code class="docutils literal notranslate"><span class="pre">response_side</span></code>, <code class="docutils literal notranslate"><span class="pre">p</span></code>…), and shows “no
+outcome data” or “not applicable” otherwise.</p>
 <hr class="docutils" />
 <section id="onlineplotbase">
 <h2>OnlinePlotBase</h2>
@@ -632,93 +643,113 @@ Always clear the axes at the start of <code class="docutils literal notranslate"
 <li><p>One column per state (<code class="docutils literal notranslate"><span class="pre">STATE_&lt;name&gt;_START</span></code> / <code class="docutils literal notranslate"><span class="pre">STATE_&lt;name&gt;_END</span></code>) and per event
 (e.g. <code class="docutils literal notranslate"><span class="pre">Port1In</span></code>, <code class="docutils literal notranslate"><span class="pre">Port1Out</span></code>, <code class="docutils literal notranslate"><span class="pre">Tup</span></code>, …): the ones Bpod records automatically, or the
 ones the task registers itself without Bpod. Each cell is a <strong>list</strong> of the
-timestamps of that trial (see <code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> in <a class="reference internal" href="tasks_bpod.html"><span class="std std-doc">Tasks (Bpod)</span></a>).</p></li>
+timestamps of that trial (see the trial data in <a class="reference internal" href="tasks_bpod.html#trial-data"><span class="std std-ref">Tasks (Bpod)</span></a>).</p></li>
 </ul>
-<p>The saved session file (and so the <code class="docutils literal notranslate"><span class="pre">df</span></code> of <code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code>) also has <code class="docutils literal notranslate"><span class="pre">run_mode</span></code>
-(<code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>) and <code class="docutils literal notranslate"><span class="pre">session</span></code> (the session index within the subject’s
-history), added when the session is saved; the online <code class="docutils literal notranslate"><span class="pre">df</span></code> doesn’t.</p>
 <p><em>Custom columns</em></p>
 <p>Any value registered with <code class="docutils literal notranslate"><span class="pre">self.register_value(name,</span> <span class="pre">value)</span></code> inside <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>
-appears as an additional column.</p>
-<p><strong>Example</strong> — plot accuracy and reaction time trial by trial:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.online_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnlinePlotBase</span>
+appears as an additional column, e.g. <code class="docutils literal notranslate"><span class="pre">outcome</span></code> and <code class="docutils literal notranslate"><span class="pre">water</span></code> in all the tasks of the
+example project.</p>
+<p><strong>Example</strong> — plot accuracy and reaction time trial by trial, for a task that
+registers <code class="docutils literal notranslate"><span class="pre">outcome</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;correct&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;incorrect&quot;</span></code>…) and <code class="docutils literal notranslate"><span class="pre">response_time</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="k">class</span><span class="w"> </span><span class="nc">OnlinePlot</span><span class="p">(</span><span class="n">OnlinePlotBase</span><span class="p">):</span>
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.online_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnlinePlotBase</span>
 </span><span data-line="4">
-</span><span data-line="5">    <span class="k">def</span><span class="w"> </span><span class="nf">create_figure_and_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="6">        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-</span><span data-line="7">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
-</span><span data-line="8">            <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span>
-</span><span data-line="9">        <span class="p">)</span>
-</span><span data-line="10">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</span><span data-line="11">
-</span><span data-line="12">    <span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="13">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="14">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="15">
-</span><span data-line="16">        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span> <span class="ow">or</span> <span class="s2">"correct"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="17">            <span class="k">return</span>
-</span><span data-line="18">
-</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"trial"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"correct"</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"steelblue"</span><span class="p">)</span>
-</span><span data-line="20">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Accuracy (10-trial rolling mean)"</span><span class="p">)</span>
-</span><span data-line="21">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="22">
-</span><span data-line="23">        <span class="k">if</span> <span class="s2">"response_time"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="24">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"trial"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"response_time"</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"salmon"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</span><span data-line="25">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Response time (s)"</span><span class="p">)</span>
-</span><span data-line="26">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">OnlinePlot</span><span class="p">(</span><span class="n">OnlinePlotBase</span><span class="p">):</span>
+</span><span data-line="7">
+</span><span data-line="8">    <span class="k">def</span><span class="w"> </span><span class="nf">create_figure_and_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="9">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+</span><span data-line="10">            <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span>
+</span><span data-line="11">        <span class="p">)</span>
+</span><span data-line="12">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span data-line="13">
+</span><span data-line="14">    <span class="k">def</span><span class="w"> </span><span class="nf">update_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="15">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="16">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="17">
+</span><span data-line="18">        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span> <span class="ow">or</span> <span class="s2">"outcome"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="19">            <span class="k">return</span>
+</span><span data-line="20">
+</span><span data-line="21">        <span class="n">correct</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</span><span data-line="22">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"trial"</span><span class="p">],</span> <span class="n">correct</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</span><span data-line="23">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Accuracy (10-trial rolling mean)"</span><span class="p">)</span>
+</span><span data-line="24">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="25">
+</span><span data-line="26">        <span class="k">if</span> <span class="s2">"response_time"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="27">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"trial"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"response_time"</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"salmon"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</span><span data-line="28">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Response time (s)"</span><span class="p">)</span>
+</span><span data-line="29">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_rt</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
 </span></pre></div>
 </div>
 </section>
 <hr class="docutils" />
 <section id="sessionplotbase">
 <h2>SessionPlotBase</h2>
-<p><code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code> produces a static figure shown in the GUI when the user clicks on
-a finished session in the Sessions table.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code> produces a static figure shown in the GUI when the user selects a
+finished session in <code class="docutils literal notranslate"><span class="pre">DATA</span></code> → <code class="docutils literal notranslate"><span class="pre">SESSIONS_SUMMARY</span></code> and clicks <code class="docutils literal notranslate"><span class="pre">PLOT</span> <span class="pre">SESSION</span></code>.</p>
 <p>Override <strong><code class="docutils literal notranslate"><span class="pre">create_plot(df,</span> <span class="pre">weight,</span> <span class="pre">width,</span> <span class="pre">height)</span></code></strong> and return a <code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code>.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> — the full session CSV as a DataFrame. Same columns as <code class="docutils literal notranslate"><span class="pre">OnlinePlotBase.df</span></code>
-(see above) plus <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> and <code class="docutils literal notranslate"><span class="pre">session</span></code>, with all trials already present.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> — the session CSV as a DataFrame, with all its trials: the same columns as the
+<code class="docutils literal notranslate"><span class="pre">df</span></code> of <code class="docutils literal notranslate"><span class="pre">OnlinePlotBase</span></code> (see above), plus <code class="docutils literal notranslate"><span class="pre">run_mode</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">weight</span></code> — body weight of the subject at the time of the session (float, grams).
 <code class="docutils literal notranslate"><span class="pre">0.0</span></code> if not recorded.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">height</span></code> — figure size in inches requested by the GUI.</p></li>
 </ul>
-<p><strong>Example</strong> — plot trial outcome over time with body weight in the title:</p>
+<div class="warning admonition">
+<p class="admonition-title">The state and event columns are text in the saved files</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">df</span></code> of <code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code> and <code class="docutils literal notranslate"><span class="pre">SubjectPlotBase</span></code> is read from the saved CSV files,
+where the lists of the state and event columns are saved as text: a cell of <code class="docutils literal notranslate"><span class="pre">Port1In</span></code>
+is the string <code class="docutils literal notranslate"><span class="pre">&quot;[1793961057.5,</span> <span class="pre">1793961059.2]&quot;</span></code>, not a list. Convert it before using
+it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">pokes</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"Port1In"</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">)</span>  <span class="c1"># now lists of floats</span>
+</span></pre></div>
+</div>
+<p>The columns registered with <code class="docutils literal notranslate"><span class="pre">register_value</span></code> (numbers, strings) are read normally.</p>
+</div>
+<p><strong>Example</strong> — plot the accuracy over the session with body weight in the title:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.session_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionPlotBase</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">SessionPlot</span><span class="p">(</span><span class="n">SessionPlotBase</span><span class="p">):</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.session_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionPlotBase</span>
+</span><span data-line="5">
 </span><span data-line="6">
-</span><span data-line="7">    <span class="k">def</span><span class="w"> </span><span class="nf">create_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-</span><span data-line="8">        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
-</span><span data-line="9">
-</span><span data-line="10">        <span class="k">if</span> <span class="s2">"correct"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="11">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"trial"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"correct"</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">"steelblue"</span><span class="p">)</span>
-</span><span data-line="12">            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Accuracy (10-trial rolling mean)"</span><span class="p">)</span>
-</span><span data-line="13">            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="14">
-</span><span data-line="15">        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Session — </span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="s1">'task'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-</span><span data-line="16">        <span class="k">if</span> <span class="n">weight</span><span class="p">:</span>
-</span><span data-line="17">            <span class="n">title</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"  |  weight: </span><span class="si">{</span><span class="n">weight</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> g"</span>
-</span><span data-line="18">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-</span><span data-line="19">        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
-</span><span data-line="20">        <span class="k">return</span> <span class="n">fig</span>
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">SessionPlot</span><span class="p">(</span><span class="n">SessionPlotBase</span><span class="p">):</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="k">def</span><span class="w"> </span><span class="nf">create_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+</span><span data-line="10">        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+</span><span data-line="11">
+</span><span data-line="12">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="13">            <span class="n">correct</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</span><span data-line="14">            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"trial"</span><span class="p">],</span> <span class="n">correct</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</span><span data-line="15">            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Accuracy (10-trial rolling mean)"</span><span class="p">)</span>
+</span><span data-line="16">            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="17">
+</span><span data-line="18">        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Session — </span><span class="si">{</span><span class="n">df</span><span class="p">[</span><span class="s1">'task'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+</span><span data-line="19">        <span class="k">if</span> <span class="n">weight</span><span class="p">:</span>
+</span><span data-line="20">            <span class="n">title</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"  |  weight: </span><span class="si">{</span><span class="n">weight</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> g"</span>
+</span><span data-line="21">        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+</span><span data-line="22">        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="23">        <span class="k">return</span> <span class="n">fig</span>
 </span></pre></div>
 </div>
 </section>
 <hr class="docutils" />
 <section id="subjectplotbase">
 <h2>SubjectPlotBase</h2>
-<p><code class="docutils literal notranslate"><span class="pre">SubjectPlotBase</span></code> produces a static figure shown when the user clicks on a subject
-in the Subjects table. It has access to the subject’s full history across all sessions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SubjectPlotBase</span></code> produces a static figure shown when the user selects a subject in
+the <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code> screen and clicks <code class="docutils literal notranslate"><span class="pre">PLOT</span> <span class="pre">SUBJECT</span></code>. It has access to the subject’s full
+history across all sessions.</p>
 <p>Override <strong><code class="docutils literal notranslate"><span class="pre">create_plot(df,</span> <span class="pre">summary_df,</span> <span class="pre">width,</span> <span class="pre">height)</span></code></strong> and return a <code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code>.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> — all trials for this subject, concatenated across sessions. Same trial-level
-columns as above, plus a <code class="docutils literal notranslate"><span class="pre">session</span></code> column (integer, 1-based) that identifies which
-session each trial belongs to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> — all trials for this subject, concatenated across sessions, read from the
+subject’s CSV file. Same columns as the <code class="docutils literal notranslate"><span class="pre">df</span></code> of <code class="docutils literal notranslate"><span class="pre">SessionPlotBase</span></code> (the state and
+event columns are text too), plus a <code class="docutils literal notranslate"><span class="pre">session</span></code> column (integer, 1-based) that
+identifies which session each trial belongs to.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">summary_df</span></code> — one row per session for this subject, from <code class="docutils literal notranslate"><span class="pre">sessions_summary.csv</span></code>.
 Columns:</p>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -765,32 +796,36 @@ Columns:</p>
 <p><strong>Example</strong> — accuracy per session and weight evolution:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.subject_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubjectPlotBase</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">SubjectPlot</span><span class="p">(</span><span class="n">SubjectPlotBase</span><span class="p">):</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.subject_plot_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubjectPlotBase</span>
+</span><span data-line="5">
 </span><span data-line="6">
-</span><span data-line="7">    <span class="k">def</span><span class="w"> </span><span class="nf">create_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-</span><span data-line="8">        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_acc</span><span class="p">,</span> <span class="n">ax_w</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="9">
-</span><span data-line="10">        <span class="k">if</span> <span class="s2">"correct"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="11">            <span class="n">acc</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"session"</span><span class="p">)[</span><span class="s2">"correct"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-</span><span data-line="12">            <span class="n">ax_acc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"steelblue"</span><span class="p">)</span>
-</span><span data-line="13">            <span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Mean accuracy per session"</span><span class="p">)</span>
-</span><span data-line="14">            <span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="15">
-</span><span data-line="16">        <span class="k">if</span> <span class="ow">not</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="s2">"weight"</span> <span class="ow">in</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-</span><span data-line="17">            <span class="n">ax_w</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-</span><span data-line="18">                <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary_df</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
-</span><span data-line="19">                <span class="n">summary_df</span><span class="p">[</span><span class="s2">"weight"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
-</span><span data-line="20">                <span class="s2">"s-"</span><span class="p">,</span>
-</span><span data-line="21">                <span class="n">color</span><span class="o">=</span><span class="s2">"salmon"</span><span class="p">,</span>
-</span><span data-line="22">            <span class="p">)</span>
-</span><span data-line="23">            <span class="n">ax_w</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Weight (g)"</span><span class="p">)</span>
-</span><span data-line="24">            <span class="n">ax_w</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Session"</span><span class="p">)</span>
-</span><span data-line="25">
-</span><span data-line="26">        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"subject"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</span><span data-line="27">        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</span><span data-line="28">        <span class="k">return</span> <span class="n">fig</span>
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">SubjectPlot</span><span class="p">(</span><span class="n">SubjectPlotBase</span><span class="p">):</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="k">def</span><span class="w"> </span><span class="nf">create_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">summary_df</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+</span><span data-line="10">        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_acc</span><span class="p">,</span> <span class="n">ax_w</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+</span><span data-line="11">
+</span><span data-line="12">        <span class="k">if</span> <span class="s2">"outcome"</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="13">            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">correct</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"outcome"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"correct"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+</span><span data-line="14">            <span class="n">acc</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"session"</span><span class="p">)[</span><span class="s2">"correct"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span><span data-line="15">            <span class="n">ax_acc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"steelblue"</span><span class="p">)</span>
+</span><span data-line="16">            <span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Mean accuracy per session"</span><span class="p">)</span>
+</span><span data-line="17">            <span class="n">ax_acc</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Session"</span><span class="p">)</span>
+</span><span data-line="18">            <span class="n">ax_acc</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="19">
+</span><span data-line="20">        <span class="k">if</span> <span class="ow">not</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">empty</span> <span class="ow">and</span> <span class="s2">"weight"</span> <span class="ow">in</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+</span><span data-line="21">            <span class="n">ax_w</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+</span><span data-line="22">                <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary_df</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+</span><span data-line="23">                <span class="n">summary_df</span><span class="p">[</span><span class="s2">"weight"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+</span><span data-line="24">                <span class="s2">"s-"</span><span class="p">,</span>
+</span><span data-line="25">                <span class="n">color</span><span class="o">=</span><span class="s2">"salmon"</span><span class="p">,</span>
+</span><span data-line="26">            <span class="p">)</span>
+</span><span data-line="27">            <span class="n">ax_w</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Weight (g)"</span><span class="p">)</span>
+</span><span data-line="28">            <span class="n">ax_w</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Session"</span><span class="p">)</span>
+</span><span data-line="29">
+</span><span data-line="30">        <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"subject"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span data-line="31">        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="32">        <span class="k">return</span> <span class="n">fig</span>
 </span></pre></div>
 </div>
 </section>
@@ -833,7 +868,7 @@ Columns:</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

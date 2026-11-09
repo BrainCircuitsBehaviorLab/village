@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -568,128 +572,133 @@ data-aria-dark="Switch to auto color mode">
 <h2>Task</h2>
 <p><a class="reference download internal" download="" href="../_downloads/87dd1afde5817a441282cf2149bd5ca4/arduino_1_habituation.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">arduino_1_habituation.py</span></code></a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">serial</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
-</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
-</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
-</span><span data-line="8">
-</span><span data-line="9"><span class="c1"># Protocol (see runHabituation() in village_arduino/village_arduino.ino):</span>
-</span><span data-line="10"><span class="c1">#</span>
-</span><span data-line="11"><span class="c1"># Pi -&gt; Arduino, 3 raw bytes, sent once at the start of each trial:</span>
-</span><span data-line="12"><span class="c1">#   [CMD_START_TRIAL, duration_s (uint16, little-endian)]</span>
-</span><span data-line="13"><span class="c1">#   Tells the Arduino how long this trial lasts. From here the Arduino</span>
-</span><span data-line="14"><span class="c1">#   watches the 3 poke sensors on its own; the Pi just listens.</span>
-</span><span data-line="15"><span class="c1">#</span>
-</span><span data-line="16"><span class="c1"># Arduino -&gt; Pi, 6 raw bytes per message:</span>
-</span><span data-line="17"><span class="c1">#   [EVENT_STATE, state, elapsed_ms (uint32, LE)]</span>
-</span><span data-line="18"><span class="c1">#     -- every time the Arduino enters a new state (see STATE_NAMES), so it</span>
-</span><span data-line="19"><span class="c1">#        can be registered with register_enter_state, as Bpod does.</span>
-</span><span data-line="20"><span class="c1">#   [EVENT_TRIAL_END, port (0 if nobody poked), elapsed_ms (uint32, LE)]</span>
-</span><span data-line="21"><span class="c1">#     -- once, when the trial is over.</span>
-</span><span data-line="22"><span class="c1">#   elapsed_ms is milliseconds since the Arduino received CMD_START_TRIAL</span>
-</span><span data-line="23"><span class="c1">#   for THIS trial (its own timer, reset every trial). It is the controller</span>
-</span><span data-line="24"><span class="c1">#   clock: the trial start is registered as controller time 0 at the moment</span>
-</span><span data-line="25"><span class="c1">#   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller</span>
-</span><span data-line="26"><span class="c1">#   timestamp (register_controller_event / register_enter_state), so the two</span>
-</span><span data-line="27"><span class="c1">#   clocks never need to be synchronized.</span>
-</span><span data-line="28"><span class="n">CMD_START_TRIAL</span> <span class="o">=</span> <span class="mi">11</span>  <span class="c1"># CMD_HABITUATION in village_arduino.ino</span>
-</span><span data-line="29"><span class="n">EVENT_TRIAL_END</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span data-line="30"><span class="n">EVENT_STATE</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span data-line="31">
-</span><span data-line="32"><span class="c1"># State ids sent by the Arduino (same names as bpod_1_habituation.py)</span>
-</span><span data-line="33"><span class="n">STATE_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">"ready_to_explore"</span><span class="p">}</span>
-</span><span data-line="34">
-</span><span data-line="35"><span class="n">BAUDRATE</span> <span class="o">=</span> <span class="mi">9600</span>  <span class="c1"># must match the Arduino sketch's Serial.begin(...)</span>
-</span><span data-line="36"><span class="n">READ_TIMEOUT</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># seconds; also how often should_stop gets re-checked</span>
-</span><span data-line="37"><span class="n">MESSAGE_SIZE</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># every Arduino -&gt; Pi message is exactly this many bytes</span>
-</span><span data-line="38"><span class="n">STATE_DURATION</span> <span class="o">=</span> <span class="mi">60</span>  <span class="c1"># seconds</span>
-</span><span data-line="39">
-</span><span data-line="40">
-</span><span data-line="41"><span class="k">class</span><span class="w"> </span><span class="nc">Arduino1Habituation</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
-</span><span data-line="42">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="43">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="44">
-</span><span data-line="45">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
-</span><span data-line="46"><span class="s2">        Habituation Task</span>
-</span><span data-line="47"><span class="s2">        ----------------------------------------------------------</span>
-</span><span data-line="48"><span class="s2">        Lets a mouse get used to being in the box on its own. Every trial,</span>
-</span><span data-line="49"><span class="s2">        the Pi tells the Arduino how long to wait (STATE_DURATION), and the</span>
-</span><span data-line="50"><span class="s2">        Arduino watches all 3 ports for that whole window, ending the trial</span>
-</span><span data-line="51"><span class="s2">        early the moment any one of them is poked. No reward is delivered --</span>
-</span><span data-line="52"><span class="s2">        pokes are only recorded, to see the animal is exploring the box.</span>
-</span><span data-line="53"><span class="s2">        """</span>
-</span><span data-line="54">
-</span><span data-line="55">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="56"><span class="w">        </span><span class="sd">"""Opens the serial connection to the Arduino."""</span>
-</span><span data-line="57">
-</span><span data-line="58">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span>
-</span><span data-line="59">            <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"CONTROLLER_PORT"</span><span class="p">),</span>
-</span><span data-line="60">            <span class="n">baudrate</span><span class="o">=</span><span class="n">BAUDRATE</span><span class="p">,</span>
-</span><span data-line="61">            <span class="n">timeout</span><span class="o">=</span><span class="n">READ_TIMEOUT</span><span class="p">,</span>
-</span><span data-line="62">        <span class="p">)</span>
-</span><span data-line="63">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">reset_input_buffer</span><span class="p">()</span>
-</span><span data-line="64">
-</span><span data-line="65">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="66"><span class="w">        </span><span class="sd">"""Tells the Arduino how long this trial should last, then waits for</span>
-</span><span data-line="67"><span class="sd">        its single reply: either a port number (whichever was poked first)</span>
-</span><span data-line="68"><span class="sd">        or 0 if the whole duration passed with no poke at all.</span>
+</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">serial</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+</span><span data-line="9">
+</span><span data-line="10"><span class="c1"># Protocol (see runHabituation() in village_arduino/village_arduino.ino):</span>
+</span><span data-line="11"><span class="c1">#</span>
+</span><span data-line="12"><span class="c1"># Pi -&gt; Arduino, 3 raw bytes, sent once at the start of each trial:</span>
+</span><span data-line="13"><span class="c1">#   [CMD_START_TRIAL, duration_s (uint16, little-endian)]</span>
+</span><span data-line="14"><span class="c1">#   Tells the Arduino how long this trial lasts. From here the Arduino</span>
+</span><span data-line="15"><span class="c1">#   watches the 3 poke sensors on its own; the Pi just listens.</span>
+</span><span data-line="16"><span class="c1">#</span>
+</span><span data-line="17"><span class="c1"># Arduino -&gt; Pi, 6 raw bytes per message:</span>
+</span><span data-line="18"><span class="c1">#   [EVENT_STATE, state, elapsed_ms (uint32, LE)]</span>
+</span><span data-line="19"><span class="c1">#     -- every time the Arduino enters a new state (see STATE_NAMES), so it</span>
+</span><span data-line="20"><span class="c1">#        can be registered with register_enter_state, as Bpod does.</span>
+</span><span data-line="21"><span class="c1">#   [EVENT_TRIAL_END, port (0 if nobody poked), elapsed_ms (uint32, LE)]</span>
+</span><span data-line="22"><span class="c1">#     -- once, when the trial is over.</span>
+</span><span data-line="23"><span class="c1">#   elapsed_ms is milliseconds since the Arduino received CMD_START_TRIAL</span>
+</span><span data-line="24"><span class="c1">#   for THIS trial (its own timer, reset every trial). It is the controller</span>
+</span><span data-line="25"><span class="c1">#   clock: the trial start is registered as controller time 0 at the moment</span>
+</span><span data-line="26"><span class="c1">#   the Pi sent CMD_START_TRIAL, and every elapsed_ms as a controller</span>
+</span><span data-line="27"><span class="c1">#   timestamp (register_controller_event / register_enter_state), so the two</span>
+</span><span data-line="28"><span class="c1">#   clocks never need to be synchronized.</span>
+</span><span data-line="29"><span class="n">CMD_START_TRIAL</span> <span class="o">=</span> <span class="mi">11</span>  <span class="c1"># CMD_HABITUATION in village_arduino.ino</span>
+</span><span data-line="30"><span class="n">EVENT_TRIAL_END</span> <span class="o">=</span> <span class="mi">2</span>
+</span><span data-line="31"><span class="n">EVENT_STATE</span> <span class="o">=</span> <span class="mi">3</span>
+</span><span data-line="32">
+</span><span data-line="33"><span class="c1"># State ids sent by the Arduino (same names as bpod_1_habituation.py)</span>
+</span><span data-line="34"><span class="n">STATE_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">"ready_to_explore"</span><span class="p">}</span>
+</span><span data-line="35">
+</span><span data-line="36"><span class="n">BAUDRATE</span> <span class="o">=</span> <span class="mi">9600</span>  <span class="c1"># must match the Arduino sketch's Serial.begin(...)</span>
+</span><span data-line="37"><span class="n">READ_TIMEOUT</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># seconds; also how often should_stop gets re-checked</span>
+</span><span data-line="38"><span class="n">MESSAGE_SIZE</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># every Arduino -&gt; Pi message is exactly this many bytes</span>
+</span><span data-line="39"><span class="n">STARTUP_WAIT</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># seconds; opening the port resets most Arduino boards</span>
+</span><span data-line="40"><span class="n">STATE_DURATION</span> <span class="o">=</span> <span class="mi">60</span>  <span class="c1"># seconds</span>
+</span><span data-line="41">
+</span><span data-line="42">
+</span><span data-line="43"><span class="k">class</span><span class="w"> </span><span class="nc">Arduino1Habituation</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
+</span><span data-line="44">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="45">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="46">
+</span><span data-line="47">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
+</span><span data-line="48"><span class="s2">        Habituation Task</span>
+</span><span data-line="49"><span class="s2">        ----------------------------------------------------------</span>
+</span><span data-line="50"><span class="s2">        Lets a mouse get used to being in the box on its own. Every trial,</span>
+</span><span data-line="51"><span class="s2">        the Pi tells the Arduino how long to wait (STATE_DURATION), and the</span>
+</span><span data-line="52"><span class="s2">        Arduino watches all 3 ports for that whole window, ending the trial</span>
+</span><span data-line="53"><span class="s2">        early the moment any one of them is poked. No reward is delivered --</span>
+</span><span data-line="54"><span class="s2">        pokes are only recorded, to see the animal is exploring the box.</span>
+</span><span data-line="55"><span class="s2">        """</span>
+</span><span data-line="56">
+</span><span data-line="57">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="58"><span class="w">        </span><span class="sd">"""Opens the serial connection to the Arduino."""</span>
+</span><span data-line="59">
+</span><span data-line="60">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span>
+</span><span data-line="61">            <span class="n">port</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"CONTROLLER_PORT"</span><span class="p">),</span>
+</span><span data-line="62">            <span class="n">baudrate</span><span class="o">=</span><span class="n">BAUDRATE</span><span class="p">,</span>
+</span><span data-line="63">            <span class="n">timeout</span><span class="o">=</span><span class="n">READ_TIMEOUT</span><span class="p">,</span>
+</span><span data-line="64">        <span class="p">)</span>
+</span><span data-line="65">        <span class="c1"># Opening the port resets most Arduino boards: wait for the sketch</span>
+</span><span data-line="66">        <span class="c1"># to be running, or the first command would be lost.</span>
+</span><span data-line="67">        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">STARTUP_WAIT</span><span class="p">)</span>
+</span><span data-line="68">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">reset_input_buffer</span><span class="p">()</span>
 </span><span data-line="69">
-</span><span data-line="70"><span class="sd">        The deadline below is only a safety net for a lost/garbled message</span>
-</span><span data-line="71"><span class="sd">        -- in normal operation the Arduino's own reply always arrives well</span>
-</span><span data-line="72"><span class="sd">        before it.</span>
-</span><span data-line="73"><span class="sd">        """</span>
+</span><span data-line="70">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="71"><span class="w">        </span><span class="sd">"""Tells the Arduino how long this trial should last, then waits for</span>
+</span><span data-line="72"><span class="sd">        its single reply: either a port number (whichever was poked first)</span>
+</span><span data-line="73"><span class="sd">        or 0 if the whole duration passed with no poke at all.</span>
 </span><span data-line="74">
-</span><span data-line="75">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">"&lt;BH"</span><span class="p">,</span> <span class="n">CMD_START_TRIAL</span><span class="p">,</span> <span class="n">STATE_DURATION</span><span class="p">))</span>
-</span><span data-line="76">        <span class="n">t_sent</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
-</span><span data-line="77">        <span class="c1"># The Arduino's clock (elapsed_ms) starts at 0 when it gets the command.</span>
-</span><span data-line="78">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t_sent</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="75"><span class="sd">        The deadline below is only a safety net for a lost/garbled message</span>
+</span><span data-line="76"><span class="sd">        -- in normal operation the Arduino's own reply always arrives well</span>
+</span><span data-line="77"><span class="sd">        before it.</span>
+</span><span data-line="78"><span class="sd">        """</span>
 </span><span data-line="79">
-</span><span data-line="80">        <span class="n">deadline</span> <span class="o">=</span> <span class="n">t_sent</span> <span class="o">+</span> <span class="n">STATE_DURATION</span> <span class="o">+</span> <span class="mf">2.0</span>  <span class="c1"># margin for serial/USB latency</span>
-</span><span data-line="81">        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
-</span><span data-line="82">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
-</span><span data-line="83">            <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">MESSAGE_SIZE</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
-</span><span data-line="84">            <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
-</span><span data-line="85">                <span class="k">continue</span>  <span class="c1"># nothing arrived within READ_TIMEOUT; keep waiting</span>
-</span><span data-line="86">            <span class="n">buffer</span> <span class="o">+=</span> <span class="n">chunk</span>
-</span><span data-line="87">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MESSAGE_SIZE</span><span class="p">:</span>
-</span><span data-line="88">                <span class="k">continue</span>
-</span><span data-line="89">
-</span><span data-line="90">            <span class="n">event</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">elapsed_ms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&lt;BBI"</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
-</span><span data-line="91">            <span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="92">            <span class="n">t</span> <span class="o">=</span> <span class="n">elapsed_ms</span> <span class="o">/</span> <span class="mf">1000.0</span>  <span class="c1"># controller clock, seconds</span>
-</span><span data-line="93">
-</span><span data-line="94">            <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_STATE</span><span class="p">:</span>
-</span><span data-line="95">                <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="n">STATE_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"state</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
-</span><span data-line="96">            <span class="k">elif</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_TRIAL_END</span><span class="p">:</span>
-</span><span data-line="97">                <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># the port that was poked</span>
-</span><span data-line="98">                    <span class="bp">self</span><span class="o">.</span><span class="n">register_controller_event</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Port</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">In"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</span><span data-line="99">                <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-</span><span data-line="100">                <span class="k">break</span>
-</span><span data-line="101">        <span class="c1"># If the loop ended without EVENT_TRIAL_END (task stopped, or a lost</span>
-</span><span data-line="102">        <span class="c1"># message), the trial is ended automatically when this returns.</span>
-</span><span data-line="103">
-</span><span data-line="104">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="105"><span class="w">        </span><span class="sd">"""Reads back whichever port event create_trial registered, if any,</span>
-</span><span data-line="106"><span class="sd">        to label the trial."""</span>
-</span><span data-line="107">
-</span><span data-line="108">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"miss"</span>
-</span><span data-line="109">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port1In"</span><span class="p">):</span>
-</span><span data-line="110">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"left_poke"</span>
-</span><span data-line="111">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port2In"</span><span class="p">):</span>
-</span><span data-line="112">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"center_poke"</span>
-</span><span data-line="113">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port3In"</span><span class="p">):</span>
-</span><span data-line="114">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"right_poke"</span>
-</span><span data-line="115">
-</span><span data-line="116">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
-</span><span data-line="117">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span><span data-line="118">
-</span><span data-line="119">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="120"><span class="w">        </span><span class="sd">"""Closes the serial connection to the Arduino."""</span>
-</span><span data-line="121">
-</span><span data-line="122">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">is_open</span><span class="p">:</span>
-</span><span data-line="123">            <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span><span data-line="80">        <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">"&lt;BH"</span><span class="p">,</span> <span class="n">CMD_START_TRIAL</span><span class="p">,</span> <span class="n">STATE_DURATION</span><span class="p">))</span>
+</span><span data-line="81">        <span class="n">t_sent</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="82">        <span class="c1"># The Arduino's clock (elapsed_ms) starts at 0 when it gets the command.</span>
+</span><span data-line="83">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t_sent</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</span><span data-line="84">
+</span><span data-line="85">        <span class="n">deadline</span> <span class="o">=</span> <span class="n">t_sent</span> <span class="o">+</span> <span class="n">STATE_DURATION</span> <span class="o">+</span> <span class="mf">2.0</span>  <span class="c1"># margin for serial/USB latency</span>
+</span><span data-line="86">        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+</span><span data-line="87">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+</span><span data-line="88">            <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">MESSAGE_SIZE</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
+</span><span data-line="89">            <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+</span><span data-line="90">                <span class="k">continue</span>  <span class="c1"># nothing arrived within READ_TIMEOUT; keep waiting</span>
+</span><span data-line="91">            <span class="n">buffer</span> <span class="o">+=</span> <span class="n">chunk</span>
+</span><span data-line="92">            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MESSAGE_SIZE</span><span class="p">:</span>
+</span><span data-line="93">                <span class="k">continue</span>
+</span><span data-line="94">
+</span><span data-line="95">            <span class="n">event</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">elapsed_ms</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&lt;BBI"</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span>
+</span><span data-line="96">            <span class="n">buffer</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="97">            <span class="n">t</span> <span class="o">=</span> <span class="n">elapsed_ms</span> <span class="o">/</span> <span class="mf">1000.0</span>  <span class="c1"># controller clock, seconds</span>
+</span><span data-line="98">
+</span><span data-line="99">            <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_STATE</span><span class="p">:</span>
+</span><span data-line="100">                <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="n">STATE_NAMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"state</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
+</span><span data-line="101">            <span class="k">elif</span> <span class="n">event</span> <span class="o">==</span> <span class="n">EVENT_TRIAL_END</span><span class="p">:</span>
+</span><span data-line="102">                <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># the port that was poked</span>
+</span><span data-line="103">                    <span class="bp">self</span><span class="o">.</span><span class="n">register_controller_event</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Port</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">In"</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</span><span data-line="104">                <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</span><span data-line="105">                <span class="k">break</span>
+</span><span data-line="106">        <span class="c1"># If the loop ended without EVENT_TRIAL_END (task stopped, or a lost</span>
+</span><span data-line="107">        <span class="c1"># message), the trial is ended automatically when this returns.</span>
+</span><span data-line="108">
+</span><span data-line="109">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="110"><span class="w">        </span><span class="sd">"""Reads back whichever port event create_trial registered, if any,</span>
+</span><span data-line="111"><span class="sd">        to label the trial."""</span>
+</span><span data-line="112">
+</span><span data-line="113">        <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"miss"</span>
+</span><span data-line="114">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port1In"</span><span class="p">):</span>
+</span><span data-line="115">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"left_poke"</span>
+</span><span data-line="116">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port2In"</span><span class="p">):</span>
+</span><span data-line="117">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"center_poke"</span>
+</span><span data-line="118">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Port3In"</span><span class="p">):</span>
+</span><span data-line="119">            <span class="n">outcome</span> <span class="o">=</span> <span class="s2">"right_poke"</span>
+</span><span data-line="120">
+</span><span data-line="121">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"outcome"</span><span class="p">,</span> <span class="n">outcome</span><span class="p">)</span>
+</span><span data-line="122">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="123">
+</span><span data-line="124">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="125"><span class="w">        </span><span class="sd">"""Closes the serial connection to the Arduino."""</span>
+</span><span data-line="126">
+</span><span data-line="127">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">is_open</span><span class="p">:</span>
+</span><span data-line="128">            <span class="bp">self</span><span class="o">.</span><span class="n">serial_port</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </section>
@@ -771,7 +780,7 @@ the trial runs in <code class="docutils literal notranslate"><span class="pre">r
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -715,7 +719,8 @@ over SPI, regardless of how many LEDs actually changed, so its latency scales wi
 strip length at roughly 0.04 ms per LED at the default <code class="docutils literal notranslate"><span class="pre">SPI_SPEED_KHZ</span></code> = 800.
 For a 144-LED strip or matrix: <strong>mean = 5.8 ms, SD = 0.2 ms</strong>.</p>
 <p><strong>Sound playback (Raspberry Pi DAC Pro)</strong>
-The slow part — decoding and staging the audio — happens in <code class="docutils literal notranslate"><span class="pre">load()</span></code>, ahead of time.
+The slow part — preparing the audio for the sound card — happens in <code class="docutils literal notranslate"><span class="pre">load()</span></code>, ahead
+of time.
 <code class="docutils literal notranslate"><span class="pre">play()</span></code> itself is fast, since it just wakes the primed PCM: measured at the default
 <code class="docutils literal notranslate"><span class="pre">SAMPLERATE</span></code> (96 kHz), <strong>mean = 3.2 ms, SD = 0.6 ms</strong>.</p>
 <p><strong>Image display on screen</strong>
@@ -730,9 +735,11 @@ plus the remaining portion of the current frame: <strong>mean = 24.9 ms, SD = 7.
 <p>Communication and action latencies are both sensitive to CPU load. The platform
 implements several measures to keep CPU usage low during sessions:</p>
 <ul class="simple">
-<li><p>Expensive background processes are suspended during sessions (e.g. the Python
-garbage collector, system update checks) and re-enabled when the system returns to
-the <code class="docutils literal notranslate"><span class="pre">WAIT</span></code> state.</p></li>
+<li><p>The Python garbage collector is disabled during sessions and re-enabled when the
+system returns to the <code class="docutils literal notranslate"><span class="pre">WAIT</span></code> state.</p></li>
+<li><p>The automatic system update checks are disabled in the Raspberry Pi image (see
+<a class="reference internal" href="../resources/software_installation.html#disabling-automatic-updates"><span class="std std-ref">Manual Software Installation</span></a>),
+so they never run in the middle of a session.</p></li>
 <li><p>Cameras are configured at 640×480 / 30 fps (operant box) and 10 fps (corridor)
 by default. If these values are increased, latencies should be re-measured
 experimentally to confirm they remain within acceptable bounds.</p></li>
@@ -854,7 +861,7 @@ action runs on the Raspberry Pi (LED strip, Sound, Screen).</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

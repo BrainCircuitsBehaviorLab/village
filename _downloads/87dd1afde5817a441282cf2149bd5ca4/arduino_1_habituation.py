@@ -1,4 +1,5 @@
 import struct
+import time
 
 import serial
 
@@ -35,6 +36,7 @@ STATE_NAMES = {1: "ready_to_explore"}
 BAUDRATE = 9600  # must match the Arduino sketch's Serial.begin(...)
 READ_TIMEOUT = 0.05  # seconds; also how often should_stop gets re-checked
 MESSAGE_SIZE = 6  # every Arduino -> Pi message is exactly this many bytes
+STARTUP_WAIT = 2.0  # seconds; opening the port resets most Arduino boards
 STATE_DURATION = 60  # seconds
 
 
@@ -60,6 +62,9 @@ class Arduino1Habituation(TaskBase):
             baudrate=BAUDRATE,
             timeout=READ_TIMEOUT,
         )
+        # Opening the port resets most Arduino boards: wait for the sketch
+        # to be running, or the first command would be lost.
+        time.sleep(STARTUP_WAIT)
         self.serial_port.reset_input_buffer()
 
     def create_trial(self):

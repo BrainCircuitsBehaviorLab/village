@@ -4,7 +4,7 @@ Everything a task can use: the methods you write, the methods you can call, the
 attributes of the task and the Bpod primitives. Most of it is the same with Bpod,
 with an Arduino or with the Raspberry Pi alone; what only works with one of them is
 marked. For how to write a task, see [Tasks (Bpod)](tasks_bpod.md),
-[Tasks (Arduino)](tasks_arduino.md) and [Tasks (Raspberry Pi)](tasks_raspberry.md).
+[Tasks (Arduino)](tasks_arduino.md) and [Tasks (Raspberry Only)](tasks_raspberry.md).
 
 ---
 

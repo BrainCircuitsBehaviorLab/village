@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -483,25 +487,16 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#how-a-task-runs">How a task runs</a></li>
-<li><a class="reference internal" href="#reference">Reference</a><ul>
-<li><a class="reference internal" href="#the-four-methods-you-write">The four methods you write</a></li>
-<li><a class="reference internal" href="#methods-you-can-call">Methods you can call</a></li>
-<li><a class="reference internal" href="#attributes-you-can-use">Attributes you can use</a></li>
-<li><a class="reference internal" href="#triggers-and-devices">Triggers and devices</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#examples">Examples</a><ul>
-<li><a class="reference internal" href="#a-simple-task-a-sound-every-trial">A simple task: a sound every trial</a></li>
-<li><a class="reference internal" href="#reacting-to-the-camera">Reacting to the camera</a></li>
-<li><a class="reference internal" href="#reacting-to-the-touchscreen">Reacting to the touchscreen</a></li>
-<li><a class="reference internal" href="#complete-examples">Complete examples</a></li>
+<li><a class="reference internal" href="#a-first-task-entering-an-area">A first task: entering an area</a><ul>
+<li><a class="reference internal" href="#the-task">The task</a></li>
+<li><a class="reference internal" href="#the-camera-trigger">The camera trigger</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#trial-data">Trial data</a><ul>
 <li><a class="reference internal" href="#what-is-saved">What is saved</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#ending-the-session-from-the-task">Ending the session from the task</a></li>
+<li><a class="reference internal" href="#playing-a-sound">Playing a sound</a></li>
 </ul>
 </div></div>
   </aside>
@@ -582,7 +577,8 @@ Raspberry Pi runs the trial itself: it reacts to what it detects (the box camera
 areas, the touchscreen, the GPIO input pin, the box scale) and produces the stimuli
 (sounds, the screen, the LED strip, the GPIO output pin). Its timing is less precise
 than a microcontroller’s (see <a class="reference internal" href="../system_operation/timing.html"><span class="std std-doc">Timing, Clocks &amp; Latencies</span></a>):
-for fast and precise timing, use Bpod or a microcontroller.</p>
+for fast and precise timing, use Bpod or a microcontroller. And without a controller
+there are no valves: these tasks don’t give water.</p>
 <p>A task is a class that inherits from <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code>, in any <code class="docutils literal notranslate"><span class="pre">.py</span></code> file inside your
 project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory. The name of the class is the name of the task: the one
 shown in the GUI and used in <code class="docutils literal notranslate"><span class="pre">next_task</span></code> by the training protocol. The file name does
@@ -590,319 +586,63 @@ not matter.</p>
 <section id="how-a-task-runs">
 <h2>How a task runs</h2>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">start()</span></code> is called once, when the session starts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start()</span></code> is called once, when the session starts, before the first trial.
+Compute what the whole session needs: sounds, stimulus positions…</p></li>
 <li><p>Then, trial after trial:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">create_trial()</span></code> <strong>is</strong> the trial: it registers the start of the trial, waits
 for what has to happen (or a timeout), registers it, and returns when the trial
-is over;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> is filled with everything registered in the trial;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> reads it and registers the values to save, at least <code class="docutils literal notranslate"><span class="pre">water</span></code>.</p></li>
+is over. Then <code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> is filled with everything registered in the
+trial;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">after_trial()</span></code> is called after every trial. It reads <code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code> and saves
+values with <code class="docutils literal notranslate"><span class="pre">register_value</span></code>. Registering <code class="docutils literal notranslate"><span class="pre">water</span></code> is mandatory.</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">close()</span></code> is called once, when the session ends.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">close()</span></code> is called once, when the session ends (session finished, stopped, or
+error), after the last trial. It can be used to close files or connections.</p></li>
 </ol>
 <p>The session ends when it reaches <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code> (set in the training protocol),
 when the STOP button is pressed, or when your task sets <code class="docutils literal notranslate"><span class="pre">self.force_stop</span> <span class="pre">=</span> <span class="pre">True</span></code>. The
 system checks these conditions continuously, not only between trials: if one is met
 during a trial, the session ends at once and that trial is cut (it is not saved in the
 session file, only in the RAW file). In Manual mode the session also ends after the
-number of trials chosen when launching the task; this limit is reached at the end of
-a trial, so nothing is lost.</p>
+number of trials chosen when launching the task.</p>
 <div class="warning admonition">
 <p class="admonition-title">Check should_stop in your waiting loops</p>
-<p>The system ends the session, but it cannot stop your Python code: a <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>
-waiting for something would keep running. Every waiting loop must check
-<code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (and a timeout), so it can never wait forever:</p>
+<p>When the session ends, the system waits up to 5 seconds for <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> to return
+before saving, but it cannot stop your Python code: a <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> waiting for
+something would keep running. Every waiting loop must check <code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code> (and a
+timeout), so it can never wait forever:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
 </span><span data-line="2">    <span class="o">...</span>  <span class="c1"># wait for your own condition</span>
 </span></pre></div>
 </div>
 </div>
-<p><strong>Triggers.</strong> The detections arrive through the triggers (camera, touchscreen, GPIO,
-scale), which run in their own threads and call your code while the task is running.
-The usual pattern is: the trigger reacts and signals the task (with a
-<code class="docutils literal notranslate"><span class="pre">threading.Event</span></code>), and the loop of <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> waits for that signal, or a
-timeout, to end the trial.</p>
-<p><strong>One clock.</strong> Here the Raspberry Pi is also the controller, so there is only one
-clock: pass <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as every timestamp, and the same time as both
-clocks in <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>.</p>
-</section>
-<hr class="docutils" />
-<section id="reference">
-<h2>Reference</h2>
-<section id="the-four-methods-you-write">
-<h3>The four methods you write</h3>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p>Method</p></th>
-<th class="head text-left"><p>Called</p></th>
-<th class="head text-left"><p>Use it to</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">start(self)</span></code></p></td>
-<td class="text-left"><p>Once, before the first trial.</p></td>
-<td class="text-left"><p>Compute what the whole session needs: sounds, stimulus positions… and create the signals the triggers will use.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">create_trial(self)</span></code></p></td>
-<td class="text-left"><p>Every trial.</p></td>
-<td class="text-left"><p>Run the trial: call <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>, wait for the trigger’s signal or a timeout, and register what happened.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">after_trial(self)</span></code></p></td>
-<td class="text-left"><p>After every trial.</p></td>
-<td class="text-left"><p>Read <code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code>, decide the outcome, and save values with <code class="docutils literal notranslate"><span class="pre">register_value</span></code>. Registering <code class="docutils literal notranslate"><span class="pre">water</span></code> is mandatory.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">close(self)</span></code></p></td>
-<td class="text-left"><p>Once, after the last trial (session finished, stopped, or error).</p></td>
-<td class="text-left"><p>Clean up: close files or connections. Usually <code class="docutils literal notranslate"><span class="pre">pass</span></code>.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+<p>The detections arrive through the <strong>triggers</strong> (camera, touchscreen, GPIO, scale):
+classes in your <code class="docutils literal notranslate"><span class="pre">code</span></code> directory that the system calls, in their own threads, while
+the task is running. The usual pattern is: the trigger reacts and signals the task
+(with a <code class="docutils literal notranslate"><span class="pre">threading.Event</span></code>), and the loop of <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> waits for that signal, or a
+timeout, to end the trial. The first task below works this way.</p>
+<p>All the methods and attributes a task can use are in
+<a class="reference internal" href="tasks_reference.html"><span class="std std-doc">Task Reference</span></a>.</p>
 <div class="warning admonition">
 <p class="admonition-title">Register water in every trial</p>
-<p>Call <code class="docutils literal notranslate"><span class="pre">self.register_value(&quot;water&quot;,</span> <span class="pre">...)</span></code> in every <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>, with the microliters
-delivered in the trial (<code class="docutils literal notranslate"><span class="pre">0</span></code> if none). The system adds them up to know how much each
+<p>Call <code class="docutils literal notranslate"><span class="pre">self.register_value(&quot;water&quot;,</span> <span class="pre">0)</span></code> in every <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>, even though these tasks
+give no water. The system adds up the water of every trial to know how much each
 subject drinks, and raises an alarm if it is too little.</p>
 </div>
 </section>
-<section id="methods-you-can-call">
-<h3>Methods you can call</h3>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p>Method</p></th>
-<th class="head text-left"><p>Use</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.register_start_trial(raspberry_timestamp,</span> <span class="pre">controller_timestamp)</span></code></p></td>
-<td class="text-left"><p><strong>Required</strong> at the start of every trial, in <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>: without it the task stops with an error. Pass <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as both.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.register_end_trial(controller_timestamp)</span></code></p></td>
-<td class="text-left"><p>Ends the trial. Optional: if <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returns without calling it, the trial is ended at that moment.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.register_enter_state(state_name,</span> <span class="pre">controller_timestamp)</span></code></p></td>
-<td class="text-left"><p>If your trial is organized in states: closes the previous state and opens this one, as Bpod does.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.register_raspberry_event(name,</span> <span class="pre">timestamp)</span></code></p></td>
-<td class="text-left"><p>Records an event (a camera detection, a GPIO input…) with <code class="docutils literal notranslate"><span class="pre">time_utils.now_timestamp()</span></code> as timestamp. <code class="docutils literal notranslate"><span class="pre">register_controller_event</span></code> does exactly the same here.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.register_value(name,</span> <span class="pre">value)</span></code></p></td>
-<td class="text-left"><p>Saves a value in the trial’s row of the session file (a column named <code class="docutils literal notranslate"><span class="pre">name</span></code>). Call it in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.execute_function(i)</span></code></p></td>
-<td class="text-left"><p>Runs direct function <code class="docutils literal notranslate"><span class="pre">i</span></code> (1-98), see <a class="reference internal" href="functions.html"><span class="std std-doc">Direct Functions</span></a>.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">register_*</span></code> methods only record what happens between <code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code> and
-the end of the trial: anything registered outside that window is ignored.</p>
-</section>
-<section id="attributes-you-can-use">
-<h3>Attributes you can use</h3>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p>Attribute</p></th>
-<th class="head text-left"><p>Type</p></th>
-<th class="head text-left"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.settings</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Settings</span></code></p></td>
-<td class="text-left"><p>The subject’s training settings, defined in the <a class="reference internal" href="creating.html"><span class="std std-doc">training protocol</span></a> (e.g. <code class="docutils literal notranslate"><span class="pre">self.settings.reward_volume</span></code>). Changes made during the session are kept for the next one.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.calibrations</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Calibrations</span></code></p></td>
-<td class="text-left"><p>Calibrations, e.g. <code class="docutils literal notranslate"><span class="pre">self.calibrations.sound_calibration.get_sound_gain(speaker,</span> <span class="pre">dB,</span> <span class="pre">sound_name)</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
-<td class="text-left"><p>Everything registered in the trial, available in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> (see <a class="reference internal" href="#trial-data"><span class="std std-ref">Trial data</span></a>).</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.info</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td class="text-left"><p>Description of the task, shown when it is selected in the GUI. Set it in <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.name</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td class="text-left"><p>The name of the task, which is the name of its class (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;RaspberryArea1Sound&quot;</span></code>).</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.subject</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td class="text-left"><p>The name of the subject (<code class="docutils literal notranslate"><span class="pre">&quot;None&quot;</span></code> when a task is launched manually without a subject).</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.current_trial</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
-<td class="text-left"><p>The number of the current trial, starting from 1.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.system_name</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td class="text-left"><p>The name of the system (<code class="docutils literal notranslate"><span class="pre">SYSTEM_NAME</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>).</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.date</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td class="text-left"><p>The date and time the session started (<code class="docutils literal notranslate"><span class="pre">&quot;2026-11-07</span> <span class="pre">10:30:00&quot;</span></code>).</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.run_mode</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">&quot;Auto&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Manual&quot;</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.chrono</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Chrono</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.chrono.get_time()</span></code> is the time in seconds since the session started.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.force_stop</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
-<td class="text-left"><p>Set it to <code class="docutils literal notranslate"><span class="pre">True</span></code> to end the session (see <a class="reference internal" href="#ending-the-session-from-the-task"><span class="std std-ref">Ending the session from the task</span></a>).</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.stop_button_pressed</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> once the STOP button has been pressed. Read it, don’t set it.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.should_stop</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> once any stopping condition is met (read-only). Check it in every waiting loop of <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.system_state</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">State</span></code></p></td>
-<td class="text-left"><p>The state of the system, e.g. <code class="docutils literal notranslate"><span class="pre">State.RUN_OPEN</span></code> (Auto mode, the subject can leave the box). Import <code class="docutils literal notranslate"><span class="pre">State</span></code> from <code class="docutils literal notranslate"><span class="pre">village.classes.enums</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.cam_box</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Camera</span></code></p></td>
-<td class="text-left"><p>The box camera (see <a class="reference internal" href="../devices/camera.html"><span class="std std-doc">Camera</span></a>).</p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.gpio</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Gpio</span></code></p></td>
-<td class="text-left"><p>The GPIO output pin: <code class="docutils literal notranslate"><span class="pre">set_on()</span></code> / <code class="docutils literal notranslate"><span class="pre">set_off()</span></code> (see <a class="reference internal" href="../devices/gpio.html"><span class="std std-doc">GPIO</span></a>).</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">self.custom_areas</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
-<td class="text-left"><p>The detection areas with a custom shape, if the project defines any (see <a class="reference internal" href="../devices/camera.html#custom-detection-area"><span class="std std-ref">Camera</span></a>).</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>You can also add your own attributes (<code class="docutils literal notranslate"><span class="pre">self.area1_event</span></code>, <code class="docutils literal notranslate"><span class="pre">self.side</span> <span class="pre">=</span> <span class="pre">&quot;left&quot;</span></code>…):
-they are kept from one method to the next, and the triggers and direct functions can
-read them through <code class="docutils literal notranslate"><span class="pre">self.task</span></code>.</p>
-</section>
-<section id="triggers-and-devices">
-<h3>Triggers and devices</h3>
-<p>The triggers are classes in your <code class="docutils literal notranslate"><span class="pre">code</span></code> directory; each one is called by the system
-while a task is running, and reaches the task through <code class="docutils literal notranslate"><span class="pre">self.task</span></code>:</p>
-<div class="table-wrapper colwidths-auto docutils container">
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head text-left"><p>Trigger</p></th>
-<th class="head text-left"><p>Inherits from</p></th>
-<th class="head text-left"><p>Called</p></th>
-<th class="head text-left"><p>See</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="text-left"><p>Camera</p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code></p></td>
-<td class="text-left"><p>On every frame, with the camera (<code class="docutils literal notranslate"><span class="pre">cam.area1_is_triggered</span></code>…).</p></td>
-<td class="text-left"><p><a class="reference internal" href="../devices/camera.html#reacting-to-the-animals-position"><span class="std std-ref">Camera</span></a></p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p>Touchscreen</p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">TouchTriggerBase</span></code></p></td>
-<td class="text-left"><p>On every touch, with its position.</p></td>
-<td class="text-left"><p><a class="reference internal" href="../devices/screen.html#reacting-to-touches"><span class="std std-ref">Screen &amp; Touchscreen</span></a></p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p>GPIO input</p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">GpioTriggerBase</span></code></p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">trigger_on</span></code> / <code class="docutils literal notranslate"><span class="pre">trigger_off</span></code>, when the input pin turns on or off.</p></td>
-<td class="text-left"><p><a class="reference internal" href="../devices/gpio.html#reacting-to-the-input-pin"><span class="std std-ref">GPIO</span></a></p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p>Box scale</p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">ScaleTriggerBase</span></code></p></td>
-<td class="text-left"><p>On every reading of the scale, with the weight.</p></td>
-<td class="text-left"><p><a class="reference internal" href="../devices/scale.html#reacting-to-the-box-scale"><span class="std std-ref">Scale</span></a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The stimuli are produced with the devices of the Raspberry Pi:
-<a class="reference internal" href="../devices/sound.html"><span class="std std-doc">Sound</span></a> (<code class="docutils literal notranslate"><span class="pre">sound_device.load</span></code> and <code class="docutils literal notranslate"><span class="pre">sound_device.play</span></code>),
-<a class="reference internal" href="../devices/screen.html"><span class="std std-doc">Screen</span></a>, <a class="reference internal" href="../devices/led_strip.html"><span class="std std-doc">LED Strip</span></a> and the GPIO
-output pin (<code class="docutils literal notranslate"><span class="pre">self.gpio</span></code>). They can be used from the task, from a trigger or from a
-direct function.</p>
-</section>
-</section>
 <hr class="docutils" />
-<section id="examples">
-<h2>Examples</h2>
-<section id="a-simple-task-a-sound-every-trial">
-<h3>A simple task: a sound every trial</h3>
-<p>Every trial plays a sound and then waits for the inter-trial interval. It shows the
-structure of every task without a controller: <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> registers the start, the
-states as they are entered and the end, and every wait checks <code class="docutils literal notranslate"><span class="pre">should_stop</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">sound_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">whitenoise_generator</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
-</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
-</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
-</span><span data-line="8">
-</span><span data-line="9">
-</span><span data-line="10"><span class="k">class</span><span class="w"> </span><span class="nc">SoundEveryTrial</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
-</span><span data-line="11">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="12">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="13">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
-</span><span data-line="14"><span class="s2">        Sound Every Trial</span>
-</span><span data-line="15"><span class="s2">        -----------------</span>
-</span><span data-line="16"><span class="s2">        A sound, then the inter-trial interval.</span>
-</span><span data-line="17"><span class="s2">        """</span>
-</span><span data-line="18">
-</span><span data-line="19">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="20">        <span class="n">sound</span> <span class="o">=</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-</span><span data-line="21">        <span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">sound</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">sound</span><span class="p">)</span>  <span class="c1"># loaded once, played every trial</span>
-</span><span data-line="22">
-</span><span data-line="23">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="24">        <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
-</span><span data-line="25">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">)</span>
-</span><span data-line="26">
-</span><span data-line="27">        <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"sound"</span><span class="p">,</span> <span class="n">t0</span><span class="p">)</span>
-</span><span data-line="28">        <span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
-</span><span data-line="29">        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-</span><span data-line="30">
-</span><span data-line="31">        <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"iti"</span><span class="p">,</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
-</span><span data-line="32">        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span><span class="p">)</span>
-</span><span data-line="33">
-</span><span data-line="34">        <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
-</span><span data-line="35">
-</span><span data-line="36">    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">):</span>
-</span><span data-line="37"><span class="w">        </span><span class="sd">"""Waits the given seconds, less if the task has to stop."""</span>
-</span><span data-line="38">        <span class="n">end</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">+</span> <span class="n">seconds</span>
-</span><span data-line="39">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
-</span><span data-line="40">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
-</span><span data-line="41">
-</span><span data-line="42">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="43">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span><span data-line="44">
-</span><span data-line="45">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="46">        <span class="k">pass</span>
-</span></pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">gain=0.05</span></code> is an arbitrary volume; to play the sound at a given level in dB, use the
-sound calibration, as in the next example (see <a class="reference internal" href="../devices/sound.html"><span class="std std-doc">Sound</span></a>).</p>
-</section>
-<section id="reacting-to-the-camera">
-<h3>Reacting to the camera</h3>
-<p><a class="reference internal" href="../examples/raspberry_area1_sound.html"><span class="std std-doc">raspberry_area1_sound.py</span></a>: every trial waits for
-the animal to enter area 1 of the box camera (set as a TRIGGER area, with
-<code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code> ON); when it does, a sound is played and an LED of the LED
-strip turns on.</p>
-<p>The task loads the sound and creates the signal in <code class="docutils literal notranslate"><span class="pre">start</span></code>, and <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> waits
-for it:</p>
+<section id="a-first-task-entering-an-area">
+<h2>A first task: entering an area</h2>
+<p>This task of the example project waits, every trial, for the animal to enter area 1
+of the box camera. When it does, a sound plays and an LED of the LED strip turns on.
+If the animal does not enter in 60 seconds, the trial ends anyway.</p>
+<p>It needs two settings: area 1 of the box camera set as a <code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code> area, and
+<code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code> ON (see
+<a class="reference internal" href="../system_operation/detection.html#detection-in-the-operant-box"><span class="std std-ref">Detection in the Operant Box</span></a>).</p>
+<section id="the-task">
+<h3>The task</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">sound_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">whitenoise_generator</span>
@@ -915,55 +655,134 @@ for it:</p>
 </span><span data-line="10">
 </span><span data-line="11">
 </span><span data-line="12"><span class="k">class</span><span class="w"> </span><span class="nc">RaspberryArea1Sound</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
-</span><span data-line="13">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="14">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span data-line="15">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">"""</span>
-</span><span data-line="16"><span class="s2">        Area 1 Sound Task</span>
-</span><span data-line="17"><span class="s2">        -----------------</span>
-</span><span data-line="18"><span class="s2">        Entering BOX area 1 plays a sound and lights an LED of the strip.</span>
-</span><span data-line="19"><span class="s2">        """</span>
-</span><span data-line="20">
-</span><span data-line="21">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="22">        <span class="c1"># the sound at 70 dB, from the sound calibration; loaded once, and</span>
-</span><span data-line="23">        <span class="c1"># played by camera_trigger.py every time area 1 is entered</span>
-</span><span data-line="24">        <span class="n">gain_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
-</span><span data-line="25">            <span class="n">speaker</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"whitenoise"</span>
-</span><span data-line="26">        <span class="p">)</span>
-</span><span data-line="27">        <span class="n">gain_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
-</span><span data-line="28">            <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"whitenoise"</span>
-</span><span data-line="29">        <span class="p">)</span>
-</span><span data-line="30">        <span class="n">sound_left</span> <span class="o">=</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain_left</span><span class="p">)</span>
-</span><span data-line="31">        <span class="n">sound_right</span> <span class="o">=</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain_right</span><span class="p">)</span>
-</span><span data-line="32">        <span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">sound_left</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">sound_right</span><span class="p">)</span>
-</span><span data-line="33">
-</span><span data-line="34">        <span class="c1"># set by camera_trigger.py the moment area 1 is entered</span>
-</span><span data-line="35">        <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
-</span><span data-line="36">
-</span><span data-line="37">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span data-line="39">
-</span><span data-line="40">        <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
-</span><span data-line="41">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">)</span>
+</span><span data-line="13"><span class="w">    </span><span class="sd">"""No Bpod, no Arduino (BEHAVIOR_CONTROLLER = OTHER): area 1 entry is</span>
+</span><span data-line="14"><span class="sd">    reacted to by a custom CameraTriggerBase (camera_trigger.py, in this</span>
+</span><span data-line="15"><span class="sd">    same code directory), which plays the sound and lights an LED strip LED</span>
+</span><span data-line="16"><span class="sd">    the moment the animal enters. create_trial just waits for that to</span>
+</span><span data-line="17"><span class="sd">    happen (or times out), then ends the trial.</span>
+</span><span data-line="18">
+</span><span data-line="19"><span class="sd">    Required setup (in SETTINGS, not in this file):</span>
+</span><span data-line="20"><span class="sd">    - CAM_BOX_TRACKING_POSITION must be ON.</span>
+</span><span data-line="21"><span class="sd">    - BOX area 1 must be set to TRIGGER status (and positioned/sized as</span>
+</span><span data-line="22"><span class="sd">      wanted) in the box area settings.</span>
+</span><span data-line="23"><span class="sd">    Without both, area1_is_triggered never becomes True and every trial</span>
+</span><span data-line="24"><span class="sd">    will just time out.</span>
+</span><span data-line="25"><span class="sd">    """</span>
+</span><span data-line="26">
+</span><span data-line="27">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="28">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="29">
+</span><span data-line="30">        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"""</span>
+</span><span data-line="31"><span class="s2">        Area 1 Sound Task</span>
+</span><span data-line="32"><span class="s2">        ----------------------------------------------------------------</span>
+</span><span data-line="33"><span class="s2">        No controller involved -- driven entirely by camera position</span>
+</span><span data-line="34"><span class="s2">        tracking, reacted to in camera_trigger.py. Each trial:</span>
+</span><span data-line="35"><span class="s2">        - If the animal enters BOX area 1, camera_trigger.py plays a sound</span>
+</span><span data-line="36"><span class="s2">          and lights an LED on the strip; the trial ends right after.</span>
+</span><span data-line="37"><span class="s2">        - Otherwise, the trial ends anyway after </span><span class="si">{</span><span class="n">TRIAL_TIMEOUT</span><span class="si">}</span><span class="s2"> seconds.</span>
+</span><span data-line="38">
+</span><span data-line="39"><span class="s2">        Requires CAM_BOX_TRACKING_POSITION ON and BOX area 1 set to TRIGGER</span>
+</span><span data-line="40"><span class="s2">        (see SETTINGS).</span>
+</span><span data-line="41"><span class="s2">        """</span>
 </span><span data-line="42">
-</span><span data-line="43">        <span class="n">deadline</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="n">TRIAL_TIMEOUT</span>
-</span><span data-line="44">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
-</span><span data-line="45">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
-</span><span data-line="46">                <span class="k">break</span>
-</span><span data-line="47">
-</span><span data-line="48">        <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
-</span><span data-line="49">
-</span><span data-line="50">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="51">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"entered_area1"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">())</span>
-</span><span data-line="52">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span><span data-line="53">
-</span><span data-line="54">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="55">        <span class="k">pass</span>
+</span><span data-line="43">    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="44"><span class="w">        </span><span class="sd">"""Loads the sound once -- camera_trigger.py's function4 call</span>
+</span><span data-line="45"><span class="sd">        replays this same loaded sound every time area 1 is entered, no</span>
+</span><span data-line="46"><span class="sd">        reload needed.</span>
+</span><span data-line="47"><span class="sd">        """</span>
+</span><span data-line="48">
+</span><span data-line="49">        <span class="n">gain_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="50">            <span class="n">speaker</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"whitenoise"</span>
+</span><span data-line="51">        <span class="p">)</span>
+</span><span data-line="52">        <span class="n">gain_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calibrations</span><span class="o">.</span><span class="n">sound_calibration</span><span class="o">.</span><span class="n">get_sound_gain</span><span class="p">(</span>
+</span><span data-line="53">            <span class="n">speaker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dB</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">sound_name</span><span class="o">=</span><span class="s2">"whitenoise"</span>
+</span><span data-line="54">        <span class="p">)</span>
+</span><span data-line="55">        <span class="n">sound_left</span> <span class="o">=</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain_left</span><span class="p">)</span>
+</span><span data-line="56">        <span class="n">sound_right</span> <span class="o">=</span> <span class="n">whitenoise_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain_right</span><span class="p">)</span>
+</span><span data-line="57">        <span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">sound_left</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">sound_right</span><span class="p">)</span>
+</span><span data-line="58">
+</span><span data-line="59">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">tracking</span><span class="p">:</span>
+</span><span data-line="60">            <span class="nb">print</span><span class="p">(</span>
+</span><span data-line="61">                <span class="s2">"Warning: CAM_BOX_TRACKING_POSITION is OFF -- "</span>
+</span><span data-line="62">                <span class="s2">"area1 will never trigger."</span>
+</span><span data-line="63">            <span class="p">)</span>
+</span><span data-line="64">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">areas_trigger</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+</span><span data-line="65">            <span class="nb">print</span><span class="p">(</span>
+</span><span data-line="66">                <span class="s2">"Warning: BOX area 1 is not set to TRIGGER -- "</span>
+</span><span data-line="67">                <span class="s2">"area1 will never trigger."</span>
+</span><span data-line="68">            <span class="p">)</span>
+</span><span data-line="69">
+</span><span data-line="70">        <span class="c1"># Set by camera_trigger.py's CameraTrigger.trigger() the moment</span>
+</span><span data-line="71">        <span class="c1"># area 1 is entered; create_trial just waits on it.</span>
+</span><span data-line="72">        <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+</span><span data-line="73">
+</span><span data-line="74">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="75"><span class="w">        </span><span class="sd">"""Waits for camera_trigger.py to react to area 1, or for</span>
+</span><span data-line="76"><span class="sd">        TRIAL_TIMEOUT seconds to pass -- then ends the trial either way."""</span>
+</span><span data-line="77">
+</span><span data-line="78">        <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span data-line="79">
+</span><span data-line="80">        <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="81">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">)</span>
+</span><span data-line="82">
+</span><span data-line="83">        <span class="n">deadline</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="n">TRIAL_TIMEOUT</span>
+</span><span data-line="84">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">deadline</span><span class="p">:</span>
+</span><span data-line="85">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+</span><span data-line="86">                <span class="k">break</span>
+</span><span data-line="87">
+</span><span data-line="88">        <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
+</span><span data-line="89">
+</span><span data-line="90">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="91">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"entered_area1"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area1_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">())</span>
+</span><span data-line="92">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="93">
+</span><span data-line="94">    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="95">        <span class="k">pass</span>
 </span></pre></div>
 </div>
-<p>The part of <a class="reference internal" href="../examples/camera_trigger.html"><span class="std std-doc">camera_trigger.py</span></a> that reacts to area 1.
-It runs on every frame of the box camera; when the animal is in area 1 and the task’s
-signal is not set yet, it registers the entry, plays the sound (direct function 4,
-“Play Loaded Sound”), lights the LED and sets the signal:</p>
+<p>Step by step:</p>
+<ul>
+<li><p><strong>The imports.</strong> <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code> is the class every task inherits from.
+<code class="docutils literal notranslate"><span class="pre">whitenoise_generator</span></code> comes from <code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code>, a file of the example
+project (see <a class="reference internal" href="#playing-a-sound"><span class="std std-ref">Playing a sound</span></a>), <code class="docutils literal notranslate"><span class="pre">sound_device</span></code> is the sound card,
+and <code class="docutils literal notranslate"><span class="pre">time_utils</span></code> gives the time of the Raspberry Pi.</p></li>
+<li><p><strong>The class name</strong>, <code class="docutils literal notranslate"><span class="pre">RaspberryArea1Sound</span></code>, is the name of the task.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__init__</span></code></strong> only sets <code class="docutils literal notranslate"><span class="pre">self.info</span></code>, the description shown when the task is
+selected in the GUI. Always call <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> first.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">start</span></code></strong> prepares the session:</p>
+<ul class="simple">
+<li><p>it loads the sound, a white noise of 1 second at 70 dB from the sound
+calibration, once: it will be played every time the animal enters the area;</p></li>
+<li><p>it warns if the camera is not set up for the task;</p></li>
+<li><p>it creates <code class="docutils literal notranslate"><span class="pre">self.area1_event</span></code>, the signal the camera trigger sets when the
+animal enters area 1.</p></li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">create_trial</span></code></strong> runs the whole trial:</p>
+<ol class="arabic simple">
+<li><p>It clears the signal and registers the start of the trial. Here the Raspberry
+Pi is also the controller, so there is only <strong>one clock</strong>: the same time is
+passed as both clocks.</p></li>
+<li><p>It waits for the signal, checking every 0.05 seconds whether the task has to
+stop, up to <code class="docutils literal notranslate"><span class="pre">TRIAL_TIMEOUT</span></code> seconds.</p></li>
+<li><p>It registers the end of the trial.</p></li>
+</ol>
+<p>When the trial ends, the next one starts right away with a new call to
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code>, until the session ends.</p>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">after_trial</span></code></strong> saves whether the animal entered the area (<code class="docutils literal notranslate"><span class="pre">entered_area1</span></code>), and
+the water given, <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">close</span></code></strong> has nothing to clean up.</p></li>
+</ul>
+</section>
+<section id="the-camera-trigger">
+<h3>The camera trigger</h3>
+<p>The animal is detected by the camera trigger, in
+<a class="reference internal" href="../examples/camera_trigger.html"><span class="std std-doc">camera_trigger.py</span></a>: a class that inherits from
+<code class="docutils literal notranslate"><span class="pre">CameraTriggerBase</span></code>, whose <code class="docutils literal notranslate"><span class="pre">trigger</span></code> method is called on every frame of the box
+camera while a task is running (see
+<a class="reference internal" href="../devices/camera.html#reacting-to-the-animals-position"><span class="std std-ref">Reacting to the Animal’s Position</span></a>).
+This is the part that reacts to area 1:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1">        <span class="n">area1_event</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="s2">"area1_event"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># only in this task</span>
 </span><span data-line="2">        <span class="k">if</span> <span class="p">(</span>
 </span><span data-line="3">            <span class="n">cam</span><span class="o">.</span><span class="n">area1_is_triggered</span>
@@ -976,39 +795,25 @@ signal is not set yet, it registers the entry, plays the sound (direct function 
 </span><span data-line="10">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># "Play Loaded Sound"</span>
 </span><span data-line="11">
 </span><span data-line="12">            <span class="n">led_strip</span><span class="o">.</span><span class="n">set_led_color</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
-</span><span data-line="13">            <span class="n">led_strip</span><span class="o">.</span><span class="n">update_strip</span><span class="p">()</span>
+</span><span data-line="13">            <span class="n">led_strip</span><span class="o">.</span><span class="n">update_strip</span><span class="p">(</span><span class="n">sleep_duration</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </span><span data-line="14">
 </span><span data-line="15">            <span class="n">area1_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<p>The original file also prints a warning in <code class="docutils literal notranslate"><span class="pre">start</span></code> if the camera is not set up for
-the task.</p>
-</section>
-<section id="reacting-to-the-touchscreen">
-<h3>Reacting to the touchscreen</h3>
-<p><a class="reference internal" href="../examples/raspberry_touchscreen.html"><span class="std std-doc">raspberry_touchscreen.py</span></a> follows the same
-pattern with the touchscreen: <code class="docutils literal notranslate"><span class="pre">start</span></code> draws 6 rectangles and creates
-<code class="docutils literal notranslate"><span class="pre">self.touch_event</span></code>, and <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> waits for it as above. In
-<a class="reference internal" href="../examples/touch_trigger.html"><span class="std std-doc">touch_trigger.py</span></a>, <code class="docutils literal notranslate"><span class="pre">trigger(self,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">timestamp)</span></code> is
-called on every touch; when the touch is inside one of the rectangles, it runs a
-different visual stimulus for each one and sets the signal:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1">    <span class="k">def</span><span class="w"> </span><span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="2">        <span class="n">rects</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="s2">"rects"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># only in this task</span>
-</span><span data-line="3">        <span class="k">if</span> <span class="n">rects</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="4">            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rect</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rects</span><span class="p">):</span>
-</span><span data-line="5">                <span class="k">if</span> <span class="n">_inside</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rect</span><span class="p">):</span>
-</span><span data-line="6">                    <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="n">FUNCTION_IDS</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-</span><span data-line="7">                    <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">touch_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-</span><span data-line="8">                    <span class="k">return</span>
-</span></pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">_inside</span></code> checks whether a point is inside a rectangle, and <code class="docutils literal notranslate"><span class="pre">FUNCTION_IDS</span></code> are the
-direct functions of the 6 stimuli. Every touch is also recorded automatically as an
-event (see <a class="reference internal" href="#trial-data"><span class="std std-ref">Trial data</span></a>).</p>
-</section>
-<section id="complete-examples">
-<h3>Complete examples</h3>
-<p>The two examples above, complete, are in
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.area1_is_triggered</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> while the animal is in area 1. It stays <code class="docutils literal notranslate"><span class="pre">True</span></code>
+on every frame while the animal is inside, so the trigger only acts if the signal
+is not set yet: once per trial.</p></li>
+<li><p>It registers the entry as the event <code class="docutils literal notranslate"><span class="pre">area1_entered</span></code>, plays the sound loaded in
+<code class="docutils literal notranslate"><span class="pre">start</span></code> (direct function 4, see <a class="reference internal" href="#playing-a-sound"><span class="std std-ref">Playing a sound</span></a>), lights the
+first LED of the strip, and sets the signal, which ends the wait of
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.task</span></code> is the task that is running. <code class="docutils literal notranslate"><span class="pre">getattr</span></code> is used because the trigger is
+called for every task, and only this one has <code class="docutils literal notranslate"><span class="pre">area1_event</span></code>.</p></li>
+</ul>
+<p>The complete code of this task and of
+<a class="reference internal" href="../examples/raspberry_stimulus_menu.html"><span class="std std-doc">raspberry_stimulus_menu.py</span></a>, which follows the
+same pattern with the touchscreen, are in
 <a class="reference internal" href="../examples/tasks_raspberry.html"><span class="std std-doc">Task Examples (Raspberry Only)</span></a>.</p>
 </section>
 </section>
@@ -1016,7 +821,25 @@ event (see <a class="reference internal" href="#trial-data"><span class="std std
 <section id="trial-data">
 <h2>Trial data</h2>
 <p>When a trial ends, everything registered in it is put in <code class="docutils literal notranslate"><span class="pre">self.trial_data</span></code>, a
-dictionary that <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> reads to decide the outcome of the trial. Its keys:</p>
+dictionary that <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> reads to decide the outcome of the trial. For example,
+a trial of the first task in which the animal enters area 1 after 8.11 seconds:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
+</span><span data-line="2">    <span class="s2">"date"</span><span class="p">:</span> <span class="s2">"2026-11-07 10:30:00"</span><span class="p">,</span>
+</span><span data-line="3">    <span class="s2">"trial"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+</span><span data-line="4">    <span class="s2">"subject"</span><span class="p">:</span> <span class="s2">"mouse1"</span><span class="p">,</span>
+</span><span data-line="5">    <span class="s2">"task"</span><span class="p">:</span> <span class="s2">"RaspberryArea1Sound"</span><span class="p">,</span>
+</span><span data-line="6">    <span class="s2">"system_name"</span><span class="p">:</span> <span class="s2">"village01"</span><span class="p">,</span>
+</span><span data-line="7">    <span class="s2">"TRIAL_START"</span><span class="p">:</span> <span class="mf">1793961045.20</span><span class="p">,</span>
+</span><span data-line="8">    <span class="s2">"TRIAL_END"</span><span class="p">:</span> <span class="mf">1793961053.36</span><span class="p">,</span>
+</span><span data-line="9">    <span class="s2">"area1_entered"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1793961053.31</span><span class="p">],</span>
+</span><span data-line="10">    <span class="s2">"sound"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1793961053.32</span><span class="p">],</span>
+</span><span data-line="11">    <span class="s2">"ordered_list_of_events"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"area1_entered"</span><span class="p">,</span> <span class="s2">"sound"</span><span class="p">],</span>
+</span><span data-line="12"><span class="p">}</span>
+</span></pre></div>
+</div>
+<p>If the animal does not enter, there are no <code class="docutils literal notranslate"><span class="pre">area1_entered</span></code> and <code class="docutils literal notranslate"><span class="pre">sound</span></code> keys: the
+trial just ends after 60 seconds.</p>
+<p>The keys are:</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1032,10 +855,10 @@ dictionary that <code class="docutils literal notranslate"><span class="pre">aft
 <td class="text-left"><p>When the trial started (<code class="docutils literal notranslate"><span class="pre">register_start_trial</span></code>) and ended (<code class="docutils literal notranslate"><span class="pre">register_end_trial</span></code>, or the moment <code class="docutils literal notranslate"><span class="pre">create_trial</span></code> returned).</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_START&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;STATE_&lt;name&gt;_END&quot;</span></code></p></td>
-<td class="text-left"><p>For every state registered with <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code>, a list with the times it was entered and left (a list, because a state can be visited several times). A state ends when the next one is entered, or when the trial ends. A state that was <strong>not visited</strong> is not in the dictionary.</p></td>
+<td class="text-left"><p>For every state registered with <code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code>, a list with the times it was entered and left (a list, because a state can be visited several times). A state ends when the next one is entered, or when the trial ends. A state that was <strong>not visited</strong> is not in the dictionary. The first task has no states.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;event&gt;&quot;</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;area1_entered&quot;</span></code>…)</p></td>
-<td class="text-left"><p>For every event registered, a list with the times of each occurrence. Events that did not happen are not in the dictionary. The ones the system registers by itself are included too: <code class="docutils literal notranslate"><span class="pre">sound</span></code> when a sound starts playing, <code class="docutils literal notranslate"><span class="pre">touch_&lt;x&gt;_&lt;y&gt;</span></code> for every touch (e.g. <code class="docutils literal notranslate"><span class="pre">touch_640_360</span></code>).</p></td>
+<td class="text-left"><p>For every event registered, a list with the times of each occurrence. Events that did not happen are not in the dictionary. The ones the system registers by itself are included too: <code class="docutils literal notranslate"><span class="pre">sound</span></code> when a sound starts playing, <code class="docutils literal notranslate"><span class="pre">touch_&lt;x&gt;_&lt;y&gt;</span></code> for every touch (e.g. <code class="docutils literal notranslate"><span class="pre">touch_640_360</span></code>), <code class="docutils literal notranslate"><span class="pre">screen_*</span></code> when a stimulus appears on the screen.</p></td>
 </tr>
 <tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">&quot;ordered_list_of_events&quot;</span></code></p></td>
 <td class="text-left"><p>The names of all the events, in the order they happened.</p></td>
@@ -1045,82 +868,135 @@ dictionary that <code class="docutils literal notranslate"><span class="pre">aft
 </div>
 <p>All the times are in seconds (UNIX time), so they can be compared and subtracted
 directly.</p>
-<p>For example, a trial of the camera example in which the animal enters area 1 after
-8.11 seconds:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="p">{</span>
-</span><span data-line="2">    <span class="s2">"date"</span><span class="p">:</span> <span class="s2">"2026-11-07 10:30:00"</span><span class="p">,</span>
-</span><span data-line="3">    <span class="s2">"trial"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-</span><span data-line="4">    <span class="s2">"subject"</span><span class="p">:</span> <span class="s2">"mouse1"</span><span class="p">,</span>
-</span><span data-line="5">    <span class="s2">"task"</span><span class="p">:</span> <span class="s2">"RaspberryArea1Sound"</span><span class="p">,</span>
-</span><span data-line="6">    <span class="s2">"system_name"</span><span class="p">:</span> <span class="s2">"village01"</span><span class="p">,</span>
-</span><span data-line="7">    <span class="s2">"TRIAL_START"</span><span class="p">:</span> <span class="mf">1793961045.20</span><span class="p">,</span>
-</span><span data-line="8">    <span class="s2">"TRIAL_END"</span><span class="p">:</span> <span class="mf">1793961053.36</span><span class="p">,</span>
-</span><span data-line="9">    <span class="s2">"area1_entered"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1793961053.31</span><span class="p">],</span>
-</span><span data-line="10">    <span class="s2">"sound"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1793961053.32</span><span class="p">],</span>
-</span><span data-line="11">    <span class="s2">"ordered_list_of_events"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"area1_entered"</span><span class="p">,</span> <span class="s2">"sound"</span><span class="p">],</span>
-</span><span data-line="12"><span class="p">}</span>
-</span></pre></div>
-</div>
-<p>The usual questions are answered like this (the comments give the results for the
-trial above):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="4">    <span class="c1"># Did an event happen? Its key exists: use .get with an empty list by default.</span>
-</span><span data-line="5">    <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"area1_entered"</span><span class="p">,</span> <span class="p">[])</span>
-</span><span data-line="6">    <span class="n">entered</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>  <span class="c1"># True</span>
+<p>This is how to get the usual information from it in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> (the comments
+give the results for the trial above):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="2">    <span class="c1"># Did an event happen? Its key exists.</span>
+</span><span data-line="3">    <span class="n">entered</span> <span class="o">=</span> <span class="s2">"area1_entered"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span>  <span class="c1"># True</span>
+</span><span data-line="4">
+</span><span data-line="5">    <span class="c1"># How many times? The length of its list (an empty list if it did not happen).</span>
+</span><span data-line="6">    <span class="n">number_of_sounds</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sound"</span><span class="p">,</span> <span class="p">[]))</span>  <span class="c1"># 1</span>
 </span><span data-line="7">
-</span><span data-line="8">    <span class="c1"># How long did something take? Subtract two times.</span>
-</span><span data-line="9">    <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">]</span>
-</span><span data-line="10">    <span class="n">latency</span> <span class="o">=</span> <span class="n">entries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span> <span class="k">if</span> <span class="n">entered</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span>  <span class="c1"># 8.11 s</span>
-</span><span data-line="11">
-</span><span data-line="12">    <span class="c1"># Was a state visited? If not, its key is missing: use a nan default.</span>
-</span><span data-line="13">    <span class="n">t_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"STATE_reward_START"</span><span class="p">,</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="14">    <span class="n">rewarded</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t_reward</span><span class="p">)</span>  <span class="c1"># False (this task has no states)</span>
-</span><span data-line="15">
-</span><span data-line="16">    <span class="c1"># Touches: one key per position, all starting with "touch_".</span>
-</span><span data-line="17">    <span class="n">n_touches</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
-</span><span data-line="18">        <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">times</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"touch_"</span><span class="p">)</span>
-</span><span data-line="19">    <span class="p">)</span>  <span class="c1"># 0</span>
-</span><span data-line="20">
-</span><span data-line="21">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="n">latency</span><span class="p">)</span>
-</span><span data-line="22">    <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span data-line="8">    <span class="c1"># When? The first element of its list.</span>
+</span><span data-line="9">    <span class="n">entry_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">"area1_entered"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># 1793961053.31</span>
+</span><span data-line="10">
+</span><span data-line="11">    <span class="c1"># How long did something take? Subtract two times.</span>
+</span><span data-line="12">    <span class="n">trial_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="p">[</span><span class="s2">"TRIAL_START"</span><span class="p">]</span>
+</span><span data-line="13">    <span class="n">latency</span> <span class="o">=</span> <span class="n">entry_time</span> <span class="o">-</span> <span class="n">trial_start</span>  <span class="c1"># 8.11 s</span>
+</span><span data-line="14">
+</span><span data-line="15">    <span class="c1"># Was a state visited? Its key exists.</span>
+</span><span data-line="16">    <span class="n">in_iti</span> <span class="o">=</span> <span class="s2">"STATE_iti_START"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span>  <span class="c1"># False (this task has no states)</span>
+</span><span data-line="17">
+</span><span data-line="18">    <span class="c1"># Touches: one key per position, all starting with "touch_".</span>
+</span><span data-line="19">    <span class="n">number_of_touches</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+</span><span data-line="20">        <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">times</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trial_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"touch_"</span><span class="p">)</span>
+</span><span data-line="21">    <span class="p">)</span>  <span class="c1"># 0</span>
 </span></pre></div>
 </div>
 <section id="what-is-saved">
 <h3>What is saved</h3>
-<p>At the end of each trial, <code class="docutils literal notranslate"><span class="pre">trial_data</span></code> (with the values registered in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>)
-becomes one row of the session table. When the session ends, two files are saved:</p>
+<p>At the end of each trial, <code class="docutils literal notranslate"><span class="pre">trial_data</span></code>, with the values registered in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>
+(<code class="docutils literal notranslate"><span class="pre">entered_area1</span></code> and <code class="docutils literal notranslate"><span class="pre">water</span></code> in the first task), becomes one row of the session
+table. When the session ends, two files are saved:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">&lt;session&gt;.csv</span></code></strong>: one row per trial, with a column for each key above and each
-registered value. It is the file used for the analysis and by the training protocol
-(<code class="docutils literal notranslate"><span class="pre">self.df</span></code>). A trial only gets its row when it finishes, so the trial that was
-running when the session stopped is not in it.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">&lt;session&gt;_RAW.csv</span></code></strong>: one line per event, written as they happen, including the
-trial that was interrupted.</p></li>
+registered value. It is the file used for the analysis and by the training
+protocol (<code class="docutils literal notranslate"><span class="pre">self.df</span></code>). A trial only gets its row when it finishes, so the trial
+that was running when the session stopped is not in it.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">&lt;session&gt;_RAW.csv</span></code></strong>: one line per event, written as they happen, including
+the trial that was interrupted.</p></li>
 </ul>
 <p>The session is saved if at least one trial was completed. Design the task so that
 trials end after a reasonable time even if the animal does nothing (with a timeout,
-as in the examples): a session that is a single trial that never ends would not be
+as in the first task): a session that is a single trial that never ends would not be
 saved.</p>
 </section>
 </section>
 <hr class="docutils" />
-<section id="ending-the-session-from-the-task">
-<h2>Ending the session from the task</h2>
-<p>Set <code class="docutils literal notranslate"><span class="pre">self.force_stop</span> <span class="pre">=</span> <span class="pre">True</span></code> to end the session. The session ends at once, so set it
-in <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>, when the trial is already complete: set during a trial (from a
-trigger or a direct function), it cuts that trial. It works in Auto mode too: the
-session is saved and the subject is let out, as when <code class="docutils literal notranslate"><span class="pre">maximum_duration</span></code> is reached,
-even before <code class="docutils literal notranslate"><span class="pre">minimum_duration</span></code>. For example, to stop after a maximum number of trials
-(<code class="docutils literal notranslate"><span class="pre">max_trials</span></code> defined in the training protocol):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="2">    <span class="o">...</span>
-</span><span data-line="3">    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">max_trials</span><span class="p">:</span>
-</span><span data-line="4">        <span class="bp">self</span><span class="o">.</span><span class="n">force_stop</span> <span class="o">=</span> <span class="kc">True</span>
+<section id="playing-a-sound">
+<h2>Playing a sound</h2>
+<p>The sound card is connected to the Raspberry Pi, so the task loads the sound and plays
+it directly. This uses a file of your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory, written by you (the
+example project already includes it): <strong><code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code></strong>, with functions that
+generate sounds as NumPy arrays, such as <code class="docutils literal notranslate"><span class="pre">tone_generator</span></code> or <code class="docutils literal notranslate"><span class="pre">whitenoise_generator</span></code>.
+See <a class="reference internal" href="../devices/sound.html#sound-functions"><span class="std std-ref">Sound Functions</span></a>. The sound is loaded with
+<code class="docutils literal notranslate"><span class="pre">sound_device.load</span></code> and played with <code class="docutils literal notranslate"><span class="pre">sound_device.play</span></code> (see
+<a class="reference internal" href="../devices/sound.html#using-it-in-tasks"><span class="std std-ref">Using It in Tasks</span></a>).</p>
+<p>In this example, every trial a tone of a random frequency (5 or 10 kHz) is loaded and
+played, followed by the inter-trial interval:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">sound_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">tone_generator</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskBase</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
+</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">village.scripts.time_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_utils</span>
+</span><span data-line="9">
+</span><span data-line="10">
+</span><span data-line="11"><span class="k">class</span><span class="w"> </span><span class="nc">SoundEveryTrial</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
+</span><span data-line="12">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="13">        <span class="c1"># load this trial's sound before the trial starts</span>
+</span><span data-line="14">        <span class="bp">self</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">])</span>
+</span><span data-line="15">        <span class="n">sound</span> <span class="o">=</span> <span class="n">tone_generator</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frequency</span><span class="p">)</span>
+</span><span data-line="16">        <span class="n">sound_device</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">sound</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">sound</span><span class="p">)</span>
+</span><span data-line="17">
+</span><span data-line="18">        <span class="n">t0</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span>
+</span><span data-line="19">        <span class="bp">self</span><span class="o">.</span><span class="n">register_start_trial</span><span class="p">(</span><span class="n">raspberry_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">,</span> <span class="n">controller_timestamp</span><span class="o">=</span><span class="n">t0</span><span class="p">)</span>
+</span><span data-line="20">
+</span><span data-line="21">        <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"sound"</span><span class="p">,</span> <span class="n">t0</span><span class="p">)</span>
+</span><span data-line="22">        <span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</span><span data-line="23">        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</span><span data-line="24">
+</span><span data-line="25">        <span class="bp">self</span><span class="o">.</span><span class="n">register_enter_state</span><span class="p">(</span><span class="s2">"iti"</span><span class="p">,</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
+</span><span data-line="26">        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">iti_time</span><span class="p">)</span>
+</span><span data-line="27">
+</span><span data-line="28">        <span class="bp">self</span><span class="o">.</span><span class="n">register_end_trial</span><span class="p">(</span><span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">())</span>
+</span><span data-line="29">
+</span><span data-line="30">    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">):</span>
+</span><span data-line="31"><span class="w">        </span><span class="sd">"""Waits the given seconds, less if the task has to stop."""</span>
+</span><span data-line="32">        <span class="n">end</span> <span class="o">=</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">+</span> <span class="n">seconds</span>
+</span><span data-line="33">        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span> <span class="ow">and</span> <span class="n">time_utils</span><span class="o">.</span><span class="n">now_timestamp</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+</span><span data-line="34">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+</span><span data-line="35">
+</span><span data-line="36">    <span class="k">def</span><span class="w"> </span><span class="nf">after_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="37">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"frequency"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequency</span><span class="p">)</span>
+</span><span data-line="38">        <span class="bp">self</span><span class="o">.</span><span class="n">register_value</span><span class="p">(</span><span class="s2">"water"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p>The same works for any criterion: an amount of water, a number of correct trials…</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">create_trial</span></code> loads the sound before registering the start of the trial, so it is
+ready when it is needed. Loading takes longer the longer the sound is; playing a
+loaded sound starts at once.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">register_enter_state</span></code> organizes the trial in states, as Bpod does: the trial data
+gets <code class="docutils literal notranslate"><span class="pre">STATE_sound_START</span></code>, <code class="docutils literal notranslate"><span class="pre">STATE_iti_START</span></code>… A state ends when the next one is
+entered, or when the trial ends.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wait</span></code> is a method of this task, not of <code class="docutils literal notranslate"><span class="pre">TaskBase</span></code>: it waits in short steps, so the
+task can stop in the middle of a wait.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self.frequency</span></code> is an attribute of the task, so <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> can register it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gain=0.05</span></code> is an arbitrary volume. To play the sound at a given level in dB, use
+the sound calibration, as the first task does (see <a class="reference internal" href="../devices/sound.html"><span class="std std-doc">Sound</span></a>).</p></li>
+<li><p>When the sound starts playing, the system adds a <code class="docutils literal notranslate"><span class="pre">sound</span></code> event to <code class="docutils literal notranslate"><span class="pre">trial_data</span></code>.</p></li>
+</ul>
+<p>A trigger can also play a sound, as the camera trigger of the first task does with a
+<strong>direct function</strong>: <code class="docutils literal notranslate"><span class="pre">self.task.execute_function(4)</span></code> runs <code class="docutils literal notranslate"><span class="pre">function4</span></code> of
+<code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code>, another file of the example project, which plays the sound
+that is loaded:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.direct_functions_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectFunctionsBase</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
+</span><span data-line="3">
+</span><span data-line="4">
+</span><span data-line="5"><span class="k">class</span><span class="w"> </span><span class="nc">DirectFunctions</span><span class="p">(</span><span class="n">DirectFunctionsBase</span><span class="p">):</span>
+</span><span data-line="6">    <span class="k">def</span><span class="w"> </span><span class="nf">function4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="7"><span class="w">        </span><span class="sd">"""Play Loaded Sound"""</span>
+</span><span data-line="8">        <span class="n">sound_device</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>Direct functions are numbered actions, <code class="docutils literal notranslate"><span class="pre">function1</span></code> to <code class="docutils literal notranslate"><span class="pre">function98</span></code>, that you write in
+a class that inherits from <code class="docutils literal notranslate"><span class="pre">DirectFunctionsBase</span></code>. They can be run from the task, the
+triggers or the GUI, and they can do anything the Raspberry Pi can: draw on the
+screen, write on the camera image… See
+<a class="reference internal" href="functions.html#writing-direct-functions"><span class="std std-ref">Writing Direct Functions</span></a>.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -1163,7 +1039,7 @@ even before <code class="docutils literal notranslate"><span class="pre">minimum
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

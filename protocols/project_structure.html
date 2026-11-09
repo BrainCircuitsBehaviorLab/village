@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -623,7 +627,7 @@ example, the <code class="docutils literal notranslate"><span class="pre">code/<
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1">code/
 </span><span data-line="2">├── bpod_1_habituation.py ... bpod_6_delay.py    # tasks
 </span><span data-line="3">├── arduino_1_habituation.py ... arduino_6_delay.py
-</span><span data-line="4">├── raspberry_area1_sound.py, raspberry_touchscreen.py
+</span><span data-line="4">├── raspberry_area1_sound.py, raspberry_stimulus_menu.py
 </span><span data-line="5">├── training_protocol.py
 </span><span data-line="6">├── direct_functions.py, sound_functions.py, video_functions.py
 </span><span data-line="7">├── camera_trigger.py, camera_draw.py, touch_trigger.py
@@ -634,6 +638,8 @@ example, the <code class="docutils literal notranslate"><span class="pre">code/<
 </span><span data-line="12">└── village_arduino/                             # firmware for the Arduino examples
 </span></pre></div>
 </div>
+<p>Its <code class="docutils literal notranslate"><span class="pre">media/</span></code> folder holds the image, the image with transparency and the short video
+that the screen examples show: <code class="docutils literal notranslate"><span class="pre">image.png</span></code>, <code class="docutils literal notranslate"><span class="pre">image_alpha.png</span></code> and <code class="docutils literal notranslate"><span class="pre">video.mp4</span></code>.</p>
 </section>
 </section>
 </section>
@@ -675,7 +681,7 @@ example, the <code class="docutils literal notranslate"><span class="pre">code/<
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -1,5 +1,6 @@
 import random
 import struct
+import time
 from collections import deque
 
 import numpy as np
@@ -44,10 +45,10 @@ def get_delay_probabilities(
 
 # Protocol (see runDelay() in village_arduino/village_arduino.ino):
 #
-# Pi -> Arduino, 10 raw bytes, sent once at the start of each trial:
-#   [CMD_START_TRIAL, first_port, c_led_on_timeout_ms (uint16, LE),
-#    delay_ms (uint16, LE), total_timeout_ms (uint16, LE),
-#    valve_time_ms (uint16, LE)]
+# Pi -> Arduino, 18 raw bytes, sent once at the start of each trial:
+#   [CMD_START_TRIAL, first_port, c_led_on_timeout_ms (uint32, LE),
+#    delay_ms (uint32, LE), total_timeout_ms (uint32, LE),
+#    valve_time_ms (uint32, LE)]
 #   Tells the Arduino which side lights up first this trial, how long to
 #   wait for the center poke, how long to wait before lighting the other
 #   side too, the overall response window, and the valve time for a
@@ -100,6 +101,7 @@ _OUTCOME_NAMES = {
 BAUDRATE = 9600  # must match the Arduino sketch's Serial.begin(...)
 READ_TIMEOUT = 0.05  # seconds; also how often should_stop gets re-checked
 MESSAGE_SIZE = 6  # every Arduino -> Pi message is exactly this many bytes
+STARTUP_WAIT = 2.0  # seconds; opening the port resets most Arduino boards
 TOTAL_RESPONSE_WINDOW = 40  # seconds, from the first cue turning on
 
 
@@ -122,7 +124,7 @@ class Arduino6Delay(TaskBase):
           outcome: correct if it's the side that was cued first, incorrect
           otherwise. No poke within the whole window is a miss.
             * correct -> reward, then a short delay before the next trial
-            * incorrect -> the Pi plays a buzzer, then a silent timeout
+            * incorrect -> the Pi plays a penalty tone, then a silent timeout
             * miss -> the trial just ends, no penalty
 
         The delay is drawn from a distribution controlled by self.p (0-1):
@@ -147,8 +149,8 @@ class Arduino6Delay(TaskBase):
         - self.settings.c_led_on_time: max wait for the center poke, seconds
         - self.settings.iti_time: inter-trial interval after a correct
           response, seconds
-        - self.settings.noise_time: buzzer duration after a wrong poke, seconds
-        - self.settings.timeout: total penalty duration (buzzer + silence),
+        - self.settings.noise_time: penalty tone duration after a wrong poke, seconds
+        - self.settings.timeout: total penalty duration (tone + silence),
           seconds
         - self.settings.p (optional, default 0.0): initial difficulty, 0-1
         - self.settings.curve_power (optional, default 3.0): shape parameter
@@ -156,6 +158,11 @@ class Arduino6Delay(TaskBase):
         - self.settings.delay_thresholds: the possible delays between the two
           side cues (seconds) and, for each one, the p from which it starts
           to appear (0: always)
+
+        Required calibrations:
+        - water, for ports 1 and 3
+        - the "tone_600" sound, for speaker 0 (left) at 70 dB: the penalty
+          tone loaded by direct_functions.function2
         """
 
         self.serial_port = serial.Serial(
@@ -163,6 +170,9 @@ class Arduino6Delay(TaskBase):
             baudrate=BAUDRATE,
             timeout=READ_TIMEOUT,
         )
+        # Opening the port resets most Arduino boards: wait for the sketch
+        # to be running, or the first command would be lost.
+        time.sleep(STARTUP_WAIT)
         self.serial_port.reset_input_buffer()
 
         self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
@@ -229,7 +239,7 @@ class Arduino6Delay(TaskBase):
 
         self.serial_port.write(
             struct.pack(
-                "<BBHHHH",
+                "<BBIIII",
                 CMD_START_TRIAL,
                 port,
                 c_led_on_timeout_ms,

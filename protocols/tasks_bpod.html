@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -596,15 +600,13 @@ when the STOP button is pressed, or when your task sets <code class="docutils li
 system checks these conditions continuously, not only between trials: if one is met
 during a trial, the session ends at once and that trial is cut (it is not saved in the
 session file, only in the RAW file). In Manual mode the session also ends after the
-number of trials chosen when launching the task; this limit is reached at the end of
-a trial, so nothing is lost.</p>
-<p>While Bpod runs a trial your Python code is waiting, so it cannot react in the
-middle of a trial by itself. Two channels connect the Raspberry Pi and Bpod during
-the trial: <strong>softcodes</strong> from Bpod make the Raspberry Pi run a direct function (to
-play a sound, show an image…), as in <a class="reference internal" href="#playing-a-sound"><span class="std std-ref">Playing a sound</span></a>, and
-<strong>softcodes</strong> from the Raspberry Pi to Bpod let the state machine react to something
-only the Raspberry Pi sees (the camera, the touchscreen…), see
-<a class="reference internal" href="tasks_reference.html#softcodes"><span class="std std-ref">Softcodes</span></a>.</p>
+number of trials chosen when launching the task.</p>
+<p>While Bpod runs a trial your Python code is waiting. Two channels connect the Raspberry
+Pi and Bpod during the trial: <strong>softcodes</strong> from Bpod make the Raspberry Pi run a
+direct function (to play a sound, show an image…), as in
+<a class="reference internal" href="#playing-a-sound"><span class="std std-ref">Playing a sound</span></a>, and <strong>softcodes</strong> from the Raspberry Pi to Bpod
+let the state machine react to something only the Raspberry Pi sees (the camera,
+the touchscreen…), see <a class="reference internal" href="tasks_reference.html#softcodes"><span class="std std-ref">Softcodes</span></a>.</p>
 <div class="warning admonition">
 <p class="admonition-title">Register water in every trial</p>
 <p>Call <code class="docutils literal notranslate"><span class="pre">self.register_value(&quot;water&quot;,</span> <span class="pre">...)</span></code> in every <code class="docutils literal notranslate"><span class="pre">after_trial</span></code>, with the microliters
@@ -889,8 +891,22 @@ by the task, before the trial starts, and played during the trial by a direct
 function: the state machine asks the Raspberry Pi to run it with a softcode.
 <code class="docutils literal notranslate"><span class="pre">BpodOutput.SoftCode4</span></code> in the <code class="docutils literal notranslate"><span class="pre">output_actions</span></code> of a state runs direct function 4 at
 the moment the state starts.</p>
-<p>In the example project, direct function 4 plays the sound that is loaded. It is
-defined in <code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code>:</p>
+<p>This uses two files of your project’s <code class="docutils literal notranslate"><span class="pre">code</span></code> directory, written by you (the example
+project already includes both):</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">direct_functions.py</span></code></strong>: a class that inherits from <code class="docutils literal notranslate"><span class="pre">DirectFunctionsBase</span></code>, with
+a method <code class="docutils literal notranslate"><span class="pre">functionN</span></code> for each direct function (N from 1 to 98). You choose what
+each number does. Direct functions can also be run from the GUI or from the
+triggers, and they can do anything the Raspberry Pi can: draw on the screen,
+write on the camera image… See
+<a class="reference internal" href="functions.html#writing-direct-functions"><span class="std std-ref">Writing Direct Functions</span></a>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sound_functions.py</span></code></strong>: functions that generate sounds as NumPy arrays, such as
+<code class="docutils literal notranslate"><span class="pre">tone_generator</span></code> or <code class="docutils literal notranslate"><span class="pre">whitenoise_generator</span></code>. See
+<a class="reference internal" href="../devices/sound.html#sound-functions"><span class="std std-ref">Sound Functions</span></a>.</p></li>
+</ul>
+<p>The sound is loaded with <code class="docutils literal notranslate"><span class="pre">sound_device.load</span></code> and played with <code class="docutils literal notranslate"><span class="pre">sound_device.play</span></code>
+(see <a class="reference internal" href="../devices/sound.html#using-it-in-tasks"><span class="std std-ref">Using It in Tasks</span></a>).</p>
+<p>In the example project, direct function 4 plays the sound that is loaded:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.direct_functions_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectFunctionsBase</span>
 </span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.sound_device</span><span class="w"> </span><span class="kn">import</span> <span class="n">sound_device</span>
 </span><span data-line="3">
@@ -947,16 +963,13 @@ and it is played when the animal pokes the center port:</p>
 </div>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">create_trial</span></code> runs before Bpod starts the trial, so it is the place to load the
-sound of each trial. Loading takes a few milliseconds; playing a loaded sound
-starts at once.</p></li>
+sound of each trial. Loading takes longer the longer the sound is; playing a
+loaded sound starts at once.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">self.frequency</span></code> is an attribute of the task, so <code class="docutils literal notranslate"><span class="pre">after_trial</span></code> can register it.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">gain=0.05</span></code> is an arbitrary volume. To play the sound at a given level in dB, use
 the sound calibration (see <a class="reference internal" href="../devices/sound.html"><span class="std std-doc">Sound</span></a>).</p></li>
 <li><p>When the sound starts playing, the system adds a <code class="docutils literal notranslate"><span class="pre">sound</span></code> event to <code class="docutils literal notranslate"><span class="pre">trial_data</span></code>.</p></li>
 </ul>
-<p>Direct functions can also be run from the GUI or from the triggers, and they can do
-anything the Raspberry Pi can: draw on the screen, write on the camera image… See
-<a class="reference internal" href="functions.html"><span class="std std-doc">Direct Functions</span></a>.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -999,7 +1012,7 @@ anything the Raspberry Pi can: draw on the screen, write on the camera image… 
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

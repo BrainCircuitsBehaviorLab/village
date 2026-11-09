@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protocols/tasks_reference.html">Task Reference</a></li>
@@ -437,6 +437,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.playground.html">playground</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
@@ -787,41 +791,50 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="215">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 </span><span data-line="216"><span class="w">        </span><span class="sd">"""Ensures that dictionary values match the types of default settings.</span>
 </span><span data-line="217">
-</span><span data-line="218"><span class="sd">        Args:</span>
-</span><span data-line="219"><span class="sd">            current_dict (dict[str, Any]): Input dictionary.</span>
-</span><span data-line="220">
-</span><span data-line="221"><span class="sd">        Returns:</span>
-</span><span data-line="222"><span class="sd">            Tuple[list[str], dict[str, Any]]: A tuple containing a list of keys with</span>
-</span><span data-line="223"><span class="sd">            type errors and the corrected dictionary.</span>
-</span><span data-line="224"><span class="sd">        """</span>
-</span><span data-line="225">        <span class="n">wrong_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="226">        <span class="n">default_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_dict</span><span class="p">()</span>
-</span><span data-line="227">        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">current_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="228">            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">default_dict</span><span class="p">:</span>
-</span><span data-line="229">                <span class="k">try</span><span class="p">:</span>
-</span><span data-line="230">                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">bool</span><span class="p">):</span>
-</span><span data-line="231">                        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"true"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"yes"</span><span class="p">]</span>
-</span><span data-line="232">                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">):</span>
-</span><span data-line="233">                        <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="234">                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">):</span>
-</span><span data-line="235">                        <span class="n">value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span data-line="236">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span data-line="237">                    <span class="n">wrong_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-</span><span data-line="238">                <span class="n">current_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-</span><span data-line="239">        <span class="k">return</span> <span class="n">wrong_keys</span><span class="p">,</span> <span class="n">current_dict</span></div>
+</span><span data-line="218"><span class="sd">        Numbers: a setting whose default is a float is always a float; one whose</span>
+</span><span data-line="219"><span class="sd">        default is an int is an int, unless the value has decimals (then it is a</span>
+</span><span data-line="220"><span class="sd">        float, never truncated).</span>
+</span><span data-line="221">
+</span><span data-line="222"><span class="sd">        Args:</span>
+</span><span data-line="223"><span class="sd">            current_dict (dict[str, Any]): Input dictionary.</span>
+</span><span data-line="224">
+</span><span data-line="225"><span class="sd">        Returns:</span>
+</span><span data-line="226"><span class="sd">            Tuple[list[str], dict[str, Any]]: A tuple containing a list of keys with</span>
+</span><span data-line="227"><span class="sd">            type errors and the corrected dictionary.</span>
+</span><span data-line="228"><span class="sd">        """</span>
+</span><span data-line="229">        <span class="n">wrong_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="230">        <span class="n">default_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_dict</span><span class="p">()</span>
+</span><span data-line="231">        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">current_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span data-line="232">            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">default_dict</span><span class="p">:</span>
+</span><span data-line="233">                <span class="k">try</span><span class="p">:</span>
+</span><span data-line="234">                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span data-line="235">                        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"true"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="s2">"yes"</span><span class="p">]</span>
+</span><span data-line="236">                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">):</span>
+</span><span data-line="237">                        <span class="n">value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="238">                        <span class="c1"># An integer setting stays an integer (for range(),</span>
+</span><span data-line="239">                        <span class="c1"># indexing...) unless it really has decimals: 2.5 is</span>
+</span><span data-line="240">                        <span class="c1"># kept, never truncated</span>
+</span><span data-line="241">                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+</span><span data-line="242">                            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="243">                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span data-line="244">                        <span class="n">value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span data-line="245">                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span data-line="246">                    <span class="n">wrong_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="247">                <span class="n">current_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</span><span data-line="248">        <span class="k">return</span> <span class="n">wrong_keys</span><span class="p">,</span> <span class="n">current_dict</span></div>
 
-</span><span data-line="240">
+</span><span data-line="249">
 <div class="viewcode-block" id="TrainingProtocolBase.get_string">
 <a class="viewcode-back" href="../../../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html#village.custom_classes.training_protocol_base.TrainingProtocolBase.get_string">[docs]</a>
-</span><span data-line="241">    <span class="k">def</span><span class="w"> </span><span class="nf">get_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="242"><span class="w">        </span><span class="sd">"""Returns the settings as a JSON string with corrected types.</span>
-</span><span data-line="243">
-</span><span data-line="244"><span class="sd">        Returns:</span>
-</span><span data-line="245"><span class="sd">            str: JSON string of settings.</span>
-</span><span data-line="246"><span class="sd">        """</span>
-</span><span data-line="247">        <span class="n">my_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dict</span><span class="p">()</span>
-</span><span data-line="248">        <span class="n">_</span><span class="p">,</span> <span class="n">new_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_types_in_dict</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span>
-</span><span data-line="249">        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">new_dict</span><span class="p">)</span></div>
+</span><span data-line="250">    <span class="k">def</span><span class="w"> </span><span class="nf">get_string</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span data-line="251"><span class="w">        </span><span class="sd">"""Returns the settings as a JSON string with corrected types.</span>
+</span><span data-line="252">
+</span><span data-line="253"><span class="sd">        Returns:</span>
+</span><span data-line="254"><span class="sd">            str: JSON string of settings.</span>
+</span><span data-line="255"><span class="sd">        """</span>
+</span><span data-line="256">        <span class="n">my_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dict</span><span class="p">()</span>
+</span><span data-line="257">        <span class="n">_</span><span class="p">,</span> <span class="n">new_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_types_in_dict</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span>
+</span><span data-line="258">        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">new_dict</span><span class="p">)</span></div>
 </div>
 
 </span></pre></div>
@@ -848,7 +861,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../../../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../../../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/design-tabs.js?v=f930bc37"></script>

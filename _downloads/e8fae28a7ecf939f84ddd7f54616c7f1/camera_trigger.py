@@ -45,7 +45,7 @@ class CameraTrigger(CameraTriggerBase):
             self.task.execute_function(4)  # "Play Loaded Sound"
 
             led_strip.set_led_color(0, 255, 255, 255)
-            led_strip.update_strip()
+            led_strip.update_strip(sleep_duration=None)
 
             area1_event.set()
 

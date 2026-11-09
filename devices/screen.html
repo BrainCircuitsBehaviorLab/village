@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -493,6 +497,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li><a class="reference internal" href="#using-it-in-tasks">Using It in Tasks</a><ul>
+<li><a class="reference internal" href="#events-in-the-trial-data">Events in the trial data</a></li>
 <li><a class="reference internal" href="#method-reference">Method reference</a></li>
 </ul>
 </li>
@@ -577,8 +582,9 @@ data-aria-dark="Switch to auto color mode">
 </div><article class="yue" role="main">
           <section id="screen-touchscreen">
 <h1>Screen &amp; Touchscreen</h1>
-<p>If you plan to present visual stimuli or record touch responses, enable the screen under
-<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>.</p>
+<p>If you plan to present visual stimuli or record touch responses, enable the screen with
+<code class="docutils literal notranslate"><span class="pre">USE_SCREEN</span></code> (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>): <code class="docutils literal notranslate"><span class="pre">SCREEN</span></code> for a screen that only shows
+stimuli, <code class="docutils literal notranslate"><span class="pre">TOUCHSCREEN</span></code> for one that also registers touches.</p>
 <hr class="docutils" />
 <section id="setup">
 <h2>Setup</h2>
@@ -608,7 +614,8 @@ no physical monitor required)</em>.</p></li>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">cmdline</span><span class="o">.</span><span class="n">txt</span>
 </span></pre></div>
 </div>
-<p>Replace:</p>
+<p>Replace this part of the line, which comes with the
+<a class="reference internal" href="../resources/image.html"><span class="std std-doc">Raspberry Pi Disk Image</span></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">vc4</span><span class="o">.</span><span class="n">force_hotplug</span><span class="o">=</span><span class="mi">1</span> <span class="n">video</span><span class="o">=</span><span class="n">HDMI</span><span class="o">-</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1600</span><span class="n">x900</span><span class="o">@</span><span class="mi">60</span><span class="n">D</span>
 </span></pre></div>
 </div>
@@ -629,7 +636,7 @@ operating system for the new display configuration to take effect.</p>
 set the resolution to <strong>1280×720</strong> or lower, and apply.</p>
 </section>
 <section id="resolution-and-display-latency">
-<h3>Resolution and display latency</h3>
+<span id="display-latency"></span><h3>Resolution and display latency</h3>
 <p>Keep the stimulus display at 1280×720 or below. Higher resolutions significantly
 increase CPU load on the Raspberry Pi, leading to greater stimulus presentation
 latency.</p>
@@ -750,33 +757,40 @@ each frame; media assets must be loaded separately using <code class="docutils l
 <code class="docutils literal notranslate"><span class="pre">load_video()</span></code> (either before or after setting the function).</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> to control when the stimulus appears.</p>
 <p><strong>Displaying a static image:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.screen</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span>
-</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
-</span><span data-line="3">
-</span><span data-line="4"><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
-</span><span data-line="5">    <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
-</span><span data-line="6">        <span class="k">if</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">:</span>
-</span><span data-line="7">            <span class="n">painter</span><span class="o">.</span><span class="n">drawPixmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
-</span><span data-line="8">
-</span><span data-line="9"><span class="n">screen</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"stimulus.png"</span><span class="p">)</span>
-</span><span data-line="10"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
-</span><span data-line="11"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
-</span><span data-line="12">
-</span><span data-line="13"><span class="c1"># ... trial runs ...</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.screen</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
+</span><span data-line="6">    <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="7">        <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="n">painter</span><span class="o">.</span><span class="n">viewport</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">background_color</span><span class="p">)</span>  <span class="c1"># background</span>
+</span><span data-line="8">        <span class="k">if</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">:</span>
+</span><span data-line="9">            <span class="n">painter</span><span class="o">.</span><span class="n">drawPixmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">screen</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+</span><span data-line="10">
+</span><span data-line="11"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
+</span><span data-line="12"><span class="n">screen</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"stimulus.png"</span><span class="p">)</span>
+</span><span data-line="13"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
 </span><span data-line="14">
-</span><span data-line="15"><span class="n">screen</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
+</span><span data-line="15"><span class="c1"># ... trial runs ...</span>
+</span><span data-line="16">
+</span><span data-line="17"><span class="n">screen</span><span class="o">.</span><span class="n">stop_drawing</span><span class="p">()</span>
 </span></pre></div>
 </div>
 <p><strong>Displaying a video:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
-</span><span data-line="2">    <span class="n">frame</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_video_frame</span><span class="p">()</span>
-</span><span data-line="3">    <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
-</span><span data-line="4">        <span class="k">if</span> <span class="n">frame</span><span class="p">:</span>
-</span><span data-line="5">            <span class="n">painter</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-</span><span data-line="6">
-</span><span data-line="7"><span class="n">screen</span><span class="o">.</span><span class="n">load_video</span><span class="p">(</span><span class="s2">"movie.mp4"</span><span class="p">)</span>
-</span><span data-line="8"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
-</span><span data-line="9"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.screen</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span>
+</span><span data-line="4">
+</span><span data-line="5"><span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">():</span>
+</span><span data-line="6">    <span class="n">frame</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_video_frame</span><span class="p">()</span>
+</span><span data-line="7">    <span class="k">with</span> <span class="n">QPainter</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="k">as</span> <span class="n">painter</span><span class="p">:</span>
+</span><span data-line="8">        <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="n">painter</span><span class="o">.</span><span class="n">viewport</span><span class="p">(),</span> <span class="n">screen</span><span class="o">.</span><span class="n">background_color</span><span class="p">)</span>  <span class="c1"># background</span>
+</span><span data-line="9">        <span class="k">if</span> <span class="n">frame</span><span class="p">:</span>
+</span><span data-line="10">            <span class="n">painter</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+</span><span data-line="11">
+</span><span data-line="12"><span class="n">screen</span><span class="o">.</span><span class="n">load_draw_function</span><span class="p">(</span><span class="n">draw</span><span class="p">)</span>
+</span><span data-line="13"><span class="n">screen</span><span class="o">.</span><span class="n">load_video</span><span class="p">(</span><span class="s2">"movie.mp4"</span><span class="p">)</span>
+</span><span data-line="14"><span class="n">screen</span><span class="o">.</span><span class="n">start_drawing</span><span class="p">()</span>
 </span></pre></div>
 </div>
 <p><strong>Drawing programmatically (shapes, text, time-varying stimuli):</strong></p>
@@ -802,6 +816,45 @@ attributes are updated automatically before each call:</p>
 </ul>
 <p>Files passed to <code class="docutils literal notranslate"><span class="pre">load_image()</span></code> and <code class="docutils literal notranslate"><span class="pre">load_video()</span></code> are looked up inside <code class="docutils literal notranslate"><span class="pre">MEDIA_DIRECTORY</span></code>
 (<code class="docutils literal notranslate"><span class="pre">~/village_projects/&lt;project_name&gt;/media</span></code>). Reference them by filename only.</p>
+<div class="warning admonition">
+<p class="admonition-title">Errors inside draw() are silent</p>
+<p>If the drawing function raises an error, the error is ignored and nothing is drawn
+in that frame: the stimulus just does not appear, with no message. If a stimulus
+does not show up, test the drawing function outside the task first.</p>
+</div>
+<section id="events-in-the-trial-data">
+<h3>Events in the trial data</h3>
+<p>During a trial, the first frame that draws something new adds an event to the trial
+data, with the moment the Raspberry Pi drew it. Its name depends on the last
+<code class="docutils literal notranslate"><span class="pre">load_*</span></code> method called before that frame:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Last method called</p></th>
+<th class="head"><p>Event</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_image(&quot;stimulus.png&quot;)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">screen_image_stimulus.png</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">load_video(&quot;movie.mp4&quot;)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">screen_video_movie.mp4</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_draw_function(draw)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">screen_draw</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code>, with nothing new loaded</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">screen_start</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So, to have the name of the file in the event, call <code class="docutils literal notranslate"><span class="pre">load_draw_function</span></code> before
+<code class="docutils literal notranslate"><span class="pre">load_image</span></code> or <code class="docutils literal notranslate"><span class="pre">load_video</span></code>, as in the examples above. The frame appears on the
+screen a little later than this moment (see
+<a class="reference internal" href="#display-latency"><span class="std std-ref">Resolution and display latency</span></a>).</p>
+</section>
 <section id="method-reference">
 <h3>Method reference</h3>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -839,6 +892,14 @@ attributes are updated automatically before each call:</p>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">A video with sound replaces the loaded sound</p>
+<p>The soundtrack of a video is played through the sound card, like any other sound:
+<code class="docutils literal notranslate"><span class="pre">load_video()</span></code> loads it with <code class="docutils literal notranslate"><span class="pre">sound_device.load()</span></code>, <code class="docutils literal notranslate"><span class="pre">start_drawing()</span></code> plays it and
+<code class="docutils literal notranslate"><span class="pre">stop_drawing()</span></code> stops it. So it replaces the sound the task had loaded: load the
+task’s sound again after the video if it is needed. With <code class="docutils literal notranslate"><span class="pre">volume_gain=0</span></code> the
+soundtrack is not loaded and the sound of the task is kept.</p>
 </div>
 </section>
 </section>
@@ -878,10 +939,14 @@ the plain background) until a new draw function is loaded.</p></li>
 <hr class="docutils" />
 <section id="reacting-to-touches">
 <h2>Reacting to Touches</h2>
-<p>Every time a touch event passes the debounce filter, the <code class="docutils literal notranslate"><span class="pre">trigger</span></code> method of
-<code class="docutils literal notranslate"><span class="pre">TouchTriggerBase</span></code> is called. By default it writes the touch coordinates to the
-box camera feed. You can override this behavior to implement task-specific touch
-responses.</p>
+<p>While a task is running, every time a touch event passes the debounce filter, the
+<code class="docutils literal notranslate"><span class="pre">trigger</span></code> method of <code class="docutils literal notranslate"><span class="pre">TouchTriggerBase</span></code> is called. By default it writes the touch
+coordinates to the box camera feed. You can override this behavior to implement
+task-specific touch responses.</p>
+<p>If the touchscreen is disconnected while Village runs, a “Touchscreen disconnected”
+alarm is sent and it is opened again as soon as it is plugged back in (it is looked
+for every few seconds, up to every minute). If it is not connected when Village starts,
+it is not used until Village is restarted.</p>
 <hr class="docutils" />
 <section id="creating-a-custom-touchtrigger">
 <h3>Creating a custom TouchTrigger</h3>
@@ -917,6 +982,16 @@ instead of the default base class. Only one such class is used per project.</p>
 <p>You don’t need to register the touches yourself: every touch that arrives while a trial
 is running is already saved in the trial data as a Raspberry Pi event named
 <code class="docutils literal notranslate"><span class="pre">touch_&lt;x&gt;_&lt;y&gt;</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">touch_640_360</span></code>), with its time.</p>
+<div class="warning admonition">
+<p class="admonition-title">Errors in trigger</p>
+<p>An error raised inside <code class="docutils literal notranslate"><span class="pre">trigger</span></code> sends an “Error in the touch trigger” alarm (at most
+one per hour) and that touch is skipped by the trigger; the touchscreen keeps being
+read and the next touches are processed normally. The most common cause is reading an
+attribute of the task that does not exist yet: <code class="docutils literal notranslate"><span class="pre">trigger</span></code> can be called as soon as the
+task starts, possibly before <code class="docutils literal notranslate"><span class="pre">start</span></code> has finished, and always before the first
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code>. Create every attribute your trigger reads in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> of the
+task, as in the example below.</p>
+</div>
 </section>
 <hr class="docutils" />
 <section id="example-checking-a-target-area-and-sending-a-softcode-to-bpod">
@@ -926,20 +1001,25 @@ stimulus screen and determine whether the animal’s touch landed inside or outs
 it. The result is then sent to Bpod as a softcode so that the state machine can
 branch accordingly.</p>
 <p><strong>In the task</strong>, define the target position and tolerance as instance attributes
-so the <code class="docutils literal notranslate"><span class="pre">TouchTrigger</span></code> can read them via <code class="docutils literal notranslate"><span class="pre">self.task</span></code>:</p>
+so the <code class="docutils literal notranslate"><span class="pre">TouchTrigger</span></code> can read them via <code class="docutils literal notranslate"><span class="pre">self.task</span></code>. They are created in
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code>, so they exist before the first touch, and can be changed every trial in
+<code class="docutils literal notranslate"><span class="pre">create_trial</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.task_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BpodEvent</span><span class="p">,</span> <span class="n">TaskBase</span>
 </span><span data-line="2">
 </span><span data-line="3">
 </span><span data-line="4"><span class="k">class</span><span class="w"> </span><span class="nc">MyTask</span><span class="p">(</span><span class="n">TaskBase</span><span class="p">):</span>
 </span><span data-line="5">
-</span><span data-line="6">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span data-line="7">        <span class="c1"># Position and radius of the target on the stimulus screen (pixels)</span>
-</span><span data-line="8">        <span class="bp">self</span><span class="o">.</span><span class="n">target_x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">640</span>
-</span><span data-line="9">        <span class="bp">self</span><span class="o">.</span><span class="n">target_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span>
-</span><span data-line="10">        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span>
-</span><span data-line="11">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_correct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="12">
-</span><span data-line="13">        <span class="c1"># ... build the state machine (see below) ...</span>
+</span><span data-line="6">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="7">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span data-line="8">        <span class="c1"># Position and radius of the target on the stimulus screen (pixels)</span>
+</span><span data-line="9">        <span class="bp">self</span><span class="o">.</span><span class="n">target_x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">640</span>
+</span><span data-line="10">        <span class="bp">self</span><span class="o">.</span><span class="n">target_y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">360</span>
+</span><span data-line="11">        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance_px</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span>
+</span><span data-line="12">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_correct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="13">
+</span><span data-line="14">    <span class="k">def</span><span class="w"> </span><span class="nf">create_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span data-line="15">        <span class="bp">self</span><span class="o">.</span><span class="n">touch_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="16">        <span class="c1"># ... move the target if needed, and build the state machine (see below) ...</span>
 </span></pre></div>
 </div>
 <p><strong>In <code class="docutils literal notranslate"><span class="pre">touch_trigger.py</span></code></strong>, check the distance to the target and send the
@@ -959,16 +1039,15 @@ appropriate softcode:</p>
 </span><span data-line="13">        <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">task</span><span class="o">.</span><span class="n">target_x</span>
 </span><span data-line="14">        <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">task</span><span class="o">.</span><span class="n">target_y</span>
 </span><span data-line="15">        <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
-</span><span data-line="16">        <span class="n">tolerance</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">"tolerance_px"</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
-</span><span data-line="17">
-</span><span data-line="18">        <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="n">tolerance</span><span class="p">:</span>
-</span><span data-line="19">            <span class="n">task</span><span class="o">.</span><span class="n">touch_correct</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span data-line="20">            <span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Correct touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="21">            <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># softcode 1 → correct</span>
-</span><span data-line="22">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="23">            <span class="n">task</span><span class="o">.</span><span class="n">touch_correct</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span data-line="24">            <span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Wrong touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span data-line="25">            <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># softcode 2 → incorrect</span>
+</span><span data-line="16">
+</span><span data-line="17">        <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="n">task</span><span class="o">.</span><span class="n">tolerance_px</span><span class="p">:</span>
+</span><span data-line="18">            <span class="n">task</span><span class="o">.</span><span class="n">touch_correct</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span data-line="19">            <span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Correct touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="20">            <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># softcode 1 → correct</span>
+</span><span data-line="21">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="22">            <span class="n">task</span><span class="o">.</span><span class="n">touch_correct</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span data-line="23">            <span class="n">task</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Wrong touch: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span data-line="24">            <span class="n">task</span><span class="o">.</span><span class="n">bpod</span><span class="o">.</span><span class="n">send_softcode_to_bpod</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># softcode 2 → incorrect</span>
 </span></pre></div>
 </div>
 <p>The Bpod state machine (built in the task’s <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>) receives the softcode
@@ -1034,7 +1113,7 @@ softcode are both non-blocking and safe to call from here.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

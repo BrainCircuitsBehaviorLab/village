@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -613,7 +617,10 @@ warns about it).</p>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SYNC_DESTINATION</span></code>:</strong> the base path of the backup: the path where the hard drive is
 mounted (e.g. <code class="docutils literal notranslate"><span class="pre">/media/pi/my_disk</span></code>), or a path on the server. The data are copied
 into <code class="docutils literal notranslate"><span class="pre">SYNC_DIRECTORY</span></code>, which is created automatically inside it with the project name
-followed by <code class="docutils literal notranslate"><span class="pre">_data</span></code> (in this example, <code class="docutils literal notranslate"><span class="pre">/media/pi/my_disk/demo-village-project_data</span></code>).</p></li>
+followed by <code class="docutils literal notranslate"><span class="pre">_data</span></code> (in this example, <code class="docutils literal notranslate"><span class="pre">/media/pi/my_disk/demo-village-project_data</span></code>).
+With <code class="docutils literal notranslate"><span class="pre">HD</span></code>, if the path is on the microSD card itself (the drive is not connected or
+not mounted), the sync fails with an error instead of copying the data to the card,
+and no task video is deleted.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SERVER_USER</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_HOST</span></code>, <code class="docutils literal notranslate"><span class="pre">SERVER_PORT</span></code>:</strong> only for <code class="docutils literal notranslate"><span class="pre">SERVER</span></code>: the user and
 hostname (or IP address) of the server, and the SSH port.</p></li>
 </ul>
@@ -690,7 +697,7 @@ without asking for a password: if it asks for one, the synchronization will fail
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -613,13 +617,17 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="54">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">acc</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"tab:green"</span><span class="p">)</span>
 </span><span data-line="55">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </span><span data-line="56">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span data-line="57">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
-</span><span data-line="58">        <span class="k">else</span><span class="p">:</span>
-</span><span data-line="59">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
-</span><span data-line="60">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
-</span><span data-line="61">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rolling accuracy (window=</span><span class="si">{</span><span class="n">ROLLING_WINDOW</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-</span><span data-line="62">
-</span><span data-line="63">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span data-line="57">            <span class="k">else</span><span class="p">:</span>
+</span><span data-line="58">                <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+</span><span data-line="59">                    <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no choice trials"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span>
+</span><span data-line="60">                <span class="p">)</span>
+</span><span data-line="61">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Trial"</span><span class="p">)</span>
+</span><span data-line="62">        <span class="k">else</span><span class="p">:</span>
+</span><span data-line="63">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"no outcome data"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">)</span>
+</span><span data-line="64">            <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+</span><span data-line="65">        <span class="bp">self</span><span class="o">.</span><span class="n">ax_accuracy</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rolling accuracy (window=</span><span class="si">{</span><span class="n">ROLLING_WINDOW</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+</span><span data-line="66">
+</span><span data-line="67">        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </span></pre></div>
 </div>
 </section>
@@ -661,7 +669,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -593,8 +597,17 @@ status bar and stays visible until it is changed or cleared.</p>
 </span><span data-line="3"><span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>                   <span class="c1"># clear</span>
 </span></pre></div>
 </div>
-<p>The annotation is also saved frame-by-frame in the session CSV alongside the
-position data, so it is useful for marking task events for post-hoc analysis.</p>
+<p>From a trigger, the box camera is <code class="docutils literal notranslate"><span class="pre">self.task.cam_box</span></code>. From a direct function, or
+from any other file, import it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.camera</span><span class="w"> </span><span class="kn">import</span> <span class="n">cam_box</span>
+</span><span data-line="2">
+</span><span data-line="3"><span class="n">cam_box</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"reward delivered"</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>The annotation is also saved frame by frame in the CSV file of the camera, saved next
+to the video in the videos directory (column <code class="docutils literal notranslate"><span class="pre">annotation</span></code>, together with the time
+and the position of the animal in each frame), so it is useful for marking task
+events for post-hoc analysis.</p>
 <p>For anything beyond plain text — shapes, coloured overlays, position-dependent
 graphics — see <a class="reference internal" href="#custom-camera-drawing"><span class="std std-ref">Custom Camera Drawing</span></a> below.</p>
 </section>
@@ -626,7 +639,8 @@ and triggers function number 6 when it enters a circular region at the center
 of the image.</p>
 <div class="warning admonition">
 <p class="admonition-title">trigger runs on every frame</p>
-<p><code class="docutils literal notranslate"><span class="pre">trigger</span></code> is called on every frame (30 times per second), and <code class="docutils literal notranslate"><span class="pre">cam.areaN_is_triggered</span></code>
+<p><code class="docutils literal notranslate"><span class="pre">trigger</span></code> is called on every frame (<code class="docutils literal notranslate"><span class="pre">CAM_BOX_FRAMERATE</span></code> times per second, 30 by
+default), and <code class="docutils literal notranslate"><span class="pre">cam.areaN_is_triggered</span></code>
 stays <code class="docutils literal notranslate"><span class="pre">True</span></code> the whole time the animal is inside the area. To act only once when the
 animal <strong>enters</strong>, remember whether it was already inside, as the example below does
 (or as <a class="reference internal" href="../examples/camera_trigger.html"><span class="std std-doc">camera_trigger.py</span></a> does with a signal the task
@@ -695,6 +709,15 @@ resets every trial).</p>
 </span><span data-line="61">            <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">execute_function</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 </span><span data-line="62">        <span class="bp">self</span><span class="o">.</span><span class="n">in_center</span> <span class="o">=</span> <span class="n">in_center</span>
 </span></pre></div>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">trigger must never fail</p>
+<p>An error raised inside <code class="docutils literal notranslate"><span class="pre">trigger</span></code> is not caught: it interrupts the processing of that
+frame (its drawing and its row in the CSV file of the camera are lost). The most
+common cause is reading an attribute of the task that does not exist yet:
+<code class="docutils literal notranslate"><span class="pre">trigger</span></code> is called from the moment the task starts, possibly before <code class="docutils literal notranslate"><span class="pre">start</span></code> has
+finished, and always before the first <code class="docutils literal notranslate"><span class="pre">create_trial</span></code>. Create every attribute your trigger reads in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+of the task (e.g. <code class="docutils literal notranslate"><span class="pre">self.target_x</span> <span class="pre">=</span> <span class="pre">0</span></code>), which runs before anything else.</p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
@@ -829,27 +852,33 @@ instead of the default base class. Only one such class is used per project.</p>
 </div>
 <p><strong>Overriding <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code></strong> — runs at preview framerate, screen only:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QRect</span>
-</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QBrush</span><span class="p">,</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QPainter</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QBrush</span><span class="p">,</span> <span class="n">QColor</span>
 </span><span data-line="3">
-</span><span data-line="4">    <span class="k">def</span><span class="w"> </span><span class="nf">draw_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cam</span><span class="p">,</span> <span class="n">painter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span data-line="5">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw_preview</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">painter</span><span class="p">)</span>   <span class="c1"># keep default detection overlays</span>
+</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">village.custom_classes.camera_draw_base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CameraDrawBase</span>
+</span><span data-line="5">
 </span><span data-line="6">
-</span><span data-line="7">        <span class="c1"># Highlight the reward zone on screen (never saved to video)</span>
-</span><span data-line="8">        <span class="n">zone</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">items_to_draw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"reward_zone"</span><span class="p">)</span>
-</span><span data-line="9">        <span class="k">if</span> <span class="n">zone</span> <span class="ow">and</span> <span class="n">cam</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"BOX"</span><span class="p">:</span>
-</span><span data-line="10">            <span class="n">device</span> <span class="o">=</span> <span class="n">painter</span><span class="o">.</span><span class="n">device</span><span class="p">()</span>
-</span><span data-line="11">            <span class="n">sx</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">/</span> <span class="n">cam</span><span class="o">.</span><span class="n">width</span>
-</span><span data-line="12">            <span class="n">sy</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">/</span> <span class="n">cam</span><span class="o">.</span><span class="n">height</span>
-</span><span data-line="13">            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">zone</span>
-</span><span data-line="14">            <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-</span><span data-line="15">            <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">QBrush</span><span class="p">())</span>
-</span><span data-line="16">            <span class="n">painter</span><span class="o">.</span><span class="n">drawRect</span><span class="p">(</span><span class="n">QRect</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">sx</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">sy</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">sx</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">sy</span><span class="p">)))</span>
+</span><span data-line="7"><span class="k">class</span><span class="w"> </span><span class="nc">CameraDraw</span><span class="p">(</span><span class="n">CameraDrawBase</span><span class="p">):</span>
+</span><span data-line="8">
+</span><span data-line="9">    <span class="k">def</span><span class="w"> </span><span class="nf">draw_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cam</span><span class="p">,</span> <span class="n">painter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span data-line="10">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw_preview</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">painter</span><span class="p">)</span>   <span class="c1"># keep default detection overlays</span>
+</span><span data-line="11">
+</span><span data-line="12">        <span class="c1"># Highlight the reward zone on screen (never saved to video)</span>
+</span><span data-line="13">        <span class="n">zone</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">items_to_draw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"reward_zone"</span><span class="p">)</span>
+</span><span data-line="14">        <span class="k">if</span> <span class="n">zone</span> <span class="ow">and</span> <span class="n">cam</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"BOX"</span><span class="p">:</span>
+</span><span data-line="15">            <span class="n">device</span> <span class="o">=</span> <span class="n">painter</span><span class="o">.</span><span class="n">device</span><span class="p">()</span>
+</span><span data-line="16">            <span class="n">sx</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">/</span> <span class="n">cam</span><span class="o">.</span><span class="n">width</span>
+</span><span data-line="17">            <span class="n">sy</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">/</span> <span class="n">cam</span><span class="o">.</span><span class="n">height</span>
+</span><span data-line="18">            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">zone</span>
+</span><span data-line="19">            <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span><span data-line="20">            <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">QBrush</span><span class="p">())</span>
+</span><span data-line="21">            <span class="n">painter</span><span class="o">.</span><span class="n">drawRect</span><span class="p">(</span><span class="n">QRect</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">sx</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">sy</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">*</span><span class="n">sx</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span><span class="o">*</span><span class="n">sy</span><span class="p">)))</span>
 </span></pre></div>
 </div>
+<p>Both methods can be overridden in the same class.</p>
 <div class="note admonition">
 <p class="admonition-title">Passing data from the task</p>
 <p><code class="docutils literal notranslate"><span class="pre">cam.items_to_draw</span></code> is a plain <code class="docutils literal notranslate"><span class="pre">dict</span></code> the task can populate at any point to pass
-coordinates, labels, or any other data (like <code class="docutils literal notranslate"><span class="pre">&quot;reward_zone&quot;</span></code> below).</p>
+coordinates, labels, or any other data (like <code class="docutils literal notranslate"><span class="pre">&quot;reward_zone&quot;</span></code> in the example above).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Inside the task, at any point:</span>
 </span><span data-line="2"><span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">items_to_draw</span><span class="p">[</span><span class="s2">"reward_zone"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>   <span class="c1"># x, y, w, h</span>
 </span><span data-line="3"><span class="bp">self</span><span class="o">.</span><span class="n">cam_box</span><span class="o">.</span><span class="n">items_to_draw</span><span class="p">[</span><span class="s2">"reward_zone"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>                  <span class="c1"># remove</span>
@@ -859,6 +888,12 @@ coordinates, labels, or any other data (like <code class="docutils literal notra
 <p>A complete example, which draws circles requested by the task (saved in the
 video) and the animal’s recent trail (on screen only):
 <a class="reference internal" href="../examples/camera_draw.html"><span class="std std-doc">camera_draw.py</span></a>.</p>
+<div class="warning admonition">
+<p class="admonition-title">draw must never fail</p>
+<p>As with <code class="docutils literal notranslate"><span class="pre">trigger</span></code>, an error raised inside <code class="docutils literal notranslate"><span class="pre">draw</span></code> is not caught: that frame loses its
+row in the CSV file of the camera. Check that every value you read exists (e.g.
+<code class="docutils literal notranslate"><span class="pre">cam.items_to_draw.get(&quot;circles&quot;)</span> <span class="pre">or</span> <span class="pre">[]</span></code> instead of <code class="docutils literal notranslate"><span class="pre">cam.items_to_draw[&quot;circles&quot;]</span></code>).</p>
+</div>
 <p>Both methods <code class="docutils literal notranslate"><span class="pre">draw</span></code> and <code class="docutils literal notranslate"><span class="pre">draw_preview</span></code> receive these attributes on <code class="docutils literal notranslate"><span class="pre">cam</span></code>
 (updated every frame):</p>
 <p><strong>Identity &amp; state</strong></p>
@@ -873,7 +908,10 @@ video) and the animal’s recent trail (on screen only):
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.frame</span></code> — current frame as a BGR numpy array (read/write, cv2 only).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.width</span></code>, <code class="docutils literal notranslate"><span class="pre">cam.height</span></code> — frame dimensions in pixels.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.frame_number</span></code> — frames captured since recording started.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.frame_number</span></code> — frames captured since recording started, saved in the
+<code class="docutils literal notranslate"><span class="pre">frame</span></code> column of the CSV file of the camera. In the BOX camera it is 0 whenever
+no task is running, so the last frames of a session (after the animal is back
+home) are saved with 0: use the <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> column to align the video.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.timing</span></code> — milliseconds elapsed since recording started.</p></li>
 </ul>
 <p><strong>Session info</strong></p>
@@ -885,7 +923,10 @@ video) and the animal’s recent trail (on screen only):
 </ul>
 <p><strong>Detection areas</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cam.number_of_areas</span></code> — number of configurable areas (always 4).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cam.number_of_areas</span></code> — number of configurable areas (always 4). In the CORRIDOR
+camera with <code class="docutils literal notranslate"><span class="pre">CORRIDOR_AREA_EXTRA</span></code> ON, the lists below (<code class="docutils literal notranslate"><span class="pre">cam.areas</span></code>,
+<code class="docutils literal notranslate"><span class="pre">cam.areas_active</span></code>… <code class="docutils literal notranslate"><span class="pre">cam.masks</span></code>, <code class="docutils literal notranslate"><span class="pre">cam.counts</span></code>) have a 5th element: the extra
+area.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cam.areas</span></code> — list of <code class="docutils literal notranslate"><span class="pre">[x1,</span> <span class="pre">y1,</span> <span class="pre">x2,</span> <span class="pre">y2]</span></code> pixel coordinates per area. For a
 BOX area overridden by a <code class="docutils literal notranslate"><span class="pre">CameraAreaBase</span></code>, this is the shape’s bounding
 box, not a real detection rectangle.</p></li>
@@ -953,7 +994,7 @@ pixel count: <code class="docutils literal notranslate"><span class="pre">0</spa
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

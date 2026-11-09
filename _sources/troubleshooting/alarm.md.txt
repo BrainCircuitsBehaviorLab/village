@@ -97,6 +97,11 @@ You must connect remotely, verify all animals are in the home cage, resolve the 
 
 The first column shows how each alarm begins in Telegram and in the events log, so that
 it can be searched for; "…" marks the variable part (a subject, a task, a value).
+The alarms of the cameras, the sound, the video and the touchscreen are limited to one
+per hour for each of these devices, so that a repeating problem does not flood
+Telegram: only the first one of each hour is sent and written in the events log, and
+the others are discarded. So a camera alarm may hide another camera problem that
+happened in the same hour.
 
 ```{list-table}
 :widths: 20 37 37
@@ -115,8 +120,8 @@ it can be searched for; "…" marks the variable part (a subject, a task, a valu
   - This alarm has two possible causes: (1) a different subject was detected in the corridor while the main subject was performing the task, or (2) the correct subject was detected in the corridor even though door 2 was already closed and the subject should not be there. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
   - Review the previous videos to determine the cause (e.g., door malfunction, lighting issues, inaccurate camera thresholding).
 
-* - Maximum time reached and areas 3 or 4 were never empty.
-  - After a subject enters the operant box, door 2 should close once areas 3 and 4 are empty. If the maximum task duration is reached and these areas were never cleared, the alarm is triggered. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
+* - Maximum time reached and areas 2, 3 or 4 were never empty.
+  - After a subject enters the operant box, door 2 should close once areas 2, 3 and 4 of the corridor are empty. If the maximum task duration is reached and these areas were never cleared, the alarm is triggered. After this error occurs, the system disables the RFID reader to prevent additional animals from entering.
   - Check lighting and remove any dirt or objects in the corridor.
   Check whether there was also a corridor camera alarm. Verify whether the animal fell asleep in the corridor or hesitated to enter the operant box. Review previous videos to check for door malfunction or issues with pixel detection.
 
@@ -127,6 +132,10 @@ it can be searched for; "…" marks the variable part (a subject, a task, a valu
 * - Error saving the task: …
   - The task data could not be saved.
   - Check the events log to inspect the traceback and identify the cause of the error.
+
+* - Error closing the task: …
+  - The `close` method of the task raised an error at the end of the session. The session is saved anyway.
+  - Check the events log to inspect the traceback and fix the `close` method of the task (e.g. a serial port or a file that was not open).
 
 * - Error updating the training settings for task: …
   - The training settings could not be updated, so the subject will keep its previous configuration.
@@ -149,7 +158,7 @@ it can be searched for; "…" marks the variable part (a subject, a task, a valu
   - Verify that the CSV structure is correct: all rows must contain the same number of columns, without stray spaces, tabs, or newline characters. Fix or recreate the file if needed.
 
 * - Scale not responding, please check the connection.
-  - The scale is continuously returning a weight of 0.0 grams, indicating that it is not receiving valid readings from the load cell.
+  - The scale does not answer over I2C (after 3 attempts), so it is not receiving valid readings from the load cell. Sent at most once per hour.
   - Inspect the scale wiring and connectors, ensuring all cables are firmly attached. Verify that the external 5V power supply is reaching the board.
 
 * - No detections in the last … hours
@@ -164,17 +173,33 @@ it can be searched for; "…" marks the variable part (a subject, a task, a valu
   - The disk is nearly full. This 10GB threshold is not configurable.
   - Videos are kept on the Raspberry Pi’s SD card for X days (set by `DAYS_OF_VIDEO_STORAGE`) and are automatically deleted only after proper synchronization with an external server or drive. Review rsync_logs and data_removal_logs to confirm that files are being synchronized and deleted correctly. If necessary, reduce `DAYS_OF_VIDEO_STORAGE`.
 
-* - Error in sound device
-  - An error occurred while attempting to play a sound.
+* - Sound device error
+  - An error occurred while playing a sound.
   - Check the events log to see the traceback and identify the exact cause of the error.
+
+* - A sound was lost
+  - A sound took much longer than its duration to play, as if the sound card had stopped: the system cut it to recover the card. That sound did not play completely.
+  - If it happens often, check the connection of the sound card (Audio HAT) and the `SOUND_DEVICE` setting.
+
+* - play() called before any load()
+  - The task (or a direct function) asked to play a sound before any sound was loaded, so nothing was played.
+  - Load the sound with `sound_device.load` before playing it (see [Sound](../devices/sound.md)).
+
+* - Sound device: … / SOUND_DEVICE … / Could not resolve SOUND_DEVICE …
+  - A problem with the configuration of the sound card: the card in `SOUND_DEVICE` was not found (another one is used instead), it did not accept the `SAMPLERATE`, or it could not be prepared to play.
+  - Check `SOUND_DEVICE` and `SAMPLERATE` (`SETTINGS` → `SOUND SETTINGS`) and the connection of the sound card, and restart the Training Village.
 
 * - Error in video worker
   - An error occurred while attempting to display video or visual stimuli.
   - Check the events log to inspect the traceback and determine the source of the problem.
 
-* - Touchscreen error
-  - An error occurred while reading touch events from the touchscreen.
-  - Check the events log to inspect the traceback. Verify the touchscreen's USB connection and, if the error persists, the `TOUCHSCREEN_DEVICE` setting.
+* - Touchscreen disconnected, trying to reconnect
+  - The touchscreen stopped answering, usually because its USB was disconnected. The system keeps looking for it and opens it again as soon as it is back ("Touchscreen reconnected" in the events log).
+  - Check the touchscreen's USB connection and, if it does not come back, the `TOUCHSCREEN_DEVICE` setting.
+
+* - Error in the touch trigger
+  - The `trigger` method of the touch trigger of the project raised an error. That touch is skipped, and the touchscreen keeps being read.
+  - Check the events log to inspect the traceback and fix the touch trigger (see [Screen & Touchscreen](../devices/screen.md#reacting-to-touches)).
 
 * - The session file is very large…
   - The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.
@@ -188,13 +213,29 @@ it can be searched for; "…" marks the variable part (a subject, a task, a valu
   - More than one hour has passed since the task ended, and the animal remains inside the operant box.
   - Verify via video that the animal is still inside—often it is simply asleep. Confirm that both the scale and door servos are functioning correctly; if they fail, the subject may be unable to exit the box.
 
-* - Camera not responding
-  - The camera automatically restarts if it fails to deliver frames for 10 seconds (a failing camera usually delivers completely black frames, which count as no frames), if its recording process (ffmpeg) dies unexpectedly, or if it fails to start recording in the first place. This usually indicates an intermittent connection or insufficient signal quality along the camera cable. It can also be a box left completely dark: see the box lights in [Monitor & Hardware Setup](../system_operation/corridor.md). A lack of frames while the data is being saved or synced after a session is expected and is ignored.
+* - Camera …: no frames in 10s. Restarting. / Camera …: ffmpeg died. Restarting.
+  - The camera (`BOX` or `CORRIDOR`) is restarted automatically because it did not deliver frames for 10 seconds (a failing camera usually delivers completely black frames, which count as no frames), or because its recording process (ffmpeg) died. This usually indicates an intermittent connection or insufficient signal quality along the camera cable. It can also be a box left completely dark: see the box lights in [Monitor & Hardware Setup](../system_operation/corridor.md). A lack of frames while the data is being saved or synced after a session is expected and is ignored. If the restart does not bring the image back, the next one waits longer (20 s, 40 s... up to 15 min). During a session, the box video continues in a new file, which is joined to the first one when the session ends.
   - Check the camera ribbon cable and its connectors on both ends. Ensure that the cable is not bent, damaged, or excessively long, as long cables can occasionally cause frame dropouts. If it is the box camera, check that the box is not completely dark.
+
+* - Camera BOX: still failing after 3 restarts…
+  - The box camera failed again after being restarted 3 times in the same session. It is not restarted again until the next session, so the rest of this session has no video.
+  - As for the previous alarm. Check the camera before the next session.
+
+* - Camera …: start_encoder failed, recording off.
+  - The camera could not start recording: the session has no video.
+  - Check the events log to inspect the traceback, the free space of the microSD card, and the camera cable.
+
+* - Camera BOX: failed to merge video segments after restart. / Camera BOX: failed to rename video segment after restart.
+  - After a restart of the box camera during a session, its video is in several files, which could not be joined into one (or the only one could not be renamed) when the session ended. No video is deleted: the files keep the names `<session>.mp4`, `<session>_2.mp4`...
+  - Check the events log to inspect the traceback. The pieces can be joined by hand with `ffmpeg -f concat`.
 
 * - … occupied more than 90% of the last hour
   - One or more corridor areas were continuously occupied for more than 90% of the last hour. This may indicate an animal is sleeping in the corridor, or that a false detection is occurring due to lighting or dirt. This check can be enabled or disabled in the settings using `CORRIDOR_OCCUPATION_ALARM`.
   - Review the corridor video for the last hour to determine whether a real animal is present or whether the detection is a false positive. If an animal is stuck, verify that door 1 and door 2 are operating correctly and that the animal can move freely. If it is a false positive, check corridor illumination, clean the floor, and adjust the detection thresholds.
+
+* - Communication between homecages has been closed for more than … hours
+  - The extra corridor area (`CORRIDOR_AREA_EXTRA`), which checks the passage between the two homecages, was occupied more than 90% of the last `AREA_EXTRA_HOURS` hours: the passage may be blocked.
+  - Check the passage between the homecages and the corridor video. If it is a false detection, check the illumination and the threshold of the extra area.
 
 * - Low temperature: … / High temperature: …
   - Temperature has risen above `MAXIMUM_TEMPERATURE` or fallen below `MINIMUM_TEMPERATURE`.

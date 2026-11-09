@@ -41,6 +41,7 @@
    rsync_to_hard_drive
    rsync_to_server
    safe_removal_of_data
+   safe_write
    time_utils
    utils
 

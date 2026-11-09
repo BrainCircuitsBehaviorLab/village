@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -667,7 +671,7 @@ closed: it prints every change of the pin, with the resistor of <code class="doc
 <h2>Using It in Tasks</h2>
 <p>The output pin (<code class="docutils literal notranslate"><span class="pre">GPIO_OUT</span></code>) is available at all times via <code class="docutils literal notranslate"><span class="pre">gpio.set_on()</span></code> and
 <code class="docutils literal notranslate"><span class="pre">gpio.set_off()</span></code>, regardless of the input pin’s state — call them from
-anywhere: a task, a trigger, a direct function, the screen sync, and so on.</p>
+anywhere: a task, a trigger, a direct function, and so on.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">village.devices.gpio</span><span class="w"> </span><span class="kn">import</span> <span class="n">gpio</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="n">gpio</span><span class="o">.</span><span class="n">set_on</span><span class="p">()</span>   <span class="c1"># drives GPIO_OUT HIGH</span>
@@ -719,7 +723,9 @@ instead of the default base class. Only one such class is used per project.</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">trigger_on</span></code>/<code class="docutils literal notranslate"><span class="pre">trigger_off</span></code> run in the GPIO reader thread, not in the task
-thread. Keep them fast and avoid blocking calls.</p>
+thread. Keep them fast and avoid blocking calls. They can be called as soon as the
+task starts, possibly before <code class="docutils literal notranslate"><span class="pre">start</span></code> has finished: create every attribute of the task
+they read in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> of the task.</p>
 </div>
 <p>A complete example, which records the pin in the trial data of any task:
 <a class="reference internal" href="../examples/gpio_trigger.html"><span class="std std-doc">gpio_trigger.py</span></a>.</p>
@@ -766,7 +772,7 @@ thread. Keep them fast and avoid blocking calls.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

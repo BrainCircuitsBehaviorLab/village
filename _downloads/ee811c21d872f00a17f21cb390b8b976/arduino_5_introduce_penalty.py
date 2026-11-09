@@ -1,5 +1,6 @@
 import random
 import struct
+import time
 
 import serial
 
@@ -9,11 +10,11 @@ from village.settings import settings
 
 # Protocol (see runIntroducePenalty() in village_arduino/village_arduino.ino):
 #
-# Pi -> Arduino, 8 raw bytes, sent once at the start of each trial:
+# Pi -> Arduino, 14 raw bytes, sent once at the start of each trial:
 #   [CMD_START_TRIAL, correct_port,
-#    c_led_on_timeout_ms (uint16, LE),
-#    led_on_timeout_ms (uint16, LE),
-#    valve_time_ms (uint16, LE)]
+#    c_led_on_timeout_ms (uint32, LE),
+#    led_on_timeout_ms (uint32, LE),
+#    valve_time_ms (uint32, LE)]
 #   Tells the Arduino which side port is correct this trial and the three
 #   timings it needs. From here the Arduino runs the whole trial (center
 #   poke, side poke, valve) on its own; the Pi just listens and plays the
@@ -60,6 +61,7 @@ _OUTCOME_NAMES = {
 BAUDRATE = 9600  # must match the Arduino sketch's Serial.begin(...)
 READ_TIMEOUT = 0.05  # seconds; also how often should_stop/deadlines get re-checked
 MESSAGE_SIZE = 6  # every Arduino -> Pi message is exactly this many bytes
+STARTUP_WAIT = 2.0  # seconds; opening the port resets most Arduino boards
 
 
 class Arduino5IntroducePenalty(TaskBase):
@@ -71,7 +73,7 @@ class Arduino5IntroducePenalty(TaskBase):
         Center-Initiated Side Alternation Task, with penalty
         -----------------------------------------------------------------------------
         Same idea as plain center-initiation, plus a penalty for choosing
-        the wrong side: a buzzer and a timeout before the next trial.
+        the wrong side: a tone and a timeout before the next trial.
         - The Pi picks which side is correct this trial, loads the penalty
           sound (ready ahead of time, in case it's needed), and sends the
           trial's port and timings to the Arduino. The Arduino runs the
@@ -82,7 +84,7 @@ class Arduino5IntroducePenalty(TaskBase):
             * The correct side's LED then turns on. Whichever port is
               poked first decides the outcome:
                 - correct -> reward, then a short delay before the next trial
-                - wrong -> the Pi plays the already-loaded buzzer sound,
+                - wrong -> the Pi plays the already-loaded penalty tone,
                   then a silent timeout
                 - neither, before the window ends -> miss, no penalty
         """
@@ -100,8 +102,13 @@ class Arduino5IntroducePenalty(TaskBase):
         - self.settings.c_led_on_time: time allowed to poke the center port, seconds
         - self.settings.led_on_time: time allowed to poke the correct side, seconds
         - self.settings.iti_time: inter-trial interval, seconds
-        - self.settings.noise_time: buzzer duration after a wrong poke, seconds
-        - self.settings.timeout: total penalty duration (buzzer + silence), seconds
+        - self.settings.noise_time: penalty tone duration after a wrong poke, seconds
+        - self.settings.timeout: total penalty duration (tone + silence), seconds
+
+        Required calibrations:
+        - water, for ports 1 and 3
+        - the "tone_600" sound, for speaker 0 (left) at 70 dB: the penalty
+          tone loaded by direct_functions.function2
         """
 
         self.serial_port = serial.Serial(
@@ -109,6 +116,9 @@ class Arduino5IntroducePenalty(TaskBase):
             baudrate=BAUDRATE,
             timeout=READ_TIMEOUT,
         )
+        # Opening the port resets most Arduino boards: wait for the sketch
+        # to be running, or the first command would be lost.
+        time.sleep(STARTUP_WAIT)
         self.serial_port.reset_input_buffer()
 
         self.valve_l_time = self.calibrations.water_calibration.get_valve_time(
@@ -159,7 +169,7 @@ class Arduino5IntroducePenalty(TaskBase):
 
         self.serial_port.write(
             struct.pack(
-                "<BBHHH",
+                "<BBIII",
                 CMD_START_TRIAL,
                 port,
                 c_led_on_timeout_ms,

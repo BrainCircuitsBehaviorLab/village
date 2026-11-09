@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -485,6 +489,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#what-you-need">What You Need</a></li>
 <li><a class="reference internal" href="#launch-raspberry-pi-os-for-the-first-time">Launch Raspberry Pi OS for the First Time</a></li>
 <li><a class="reference internal" href="#updating-the-system">Updating the System</a></li>
+<li><a class="reference internal" href="#disabling-automatic-updates">Disabling Automatic Updates</a></li>
 <li><a class="reference internal" href="#installing-needed-libraries">Installing Needed Libraries</a></li>
 <li><a class="reference internal" href="#creating-a-python-environment-and-installing-pip-libraries">Creating a Python Environment and Installing pip Libraries</a></li>
 <li><a class="reference internal" href="#screen-settings">Screen Settings</a></li>
@@ -618,6 +623,29 @@ data-aria-dark="Switch to auto color mode">
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
 </span><span data-line="2"><span class="n">sudo</span> <span class="n">apt</span> <span class="n">full</span><span class="o">-</span><span class="n">upgrade</span>
+</span></pre></div>
+</div>
+</section>
+<section id="disabling-automatic-updates">
+<h2>Disabling Automatic Updates</h2>
+<p>Raspberry Pi OS checks for updates in the background once a day, at a random time that can fall in the middle of a session, using CPU that the cameras and the task need. An automatic update could also change a library the Training Village depends on without anyone noticing. Disable these checks and update the system by hand when no animals are training.</p>
+<ol class="arabic simple">
+<li><p>Disable the daily apt timers and the PackageKit service, which the desktop uses to look for updates:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">disable</span> <span class="o">--</span><span class="n">now</span> <span class="n">apt</span><span class="o">-</span><span class="n">daily</span><span class="o">.</span><span class="n">timer</span> <span class="n">apt</span><span class="o">-</span><span class="n">daily</span><span class="o">-</span><span class="n">upgrade</span><span class="o">.</span><span class="n">timer</span>
+</span><span data-line="2"><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">mask</span> <span class="n">packagekit</span>
+</span></pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Remove the updates notifier from the toolbar: right-click on the toolbar, select <code class="docutils literal notranslate"><span class="pre">Add/Remove</span> <span class="pre">Panel</span> <span class="pre">Items</span></code>, select <code class="docutils literal notranslate"><span class="pre">Updater</span></code> (if present) and click <code class="docutils literal notranslate"><span class="pre">Remove</span></code>.</p></li>
+<li><p>Check that no apt timer is left (the command should print nothing):</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">systemctl</span> <span class="nb">list</span><span class="o">-</span><span class="n">timers</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">apt</span>
+</span></pre></div>
+</div>
+<p>To update the system later, run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">update</span></code> and <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">full-upgrade</span></code> as above. To restore the automatic updates:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">enable</span> <span class="o">--</span><span class="n">now</span> <span class="n">apt</span><span class="o">-</span><span class="n">daily</span><span class="o">.</span><span class="n">timer</span> <span class="n">apt</span><span class="o">-</span><span class="n">daily</span><span class="o">-</span><span class="n">upgrade</span><span class="o">.</span><span class="n">timer</span>
+</span><span data-line="2"><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">unmask</span> <span class="n">packagekit</span>
 </span></pre></div>
 </div>
 </section>
@@ -999,7 +1027,7 @@ which should include <code class="docutils literal notranslate"><span class="pre
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

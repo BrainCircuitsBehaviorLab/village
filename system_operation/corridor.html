@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -579,7 +583,7 @@ data-aria-dark="Switch to auto color mode">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code>:</strong> only if <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is ON (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">SETTINGS</span></code>).</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">BOX</span></code>:</strong> only if <code class="docutils literal notranslate"><span class="pre">USE_BOX_BOARD</span></code> is ON (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>) or the behavioral controller is a Bpod.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">FUNCTIONS</span></code>:</strong> always.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> only if the behavioral controller is a Bpod or the box camera tracking is enabled.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">VIRTUAL</span> <span class="pre">MOUSE</span></code>:</strong> only if the behavioral controller is a Bpod, the box camera tracking is enabled (<code class="docutils literal notranslate"><span class="pre">CAM_BOX_TRACKING_POSITION</span></code>), or <code class="docutils literal notranslate"><span class="pre">USE_SCREEN</span></code> is <code class="docutils literal notranslate"><span class="pre">TOUCHSCREEN</span></code>.</p></li>
 </ul>
 <section id="corridor">
 <h3><code class="docutils literal notranslate"><span class="pre">CORRIDOR</span></code></h3>
@@ -672,7 +676,7 @@ the case, set the <code class="docutils literal notranslate"><span class="pre">I
 <p>A secondary group of tabs is located at the bottom of the screen to monitor system telemetry and history:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">INFO</span></code>:</strong> Displays a live stream of recent system events and operational logs. Double-clicking any logged event opens an expanded window with detailed diagnostic information.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code>:</strong> Only with <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> ON. Renders an interactive graphical chart illustrating both successful entries and denied entry attempts for all subjects over the past seven days.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PLOT</span></code>:</strong> Only with <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> ON. Shows a chart of the successful entries and the denied entry attempts of all subjects over the last three days.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code>:</strong> Provides fine-grained control over the computer vision and animal detection parameters for both the corridor and operant box tracking systems. A comprehensive breakdown of these parameters is available in the <a class="reference internal" href="detection.html"><span class="std std-doc">Animal Detection &amp; Tracking</span></a>.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">EXTRA</span></code>:</strong> Only with <code class="docutils literal notranslate"><span class="pre">CORRIDOR_AREA_EXTRA</span></code> ON (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>). Configures the extra corridor area used to check that the passage between the two homecages is not blocked. See <a class="reference internal" href="../advanced_customization/homecage_camera_control.html"><span class="std std-doc">Homecage Camera Control</span></a>.</p></li>
 </ul>
@@ -716,7 +720,7 @@ the case, set the <code class="docutils literal notranslate"><span class="pre">I
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

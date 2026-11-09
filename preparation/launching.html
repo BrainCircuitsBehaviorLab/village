@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -577,7 +581,7 @@ data-aria-dark="Switch to auto color mode">
 <hr class="docutils" />
 <section id="default-project">
 <h2>Default Project</h2>
-<p>The first time the Training Village (TV) is launched, a default project named <code class="docutils literal notranslate"><span class="pre">demo-village-project</span></code> is created with several example tasks, copied from the Village installation into <code class="docutils literal notranslate"><span class="pre">~/village_projects/demo-village-project/code</span></code>. They are the same example files shown in <a class="reference internal" href="../protocol_index.html"><span class="std std-doc">Protocol &amp; Task Design</span></a>, <a class="reference internal" href="../plotting_index.html"><span class="std std-doc">Plotting</span></a> and <a class="reference internal" href="../advanced_customization_index.html"><span class="std std-doc">Advanced Customization</span></a>.</p>
+<p>The first time the Training Village (TV) is launched, a default project named <code class="docutils literal notranslate"><span class="pre">demo-village-project</span></code> is created with several example tasks, copied from the Village installation into <code class="docutils literal notranslate"><span class="pre">~/village_projects/demo-village-project/code</span></code>, together with the image and video files they use, copied into its <code class="docutils literal notranslate"><span class="pre">media</span></code> folder. They are the same example files shown in <a class="reference internal" href="../protocol_index.html"><span class="std std-doc">Protocol &amp; Task Design</span></a>, <a class="reference internal" href="../plotting_index.html"><span class="std std-doc">Plotting</span></a> and <a class="reference internal" href="../advanced_customization_index.html"><span class="std std-doc">Advanced Customization</span></a>.</p>
 </section>
 <hr class="docutils" />
 <section id="automatic-component-check">
@@ -585,7 +589,7 @@ data-aria-dark="Switch to auto color mode">
 <p>When the GUI launches, the system immediately performs an automated self-diagnostic check on all essential hardware connections (such as cameras, temperature sensors, scales, etc.). If a connection to a critical component cannot be established, a warning message will appear (“System running in debug mode”).</p>
 <div class="note admonition">
 <p class="admonition-title">Note</p>
-<p>Upon your very first boot, you will likely receive warnings stating that telegram_bot and box_chip are not functioning. This is perfectly normal if you have not configured Telegram yet or if you haven’t connected the physical Box Board satellite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.</p>
+<p>Upon your very first boot, you will likely receive the warning <code class="docutils literal notranslate"><span class="pre">Error</span> <span class="pre">connecting</span> <span class="pre">to:</span> <span class="pre">chip_box,</span> <span class="pre">telegram_bot</span></code>. This is perfectly normal if you have not configured Telegram yet or if you haven’t connected the physical Box Board satellite module. You can safely ignore these specific warnings for now; they will not prevent the core system from running.</p>
 </div>
 </section>
 </section>
@@ -627,7 +631,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

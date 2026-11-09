@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -604,8 +608,8 @@ data-aria-dark="Switch to auto color mode">
 </span><span data-line="41"><span class="sd">        - iti_time: inter-trial interval, seconds.</span>
 </span><span data-line="42"><span class="sd">        - timeout: punishment timeout after an incorrect response</span>
 </span><span data-line="43"><span class="sd">          (introduce_penalty and delay), seconds.</span>
-</span><span data-line="44"><span class="sd">        - noise_time: white-noise punishment duration (introduce_penalty and</span>
-</span><span data-line="45"><span class="sd">          delay), seconds.</span>
+</span><span data-line="44"><span class="sd">        - noise_time: penalty tone duration (introduce_penalty and delay),</span>
+</span><span data-line="45"><span class="sd">          seconds.</span>
 </span><span data-line="46"><span class="sd">        - p: difficulty of the delay task (0-1), carried over from session to</span>
 </span><span data-line="47"><span class="sd">          session (see update_training_settings).</span>
 </span><span data-line="48"><span class="sd">        - delay_thresholds: possible delays between the two side LEDs (seconds;</span>
@@ -829,7 +833,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>

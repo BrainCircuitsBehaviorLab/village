@@ -63,11 +63,11 @@ then be left alone, is better off with it unchecked.
 
 ```{admonition} Note
 :class: note
-When `hold` is off and the travel time is `0` (an instant move), the system waits one
-second before cutting the power, so the servo has time to physically get there —
-cutting it immediately would leave the motor stranded mid-travel. This wait is the
-`MOTOR_SETTLE_MS` constant in `village/devices/chip.py`; a heavier door with a long
-travel may need it raised.
+When `hold` is off, the system waits one second after the movement before cutting the
+power, so the servo has time to physically get there — cutting it immediately would
+leave the motor stranded mid-travel, especially after an instant move (travel time
+`0`). A heavier door with a long travel may need a longer wait: pass it in
+milliseconds with `settle_ms` (see [Using It in Tasks](#using-it-in-tasks)).
 ```
 
 ---
@@ -101,15 +101,19 @@ motor_box1.disable()
 
 | Method | Arguments | Description |
 |--------|-----------|-------------|
-| `open(hold=None, settle_ms=1000)` | — | Moves to the calibrated open angle over the calibrated open time. |
-| `close(hold=None, settle_ms=1000)` | — | Moves to the calibrated close angle over the calibrated close time. |
-| `move(angle, total_ms=0, hold=None, settle_ms=1000)` | `angle`: 0–180, `total_ms`: total travel time | Moves to an arbitrary angle. |
+| `open(hold=None, settle_ms=1000)` | `hold`, `settle_ms`: see below | Moves to the calibrated open angle over the calibrated open time. |
+| `close(hold=None, settle_ms=1000)` | `hold`, `settle_ms`: see below | Moves to the calibrated close angle over the calibrated close time. |
+| `move(angle, total_ms=0, hold=None, settle_ms=1000)` | `angle`: 0–180, `total_ms`: total travel time in ms; `hold`, `settle_ms`: see below | Moves to an arbitrary angle. |
 | `disable()` | — | Cuts the PWM signal, releasing holding torque immediately. |
 
 `hold=None` (the default on all three movement methods) means **use this motor's
 saved value**. Pass `hold=True` or `hold=False` to override it for that one call
-without changing the setting. `settle_ms` only has an effect when `hold` resolves to
-`False`.
+without changing the setting. `settle_ms` is how long to wait after the movement
+before cutting the power, and only has an effect when `hold` resolves to `False`.
+
+The first movement of each motor after Village starts goes straight to its target,
+without spreading it over the travel time, because the real position of the servo is
+not known yet. Every later movement uses the travel time.
 
 #### These calls never block
 

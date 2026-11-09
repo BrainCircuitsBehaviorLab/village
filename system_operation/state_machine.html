@@ -137,7 +137,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_touchscreen.html">raspberry_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
@@ -439,6 +439,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
 </ul>
@@ -488,6 +492,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#in-both-cases">In Both Cases</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#other-ways-a-session-ends">Other Ways a Session Ends</a></li>
 </ul>
 </div></div>
   </aside>
@@ -606,6 +611,23 @@ data-aria-dark="Switch to auto color mode">
 <p>The system transitions back to the initial WAIT state, ready for the next session.</p>
 </section>
 </section>
+<section id="other-ways-a-session-ends">
+<h2>Other Ways a Session Ends</h2>
+<ul class="simple">
+<li><p><strong>The task sets <code class="docutils literal notranslate"><span class="pre">force_stop</span></code></strong> (see <a class="reference internal" href="../protocols/tasks_reference.html#force-stop"><span class="std std-ref">Ending the session from the task</span></a>):
+the session ends without waiting for the minimum or the maximum time, and continues
+as in Option B. In <code class="docutils literal notranslate"><span class="pre">RUN_CLOSED</span></code>, door 2 opens at once (<code class="docutils literal notranslate"><span class="pre">OPEN_DOOR2</span></code>) and <code class="docutils literal notranslate"><span class="pre">RUN_OPEN</span></code>
+saves the data (<code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>). In <code class="docutils literal notranslate"><span class="pre">RUN_INITIAL</span></code>, door 2 is still open, so the data
+is saved directly (<code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>). In <code class="docutils literal notranslate"><span class="pre">RUN_OPEN</span></code>, the data is saved as when the
+maximum time is reached.</p></li>
+<li><p><strong>The STOP button, an error in the task, or a wrong RFID detection</strong> (another subject
+detected in the corridor while one is in the box): <code class="docutils literal notranslate"><span class="pre">OPEN_DOOR2_STOP</span></code> opens door 2
+and disconnects the RFID reader, so that no other subject can enter, and the session
+continues as in Option B (<code class="docutils literal notranslate"><span class="pre">SAVE_INSIDE</span></code>). The errors and the wrong detections raise
+an alarm. In the three cases, turn the RFID reader back on from the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code>
+screen once the problem is solved.</p></li>
+</ul>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
@@ -645,7 +667,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=7af8845f"></script>
+      <script src="../_static/documentation_options.js?v=1d69f67d"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/design-tabs.js?v=f930bc37"></script>
