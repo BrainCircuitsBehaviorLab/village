@@ -460,6 +460,25 @@ class Camera:
         """Stops the camera capture."""
         self.cam.stop()
 
+    def close(self) -> None:
+        """Stops the camera and releases it, before the app exits.
+
+        self.frame is a view of a camera buffer (MappedArray), not a copy: it
+        is deleted before closing, or picamera2 cannot free that buffer and
+        prints a BufferError when the objects are destroyed at exit. The
+        camera can't be used after this.
+        """
+        self.watchdog_timer.stop()
+        try:
+            self.cam.stop()
+        except Exception:
+            pass
+        self.__dict__.pop("frame", None)
+        try:
+            self.cam.close()
+        except Exception:
+            pass
+
     def stop_preview_window(self) -> None:
         """Stops the preview window and resets preview to NULL."""
         if self.cam._preview is not None:

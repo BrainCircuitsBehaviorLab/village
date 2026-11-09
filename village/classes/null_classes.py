@@ -324,6 +324,10 @@ class NullCamera:
         """Stops the camera."""
         return
 
+    def close(self) -> None:
+        """Stops and releases the camera."""
+        return
+
     def start_preview_window(self) -> QWidget:
         """Starts the preview window.
 

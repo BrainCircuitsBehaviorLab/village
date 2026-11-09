@@ -71,6 +71,8 @@ class Gui:
         log.end("VILLAGE")
         cam_corridor.stop_recording()
         cam_box.stop_recording()
+        cam_corridor.close()
+        cam_box.close()
         sound_device.shutdown()
         self.q_app.quit()
         sys.exit()
