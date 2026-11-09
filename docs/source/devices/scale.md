@@ -86,10 +86,10 @@ class ScaleTrigger(ScaleTriggerBase):
 ```{admonition} Note
 :class: note
 `on_weight` runs in the scale reader thread, not in the task thread. Keep it
-fast and avoid blocking calls: the next reading waits until it returns. It can be
-called as soon as the task starts, possibly before `start` has finished: create every
-attribute of the task it reads in the `__init__` of the task. If it raises an error,
-the error is logged and the readings go on.
+fast and avoid blocking calls: the next reading waits until it returns. It is only
+called once the `start` of the task has finished, so it can read any attribute
+`start` creates, and never in calibrations. If it raises an error, the error is
+logged and the readings go on.
 ```
 
 A complete example, which records when the animal steps on and off the scale

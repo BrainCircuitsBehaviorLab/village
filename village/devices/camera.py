@@ -918,7 +918,10 @@ class Camera:
                 if int(self.gray_frame.max()) > BLACK_FRAME_MAX:
                     self.last_good_frame = self.camera_timestamp
                 self.detect_and_trigger()
-                manager.camera_draw.draw(self)
+                try:
+                    manager.camera_draw.draw(self)
+                except Exception:
+                    self._report_user_code_error("camera draw")
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()
@@ -1028,8 +1031,28 @@ class Camera:
             self.areas_trigger[3] and tracked and self._area_is_triggered(3)
         )
 
-        if self.task_is_running:
-            manager.camera_trigger.trigger(self)
+        if manager.triggers_active():
+            try:
+                manager.camera_trigger.trigger(self)
+            except Exception:
+                self._report_user_code_error("camera trigger")
+
+    def _report_user_code_error(self, what: str) -> None:
+        """Reports an error in the project's camera trigger or camera draw,
+        called on every frame, as an alarm at most once per hour (the traceback
+        goes to the events). The frame is still processed: an exception left
+        to reach picamera2's callback thread would stop the camera.
+        """
+        try:
+            error_queue.put_nowait(
+                (
+                    "cam",
+                    "Error in the " + what + ", camera " + self.name,
+                    traceback.format_exc(),
+                )
+            )
+        except queue.Full:
+            pass
 
     def detect_black(self) -> None:
         """Detects black objects in defined areas using thresholding."""

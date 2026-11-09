@@ -357,6 +357,10 @@ class TaskBase:
         # Set by the system when it ends the session (manager.disconnect_and_save),
         # whatever the reason: the trial running at that moment is not saved.
         self.stop_requested: bool = False
+        # True once start() has finished. The triggers (camera, touch, GPIO,
+        # scale) are only called after that, so they can use what start()
+        # defines.
+        self.started: bool = False
         self.run_mode: str = "Manual"
         self.maximum_number_of_trials: int = 100000000
         self.chrono = time_utils.Chrono()
@@ -558,6 +562,7 @@ class TaskBase:
         """Runs the task in the main thread until completion or forced stop."""
         self.chrono.reset()
         self.start()
+        self.started = True
         while not self.should_stop:
             self.do_trial()
 

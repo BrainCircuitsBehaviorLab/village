@@ -132,7 +132,9 @@ class Scale(NullScale):
             weight = self.get_weight()
             timestamp = time_utils.now_timestamp()
             self.last_weight = weight
-            if trigger is not None:
+            # Only once the task's start() has finished, so the trigger can use
+            # what start() defines
+            if trigger is not None and trigger.task.started:
                 try:
                     trigger.on_weight(weight, timestamp)
                 except Exception:

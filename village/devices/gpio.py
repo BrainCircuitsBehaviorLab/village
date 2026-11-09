@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import queue
 import traceback
 from typing import TYPE_CHECKING, Any
 
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
 from village.classes.enums import PullResistor
+from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.settings import settings
 
@@ -23,7 +25,8 @@ class Gpio:
       and self.trigger.trigger_on() is called when it goes from OFF to ON, and
       self.trigger.trigger_off() when it goes from ON to OFF. GPIO_IN_PULL
       decides what ON is: HIGH with the pull-down (DOWN, the default), LOW
-      with the pull-up (UP). The watching runs only while a task is active.
+      with the pull-up (UP). The watching runs only while a task is active,
+      once its start() has finished.
       See GpioTriggerBase to customize what happens on trigger_on/trigger_off.
 
     - Output (GPIO_OUT, default 27): set_on() drives the pin HIGH and set_off()
@@ -95,13 +98,34 @@ class Gpio:
             log.error(msg, exception=traceback.format_exc())
         self.error = error
 
+    # Called from gpiozero's thread. Only once the task's start() has finished
+    # (task.started), so the trigger can use what start() defines. An error in
+    # the trigger (usually in the user's code) is reported, as an alarm at most
+    # once per hour, and the pin keeps being watched.
     def _trigger_on(self) -> None:
-        if self.trigger is not None:
-            self.trigger.trigger_on()
+        trigger = self.trigger
+        if trigger is not None and trigger.task.started:
+            try:
+                trigger.trigger_on()
+            except Exception:
+                self._report_trigger_error()
 
     def _trigger_off(self) -> None:
-        if self.trigger is not None:
-            self.trigger.trigger_off()
+        trigger = self.trigger
+        if trigger is not None and trigger.task.started:
+            try:
+                trigger.trigger_off()
+            except Exception:
+                self._report_trigger_error()
+
+    @staticmethod
+    def _report_trigger_error() -> None:
+        try:
+            error_queue.put_nowait(
+                ("gpio", "Error in the GPIO trigger", traceback.format_exc())
+            )
+        except queue.Full:
+            pass
 
 
 gpio = Gpio()

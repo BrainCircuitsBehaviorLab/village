@@ -108,7 +108,7 @@ class Touch:
                     px = int(_x * self._px_per_touch_x)
                     py = int(_y * self._px_per_touch_y)
                     _last_t = t
-                    if manager.state.task_is_running():
+                    if manager.triggers_active():
                         ts = t - (time.time() - time_utils.now_timestamp())
                         self._handle_touch(px, py, ts)
 

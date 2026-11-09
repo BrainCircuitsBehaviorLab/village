@@ -403,11 +403,9 @@ is running is already saved in the trial data as a Raspberry Pi event named
 :class: warning
 An error raised inside `trigger` sends an "Error in the touch trigger" alarm (at most
 one per hour) and that touch is skipped by the trigger; the touchscreen keeps being
-read and the next touches are processed normally. The most common cause is reading an
-attribute of the task that does not exist yet: `trigger` can be called as soon as the
-task starts, possibly before `start` has finished, and always before the first
-`create_trial`. Create every attribute your trigger reads in the `__init__` of the
-task, as in the example below.
+read and the next touches are processed normally. `trigger` is only called once the
+`start` of the task has finished, so it can read any attribute `start` creates (it
+can still be called before the first `create_trial`), and never in calibrations.
 ```
 
 ---

@@ -225,6 +225,15 @@ class Manager:
             self.heavy_work_end = time.monotonic()
         self._state = value
 
+    def triggers_active(self) -> bool:
+        """Whether the project's camera and touch triggers are called: while a
+        task is running and its start() has finished (so they can use what
+        start() defines), but not in a calibration, which also runs as a
+        manual task but has nothing the project's triggers expect."""
+        return (
+            self.state.task_is_running() and self.task.started and not self.calibrating
+        )
+
     def camera_gap_expected(self, grace_s: float = 10.0) -> bool:
         """Whether the cameras may be missing frames because of heavy work.
 
@@ -396,13 +405,10 @@ class Manager:
         self.direct_functions.task = self.task
         self.camera_trigger.task = self.task
         self.touch_trigger.task = self.task
-        self.gpio_trigger.task = self.task
-        self.gpio.trigger = self.gpio_trigger
         self.task.gpio = self.gpio
-        self.gpio.start()
-        self.scale_trigger.task = self.task
-        self.scale_box.trigger = self.scale_trigger
-        self.scale_box.start()
+        # The project's triggers are for its tasks: the GPIO and scale ones are
+        # not started in a calibration, and the camera and touch ones are not
+        # called (see triggers_active)
         log.start(task=self.task.name, subject="None")
         self.run_task_in_thread()
 

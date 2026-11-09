@@ -180,6 +180,7 @@ def system_run() -> None:
     video_alarm_timer = time_utils.Timer(3600)
     cam_alarm_timer = time_utils.Timer(3600)
     touchscreen_alarm_timer = time_utils.Timer(3600)
+    gpio_alarm_timer = time_utils.Timer(3600)
     manager.check_corridor_lights()
     manager.check_box_lights()
 
@@ -199,6 +200,7 @@ def system_run() -> None:
                     "video": video_alarm_timer,
                     "cam": cam_alarm_timer,
                     "touchscreen": touchscreen_alarm_timer,
+                    "gpio": gpio_alarm_timer,
                 }
                 while True:
                     # Producers put a human-readable summary in `description`

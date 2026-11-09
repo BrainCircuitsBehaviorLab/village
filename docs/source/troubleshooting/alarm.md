@@ -185,8 +185,8 @@ happened in the same hour.
   - The task (or a direct function) asked to play a sound before any sound was loaded, so nothing was played.
   - Load the sound with `sound_device.load` before playing it (see [Sound](../devices/sound.md)).
 
-* - Sound device: … / SOUND_DEVICE … / Could not resolve SOUND_DEVICE …
-  - A problem with the configuration of the sound card: the card in `SOUND_DEVICE` was not found (another one is used instead), it did not accept the `SAMPLERATE`, or it could not be prepared to play.
+* - Sound device: …
+  - The sound card could not be prepared to play. (If the card in `SOUND_DEVICE` is not found or does not accept the `SAMPLERATE`, there is no alarm: it is shown when the Training Village starts, in the `Error connecting to: sound_device` warning.)
   - Check `SOUND_DEVICE` and `SAMPLERATE` (`SETTINGS` → `SOUND SETTINGS`) and the connection of the sound card, and restart the Training Village.
 
 * - Error in video worker
@@ -200,6 +200,18 @@ happened in the same hour.
 * - Error in the touch trigger
   - The `trigger` method of the touch trigger of the project raised an error. That touch is skipped, and the touchscreen keeps being read.
   - Check the events log to inspect the traceback and fix the touch trigger (see [Screen & Touchscreen](../devices/screen.md#reacting-to-touches)).
+
+* - Error in the camera trigger, camera …
+  - The `trigger` method of the camera trigger of the project raised an error. The frame is still processed and recorded. It is called on every frame, so it usually fails again and again; this alarm shares its one-per-hour limit with the other camera alarms.
+  - Check the events log to inspect the traceback and fix the camera trigger (see [Camera](../devices/camera.md#reacting-to-the-animals-position)).
+
+* - Error in the camera draw, camera …
+  - The `draw` method of the camera draw of the project raised an error. The frame is still recorded, without the drawing. Like the camera trigger, it shares its one-per-hour limit with the other camera alarms.
+  - Check the events log to inspect the traceback and fix the camera draw (see [Camera](../devices/camera.md#custom-camera-drawing)).
+
+* - Error in the GPIO trigger
+  - The `trigger_on` or `trigger_off` method of the GPIO trigger of the project raised an error. The input pin keeps being watched. Sent at most once per hour.
+  - Check the events log to inspect the traceback and fix the GPIO trigger (see [GPIO](../devices/gpio.md#reacting-to-the-input-pin)).
 
 * - The session file is very large…
   - The session CSV contains more than 100,000 rows, typically caused by an abnormally high-frequency sensor event.

@@ -1438,7 +1438,8 @@ class VirtualMouseLayout(Layout):
             timestamp = time_utils.now_timestamp()
             x = int(self.x_line_edit.text())
             y = int(self.y_line_edit.text())
-            if x >= 0 and y >= 0:
+            # Same rule as a real touch (see Touch._read_events)
+            if x >= 0 and y >= 0 and manager.triggers_active():
                 manager.touch_trigger.trigger(x, y, timestamp)
         except Exception:
             self.x_line_edit.setText("0")

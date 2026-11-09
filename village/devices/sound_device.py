@@ -145,9 +145,10 @@ class SoundDevice:
         self.channels = 2
         self.periods = PERIODS
         self.periodsize = self._pick_periodsize(self.samplerate)
-        self.error = ""
-
-        self.device, self.card_index = self._resolve_device(
+        # A card fallback or a wrong rate is reported as a startup error
+        # (main.py logs it and shows it in the "Error connecting to" warning),
+        # so a sound card that is set up wrong doesn't look like it is working.
+        self.device, self.card_index, self.error = self._resolve_device(
             settings.get("SOUND_DEVICE")
         )
 
@@ -170,10 +171,7 @@ class SoundDevice:
                 f"Sound device granted rate {info['rate']} Hz but "
                 f"{self.samplerate} Hz was requested. pitch/duration will be wrong."
             )
-            try:
-                error_queue.put_nowait(("sound", msg, ""))
-            except queue.Full:
-                pass
+            self.error = (self.error + " " + msg).strip()
 
         self._sound: np.ndarray = np.empty((0, 2), dtype=np.int32)
         self._stop_flag = False  # asks the worker to fade out
@@ -306,7 +304,7 @@ class SoundDevice:
             pass
 
     @staticmethod
-    def _resolve_device(name: Any) -> tuple[str, int]:
+    def _resolve_device(name: Any) -> tuple[str, int, str]:
         """Maps the SOUND_DEVICE setting to an ALSA device string and card index.
 
         Accepts what get_sound_devices() lists ('DACPro (RPi DAC Pro)'), a bare
@@ -314,7 +312,8 @@ class SoundDevice:
         the ID at every start, so it survives cards being renumbered.
 
         Returns:
-            tuple[str, int]: ('hw:N,D', N).
+            tuple[str, int, str]: ('hw:N,D', N, error). error is "" unless
+            SOUND_DEVICE matches no card and another one is used instead.
         """
         text = str(name or "").strip()
         # Card names contain spaces ('RPi DAC Pro'), so splitting on whitespace
@@ -325,7 +324,7 @@ class SoundDevice:
         m = re.match(r"^(?:plug)?hw:(\d+)(?:,(\d+))?$", token)
         if m:
             card = int(m.group(1))
-            return f"hw:{card},{int(m.group(2) or 0)}", card
+            return f"hw:{card},{int(m.group(2) or 0)}", card, ""
 
         # Card ID, exact then case-insensitive.
         try:
@@ -336,36 +335,22 @@ class SoundDevice:
                 except Exception:
                     continue
             if token in cards:
-                return f"hw:{cards[token]},0", cards[token]
+                return f"hw:{cards[token]},0", cards[token], ""
             for cid, i in cards.items():
                 if cid.lower() == token.lower():
-                    return f"hw:{i},0", i
+                    return f"hw:{i},0", i, ""
             if cards:
                 cid, i = next(iter(cards.items()))
                 msg = (
                     f"SOUND_DEVICE '{text}' matches no card. Available: "
                     f"{', '.join(cards)}. Falling back to '{cid}'."
                 )
-                log.error(msg)
-                SoundDevice._report_resolve_fallback(msg)
-                return f"hw:{i},0", i
+                return f"hw:{i},0", i, msg
         except Exception:
             pass
 
         msg = f"Could not resolve SOUND_DEVICE '{text}'. Falling back to hw:0,0"
-        log.error(msg)
-        SoundDevice._report_resolve_fallback(msg)
-        return "hw:0,0", 0
-
-    @staticmethod
-    def _report_resolve_fallback(msg: str) -> None:
-        """Surfaces a silent card-fallback to the user (Telegram/events),
-        not just the server log -- otherwise SOUND_DEVICE quietly pointing
-        at the wrong card looks identical to it working correctly."""
-        try:
-            error_queue.put_nowait(("sound", msg, ""))
-        except queue.Full:
-            pass
+        return "hw:0,0", 0, msg
 
     @staticmethod
     def _set_realtime_priority() -> None:
