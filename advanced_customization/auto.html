@@ -8,7 +8,7 @@
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -619,7 +619,11 @@ values of <code class="docutils literal notranslate"><span class="pre">PARAMS</s
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">inject_trials(n,</span> <span class="pre">interval=1.0,</span> <span class="pre">**params)</span></code></strong>: Calls <code class="docutils literal notranslate"><span class="pre">inject_trial</span></code> <em>n</em> times, one every
 <code class="docutils literal notranslate"><span class="pre">interval</span></code> seconds.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">poke(port,</span> <span class="pre">duration=0.1)</span></code></strong>: Simulates a nose-poke in and out on the given Bpod port
-(only with Bpod).</p></li>
+(only with Bpod). It sends Out, In 10 ms later, and Out again after <code class="docutils literal notranslate"><span class="pre">duration</span></code>.
+The first Out does nothing when the port is already out, but a port with nothing
+connected reads as in, so without it the In would not be registered. With nothing
+connected, the first poke of each trial therefore also records an extra Out, 10 ms
+before the In.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">set_position(x,</span> <span class="pre">y)</span></code></strong>: Updates the virtual animal’s position and trace, as seen by
 the camera tracking system.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">wait(seconds)</span></code></strong>: Pauses execution for the given duration, stopping early if the
@@ -667,10 +671,10 @@ virtual animal is stopped.</p></li>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=340303ed"></script>
+      <script src="../_static/documentation_options.js?v=d0b62daa"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>

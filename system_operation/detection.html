@@ -8,7 +8,7 @@
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -563,7 +563,7 @@ data-aria-dark="Switch to auto color mode">
   </div>
 </div><article class="yue" role="main">
           <section id="animal-detection-tracking">
-<h1>Animal Detection &amp; Tracking</h1>
+<span id="animal-detection--tracking"></span><h1>Animal Detection &amp; Tracking</h1>
 <p>An automated animal detection algorithm operates continuously on both the corridor camera and the operant box camera. The algorithm processes each image by converting it to black-and-white pixels based on a set luminance threshold (pixels above the threshold are marked white, and those below are marked black). By counting the pixels of the animal’s color (black by default, see <code class="docutils literal notranslate"><span class="pre">DETECTION_COLOR</span></code> below), the system determines whether a specific area is empty, contains one animal, or holds multiple animals.</p>
 <p>In addition to this pixel-counting baseline, an advanced tracking algorithm runs by default on the operant box camera feed. This module tracks the animal’s absolute position in real time utilizing OpenCV’s contour detection (<code class="docutils literal notranslate"><span class="pre">findContours</span></code>) to compute the exact center of mass (centroid) of the subject.</p>
 <p>While this advanced tracking module increases CPU overhead, its execution time at a resolution of 640x480 is highly optimized, taking only <strong>4 to 5 ms per frame</strong>. Given the standard frame rate of the operant box camera (<strong>30 fps</strong>, or approximately <strong>33 ms per frame</strong>), the system has more than enough computational headroom to execute tracking on every single frame without latency.</p>
@@ -647,7 +647,7 @@ count condition, described below.</p>
 </section>
 <hr class="docutils" />
 <section id="camera-adjustments-lens-position-sharpness-exposure">
-<h2>Camera Adjustments: Lens Position, Sharpness &amp; Exposure</h2>
+<span id="camera-adjustments-lens-position-sharpness--exposure"></span><h2>Camera Adjustments: Lens Position, Sharpness &amp; Exposure</h2>
 <p>Below the corridor and box detection areas, the <code class="docutils literal notranslate"><span class="pre">DETECTION</span> <span class="pre">SETTINGS</span></code> tab also provides a <code class="docutils literal notranslate"><span class="pre">CORRIDOR</span> <span class="pre">ADJUSTMENTS</span></code> panel (only shown when <code class="docutils literal notranslate"><span class="pre">USE_CORRIDOR</span></code> is <strong>ON</strong>) and a <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">ADJUSTMENTS</span></code> panel, letting you tune each camera’s image quality directly while watching the live preview, without having to go through <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>:</p>
 <a class="reference internal image-reference" href="../_images/detection_settings3.webp"><img alt="../_images/detection_settings3.webp" class="align-center" src="../_images/detection_settings3.webp" style="width: 40%;" />
 </a>
@@ -697,10 +697,10 @@ count condition, described below.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=340303ed"></script>
+      <script src="../_static/documentation_options.js?v=d0b62daa"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
       <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>

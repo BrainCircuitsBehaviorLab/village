@@ -8,7 +8,7 @@
     setColorMode(localStorage._theme||"light");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -603,7 +603,7 @@ delay discrimination task.</p>
 </section>
 <hr class="docutils" />
 <section id="default-training-settings">
-<h2><code class="docutils literal notranslate"><span class="pre">default_training_settings()</span></code></h2>
+<span id="default_training_settings"></span><h2><code class="docutils literal notranslate"><span class="pre">default_training_settings()</span></code></h2>
 <p>This method defines all training variables and their initial values. It is called once
 when a new subject is created. The variables defined here are accessible from within
 any task via <code class="docutils literal notranslate"><span class="pre">self.settings.&lt;variable_name&gt;</span></code>.</p>
@@ -674,7 +674,7 @@ decimal by nature, like times or volumes, if your code needs them to be <code cl
 </section>
 <hr class="docutils" />
 <section id="update-training-settings">
-<h2><code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code></h2>
+<span id="update_training_settings"></span><h2><code class="docutils literal notranslate"><span class="pre">update_training_settings()</span></code></h2>
 <p>This method runs automatically at the end of every session that is saved: a session
 with a subject and at least one completed trial. It looks at the subject’s history and
 updates whichever settings should change based on performance: typically
@@ -780,7 +780,7 @@ so <code class="docutils literal notranslate"><span class="pre">next_task</span>
 </section>
 <hr class="docutils" />
 <section id="define-gui-tabs-optional">
-<h2><code class="docutils literal notranslate"><span class="pre">define_gui_tabs()</span></code> <em>(optional)</em></h2>
+<span id="define_gui_tabs-optional"></span><h2><code class="docutils literal notranslate"><span class="pre">define_gui_tabs()</span></code> <em>(optional)</em></h2>
 <p>If your protocol has many variables, this method lets you organize them into named tabs
 in the GUI panel that appears when launching a task manually. Variables not assigned to
 any tab are placed in a default <strong>General</strong> tab. You can also use the reserved <code class="docutils literal notranslate"><span class="pre">&quot;Hide&quot;</span></code>
@@ -906,10 +906,10 @@ saving them.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=340303ed"></script>
+      <script src="../_static/documentation_options.js?v=d0b62daa"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
       <script src="../_static/shibuya.js?v=50760d75"></script>
       <script src="../_static/lightbox.js?v=687af727"></script>
       <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
