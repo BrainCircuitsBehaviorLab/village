@@ -301,10 +301,16 @@ class BpodController:
     def poke_thread(self, i: int, close: bool) -> None:
         """Thread function to simulate poke entry and exit.
 
+        Starts with an Out: a port with nothing connected reads as In, so a
+        bare In would not change it and only the Out would be registered.
+        With a port that is already Out, the first Out does nothing.
+
         Args:
             i (int): Poke port index.
             close (bool): Whether to close connection.
         """
+        self.manual_override_input("Port" + str(i) + "Out")
+        time.sleep(0.01)
         self.manual_override_input("Port" + str(i) + "In")
         time.sleep(0.1)
         self.manual_override_input("Port" + str(i) + "Out")

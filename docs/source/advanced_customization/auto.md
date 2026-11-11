@@ -63,7 +63,11 @@ And call these:
 - **`inject_trials(n, interval=1.0, **params)`**: Calls `inject_trial` *n* times, one every
   `interval` seconds.
 - **`poke(port, duration=0.1)`**: Simulates a nose-poke in and out on the given Bpod port
-  (only with Bpod).
+  (only with Bpod). It sends Out, In 10 ms later, and Out again after `duration`.
+  The first Out does nothing when the port is already out, but a port with nothing
+  connected reads as in, so without it the In would not be registered. With nothing
+  connected, the first poke of each trial therefore also records an extra Out, 10 ms
+  before the In.
 - **`set_position(x, y)`**: Updates the virtual animal's position and trace, as seen by
   the camera tracking system.
 - **`wait(seconds)`**: Pauses execution for the given duration, stopping early if the

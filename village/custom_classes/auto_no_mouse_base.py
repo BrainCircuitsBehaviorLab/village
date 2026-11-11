@@ -159,9 +159,15 @@ class AutoNoMouseBase:
         self._inject_thread.start()
 
     def poke(self, port: int, duration: float = 0.1) -> None:
-        """Simulate a nose-poke in and out on port."""
+        """Simulate a nose-poke in and out on port.
+
+        Starts with an Out, as the virtual poke of the GUI (see
+        BpodController.poke_thread), so the In is registered even with
+        nothing connected to the port."""
         if self.task is None:
             return
+        self.task.bpod.manual_override_input(f"Port{port}Out")
+        self._stop_event.wait(0.01)
         self.task.bpod.manual_override_input(f"Port{port}In")
         self._stop_event.wait(duration)
         self.task.bpod.manual_override_input(f"Port{port}Out")
