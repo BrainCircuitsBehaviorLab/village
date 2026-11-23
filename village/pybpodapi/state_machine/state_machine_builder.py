@@ -122,7 +122,7 @@ class StateMachineBuilder(StateMachineBase):
                 tmp += [transition[0]]
                 dest_state = transition[1]
                 tmp += [
-                    (self.total_states_added if math.isnan(dest_state) else dest_state)
+                    self.total_states_added if math.isnan(dest_state) else dest_state
                 ]
         message += tmp
         logger.debug("INPUT MATRIX: %s", tmp)
@@ -159,7 +159,7 @@ class StateMachineBuilder(StateMachineBase):
                     - self.hardware.channels.events_positions.globalTimerStart
                 ]
                 tmp += [
-                    (self.total_states_added if math.isnan(dest_state) else dest_state)
+                    self.total_states_added if math.isnan(dest_state) else dest_state
                 ]
         message += tmp
         logger.debug("GLOBAL_TIMER_START_MATRIX: %s", tmp)
@@ -179,7 +179,7 @@ class StateMachineBuilder(StateMachineBase):
                     - self.hardware.channels.events_positions.globalTimerEnd
                 ]
                 tmp += [
-                    (self.total_states_added if math.isnan(dest_state) else dest_state)
+                    self.total_states_added if math.isnan(dest_state) else dest_state
                 ]
         message += tmp
         logger.debug("GLOBAL_TIMER_END_MATRIX: %s", tmp)
@@ -199,7 +199,7 @@ class StateMachineBuilder(StateMachineBase):
                     - self.hardware.channels.events_positions.globalCounter
                 ]
                 tmp += [
-                    (self.total_states_added if math.isnan(dest_state) else dest_state)
+                    self.total_states_added if math.isnan(dest_state) else dest_state
                 ]
         message += tmp
         logger.debug("GLOBAL_COUNTER_MATRIX: %s", tmp)
@@ -218,7 +218,7 @@ class StateMachineBuilder(StateMachineBase):
                     transition[0] - self.hardware.channels.events_positions.condition
                 ]
                 tmp += [
-                    (self.total_states_added if math.isnan(dest_state) else dest_state)
+                    self.total_states_added if math.isnan(dest_state) else dest_state
                 ]
 
         message += tmp
