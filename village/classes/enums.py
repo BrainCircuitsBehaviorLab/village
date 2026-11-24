@@ -139,10 +139,13 @@ class State(SuperEnum):
     def can_edit_data(self) -> bool:
         """Checks if data editing is allowed in this state.
 
+        Only from WAIT: editing switches to MANUAL_MODE, so a second edit
+        cannot start while another one is still open.
+
         Returns:
             bool: True if editing is allowed.
         """
-        return self in (State.WAIT, State.MANUAL_MODE)
+        return self == State.WAIT
 
     def can_calibrate_scale(self) -> bool:
         """Checks if scale calibration is allowed in this state.

@@ -93,6 +93,16 @@ def frame_from_video_csv(video_path: str, timestamp: float) -> int | None:
     return min(index, len(timestamps) - 1)
 
 
+def _end_manual_mode() -> None:
+    """Goes back to WAIT once an edit of the tables is finished.
+
+    Only from MANUAL_MODE (the state set while editing): any other state is
+    left alone, so it never overwrites a session that started in the meantime.
+    """
+    if manager.state == State.MANUAL_MODE:
+        manager.state = State.WAIT
+
+
 def _get_calibration_by_name(name: str) -> CalibrationBase | None:
     for cal in vars(manager.calibrations).values():
         if isinstance(cal, CalibrationBase) and cal.display_name == name:
@@ -114,6 +124,15 @@ class TableView(QTableView):
         if model is not None:
             self.setModel(model)
         self.setEditTriggers(QAbstractItemView.DoubleClicked)
+
+    def closeEditor(self, editor, hint) -> None:
+        """Ends the edit of a cell edited in place (accepted or cancelled).
+
+        The state stays in MANUAL_MODE while the cell editor is open, so no
+        session can start until the edit is finished.
+        """
+        super().closeEditor(editor, hint)
+        _end_manual_mode()
 
     def _model(self) -> Table:
         """Returns the casted Table model.
@@ -205,14 +224,18 @@ class TableView(QTableView):
                             QMessageBox.No,
                         )
                         if reply == QMessageBox.No:
-                            manager.state = State.WAIT
+                            _end_manual_mode()
                             return
+                    # Opens the cell editor and returns at once: the change is
+                    # saved when it is accepted (setData -> on_data_changed), and
+                    # MANUAL_MODE ends when the editor closes (closeEditor)
                     try:
                         super().mouseDoubleClickEvent(event)
                     except RuntimeError:
-                        manager.state = State.WAIT
+                        _end_manual_mode()
                         return
-                    self.save_changes_in_df()
+                    if self.state() != QAbstractItemView.EditingState:
+                        _end_manual_mode()  # no editor was opened
             elif flags & Qt.ItemIsEditable:
                 text = "Wait until the box is empty or synchronization is complete"
                 text += " before editing the tables."
@@ -226,7 +249,7 @@ class TableView(QTableView):
                     manager.state = State.MANUAL_MODE
                     current_value = model.data(index, Qt.DisplayRole)
                     new_value = model.layout_parent.edit_task_settings(
-                        cast(str, current_value), manager.state.can_edit_data()
+                        cast(str, current_value), True
                     )
                     model.setData(index, new_value, Qt.EditRole)
                     self.save_changes_in_df()
@@ -296,7 +319,7 @@ class TableView(QTableView):
         elif manager.table == DataTable.SESSIONS_SUMMARY:
             manager.sessions_summary.df = model.complete_df
             manager.sessions_summary.save_from_df()
-        manager.state = State.WAIT
+        _end_manual_mode()
 
     def openDaysSelectionDialog(self, index: QModelIndex, current_value) -> None:
         dialog = DaysSelectionDialog(self, current_value)
@@ -306,7 +329,7 @@ class TableView(QTableView):
                 self._model().setData(index, selected_days, Qt.EditRole)
                 self.save_changes_in_df()
         # back to WAIT also when cancelled, or no RFID detection would happen
-        manager.state = State.WAIT
+        _end_manual_mode()
 
 
 class DaysSelectionDialog(QDialog):
@@ -1786,6 +1809,7 @@ class DfLayout(Layout):
     def add_button_clicked(self) -> None:
         """Actions to take when the ADD button is clicked (add new subject row)."""
         if manager.state.can_edit_data():
+            manager.state = State.MANUAL_MODE  # ended by save_changes_in_df
             self.searching = ""
             self.search_edit.setText("")
             self.update_gui()
@@ -1812,6 +1836,9 @@ class DfLayout(Layout):
         selected_indexes = sel_model.selectedRows() if sel_model else []
         if selected_indexes:
             if manager.state.can_edit_data():
+                # No session can start while the question is open; ended by
+                # save_changes_in_df
+                manager.state = State.MANUAL_MODE
                 if manager.table == DataTable.SUBJECTS:
                     text = (
                         "Do you want to delete the selected subject? "
@@ -1882,17 +1909,6 @@ class DfLayout(Layout):
                 text = "Wait until the box is empty or synchronization is complete"
                 text += " before editing the tables."
                 QMessageBox.information(self.window, "EDIT", text)
-
-    def cancel(self) -> None:
-        """Cancels the current editing session."""
-        manager.state = State.WAIT
-        self.update_buttons()
-        if manager.table == DataTable.SUBJECTS:
-            self.model.beginResetModel()
-            self.model.df = manager.subjects.df
-            self.model.endResetModel()
-            self.update_data()
-            self.create_table()
 
     def edit_task_settings(self, current_value: str, can_edit: bool) -> str:
         """Opens a dialog to edit task settings (JSON string).
