@@ -15,7 +15,7 @@ Once the GUI is active, a menu will appear at the top with the following screens
 ### MAIN
 ![Main Training village screen](/_static/main_screen.webp)
 
-The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If the `MONITOR` screen is left open with no user activity for 5 minutes (`SCREENSAVE_TIME` in `SETTINGS` → `ADVANCED SETTINGS`), the system automatically returns to this screen, to stop rendering the camera images. The other screens stay open.
+The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If the `MONITOR` or the `DATA` screen is left open with no user activity for 5 minutes (`SCREENSAVE_TIME` in `SETTINGS` → `ADVANCED SETTINGS`), the system automatically returns to this screen, to stop rendering the camera images or refreshing the tables. `DATA` stays open while a video is playing. An edit of the tables (in `DATA` or `SUBJECTS`) left open that long is closed without saving it. The other screens stay open.
 
 ---
 

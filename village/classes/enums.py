@@ -147,6 +147,27 @@ class State(SuperEnum):
         """
         return self == State.WAIT
 
+    def can_edit_data_in_session(self) -> bool:
+        """Checks if the subjects and sessions tables can be edited while a
+        session is running, without changing the state.
+
+        Only the rows of the other subjects: the subject in the box cannot be
+        edited until it is back home. Not while the session is being saved, nor
+        during the sync: the edit windows are closed then.
+
+        Returns:
+            bool: True if editing is allowed.
+        """
+        return self in (
+            State.RUN_INITIAL,
+            State.CLOSE_DOOR2,
+            State.RUN_CLOSED,
+            State.OPEN_DOOR2,
+            State.RUN_OPEN,
+            State.RUN_MANUAL,
+            State.WAIT_SUBJECT_EXIT,
+        )
+
     def can_calibrate_scale(self) -> bool:
         """Checks if scale calibration is allowed in this state.
 

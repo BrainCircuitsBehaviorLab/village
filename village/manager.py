@@ -56,6 +56,7 @@ from village.devices.screen import screen
 from village.devices.sound_device import sound_device
 from village.devices.temp_sensor import temp_sensor
 from village.scripts import utils
+from village.scripts.csv_tail import CsvTail
 from village.scripts.log import log
 from village.scripts.time_utils import time_utils
 from village.settings import settings
@@ -147,6 +148,9 @@ class Manager:
         self.actions: Actions = settings.get("ACTIONS")
         self.status_parts: list[str] = []
         self.weight: float = np.nan
+        # Columns that identify the row of the last session saved in
+        # sessions_summary (None if it was not saved)
+        self.summary_row: dict[str, str] | None = None
         self.changing_settings: bool = False
         self.tasks: dict[str, type] = {}
         self.errors: str = ""
@@ -158,6 +162,7 @@ class Manager:
         self.rt_session_path = str(
             Path(settings.get("SESSIONS_DIRECTORY"), "session.csv")
         )
+        self.raw_session_reader = CsvTail(self.rt_session_path)
 
         # init
         self.cycle_change_detector = time_utils.CycleChangeDetector(
@@ -534,24 +539,23 @@ class Manager:
         self.subject = Subject()
         self.training.restore()
         self.max_time_counter = 1
-        self.last_line_raw_df = 0
+        self.raw_session_reader.reset()
         self.raw_session_df = pd.DataFrame()
         self.calibrating = False
         self.previous_state_wait = True
 
     def update_raw_session_df(self) -> pd.DataFrame:
-        """Updates and returns the raw session DataFrame from the CSV file.
+        """Updates and returns the raw data of the current session
+        (session.csv), read as text.
+
+        Only the lines added since the previous call are read (see CsvTail):
+        the table in DATA is refreshed every second and the file grows during
+        the whole session.
 
         Returns:
-            pd.DataFrame: The loaded raw session data.
+            pd.DataFrame: The raw data of the session.
         """
-        try:
-            self.raw_session_df = pd.read_csv(
-                self.rt_session_path,
-                sep=";",
-            )
-        except Exception:
-            self.raw_session_df = pd.DataFrame()
+        self.raw_session_df = self.raw_session_reader.read()
         return self.raw_session_df
 
     def get_both_sessions_dfs(self) -> list[pd.DataFrame]:
@@ -579,6 +583,7 @@ class Manager:
         # Stop routing device events into a recorder whose task is ending.
         sound_device.recorder = None
         screen.recorder = None
+        self.summary_row = None
         save, duration, trials, water, settings_str = self.task.disconnect_and_save(
             run_mode
         )
@@ -638,30 +643,30 @@ class Manager:
     def save_to_subjects(self) -> None:
         """Updates subject data, including next session time and training settings,
         after a successful session."""
-        df = self.subjects.df
         self.training.settings = self.task.settings
         next_settings = self.training.get_jsonstring(exclude=["observations"])
-        df.loc[df["name"] == self.subject.name, "next_settings"] = next_settings
-
         time_val = time_utils.time_in_future_seconds(
             int(self.training.settings.refractory_period)
         )
         time_str = time_utils.string_from_date(time_val)
-        df.loc[df["name"] == self.subject.name, "next_session_time"] = time_str
-        self.subjects.df = df
-        self.subjects.save_from_df(self.training)
+        # On the current data, under the lock: the tables can be edited in the
+        # GUI while a session is running
+        self.subjects.update_where(
+            {"name": self.subject.name},
+            {"next_settings": next_settings, "next_session_time": time_str},
+            self.training,
+        )
 
     def save_refractory_to_subjects(self) -> None:
         """Updates the subject's next session time based on the refractory period
         (without full save)."""
-        df = self.subjects.df
         time_val = time_utils.time_in_future_seconds(
             int(self.training.settings.refractory_period)
         )
         time_str = time_utils.string_from_date(time_val)
-        df.loc[df["name"] == self.subject.name, "next_session_time"] = time_str
-        self.subjects.df = df
-        self.subjects.save_from_df(self.training)
+        self.subjects.update_where(
+            {"name": self.subject.name}, {"next_session_time": time_str}, self.training
+        )
 
     def save_to_sessions_summary(
         self, duration: float, trials: int, water: int, settings_used_str: str
@@ -687,6 +692,20 @@ class Manager:
                 settings_used_str,
             ]
         )
+        self.summary_row = {"date": self.task.date, "subject": self.subject.name}
+
+    def save_weight_to_sessions_summary(self) -> None:
+        """Saves the weight measured when the subject left the box after its
+        session was saved (EXIT_SAVED) in the row of that session.
+
+        The row is found by its date and subject, not as the last row: nothing
+        is written if the session was not saved (it would go to the previous
+        session, maybe of another subject), and a row added or deleted in the
+        meantime from the GUI does not matter.
+        """
+        if self.summary_row is None:
+            return
+        self.sessions_summary.update_where(self.summary_row, {"weight": self.weight})
 
     @property
     def corridor_cycle_is_day(self) -> bool:

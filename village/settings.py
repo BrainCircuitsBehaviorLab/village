@@ -674,8 +674,10 @@ in DATA. Setting a very low value could result in excessive CPU load.""",
         300,
         int,
         """The time in seconds after which the system automatically returns from
-the MONITOR screen to the MAIN screen if there is no user interaction. This helps
-reduce CPU usage by preventing unnecessary processing.""",
+the MONITOR or DATA screen to the MAIN screen if there is no user interaction
+(DATA stays open while a video is playing). An edit of the tables left open that
+long is closed without saving it. This helps reduce CPU usage by preventing
+unnecessary processing.""",
     ),
     Setting(
         "CORRIDOR_VIDEO_DURATION",

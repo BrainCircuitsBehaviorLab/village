@@ -61,12 +61,13 @@ class GuiWindow(QWidget):
         Returns:
             bool: True if event is handled, False otherwise.
         """
-        if event.type() == QEvent.MouseButtonPress:
+        if event.type() in (QEvent.MouseButtonPress, QEvent.KeyPress, QEvent.Wheel):
             self.update_chrono.reset()
         return super().eventFilter(source, event)
 
     def create_main_layout(self) -> None:
         """Switches the current view to the Main Layout."""
+        self.layout.on_close()
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MainLayout(self)
@@ -74,6 +75,7 @@ class GuiWindow(QWidget):
 
     def create_monitor_layout(self) -> None:
         """Switches the current view to the Monitor Layout."""
+        self.layout.on_close()
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = MonitorLayout(self)
@@ -81,6 +83,7 @@ class GuiWindow(QWidget):
 
     def create_subjects_layout(self) -> None:
         """Switches the current view to the Subjects Layout."""
+        self.layout.on_close()
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = SubjectsLayout(self)
@@ -88,6 +91,7 @@ class GuiWindow(QWidget):
 
     def create_tasks_layout(self) -> None:
         """Switches the current view to the Tasks Layout."""
+        self.layout.on_close()
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = TasksLayout(self)
@@ -95,6 +99,7 @@ class GuiWindow(QWidget):
 
     def create_data_layout(self) -> None:
         """Switches the current view to the Data Layout."""
+        self.layout.on_close()
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = DataLayout(self)
@@ -102,6 +107,7 @@ class GuiWindow(QWidget):
 
     def create_calibration_layout(self) -> None:
         """Switches the current view to the Calibration Layout."""
+        self.layout.on_close()
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = CalibrationLayout(self)
@@ -109,6 +115,7 @@ class GuiWindow(QWidget):
 
     def create_settings_layout(self) -> None:
         """Switches the current view to the Settings Layout."""
+        self.layout.on_close()
         utils.delete_all_elements_from_layout(self.layout)
         QObjectCleanupHandler().add(self.layout)
         self.layout = SettingsLayout(self)
@@ -134,15 +141,29 @@ class GuiWindow(QWidget):
     def check_update_chrono(self) -> None:
         """Checks if the inactivity timeout has been reached.
 
-        Only the Monitor view returns to Main automatically after inactivity;
-        every other view stays where it is. Also skipped while a modal dialog or
-        popup is open, so tearing down the layout under it cannot orphan it or
-        crash on close. The chrono keeps counting, so the return happens on a
-        later tick once any dialog is closed.
+        First, an edit of the tables left open (Data or Subjects) is closed
+        without saving it: started in WAIT, it keeps the state in MANUAL_MODE,
+        so no subject could enter the box while it is open.
+
+        Only the Monitor and Data views return to Main automatically after
+        inactivity (they are the ones that keep working: camera images, tables
+        refreshed every second, videos); every other view stays where it is.
+        Data stays while a video is playing. Also skipped while a modal dialog
+        or popup is open, so tearing down the layout under it cannot orphan it
+        or crash on close. The chrono keeps counting, so the return happens on
+        a later tick once any dialog is closed.
         """
         if self.update_chrono.get_seconds() <= self.screensave_time:
             return
-        if not isinstance(self.layout, MonitorLayout):
+        if (
+            isinstance(self.layout, DataLayout | SubjectsLayout)
+            and self.layout.cancel_edit()
+        ):
+            return  # its windows close once this tick ends
+        if isinstance(self.layout, DataLayout):
+            if self.layout.is_busy():
+                return
+        elif not isinstance(self.layout, MonitorLayout):
             return
         if (
             QApplication.activeModalWidget() is not None

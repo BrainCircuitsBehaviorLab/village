@@ -601,7 +601,7 @@ def system_run() -> None:
                 log.info("The subject has returned home.", subject=manager.subject.name)
                 motor_corridor2.close()
                 motor_corridor1.open()
-                manager.sessions_summary.change_last_entry("weight", manager.weight)
+                manager.save_weight_to_sessions_summary()
                 manager.state = State.SYNC
                 log.info("Going to SYNC State")
 

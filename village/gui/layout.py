@@ -619,6 +619,11 @@ class Layout(QGridLayout):
         """
         return True
 
+    def on_close(self) -> None:
+        """Called just before this layout is replaced by another one, to stop
+        what it is doing (placeholder base method)."""
+        return
+
     def main_button_clicked(self) -> None:
         """Handles main menu button click."""
         if self.change_layout():

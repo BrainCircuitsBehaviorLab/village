@@ -27,3 +27,12 @@ If new variables are added to the training protocol after a subject has already 
 ```{warning}
 Renaming a variable in the training protocol is strongly discouraged once data collection has started. The system identifies variables by name, so renaming one causes its stored value to be permanently lost for all existing subjects — the renamed variable will revert to its default value on the next session.
 ```
+
+```{admonition} Editing while a session is running
+:class: note
+The subjects can be edited, added and deleted at any time, except while a session is being saved or the data are being synchronized:
+- When no subject is in the box, no subject can enter while an edit is open.
+- While a session is running, or while the system waits for the subject to leave the box, every subject can be edited except the one in the box, until it is back home.
+- If the session starts to be saved while an edit is open, the edit is closed and the change is not saved.
+- An edit left open with no user activity for 5 minutes (`SCREENSAVE_TIME`) is closed without saving it.
+```

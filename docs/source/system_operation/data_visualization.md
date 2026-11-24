@@ -35,6 +35,10 @@ settings.
   from the subject's history, but no file is removed (see [Saved Data and Video](data.md)).
 - Double-click the `settings` cell of a session to see the settings it ran with, and to
   edit its `observations`, a free text field saved with it.
+- Sessions can be deleted and their `observations` edited while a session is running,
+  except those of the subject in the box (see
+  [Subject Management](subject.md)). The other tables can only be edited when no subject
+  is in the box.
 
 ### TEMPERATURES
 

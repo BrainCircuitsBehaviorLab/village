@@ -2,6 +2,7 @@ import csv
 import sys
 import threading
 import traceback
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -238,6 +239,105 @@ class Collection:
         with self._lock:
             self._df.loc[self._df.index[-1], column] = value
             self.save_from_df()
+
+    def update_where(
+        self,
+        where: dict[str, Any],
+        updates: dict[str, Any],
+        training: TrainingProtocolBase | None = None,
+    ) -> None:
+        """Sets `updates` in the rows that have the values in `where`, and saves.
+
+        Done on the current data under the lock, so it never overwrites a
+        change made at the same time from another thread (e.g. an edit of the
+        tables in the GUI while a session is being saved).
+
+        Args:
+            where (dict[str, Any]): The value of each column used to find the
+                rows to change.
+            updates (dict[str, Any]): The new value of each column to change.
+            training (TrainingProtocolBase): Protocol for formatting specific
+                fields.
+        """
+        with self._lock:
+            mask = pd.Series(True, index=self._df.index)
+            for col, value in where.items():
+                mask &= self._df[col] == value
+            for col, new_value in updates.items():
+                self._df.loc[mask, col] = new_value
+            self.save_from_df(training)
+
+    def replace_row(
+        self,
+        old_row: pd.Series | None,
+        new_row: pd.Series | None,
+        training: TrainingProtocolBase | None = None,
+        check: Callable[[], str] | None = None,
+    ) -> str:
+        """Replaces, adds or deletes one row, and saves.
+
+        Used by the edits of the tables in the GUI. They are applied to the
+        current data under the lock, never by saving the GUI's copy of the
+        table, which can be out of date: that would undo what other threads
+        saved in the meantime (e.g. the row of a session that just ended).
+
+        Only the cells that differ between old_row and new_row are written. The
+        row is found by its content (all its values as they were when the edit
+        started), not by its position.
+
+        Args:
+            old_row (pd.Series | None): The row as it was, or None to add
+                new_row at the end.
+            new_row (pd.Series | None): The row as it must be, or None to
+                delete old_row.
+            training (TrainingProtocolBase): Protocol for formatting specific
+                fields.
+            check (Callable[[], str] | None): Called under the lock before the
+                change: if it returns a reason, nothing is changed.
+
+        Returns:
+            str: Empty if the change was saved, otherwise the reason why not.
+        """
+        with self._lock:
+            if check is not None:
+                reason = check()
+                if reason:
+                    return reason
+            df = self._df.copy()
+            if old_row is None:
+                if new_row is None:
+                    return ""
+                added = new_row.reindex(df.columns).to_frame().T
+                df = pd.concat([df, added], ignore_index=True)
+            else:
+                idx = self._find_row(df, old_row)
+                if idx is None:
+                    return "The row was changed or deleted in the meantime."
+                if new_row is None:
+                    df = df.drop(idx).reset_index(drop=True)
+                else:
+                    for col in df.columns:
+                        if col in new_row.index and str(new_row[col]) != str(
+                            old_row.get(col)
+                        ):
+                            df.at[idx, col] = new_row[col]
+            if training is None:
+                training = TrainingProtocolBase()
+            new_df = self.df_from_df(df, training)
+            write_csv_atomic(new_df, self.path, index=False, sep=";")
+            self._df = new_df
+        return ""
+
+    @staticmethod
+    def _find_row(df: pd.DataFrame, row: pd.Series) -> Any | None:
+        """Returns the index of the first row of df equal to row, or None.
+
+        Compared as text: the row comes from a copy of the same data, so equal
+        values have the same text (NaN is "nan" in both).
+        """
+        target = [str(row.get(col)) for col in df.columns]
+        matches = df.index[(df.astype(str) == target).all(axis=1)]
+        return matches[0] if len(matches) else None
 
     def save_from_df(self, training: TrainingProtocolBase | None = None) -> None:
         """Saves values from the current DataFrame to the CSV file,

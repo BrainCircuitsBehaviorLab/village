@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 import traceback
 from pathlib import Path
@@ -20,6 +21,7 @@ from PyQt5.QtCore import (
 )
 from PyQt5.QtGui import QBrush, QColor, QFont, QImage, QPixmap
 from PyQt5.QtWidgets import (
+    QAbstractItemDelegate,
     QAbstractItemView,
     QAbstractScrollArea,
     QApplication,
@@ -43,8 +45,10 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+from village.classes.collection import Collection
 from village.classes.enums import DataTable, State
 from village.custom_classes.calibration_base import CalibrationBase
+from village.custom_classes.training_protocol_base import TrainingProtocolBase
 from village.gui.layout import Layout
 from village.manager import manager
 from village.plots.temperatures_plot import temperatures_plot
@@ -93,14 +97,181 @@ def frame_from_video_csv(video_path: str, timestamp: float) -> int | None:
     return min(index, len(timestamps) - 1)
 
 
-def _end_manual_mode() -> None:
-    """Goes back to WAIT once an edit of the tables is finished.
+class _Edit:
+    """The edit of the tables in progress (only one at a time: its windows are
+    modal, and a cell edited in place closes as soon as the focus leaves it)."""
 
-    Only from MANUAL_MODE (the state set while editing): any other state is
-    left alone, so it never overwrites a session that started in the meantime.
+    open = False
+    subjects: list[str] = []  # the subjects of the edited row
+    closed_by_state = False  # closed because the state stopped allowing it
+
+
+def _row_subjects(row: pd.Series | None) -> list[str]:
+    """Returns the subject a row of the current table belongs to, as a list
+    (empty for the tables that are not about a subject)."""
+    if row is None:
+        return []
+    if manager.table == DataTable.SUBJECTS:
+        column = "name"
+    elif manager.table == DataTable.SESSIONS_SUMMARY:
+        column = "subject"
+    else:
+        return []
+    value = row.get(column)
+    if value is None or pd.isna(value) or str(value).strip() == "":
+        return []
+    return [str(value)]
+
+
+def _row_at(df: pd.DataFrame, position: int) -> pd.Series:
+    """Returns a row keeping each value's own type (df.iloc would turn the ints
+    into floats in a table with only numeric columns), so it can be found
+    again in the collection by its content (see Collection.replace_row)."""
+    return pd.Series(
+        {col: df.iat[position, i] for i, col in enumerate(df.columns)}, dtype=object
+    )
+
+
+def _edit_blocked_reason(subjects: list[str]) -> str:
+    """Returns why the current table cannot be edited now, or "" if it can.
+
+    In WAIT (MANUAL_MODE while the edit is open) everything can be edited.
+    While a session is running (see State.can_edit_data_in_session), the
+    subjects and sessions tables, except the rows of the subject in the box.
+
+    Args:
+        subjects (list[str]): The subjects of the edited row.
     """
+    state = manager.state
+    if state.can_edit_data() or state == State.MANUAL_MODE:
+        return ""  # MANUAL_MODE: the edit started in WAIT
+    if not state.can_edit_data_in_session():
+        return (
+            "Wait until the session is saved or the synchronization is complete"
+            + " before editing the tables."
+        )
+    if manager.table not in (DataTable.SUBJECTS, DataTable.SESSIONS_SUMMARY):
+        return (
+            "While a session is running, only the subjects and the sessions can"
+            + " be edited."
+        )
+    current = manager.subject.name
+    if current in subjects:
+        return (
+            current + " is in the box: its data cannot be edited until it is back home."
+        )
+    return ""
+
+
+def _begin_edit(parent: QWidget | None, subjects: list[str]) -> bool:
+    """Starts an edit of the current table, if the state allows it.
+
+    In WAIT the state changes to MANUAL_MODE, so no session can start while
+    the edit is open. While a session is running the state is not changed: the
+    edit is closed if the session starts to be saved (see
+    DfLayout.close_edit_if_not_allowed).
+
+    Args:
+        parent (QWidget | None): The parent of the message if it is not allowed.
+        subjects (list[str]): The subjects of the edited row.
+
+    Returns:
+        bool: True if the edit can start. Every edit started must call
+        _end_edit when it finishes.
+    """
+    reason = _edit_blocked_reason(subjects)
+    if reason:
+        QMessageBox.information(parent, "EDIT", reason)
+        return False
+    if manager.state == State.WAIT:
+        manager.state = State.MANUAL_MODE
+    _Edit.open = True
+    _Edit.subjects = subjects
+    _Edit.closed_by_state = False
+    return True
+
+
+def _end_edit() -> None:
+    """Ends the edit of the tables (saved, cancelled or closed).
+
+    Goes back to WAIT only from MANUAL_MODE: any other state is left alone, so
+    it never overwrites a session.
+    """
+    if not _Edit.open:
+        return
+    _Edit.open = False
     if manager.state == State.MANUAL_MODE:
         manager.state = State.WAIT
+    if _Edit.closed_by_state:
+        _Edit.closed_by_state = False
+        # Shown once the edit window is closed, not from inside its closing
+        QTimer.singleShot(
+            0,
+            lambda: QMessageBox.information(
+                None,
+                "EDIT",
+                "The session is being saved: the edit was closed and the change"
+                + " was not saved.",
+            ),
+        )
+
+
+def _table_collection() -> tuple[Collection | None, TrainingProtocolBase | None]:
+    """Returns the collection of the current table, and the training protocol
+    used to format it when it is saved."""
+    match manager.table:
+        case DataTable.SUBJECTS:
+            return manager.subjects, manager.training
+        case DataTable.SESSIONS_SUMMARY:
+            return manager.sessions_summary, None
+        case DataTable.TEMPERATURES:
+            return manager.temperatures, None
+        case str():
+            return _get_calibration_by_name(manager.table), None
+    return None, None
+
+
+def _commit_row(
+    old_row: pd.Series | None, new_row: pd.Series | None, subjects: list[str]
+) -> str:
+    """Saves an edit of one row of the current table (see
+    Collection.replace_row), checking again under the lock that the state still
+    allows it: a session cannot start to be saved halfway through, and nothing
+    is changed if it already started.
+
+    Args:
+        old_row (pd.Series | None): The row as it was, or None to add new_row.
+        new_row (pd.Series | None): The row as it must be, or None to delete it.
+        subjects (list[str]): The subjects of the row (before and after).
+
+    Returns:
+        str: Empty if the change was saved, otherwise the reason why not.
+    """
+    collection, training = _table_collection()
+    if collection is None:
+        return "This table cannot be edited."
+    try:
+        return collection.replace_row(
+            old_row, new_row, training, check=lambda: _edit_blocked_reason(subjects)
+        )
+    except Exception:
+        log.error(
+            "Error saving the changes in the table", exception=traceback.format_exc()
+        )
+        return "Error saving the changes in the table."
+
+
+def _warn_not_saved(parent: QWidget | None, reason: str) -> None:
+    QMessageBox.warning(parent, "EDIT", reason + "\n\nThe change was not saved.")
+
+
+def _training_for_editing() -> TrainingProtocolBase:
+    """Returns a copy of the training protocol with its own settings, to edit
+    the next settings of a subject. manager.training must not be used: during
+    a session its settings are the very object the task is using."""
+    training = copy.copy(manager.training)
+    training.settings = copy.deepcopy(manager.training.default_settings)
+    return training
 
 
 def _get_calibration_by_name(name: str) -> CalibrationBase | None:
@@ -128,11 +299,11 @@ class TableView(QTableView):
     def closeEditor(self, editor, hint) -> None:
         """Ends the edit of a cell edited in place (accepted or cancelled).
 
-        The state stays in MANUAL_MODE while the cell editor is open, so no
-        session can start until the edit is finished.
+        The edit stays open (MANUAL_MODE if it started in WAIT) while the cell
+        editor is open.
         """
         super().closeEditor(editor, hint)
-        _end_manual_mode()
+        _end_edit()
 
     def _model(self) -> Table:
         """Returns the casted Table model.
@@ -181,109 +352,24 @@ class TableView(QTableView):
             return
 
         model = self._model()
-        flags = model.flags(index)
-        column = index.column()
-        column_name = model.headerData(column, Qt.Horizontal, Qt.DisplayRole)
+        editable = bool(model.flags(index) & Qt.ItemIsEditable)
+        column_name = model.headerData(index.column(), Qt.Horizontal, Qt.DisplayRole)
 
-        if manager.table == DataTable.SUBJECTS:
-            if flags & Qt.ItemIsEditable and manager.state.can_edit_data():
-                if column_name == "next_settings":
-                    manager.state = State.MANUAL_MODE
-                    current_value = model.data(index, Qt.DisplayRole)
-                    new_value = model.layout_parent.edit_next_settings(
-                        cast(str, current_value)
-                    )
-                    model.setData(index, new_value, Qt.EditRole)
-                    self.save_changes_in_df()
-                elif column_name == "next_session_time":
-                    manager.state = State.MANUAL_MODE
-                    current_value = model.data(index, Qt.DisplayRole)
-                    new_value = model.layout_parent.edit_next_session_time(
-                        cast(str, current_value)
-                    )
-                    model.setData(index, new_value, Qt.EditRole)
-                    self.save_changes_in_df()
-                elif column_name == "active":
-                    manager.state = State.MANUAL_MODE
-                    current_value = model.data(index, Qt.DisplayRole)
-                    self.openDaysSelectionDialog(index, current_value)
-                else:
-                    manager.state = State.MANUAL_MODE
-                    old_value = str(model.data(index, Qt.DisplayRole)).strip()
-                    if old_value not in ("", "nan", "0", "0.0"):
-                        text = (
-                            "If this subject already has recorded sessions, "
-                            + "modifying this value may lead to inconsistencies in "
-                            + "the data. Are you sure you want to modify this value?"
-                        )
-                        reply = QMessageBox.question(
-                            self,
-                            "Confirm edit",
-                            text,
-                            QMessageBox.Yes | QMessageBox.No,
-                            QMessageBox.No,
-                        )
-                        if reply == QMessageBox.No:
-                            _end_manual_mode()
-                            return
-                    # Opens the cell editor and returns at once: the change is
-                    # saved when it is accepted (setData -> on_data_changed), and
-                    # MANUAL_MODE ends when the editor closes (closeEditor)
-                    try:
-                        super().mouseDoubleClickEvent(event)
-                    except RuntimeError:
-                        _end_manual_mode()
-                        return
-                    if self.state() != QAbstractItemView.EditingState:
-                        _end_manual_mode()  # no editor was opened
-            elif flags & Qt.ItemIsEditable:
-                text = "Wait until the box is empty or synchronization is complete"
-                text += " before editing the tables."
-                QMessageBox.information(self, "EDIT", text)
+        if manager.table == DataTable.SUBJECTS and editable:
+            self.edit_subject_cell(index, column_name, event)
+        elif manager.table == DataTable.SESSIONS_SUMMARY and editable:
+            if column_name == "settings":
+                self.edit_session_observations(index)
             else:
-                super().mouseDoubleClickEvent(event)
-
-        elif manager.table == DataTable.SESSIONS_SUMMARY:
-            if flags & Qt.ItemIsEditable and manager.state.can_edit_data():
-                if column_name == "settings":
-                    manager.state = State.MANUAL_MODE
-                    current_value = model.data(index, Qt.DisplayRole)
-                    new_value = model.layout_parent.edit_task_settings(
-                        cast(str, current_value), True
-                    )
-                    model.setData(index, new_value, Qt.EditRole)
-                    self.save_changes_in_df()
-
-                    parent = model.layout_parent
-                    paths = parent.get_paths_from_sessions_summary_row(
-                        cast(pd.Series, parent.get_selected_row_series())
-                    )
-
-                    # new_value is already a JSON string: written as is, like
-                    # the task writes it
-                    json_path = paths[2]
-                    try:
-                        with Path(json_path).open("w") as file:
-                            file.write(new_value)
-                    except Exception:
-                        log.error(
-                            "Error trying to modify the json file",
-                            exception=traceback.format_exc(),
-                        )
-                else:
-                    text = str(index.data())
-                    text = text.replace("  |  ", "\n")
-                    QMessageBox.information(self, "", text)
-            elif flags & Qt.ItemIsEditable:
-                text = "Wait until the box is empty or synchronization is complete"
-                text += " before editing the tables."
-                QMessageBox.information(self, "EDIT", text)
+                text = str(index.data())
+                text = text.replace("  |  ", "\n")
+                QMessageBox.information(self, "", text)
+        elif manager.table == DataTable.SUBJECTS:
+            super().mouseDoubleClickEvent(event)
         else:
-            model = self._model()
             row = index.row()
-            num_cols = model.columnCount()
             lines = []
-            for col in range(num_cols):
+            for col in range(model.columnCount()):
                 header = model.headerData(col, Qt.Horizontal, Qt.DisplayRole)
                 value = str(model.data(model.index(row, col), Qt.DisplayRole))
                 value = value.replace("  |  ", "\n  ")
@@ -294,42 +380,99 @@ class TableView(QTableView):
             except RuntimeError:
                 return
 
-    def save_changes_in_df(self, update: bool = True) -> None:
-        try:
-            model = self._model()
-        except RuntimeError:
+    def edit_subject_cell(self, index: QModelIndex, column_name: str, event) -> None:
+        """Edits a cell of the subjects table: with a dialog (next_settings,
+        next_session_time, active) or in place (the other columns)."""
+        model = self._model()
+        subjects = _row_subjects(_row_at(model.df, index.row()))
+        if not _begin_edit(self, subjects):
             return
-        if update:
-            # Only write rows still present in complete_df. If it ever went out
-            # of sync, df could hold indices no longer there, which used to raise
-            # "[...] not in index" on closing a very old session.
-            idx = model.df.index.intersection(model.complete_df.index)
-            model.complete_df.loc[idx] = model.df.loc[idx]
-        if manager.table == DataTable.SUBJECTS:
-            manager.subjects.df = model.complete_df
-            manager.subjects.save_from_df(manager.training)
-        elif manager.table == DataTable.TEMPERATURES:
-            manager.temperatures.df = model.complete_df
-            manager.temperatures.save_from_df()
-        elif isinstance(manager.table, str):
-            cal = _get_calibration_by_name(manager.table)
-            if cal is not None:
-                cal.df = model.complete_df
-                cal.save_from_df()
-        elif manager.table == DataTable.SESSIONS_SUMMARY:
-            manager.sessions_summary.df = model.complete_df
-            manager.sessions_summary.save_from_df()
-        _end_manual_mode()
+        current_value = cast(str, model.data(index, Qt.DisplayRole))
 
-    def openDaysSelectionDialog(self, index: QModelIndex, current_value) -> None:
+        if column_name in ("next_settings", "next_session_time", "active"):
+            try:
+                new_value: str | None
+                if column_name == "next_settings":
+                    new_value = model.layout_parent.edit_next_settings(current_value)
+                elif column_name == "next_session_time":
+                    new_value = model.layout_parent.edit_next_session_time(
+                        current_value
+                    )
+                else:
+                    new_value = self.select_days(current_value)
+                if new_value is not None and new_value != current_value:
+                    model.setData(index, new_value, Qt.EditRole)
+            finally:
+                _end_edit()
+            return
+
+        old_value = current_value.strip()
+        if old_value not in ("", "nan", "0", "0.0"):
+            text = (
+                "If this subject already has recorded sessions, "
+                + "modifying this value may lead to inconsistencies in "
+                + "the data. Are you sure you want to modify this value?"
+            )
+            reply = QMessageBox.question(
+                self,
+                "Confirm edit",
+                text,
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
+            if reply != QMessageBox.Yes:
+                _end_edit()
+                return
+        # Opens the cell editor and returns at once: the change is saved when
+        # it is accepted (Table.setData), and the edit ends when the editor
+        # closes (closeEditor)
+        try:
+            super().mouseDoubleClickEvent(event)
+        except RuntimeError:
+            _end_edit()
+            return
+        if self.state() != QAbstractItemView.EditingState:
+            _end_edit()  # no editor was opened
+
+    def edit_session_observations(self, index: QModelIndex) -> None:
+        """Edits the observations of a session (in its settings), in the
+        sessions table and in the session's json file."""
+        model = self._model()
+        row = _row_at(model.df, index.row())
+        if not _begin_edit(self, _row_subjects(row)):
+            return
+        try:
+            parent = model.layout_parent
+            current_value = cast(str, model.data(index, Qt.DisplayRole))
+            new_value = parent.edit_task_settings(current_value, True)
+            if new_value == current_value or not model.setData(
+                index, new_value, Qt.EditRole
+            ):
+                return
+            # new_value is already a JSON string: written as is, like the
+            # task writes it
+            json_path = parent.get_paths_from_sessions_summary_row(row)[2]
+            try:
+                with Path(json_path).open("w") as file:
+                    file.write(new_value)
+            except Exception:
+                log.error(
+                    "Error trying to modify the json file",
+                    exception=traceback.format_exc(),
+                )
+        finally:
+            _end_edit()
+
+    def select_days(self, current_value: str) -> str | None:
+        """Opens the dialog to select the active days and hours.
+
+        Returns:
+            str | None: The selection, or None if it was cancelled.
+        """
         dialog = DaysSelectionDialog(self, current_value)
         if dialog.exec_() == QDialog.Accepted:
-            selected_days = dialog.getSelection()
-            if selected_days:
-                self._model().setData(index, selected_days, Qt.EditRole)
-                self.save_changes_in_df()
-        # back to WAIT also when cancelled, or no RFID detection would happen
-        _end_manual_mode()
+            return dialog.getSelection() or None
+        return None
 
 
 class DaysSelectionDialog(QDialog):
@@ -677,6 +820,16 @@ class Table(QAbstractTableModel):
         except (ValueError, TypeError):
             return False
 
+        # Saved at once, only this cell, on the current data of the collection
+        old_row = _row_at(self.df, index.row())
+        new_row = old_row.copy()
+        new_row[column_name] = value
+        subjects = _row_subjects(old_row) + _row_subjects(new_row)
+        reason = _commit_row(old_row, new_row, subjects)
+        if reason:
+            _warn_not_saved(None, reason)
+            return False
+
         self.df.iat[index.row(), index.column()] = value
         self.dataChanged.emit(index, index, [Qt.DisplayRole])
 
@@ -688,6 +841,9 @@ class Table(QAbstractTableModel):
             except Exception:
                 pass
 
+        # Shows the row as it was saved (the collection formats some values),
+        # once the cell editor, if any, is closed
+        QTimer.singleShot(0, self.layout_parent.reload_table)
         return True
 
     def flags(self, index: QModelIndex) -> Qt.ItemFlags:
@@ -717,15 +873,6 @@ class Table(QAbstractTableModel):
         self.df.sort_values(by=col_name, ascending=ascending, inplace=True)
         self.df.reset_index(drop=True, inplace=True)
         self.layoutChanged.emit()
-
-    def insertRow(self, position, index=None) -> bool:
-        self.beginInsertRows(index or QModelIndex(), position, position)
-        new_row = pd.DataFrame([[""] * self.columnCount()], columns=self.df.columns)
-        new_row = manager.subjects.df_from_df(new_row, manager.training)
-        self.df = pd.concat([self.df, new_row], ignore_index=True)
-        self.df.reset_index(drop=True, inplace=True)
-        self.endInsertRows()
-        return True
 
     def add_rows(self, new_df: pd.DataFrame) -> None:
         """Adds rows to the table model from a DataFrame.
@@ -956,10 +1103,31 @@ class DataLayout(Layout):
                 text = "There are empty names in the subjects table."
                 QMessageBox.information(self.window, "WARNING", text)
                 return False
-            else:
-                return True
-        else:
-            return True
+        return True
+
+    def on_close(self) -> None:
+        """Leaving DATA: the video must not keep playing in the background."""
+        self.page2Layout.stop_button_clicked()
+
+    def is_busy(self) -> bool:
+        """True while a video is playing: then the GUI does not return to MAIN
+        after SCREENSAVE_TIME without activity."""
+        return (
+            self.central_layout.currentWidget() is self.page2
+            and self.page2Layout.is_playing()
+        )
+
+    def cancel_edit(self) -> bool:
+        """Closes the edit in progress, if any, without saving it and without
+        telling (see GuiWindow.check_update_chrono).
+
+        Returns:
+            bool: True if there was an edit to close.
+        """
+        if not _Edit.open:
+            return False
+        self.page1Layout.close_edit(notify=False)
+        return True
 
 
 class DfLayout(Layout):
@@ -1194,7 +1362,6 @@ class DfLayout(Layout):
             editable=editable,
         )
 
-        self.model.dataChanged.connect(self.on_data_changed)
         sel_model = self.table_view.selectionModel()
         if sel_model is not None:
             sel_model.selectionChanged.connect(self.update_buttons)
@@ -1230,12 +1397,6 @@ class DfLayout(Layout):
 
         model = Table(df, complete_df, self, editable)
 
-        old_model = self.table_view.model()
-        if isinstance(old_model, Table):
-            try:
-                old_model.dataChanged.disconnect(self.on_data_changed)
-            except Exception:
-                pass
         try:
             sm = self.table_view.selectionModel()
             if sm is not None:
@@ -1319,17 +1480,65 @@ class DfLayout(Layout):
 
     def update_gui(self) -> None:
         """Updates the GUI elements, including refreshing the table data."""
+        self.close_edit_if_not_allowed()
         self.update_data()
         if self.searching == self.previous_searching:
             # add_rows only refreshes model.df; keep model.complete_df pointing at
-            # the current data object too. Otherwise it can go stale (e.g. a new
-            # session replaces sessions_summary.df) and save_changes_in_df would
-            # write df rows into a complete_df missing those indices (KeyError).
+            # the current data object too, so it never goes stale (e.g. a new
+            # session adds a row to sessions_summary)
             self.model.complete_df = self.complete_df
             self.model.add_rows(self.df)
         else:
             self.previous_searching = self.searching
             self.create_table()
+
+    def close_edit_if_not_allowed(self) -> None:
+        """Closes the edit in progress, without saving it, if the state no
+        longer allows it (a session started to be saved, or the subject of the
+        edited row entered the box).
+
+        Called on every update of the GUI, which also runs while a modal edit
+        window is open. Closing it is not what keeps the data safe (an edit is
+        checked again when it is saved, see _commit_row), but it avoids keeping
+        open an edit that cannot be saved.
+        """
+        if _Edit.open and _edit_blocked_reason(_Edit.subjects):
+            self.close_edit(notify=True)
+
+    def close_edit(self, notify: bool) -> None:
+        """Closes the edit in progress without saving it: the cell editor, or
+        the edit window (and any message open inside the edit).
+
+        Args:
+            notify (bool): Whether to tell that the edit was closed (when the
+                session starts to be saved; not when it is closed for being left
+                open without activity).
+        """
+        _Edit.closed_by_state = notify
+        view = self.table_view
+        if view.state() == QAbstractItemView.EditingState:
+            editor = view.indexWidget(view.currentIndex())
+            if editor is not None:
+                view.closeEditor(editor, QAbstractItemDelegate.RevertModelCache)
+        widget = QApplication.activeModalWidget()
+        if isinstance(widget, QDialog):
+            widget.reject()
+
+    def reload_table(self) -> None:
+        """Reloads the table from its collection after an edit, keeping the
+        scroll position."""
+        try:
+            bar = self.table_view.verticalScrollBar()
+            position = bar.value()
+            self.update_data()
+            self.model.beginResetModel()
+            self.model.complete_df = self.complete_df
+            self.model.df = self.df
+            self.model.endResetModel()
+            bar.setValue(position)
+            self.update_buttons()
+        except RuntimeError:
+            pass  # the layout was closed
 
     def connect_button_to_delete(self, button: QPushButton) -> None:
         """Connects a button to the delete action."""
@@ -1808,107 +2017,90 @@ class DfLayout(Layout):
 
     def add_button_clicked(self) -> None:
         """Actions to take when the ADD button is clicked (add new subject row)."""
-        if manager.state.can_edit_data():
-            manager.state = State.MANUAL_MODE  # ended by save_changes_in_df
+        if not _begin_edit(self.window, []):
+            return
+        try:
             self.searching = ""
             self.search_edit.setText("")
-            self.update_gui()
-            self.changes_made = True
-            self.update_buttons()
-            row_count = self.model.rowCount()
-            self.model.insertRow(row_count)
-            empty_row = pd.DataFrame(
-                [dict.fromkeys(self.model.complete_df.columns, np.nan)]
-            )
-            self.model.complete_df = pd.concat(
-                [self.model.complete_df, empty_row], ignore_index=True
-            )
-            self.table_view.save_changes_in_df()
-            self.update_buttons()
-        else:
-            text = "Wait until the box is empty or synchronization is complete"
-            text += " before editing the subjects."
-            QMessageBox.information(self.window, "EDIT", text)
+            # Empty values, formatted by the collection like the new rows always were
+            empty_row = pd.Series("", index=self.complete_df.columns, dtype=object)
+            reason = _commit_row(None, empty_row, [])
+            if reason:
+                _warn_not_saved(self.window, reason)
+            self.reload_table()
+            self.table_view.scrollToBottom()
+        finally:
+            _end_edit()
 
     def delete_button_clicked(self) -> None:
         """Actions to take when the DELETE button is clicked."""
         sel_model = self.table_view.selectionModel()
         selected_indexes = sel_model.selectedRows() if sel_model else []
-        if selected_indexes:
-            if manager.state.can_edit_data():
-                # No session can start while the question is open; ended by
-                # save_changes_in_df
-                manager.state = State.MANUAL_MODE
-                if manager.table == DataTable.SUBJECTS:
-                    text = (
-                        "Do you want to delete the selected subject? "
-                        + "The data will not be deleted, but the subject will be "
-                        + "removed from the subjects.csv file. "
-                        + "This action cannot be undone."
-                    )
-                elif manager.table == DataTable.SESSIONS_SUMMARY:
-                    text = (
-                        "Do you want to delete the selected session? "
-                        + "The session files and video will not be deleted, but the"
-                        + "session data will be removed from the sessions_summary.csv "
-                        + "and from the <name_of_subject>.csv file."
-                        + "The session name will be added to the "
-                        + "deleted_sessions.csv file. "
-                        + "This action cannot be undone."
-                    )
-                else:
-                    text = (
-                        "Do you want to delete the selected row? "
-                        + "This action cannot be undone."
-                    )
-                reply = QMessageBox.question(
-                    self.window,
-                    "Delete",
-                    text,
-                    QMessageBox.Yes | QMessageBox.No,
-                    QMessageBox.No,
+        if not selected_indexes:
+            return
+        # The row as it is now: the table is refreshed while the question is open
+        row = _row_at(self.model.df, selected_indexes[0].row())
+        subjects = _row_subjects(row)
+        if not _begin_edit(self.window, subjects):
+            return
+        try:
+            if manager.table == DataTable.SUBJECTS:
+                text = (
+                    "Do you want to delete the selected subject? "
+                    + "The data will not be deleted, but the subject will be "
+                    + "removed from the subjects.csv file. "
+                    + "This action cannot be undone."
                 )
-                if reply == QMessageBox.Yes:
-                    row = self.get_selected_row_series()
-                    if row is not None:
-                        if manager.table == DataTable.SESSIONS_SUMMARY:
-                            deleted = self.get_filename_from_sessions_summary_row(row)
-                            manager.deleted_sessions.add_entry([deleted])
-                            del_sess = manager.deleted_sessions.df["filename"].tolist()
-                            subject = row["subject"]
-                            directory = str(settings.get("SESSIONS_DIRECTORY"))
-                            try:
-                                global_csv_for_subject_script(
-                                    subject, directory, deleted_sessions=del_sess
-                                )
-                            except Exception:
-                                log.error(
-                                    "Session data for this subject was already deleted",
-                                    exception=traceback.format_exc(),
-                                )
-
-                        index = selected_indexes[0]
-                        self.model.beginRemoveRows(
-                            QModelIndex(), index.row(), index.row()
-                        )
-
-                        position = index.row()
-                        index_to_delete = self.model.df.index[position]
-
-                        self.model.df.drop(index_to_delete, inplace=True)
-                        self.model.df.reset_index(drop=True, inplace=True)
-                        self.model.complete_df.drop(index_to_delete, inplace=True)
-                        self.model.complete_df.reset_index(drop=True, inplace=True)
-                        self.model.endRemoveRows()
-
-                self.table_view.save_changes_in_df(update=False)
-                if sel_model:
-                    sel_model.clearSelection()
-                self.update_buttons()
+            elif manager.table == DataTable.SESSIONS_SUMMARY:
+                text = (
+                    "Do you want to delete the selected session? "
+                    + "The session files and video will not be deleted, but the"
+                    + "session data will be removed from the sessions_summary.csv "
+                    + "and from the <name_of_subject>.csv file."
+                    + "The session name will be added to the "
+                    + "deleted_sessions.csv file. "
+                    + "This action cannot be undone."
+                )
             else:
-                text = "Wait until the box is empty or synchronization is complete"
-                text += " before editing the tables."
-                QMessageBox.information(self.window, "EDIT", text)
+                text = (
+                    "Do you want to delete the selected row? "
+                    + "This action cannot be undone."
+                )
+            reply = QMessageBox.question(
+                self.window,
+                "Delete",
+                text,
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No,
+            )
+            if reply != QMessageBox.Yes:
+                return
+            reason = _commit_row(row, None, subjects)
+            if reason:
+                _warn_not_saved(self.window, reason)
+            elif manager.table == DataTable.SESSIONS_SUMMARY:
+                deleted = self.get_filename_from_sessions_summary_row(row)
+                manager.deleted_sessions.add_entry([deleted])
+                del_sess = manager.deleted_sessions.df["filename"].tolist()
+                directory = str(settings.get("SESSIONS_DIRECTORY"))
+                try:
+                    global_csv_for_subject_script(
+                        row["subject"], directory, deleted_sessions=del_sess
+                    )
+                except Exception:
+                    log.error(
+                        "Session data for this subject was already deleted",
+                        exception=traceback.format_exc(),
+                    )
+            self.reload_table()
+        finally:
+            _end_edit()
+            if sel_model:
+                try:
+                    sel_model.clearSelection()
+                except RuntimeError:
+                    pass
+            self.update_buttons()
 
     def edit_task_settings(self, current_value: str, can_edit: bool) -> str:
         """Opens a dialog to edit task settings (JSON string).
@@ -1977,16 +2169,17 @@ class DfLayout(Layout):
         self.reply.setFixedWidth(max_width)
         self.reply.setFixedHeight(max_height)
 
-        if self.reply.exec_():
-            for index, line_edit in enumerate(self.line_edits):
-                name = list(new_dict.keys())[index]
-                if name == "observations":
-                    value = (
-                        line_edit.text()
-                        if line_edit.text()
-                        else line_edit.placeholderText()
-                    )
-                    new_dict[name] = value
+        if not self.reply.exec_():
+            return current_value
+        for index, line_edit in enumerate(self.line_edits):
+            name = list(new_dict.keys())[index]
+            if name == "observations":
+                value = (
+                    line_edit.text()
+                    if line_edit.text()
+                    else line_edit.placeholderText()
+                )
+                new_dict[name] = value
         return json.dumps(new_dict)
 
     def edit_next_settings(self, current_value: str) -> str:
@@ -1998,8 +2191,9 @@ class DfLayout(Layout):
         Returns:
             str: The updated settings as a JSON string.
         """
-        manager.training.load_settings_from_jsonstring(current_value)
-        new_dict = manager.training.get_dict()
+        training = _training_for_editing()
+        training.load_settings_from_jsonstring(current_value)
+        new_dict = training.get_dict()
 
         self.reply = QDialog()
         self.reply.setWindowTitle("Next settings")
@@ -2008,7 +2202,7 @@ class DfLayout(Layout):
         content_layout = QVBoxLayout(content_widget)
         self.line_edits = []
 
-        properties = manager.training.get_settings_names()
+        properties = training.get_settings_names()
         for name in properties:
             if name != "observations":
                 value = new_dict.get(name, "")
@@ -2049,16 +2243,15 @@ class DfLayout(Layout):
         self.reply.setFixedWidth(max_width)
         self.reply.setFixedHeight(max_height)
 
-        if self.reply.exec_():
-            for index, line_edit in enumerate(self.line_edits):
-                name = properties[index]
-                value = (
-                    line_edit.text()
-                    if line_edit.text()
-                    else line_edit.placeholderText()
-                )
-                new_dict[name] = value
-        _, new_dict = manager.training.correct_types_in_dict(new_dict)
+        if not self.reply.exec_():
+            return current_value
+        for index, line_edit in enumerate(self.line_edits):
+            name = properties[index]
+            value = (
+                line_edit.text() if line_edit.text() else line_edit.placeholderText()
+            )
+            new_dict[name] = value
+        _, new_dict = training.correct_types_in_dict(new_dict)
         return json.dumps(new_dict)
 
     def edit_next_session_time(self, current_value: str) -> str:
@@ -2094,10 +2287,6 @@ class DfLayout(Layout):
             return dateTimeEdit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
         else:
             return current_value
-
-    def on_data_changed(self) -> None:
-        """Saves data changes to the DataFrame when modified."""
-        self.table_view.save_changes_in_df()
 
 
 class SubjectsLayout(Layout):
@@ -2200,6 +2389,18 @@ class SubjectsLayout(Layout):
         elif self.central_layout.currentIndex() == 1:
             self.page2Layout.update_gui()
 
+    def cancel_edit(self) -> bool:
+        """Closes the edit in progress, if any, without saving it and without
+        telling (see GuiWindow.check_update_chrono).
+
+        Returns:
+            bool: True if there was an edit to close.
+        """
+        if not _Edit.open:
+            return False
+        self.page1Layout.close_edit(notify=False)
+        return True
+
     def change_layout(self) -> bool:
         if self.page1Layout.df["name"].duplicated().any():
             text = "There are repeated names in the subjects table."
@@ -2259,6 +2460,7 @@ class VideoLayout(Layout):
         """
         super().__init__(window, rows=rows, columns=columns)
         self.video_path = ""
+        self.ended = False  # the last frame was reached
         self.draw()
 
     def draw(self) -> None:
@@ -2392,6 +2594,7 @@ class VideoLayout(Layout):
                 (see frame_from_video_csv). -1 if not known.
         """
         self.video_path = path
+        self.ended = False
         try:
             self.cap = cv2.VideoCapture(path)
             self.fps = int(self.cap.get(cv2.CAP_PROP_FPS))
@@ -2535,10 +2738,18 @@ class VideoLayout(Layout):
         self.stop_button_clicked()
         self.data_from_video_change_requested.emit("")
 
+    def is_playing(self) -> bool:
+        """True while the video is playing (not paused, stopped or ended)."""
+        try:
+            return self.timer.isActive() and not self.ended
+        except (AttributeError, RuntimeError):
+            return False  # no video started yet
+
     def next_frame_slot(self) -> None:
         """Handles the next frame timer event to update the video display."""
 
         ret, frame = self.cap.read()
+        self.ended = not ret
         if ret:
             img = QImage(
                 frame.data,
