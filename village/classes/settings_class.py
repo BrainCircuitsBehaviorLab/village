@@ -92,6 +92,7 @@ class Settings:
         cam_framerate_settings: list[Setting],
         corridor_settings: list[Setting],
         box_settings: list[Setting],
+        head_fixed_settings: list[Setting],
         extra_settings: list[Setting],
         controller_settings: list[Setting],
         bpod_settings: list[Setting],
@@ -117,6 +118,7 @@ class Settings:
         self.cam_framerate_settings = cam_framerate_settings
         self.corridor_settings = corridor_settings
         self.box_settings = box_settings
+        self.head_fixed_settings = head_fixed_settings
         self.extra_settings = extra_settings
         self.controller_settings = controller_settings
         self.bpod_settings = bpod_settings
@@ -145,6 +147,7 @@ class Settings:
             + cam_framerate_settings
             + corridor_settings
             + box_settings
+            + head_fixed_settings
             + extra_settings
             + controller_settings
             + bpod_settings

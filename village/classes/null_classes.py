@@ -514,6 +514,41 @@ class NullGpio:
         return
 
 
+class NullHeadFixed:
+    """Stand-in for the head-fixed board when it is not used or not connected:
+    every command does nothing."""
+
+    error: str = ""
+    name: str = "head_fixed"
+    port: str = ""
+    magnet_on: bool = False
+
+    def __init__(self) -> None:
+        self.lick_count: list[int] = [0, 0]
+        self.on_lick: Any = None
+
+    def magnet(self, power: float) -> None:
+        return
+
+    def magnet_off(self) -> None:
+        return
+
+    def servo(self, angle: float, time_ms: int = 0) -> None:
+        return
+
+    def servo_off(self) -> None:
+        return
+
+    def status(self, timeout: float = 1.0) -> dict[str, str] | None:
+        return None
+
+    def reset_lick_count(self) -> None:
+        return
+
+    def close(self) -> None:
+        return
+
+
 class NullLEDStrip:
     """Base class for LED strip"""
 

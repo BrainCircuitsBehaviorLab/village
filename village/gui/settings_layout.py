@@ -56,6 +56,7 @@ MENU_SECTIONS = [
     "MAIN SETTINGS",
     "CORRIDOR SETTINGS",
     "BOX SETTINGS",
+    "HEAD FIXED SETTINGS",
     "CONTROLLER SETTINGS",
     "CAMERA SETTINGS",
     "SOUND SETTINGS",
@@ -72,6 +73,9 @@ MENU_TOOLTIPS: dict[str, str] = {
         "Detection thresholds, weight limits and timing for corridor access."
     ),
     "BOX SETTINGS": ("Which box motors and hardware components are present."),
+    "HEAD FIXED SETTINGS": (
+        "Head-fixed board (electromagnet, servo and lickports), connected by USB."
+    ),
     "CONTROLLER SETTINGS": (
         "Behavior controller: BPOD, or OTHER (any other microcontroller, or none)."
     ),
@@ -99,6 +103,7 @@ _CONDITIONAL_KEYS: dict[str, str] = {
     "SYNC_TYPE": "SYNC SETTINGS",
     "USE_CORRIDOR": "CORRIDOR SETTINGS",
     "USE_BOX_BOARD": "BOX SETTINGS",
+    "USE_HEAD_FIXED_BOARD": "HEAD FIXED SETTINGS",
     "CORRIDOR_AREA_EXTRA": "ADVANCED SETTINGS",
 }
 
@@ -432,6 +437,15 @@ class SettingsLayout(Layout):
                     self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
                     row += 2
 
+        elif name == "HEAD FIXED SETTINGS":
+            head_fixed_active = self._get("USE_HEAD_FIXED_BOARD") == Active.ON
+            for s in settings.head_fixed_settings:
+                if s.key != "USE_HEAD_FIXED_BOARD" and not head_fixed_active:
+                    continue
+                if self._should_show(s.key):
+                    self.create_label_and_value(row, C_COL, s, name, width=C_VAL_OFF)
+                    row += 2
+
         elif name == "CONTROLLER SETTINGS":
             for s in settings.controller_settings:
                 if self._should_show(s.key):
@@ -688,6 +702,8 @@ class SettingsLayout(Layout):
             "IR_LIGHT_BOX",
             "LED_STRIP_BOX",
             "SCALE_BOX",
+            "USE_HEAD_FIXED_BOARD",
+            "HEAD_FIXED_PORT",
             "BEHAVIOR_CONTROLLER",
             "SYNC_TYPE",
             "SAFE_DELETE",

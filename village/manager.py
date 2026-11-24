@@ -24,7 +24,7 @@ from village.classes.enums import (
     State,
     SyncType,
 )
-from village.classes.null_classes import NullCamera, NullTouch
+from village.classes.null_classes import NullCamera, NullHeadFixed, NullTouch
 from village.classes.subject import Subject
 from village.controllers.bpod_controller import bpod
 from village.custom_classes.after_session_base import AfterSessionBase
@@ -62,6 +62,7 @@ from village.settings import settings
 
 if TYPE_CHECKING:
     from village.devices.camera import Camera
+    from village.devices.head_fixed import HeadFixed
     from village.devices.touch import Touch
 
 # Seconds to wait for the task thread to stop when a session ends, before
@@ -191,6 +192,9 @@ class Manager:
 
         self.cam_box: Camera | NullCamera = NullCamera()
         self.touch: Touch | NullTouch = NullTouch()
+        # Set by main.py once the board is connected (it is not imported here:
+        # the manager is imported before the log starts)
+        self.head_fixed: HeadFixed | NullHeadFixed = NullHeadFixed()
         self.direct_functions: DirectFunctionsBase = DirectFunctionsBase()
         self.calibrations: Calibrations = Calibrations()
         self.task.calibrations = self.calibrations
@@ -370,6 +374,7 @@ class Manager:
             self.gpio_trigger.task = self.task
             self.gpio.trigger = self.gpio_trigger
             self.task.gpio = self.gpio
+            self.task.head_fixed = self.head_fixed
             self.gpio.start()
             self.scale_trigger.task = self.task
             self.scale_box.trigger = self.scale_trigger
@@ -406,6 +411,7 @@ class Manager:
         self.camera_trigger.task = self.task
         self.touch_trigger.task = self.task
         self.task.gpio = self.gpio
+        self.task.head_fixed = self.head_fixed
         # The project's triggers are for its tasks: the GPIO and scale ones are
         # not started in a calibration, and the camera and touch ones are not
         # called (see triggers_active)
@@ -456,6 +462,7 @@ class Manager:
                 self.gpio_trigger.task = self.task
                 self.gpio.trigger = self.gpio_trigger
                 self.task.gpio = self.gpio
+                self.task.head_fixed = self.head_fixed
                 self.gpio.start()
                 self.scale_trigger.task = self.task
                 self.scale_box.trigger = self.scale_trigger

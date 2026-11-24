@@ -636,6 +636,24 @@ some box components, such as LED stimuli, visible/infrared lighting, and motors.
     ),
 ]
 
+head_fixed_settings = [
+    Setting(
+        "USE_HEAD_FIXED_BOARD",
+        "OFF",
+        Active,
+        """Enables the head-fixed board (electromagnet, servo and lickports),
+connected to the Raspberry Pi by USB.""",
+    ),
+    Setting(
+        "HEAD_FIXED_PORT",
+        "auto",
+        str,
+        """The USB serial port of the head-fixed board. 'auto' finds it among the
+USB serial ports (it is the only one with a Raspberry Pi RP2 chip that answers
+PING). Or a path, e.g. '/dev/ttyACM1' or a udev symbolic link.""",
+    ),
+]
+
 extra_settings = [
     Setting(
         "FAVOURITE_TASK",
@@ -1233,6 +1251,7 @@ settings = Settings(
     cam_framerate_settings,
     corridor_settings,
     box_settings,
+    head_fixed_settings,
     extra_settings,
     controller_settings,
     bpod_settings,

@@ -8,7 +8,7 @@ import pandas as pd
 
 from village.classes.calibrations import Calibrations
 from village.classes.enums import Active, ControllerEnum, Save, State
-from village.classes.null_classes import NullCamera, NullGpio
+from village.classes.null_classes import NullCamera, NullGpio, NullHeadFixed
 from village.controllers.bpod_controller import bpod
 from village.controllers.trial_recorder import TrialRecorder
 from village.custom_classes.training_protocol_base import Settings, TrainingProtocolBase
@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from village.custom_classes.camera_area_base import CameraAreaBase
     from village.devices.camera import Camera
     from village.devices.gpio import Gpio
+    from village.devices.head_fixed import HeadFixed
 
 
 class TaskError(Exception):
@@ -201,6 +202,11 @@ class TaskBase:
         Output pin control (``set_on()`` / ``set_off()``). See the Custom GPIO
         Interaction docs for the input-pin trigger hook.
 
+    self.head_fixed : HeadFixed | NullHeadFixed
+        Head-fixed board: electromagnet (``magnet()`` / ``magnet_off()``) and
+        servo (``servo()`` / ``servo_off()``). NullHeadFixed, which does
+        nothing, if USE_HEAD_FIXED_BOARD is OFF or the board is not connected.
+
     self.custom_areas : dict[int, CameraAreaBase]
         BOX area index (1-4) -> the CameraAreaBase overriding that area's
         shape, if any (see the Custom Detection Area docs). Empty for any
@@ -331,6 +337,7 @@ class TaskBase:
 
         self.cam_box: Camera | NullCamera = NullCamera()
         self.gpio: Gpio | NullGpio = NullGpio()
+        self.head_fixed: HeadFixed | NullHeadFixed = NullHeadFixed()
         self.custom_areas: dict[int, CameraAreaBase] = {}
 
         self.info: str = ""
@@ -654,6 +661,9 @@ class TaskBase:
                     subject=self.subject,
                     exception=traceback.format_exc(),
                 )
+        # The headbar is always released when the session ends, even if the
+        # task's close() did not do it (or failed)
+        self.head_fixed.magnet_off()
         self.recorder.close()
         self.cam_box.stop_recording()
         if self.subject != "None":

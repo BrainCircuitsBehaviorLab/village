@@ -7,6 +7,7 @@ from PyQt5.QtGui import QFont, QGuiApplication, QIcon
 from PyQt5.QtWidgets import QApplication
 
 from village.devices.camera import cam_box, cam_corridor
+from village.devices.head_fixed import head_fixed
 from village.devices.sound_device import sound_device
 from village.gui.gui_window import GuiWindow
 from village.scripts.log import log
@@ -74,6 +75,7 @@ class Gui:
         cam_corridor.close()
         cam_box.close()
         sound_device.shutdown()
+        head_fixed.close()  # switches the electromagnet off
         self.q_app.quit()
         sys.exit()
 
@@ -90,6 +92,9 @@ class Gui:
         cam_corridor.stop_recording()
         cam_box.stop_recording()
         sound_device.shutdown()
+        # The board keeps its state when Village restarts: switch the
+        # electromagnet off before
+        head_fixed.close()
         settings.sync()
         self.q_app.quit()
         python = sys.executable

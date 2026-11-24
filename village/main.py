@@ -77,6 +77,7 @@ from village.devices.chip import (
     motor_corridor1,
     motor_corridor2,
 )
+from village.devices.head_fixed import head_fixed
 from village.devices.rfid import rfid
 from village.devices.scale import scale, scale_box
 from village.devices.screen import screen
@@ -134,6 +135,7 @@ device_errors = [
     ("telegram_bot", telegram_bot),
     ("screen", screen),
     ("bpod", bpod),
+    ("head_fixed", head_fixed),
 ]
 # scale and temp_sensor share the same I2C bus/board as chip_corridor: if the
 # corridor chip failed to connect, the board itself is likely disconnected, so
@@ -158,6 +160,7 @@ for device_name, device in device_errors:
 if failed_devices:
     manager.errors += "Error connecting to: " + ", ".join(failed_devices)
 manager.touch = touch
+manager.head_fixed = head_fixed
 
 
 # create a secondary thread

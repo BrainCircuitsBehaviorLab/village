@@ -12,5 +12,4 @@ recursive-include resources *.png
 recursive-include resources *.ico
 recursive-include village *.png
 
-prune village/pybpodapi/v2.2
-prune village/pybpodapi/v2.3
+prune village/head_fixed_firmware

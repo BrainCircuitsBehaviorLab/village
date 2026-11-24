@@ -81,6 +81,7 @@ These lists cover the home cages, the corridor and the Raspberry Pi. The operant
     *   A 2-conductor cable of the required length, 22 AWG (0.35 mm²) or thicker
 *   2 x 5x20 mm Fuses (250V, 5A)
 *   2 x Extra-tall GPIO Header Spacer/Extension (for vertical clearance between the Pi and the Main HAT, and between the Main HAT and the optional Raspberry Pi DAC Pro)
+*   *(Optional — only for head-fixed tasks):* 1 x Custom Head-Fixed Board, with a 5V power supply (5.5 × 2.1 mm barrel plug) and a micro-USB cable to the Raspberry Pi (see [Head-Fixed Board](../devices/head_fixed.md))
 
 ---
 
@@ -97,7 +98,7 @@ These lists cover the home cages, the corridor and the Raspberry Pi. The operant
 
 *   📦 **[Download 3D Printing Files (.STL)][3D]**
 *   🛠️ **[Download CAD/CNC Machining Files (.DXF)][CAD]**
-*   🔌 **[Download PCB Gerber & Schematics Files][PCB]**
+*   🔌 **[Download PCB Gerber & Schematics Files][PCB]** (Main HAT, Corridor Board, Box Board and Head-Fixed Board: Gerber, BOM and component positions, ready to order assembled boards)
 
 ---
 
