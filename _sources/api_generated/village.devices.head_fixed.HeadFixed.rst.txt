@@ -1,0 +1,32 @@
+HeadFixed
+=========
+
+.. currentmodule:: village.devices.head_fixed
+
+.. autoclass:: HeadFixed
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~HeadFixed.__init__
+      ~HeadFixed.close
+      ~HeadFixed.magnet
+      ~HeadFixed.magnet_off
+      ~HeadFixed.reset_lick_count
+      ~HeadFixed.servo
+      ~HeadFixed.servo_off
+      ~HeadFixed.status
+   
+   
+
+   
+   
+   

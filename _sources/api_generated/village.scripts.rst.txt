@@ -31,7 +31,9 @@
    :template: custom_module_template.rst
    :recursive:
 
+   benchmark_ledstrip_latency
    check_gpio_in
+   check_head_fixed
    error_queue
    global_csv_for_subject
    import_all

@@ -28,6 +28,7 @@ null\_classes
       NullChip
       NullCollection
       NullGpio
+      NullHeadFixed
       NullLEDStrip
       NullMotor
       NullScale

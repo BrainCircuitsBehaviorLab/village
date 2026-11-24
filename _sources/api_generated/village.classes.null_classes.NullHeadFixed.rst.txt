@@ -1,0 +1,42 @@
+NullHeadFixed
+=============
+
+.. currentmodule:: village.classes.null_classes
+
+.. autoclass:: NullHeadFixed
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~NullHeadFixed.__init__
+      ~NullHeadFixed.close
+      ~NullHeadFixed.magnet
+      ~NullHeadFixed.magnet_off
+      ~NullHeadFixed.reset_lick_count
+      ~NullHeadFixed.servo
+      ~NullHeadFixed.servo_off
+      ~NullHeadFixed.status
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :no-index:
+   
+      ~NullHeadFixed.error
+      ~NullHeadFixed.magnet_on
+      ~NullHeadFixed.name
+      ~NullHeadFixed.port
+   
+   

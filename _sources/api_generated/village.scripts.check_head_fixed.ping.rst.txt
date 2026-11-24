@@ -1,0 +1,6 @@
+ping
+====
+
+.. currentmodule:: village.scripts.check_head_fixed
+
+.. autofunction:: ping

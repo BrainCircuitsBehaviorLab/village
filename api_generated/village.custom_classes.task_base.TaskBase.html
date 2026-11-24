@@ -172,6 +172,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/head_fixed.html">Head-Fixed Board</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
@@ -254,6 +255,7 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullChip.html">NullChip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullCollection.html">NullCollection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullGpio.html">NullGpio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullHeadFixed.html">NullHeadFixed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullLEDStrip.html">NullLEDStrip</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullMotor.html">NullMotor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.classes.null_classes.NullScale.html">NullScale</a></li>
@@ -360,6 +362,11 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.devices.gpio.Gpio.html">Gpio</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.devices.head_fixed.html">head_fixed</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.head_fixed.get_head_fixed.html">get_head_fixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.devices.head_fixed.HeadFixed.html">HeadFixed</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.devices.led_strip.html">led_strip</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
 </ul>
@@ -414,9 +421,19 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="village.scripts.html">scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.benchmark_ledstrip_latency.html">benchmark_ledstrip_latency</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.benchmark_ledstrip_latency.main.html">main</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.check_gpio_in.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.check_head_fixed.html">check_head_fixed</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.check_head_fixed.main.html">main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.check_head_fixed.open_board.html">open_board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.check_head_fixed.ping.html">ping</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.error_queue.html">error_queue</a></li>
@@ -700,6 +717,10 @@ between hardware values and real-world units.</p>
 </dd>
 <dt>self.gpio<span class="classifier">Gpio | NullGpio</span></dt><dd><p>Output pin control (<code class="docutils literal notranslate"><span class="pre">set_on()</span></code> / <code class="docutils literal notranslate"><span class="pre">set_off()</span></code>). See the Custom GPIO
 Interaction docs for the input-pin trigger hook.</p>
+</dd>
+<dt>self.head_fixed<span class="classifier">HeadFixed | NullHeadFixed</span></dt><dd><p>Head-fixed board: electromagnet (<code class="docutils literal notranslate"><span class="pre">magnet()</span></code> / <code class="docutils literal notranslate"><span class="pre">magnet_off()</span></code>) and
+servo (<code class="docutils literal notranslate"><span class="pre">servo()</span></code> / <code class="docutils literal notranslate"><span class="pre">servo_off()</span></code>). NullHeadFixed, which does
+nothing, if USE_HEAD_FIXED_BOARD is OFF or the board is not connected.</p>
 </dd>
 <dt>self.custom_areas<span class="classifier">dict[int, CameraAreaBase]</span></dt><dd><p>BOX area index (1-4) -&gt; the CameraAreaBase overriding that area’s
 shape, if any (see the Custom Detection Area docs). Empty for any
@@ -1109,7 +1130,7 @@ and success status.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=d0b62daa"></script>
+      <script src="../_static/documentation_options.js?v=667a9a13"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>

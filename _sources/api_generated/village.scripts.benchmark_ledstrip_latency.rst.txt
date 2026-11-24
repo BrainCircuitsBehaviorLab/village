@@ -1,0 +1,34 @@
+benchmark\_ledstrip\_latency
+============================
+
+.. automodule:: village.scripts.benchmark_ledstrip_latency
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      main
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

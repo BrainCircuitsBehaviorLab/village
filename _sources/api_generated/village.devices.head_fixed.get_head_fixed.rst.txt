@@ -1,0 +1,6 @@
+get\_head\_fixed
+================
+
+.. currentmodule:: village.devices.head_fixed
+
+.. autofunction:: get_head_fixed

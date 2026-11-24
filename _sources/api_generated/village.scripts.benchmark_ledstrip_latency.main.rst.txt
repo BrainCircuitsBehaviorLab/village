@@ -1,0 +1,6 @@
+main
+====
+
+.. currentmodule:: village.scripts.benchmark_ledstrip_latency
+
+.. autofunction:: main

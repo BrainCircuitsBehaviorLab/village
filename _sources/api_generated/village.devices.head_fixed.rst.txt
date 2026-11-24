@@ -1,0 +1,42 @@
+head\_fixed
+===========
+
+.. automodule:: village.devices.head_fixed
+   :no-members:
+   :no-undoc-members:
+   :no-inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom_base_template.rst
+   
+      get_head_fixed
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom_class_template.rst
+   
+      HeadFixed
+   
+   
+
+   
+   
+   
+
+
+

@@ -16,3 +16,4 @@ TASK DEVICES
     devices/gpio.md
     devices/scale.md
     devices/motors.md
+    devices/head_fixed.md
