@@ -716,6 +716,8 @@ data-aria-dark="Switch to auto color mode">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">can_edit_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_edit_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Checks if data editing is allowed in this state.</p>
+<p>Only from WAIT: editing switches to MANUAL_MODE, so a second edit
+cannot start while another one is still open.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if editing is allowed.</p>
@@ -934,7 +936,7 @@ and a manual task or a calibration may run with no subject at all.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=667a9a13"></script>
+      <script src="../_static/documentation_options.js?v=1f8f55be"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
