@@ -436,6 +436,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_head_fixed.ping.html">ping</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.csv_tail.html">csv_tail</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.csv_tail.CsvTail.html">CsvTail</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
@@ -605,7 +609,7 @@ data-aria-dark="Switch to auto color mode">
 <section id="main">
 <h2>MAIN</h2>
 <p><img alt="Main Training village screen" src="../_images/main_screen.webp" /></p>
-<p>The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> screen is left open with no user activity for 5 minutes (<code class="docutils literal notranslate"><span class="pre">SCREENSAVE_TIME</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>), the system automatically returns to this screen, to stop rendering the camera images. The other screens stay open.</p>
+<p>The default screen where the Raspberry Pi does not perform any rendering to display videos, although videos continue to be recorded and saved in the background. If the <code class="docutils literal notranslate"><span class="pre">MONITOR</span></code> or the <code class="docutils literal notranslate"><span class="pre">DATA</span></code> screen is left open with no user activity for 5 minutes (<code class="docutils literal notranslate"><span class="pre">SCREENSAVE_TIME</span></code> in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">ADVANCED</span> <span class="pre">SETTINGS</span></code>), the system automatically returns to this screen, to stop rendering the camera images or refreshing the tables. <code class="docutils literal notranslate"><span class="pre">DATA</span></code> stays open while a video is playing. An edit of the tables (in <code class="docutils literal notranslate"><span class="pre">DATA</span></code> or <code class="docutils literal notranslate"><span class="pre">SUBJECTS</span></code>) left open that long is closed without saving it. The other screens stay open.</p>
 </section>
 <hr class="docutils" />
 <section id="monitor">
@@ -719,7 +723,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1f8f55be"></script>
+      <script src="../_static/documentation_options.js?v=6a79e198"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>

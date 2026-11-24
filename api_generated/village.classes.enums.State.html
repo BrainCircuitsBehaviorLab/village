@@ -436,6 +436,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.check_head_fixed.ping.html">ping</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.csv_tail.html">csv_tail</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.csv_tail.CsvTail.html">CsvTail</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.error_queue.html">error_queue</a></li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.global_csv_for_subject.main.html">main</a></li>
@@ -730,6 +734,24 @@ cannot start while another one is still open.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">can_edit_data_in_session</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_edit_data_in_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Checks if the subjects and sessions tables can be edited while a
+session is running, without changing the state.</p>
+<p>Only the rows of the other subjects: the subject in the box cannot be
+edited until it is back home. Not while the session is being saved, nor
+during the sync: the edit windows are closed then.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if editing is allowed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">can_calibrate_scale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/village/classes/enums.html#State.can_calibrate_scale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Checks if scale calibration is allowed in this state.</p>
 <dl class="field-list simple">
@@ -936,7 +958,7 @@ and a manual task or a calibration may run with no subject at all.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=1f8f55be"></script>
+      <script src="../_static/documentation_options.js?v=6a79e198"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>

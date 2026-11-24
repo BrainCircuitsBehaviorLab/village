@@ -22,6 +22,7 @@ State
       ~State.get_index_from_string
       ~State.can_exit
       ~State.can_edit_data
+      ~State.can_edit_data_in_session
       ~State.can_calibrate_scale
       ~State.is_heavy_work
       ~State.can_restart_corridor_video

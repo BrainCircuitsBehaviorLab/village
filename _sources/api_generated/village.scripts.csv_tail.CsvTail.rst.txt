@@ -1,0 +1,27 @@
+CsvTail
+=======
+
+.. currentmodule:: village.scripts.csv_tail
+
+.. autoclass:: CsvTail
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~CsvTail.__init__
+      ~CsvTail.read
+      ~CsvTail.reset
+   
+   
+
+   
+   
+   
