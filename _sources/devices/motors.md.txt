@@ -3,7 +3,8 @@
 The Training Village drives standard hobby servomotors through **PCA9685** PWM
 controllers over I2C: one chip on the corridor board (up to 4 door motors) and one
 on the box board (up to 7 motors). Each motor is calibrated individually and stored
-in its own `MOTORx_VALUES` setting.
+in its own `MOTORx_VALUES` setting. The connector and PWM channel of each motor are
+listed in [Pinout & Connections](../resources/pinout.md).
 
 ---
 

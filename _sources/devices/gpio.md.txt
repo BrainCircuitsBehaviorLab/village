@@ -49,8 +49,8 @@ physical pin position on the 40-pin header — see the pinout below.
 #### Pins
 
 `GPIO_IN` is BCM 26 and `GPIO_OUT` is BCM 27. They are fixed (they cannot be
-changed from `SETTINGS`), and both are free — neither the Main HAT nor the Audio HAT
-uses them.
+changed from `SETTINGS`). [Pinout & Connections](../resources/pinout.md)
+lists every pin used by the boards, and the free ones.
 
 `GPIO_IN` (BCM 26) is already wired, at the PCB level, to the **Switch
 Connector** on the Box Board: it lets a mechanical switch drive the pin

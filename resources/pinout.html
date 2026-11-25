@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" data-accent-color="violet" data-content_root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Pinout &amp; Connections - Training village</title><link rel="shortcut icon" href="../_static/favicon.svg"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="SOFTWARE RESOURCES" href="../software.html" /><link rel="prev" title="Assembly Guide (Rat Version)" href="hardware_rats.html" />
+      <link rel="canonical" href="https://BrainCircuitsBehaviorLab.github.io/village/resources/pinout.html" /><script>
+    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
+    setColorMode(localStorage._theme||"light");
+  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
+    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=2ceb65ce" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5947d73b" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
+}
+</style>
+    
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://BrainCircuitsBehaviorLab.github.io/village/resources/pinout.html"/>
+  <meta property="og:title" content="Pinout &amp; Connections"/>
+    <meta name="twitter:card" content="summary"/>
+  </head>
+<body><div class="sy-head">
+  <div class="sy-head-blur"></div>
+  <div class="sy-head-inner sy-container mx-auto">
+    <a class="sy-head-brand" href="../index.html">
+      <img class="light-logo" src="../_static/logo_light.svg" alt="village" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/logo_dark.svg" alt="village" height="28" loading="lazy" />
+      <strong>village</strong>
+    </a>
+    <div class="sy-head-nav" id="head-nav">
+      <nav class="sy-head-links"><ul><li class="link"><a href="../overview/system.html">Documentation</a></li><li class="link"><a href="../api_index.html">API</a></li><li class="link"><a href="list_of_parts.html">Resources</a></li><li class="link"><a href="../faq/faq.html">FAQ</a></li></ul></nav>
+      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <kbd>/</kbd>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/BrainCircuitsBehaviorLab/village" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
+    </div>
+    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
+data-aria-auto="Switch to light color mode"
+data-aria-light="Switch to dark color mode"
+data-aria-dark="Switch to auto color mode">
+<i class="i-lucide theme-icon"></i>
+</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
+        <div class="hamburger">
+          <span class="hamburger_1"></span>
+          <span class="hamburger_2"></span>
+          <span class="hamburger_3"></span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="0"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../documentation_index.html">DOCUMENTATION</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overview_index.html">SYSTEM OVERVIEW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../overview/system.html">Detailed System Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../overview/requirements.html">System Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../preparation_index.html">PREPARATION &amp; SETUP</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/initial.html">Initial Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/launching.html">Launching the TV Application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/access.html">Remote Access Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/telegram.html">Telegram Bot Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/backup.html">Data Persistence &amp; Backups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/heartbeat.html">Remote Heartbeat Monitoring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preparation/animal.html">Animal Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../system_operation_index.html">SYSTEM OPERATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/GUI.html">GUI Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/settings.html">System Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/subject.html">Subject Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/manual.html">Manual Task Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/corridor.html">Monitor &amp; Hardware Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/detection.html">Animal Detection &amp; Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data_visualization.html">Data Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/data.html">Saved Data and Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/timing.html">Timing, Clocks &amp; Latencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_operation/state_machine.html">System Logic (State Machine)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../calibrations_index.html">CALIBRATIONS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/overview.html">Calibration Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/water.html">Water Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/sound.html">Sound Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/camera.html">Camera Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/thresholds.html">Corridor Threshold Calibration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../calibrations/optogrid.html">OptoGrid Calibration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../protocol_index.html">PROTOCOL &amp; TASK DESIGN</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/project_structure.html">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/creating.html">The Training Protocol</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/training_protocol.html">Training Protocol Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_bpod.html">Tasks (Bpod)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_bpod.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_1_habituation.html">bpod_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_2_passive.html">bpod_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_3_active.html">bpod_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_4_center_initiated.html">bpod_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_5_introduce_penalty.html">bpod_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_6_delay.html">bpod_6_delay.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_area2_sound.html">bpod_area2_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_touchscreen.html">bpod_touchscreen.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_global_timer.html">bpod_global_timer.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_outputs_and_events.html">bpod_outputs_and_events.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/bpod_purge_ports.html">bpod_purge_ports.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_arduino.html">Tasks (Arduino)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_arduino.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/village_arduino.html">village_arduino.ino</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_1_habituation.html">arduino_1_habituation.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_2_passive.html">arduino_2_passive.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_3_active.html">arduino_3_active.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_4_center_initiated.html">arduino_4_center_initiated.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_5_introduce_penalty.html">arduino_5_introduce_penalty.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/arduino_6_delay.html">arduino_6_delay.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_raspberry.html">Tasks (Raspberry Only)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/tasks_raspberry.html">Tasks Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_area1_sound.html">raspberry_area1_sound.py</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/raspberry_stimulus_menu.html">raspberry_stimulus_menu.py</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/tasks_reference.html">Task Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/functions.html">Direct Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/direct_functions.html">Direct Functions Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../devices_index.html">TASK DEVICES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../devices/camera.html">Camera</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_draw.html">Camera Draw Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/camera_trigger.html">Camera Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/sound.html">Sound</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/sound_functions.html">Sound Functions Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/screen.html">Screen &amp; Touchscreen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/video_functions.html">Video Functions Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/touch_trigger.html">Touchscreen Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/led_strip.html">LED Strip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/gpio.html">GPIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/gpio_trigger.html">GPIO Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/scale.html">Scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/scale_trigger.html">Scale Trigger Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/motors.html">Motors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../devices/head_fixed.html">Head-Fixed Board</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../plotting_index.html">PLOTTING</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../protocols/plots.html">Create Custom Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/online_plot.html">Online Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/session_plot.html">Session Plot Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/subject_plot.html">Subject Plot Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced_customization_index.html">ADVANCED CUSTOMIZATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/scheduled.html">Custom Scheduled Actions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/after_session.html">After Session Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../examples/change_cycle.html">Change Cycle Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/telegram_commands.html">Custom Telegram Commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/telegram_commands.html">Custom Telegram Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/calibrations.html">Custom Calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/led_calibration.html">LED Calibration Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced_customization/water_calibration_arduino.html">Water Calibration with Arduino</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/auto.html">Custom AutoNoMouse</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../examples/auto_follow_the_light.html">AutoNoMouse Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../advanced_customization/homecage_camera_control.html">Homecage Camera Control</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting_index.html">MAINTENANCE &amp; ALARMS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/cleaning.html">Cleaning &amp; Routine Maintenance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/alarm.html">Alarm System Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting/troubleshooting.html">Troubleshooting Guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_index.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.calibration.html">calibration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.html">corridor_threshold_detection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.area_count.html">area_count</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.scan_video.html">scan_video</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.calibration.corridor_threshold_detection.select_from_grays.html">select_from_grays</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.classes.html">classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.calibrations.html">calibrations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.calibrations.Calibrations.html">Calibrations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.enums.html">enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Actions.html">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Active.html">Active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.AreaActive.html">AreaActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Color.html">Color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ControllerEnum.html">ControllerEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Cycle.html">Cycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.CycleDay.html">CycleDay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.DataTable.html">DataTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Info.html">Info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.OldVersion.html">OldVersion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PixelType.html">PixelType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.PullResistor.html">PullResistor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Samplerate.html">Samplerate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.Save.html">Save</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.ScreenActive.html">ScreenActive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.State.html">State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SuperEnum.html">SuperEnum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.enums.SyncType.html">SyncType</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.null_classes.html">null_classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullBpod.html">NullBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCalibrationBase.html">NullCalibrationBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCamera.html">NullCamera</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullChip.html">NullChip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullCollection.html">NullCollection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullGpio.html">NullGpio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullHeadFixed.html">NullHeadFixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullLEDStrip.html">NullLEDStrip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullMotor.html">NullMotor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullScale.html">NullScale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoftCodeToBpod.html">NullSoftCodeToBpod</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullSoundDevice.html">NullSoundDevice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullStateMachine.html">NullStateMachine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTelegramBot.html">NullTelegramBot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTempSensor.html">NullTempSensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.null_classes.NullTouch.html">NullTouch</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.classes.settings_class.html">settings_class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Setting.html">Setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.classes.settings_class.Settings.html">Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.custom_classes.html">custom_classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.html">auto_no_mouse_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutoNoMouseBase.html">AutoNoMouseBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.auto_no_mouse_base.AutonomouseParam.html">AutonomouseParam</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_task_base.html">calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.calibration_task_base.CalibrationTaskBase.html">CalibrationTaskBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.html">camera_area_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_area_base.CameraAreaBase.html">CameraAreaBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.html">camera_draw_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_draw_base.CameraDrawBase.html">CameraDrawBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.html">camera_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.camera_trigger_base.CameraTriggerBase.html">CameraTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.html">direct_functions_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.direct_functions_base.DirectFunctionsBase.html">DirectFunctionsBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.html">gpio_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.gpio_trigger_base.GpioTriggerBase.html">GpioTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.html">online_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.online_plot_base.OnlinePlotBase.html">OnlinePlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.html">scale_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.scale_trigger_base.ScaleTriggerBase.html">ScaleTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.html">session_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.session_plot_base.SessionPlotBase.html">SessionPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.html">subject_plot_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.subject_plot_base.SubjectPlotBase.html">SubjectPlotBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.html">task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodEvent.html">BpodEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.BpodOutput.html">BpodOutput</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskBase.html">TaskBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.task_base.TaskError.html">village.custom_classes.task_base.TaskError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.html">telegram_command_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.telegram_command_base.TelegramCommandBase.html">TelegramCommandBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.html">touch_trigger_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.touch_trigger_base.TouchTriggerBase.html">TouchTriggerBase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.html">training_protocol_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingProtocolBase.html">TrainingProtocolBase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.training_protocol_base.TrainingError.html">village.custom_classes.training_protocol_base.TrainingError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.html">water_calibration_task_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.custom_classes.water_calibration_task_base.WaterCalibrationTaskBase.html">WaterCalibrationTaskBase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.devices.html">devices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.chip.html">chip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor.html">get_motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_if_active.html">get_motor_if_active</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.get_motor_old.html">get_motor_old</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.parse_motor_values.html">parse_motor_values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.LED.html">LED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.Motor.html">Motor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.chip.MotorOld.html">MotorOld</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.gpio.html">gpio</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.gpio.Gpio.html">Gpio</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.head_fixed.html">head_fixed</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.head_fixed.get_head_fixed.html">get_head_fixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.head_fixed.HeadFixed.html">HeadFixed</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.led_strip.html">led_strip</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.led_strip.get_led_strip.html">get_led_strip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.motor_old.html">motor_old</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.angle_to_ns.html">angle_to_ns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.find_pwmchip.html">find_pwmchip</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.motor_old.PwmPin.html">PwmPin</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.optogrid.html">optogrid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.og_connect.html">og_connect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.IMUConfig.html">IMUConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoGrid.html">OptoGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.optogrid.OptoSetting.html">OptoSetting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.scale.html">scale</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.get_scale.html">get_scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.scale.Scale.html">Scale</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.screen.html">screen</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.get_screen.html">get_screen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.screen.VideoWorker.html">VideoWorker</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.sound_device.html">sound_device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_device.html">get_sound_device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.get_sound_devices.html">get_sound_devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.match_sound_device_setting.html">match_sound_device_setting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.sound_device.SoundDevice.html">SoundDevice</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.html">temp_sensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.get_temp_sensor.html">get_temp_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.devices.temp_sensor.TempSensor.html">TempSensor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.gui.html">gui</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.plots.html">plots</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.html">temperatures_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.temperatures_plot.temperatures_plot.html">temperatures_plot</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.plots.weights_plot.html">weights_plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.plots.weights_plot.weights_plot.html">weights_plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_generated/village.scripts.html">scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.benchmark_ledstrip_latency.html">benchmark_ledstrip_latency</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.benchmark_ledstrip_latency.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_head_fixed.html">check_head_fixed</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_head_fixed.main.html">main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_head_fixed.open_board.html">open_board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_head_fixed.ping.html">ping</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.csv_tail.html">csv_tail</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.csv_tail.CsvTail.html">CsvTail</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.error_queue.html">error_queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.html">global_csv_for_subject</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.global_csv_for_subject.main.html">main</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.log.html">log</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.log.Log.html">Log</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.html">parse_bpod_messages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_input_to_tuple_override.html">parse_input_to_tuple_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple.html">parse_output_to_tuple</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.parse_bpod_messages.parse_output_to_tuple_override.html">parse_output_to_tuple_override</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.playground.html">playground</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.measure_softcode_latency.html">measure_softcode_latency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.playground.BpodWithLatencyTest.html">BpodWithLatencyTest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.safe_write.html">safe_write</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.safe_write.write_csv_atomic.html">write_csv_atomic</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.time_utils.html">time_utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.time_utils.TimeUtils.html">TimeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../resources_index.html">RESOURCES</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../hardware.html">HARDWARE RESOURCES</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="list_of_parts.html">List of Parts &amp; Design Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html">Assembly Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware_large.html">Assembly Guide (with Eco-HAB)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware_rats.html">Assembly Guide (Rat Version)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Pinout &amp; Connections</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../software.html">SOFTWARE RESOURCES</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="software_installation.html">Manual Software Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image.html">Raspberry Pi Disk Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bpod_firmware.html">Custom Bpod Firmware</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq_index.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../faq_index2.html">FAQ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq/faq.html">Frequently Asked Questions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#raspberry-pi-header">Raspberry Pi Header</a></li>
+<li><a class="reference internal" href="#i2c-bus">I2C Bus</a></li>
+<li><a class="reference internal" href="#main-hat">Main HAT</a></li>
+<li><a class="reference internal" href="#corridor-board">Corridor Board</a></li>
+<li><a class="reference internal" href="#box-board">Box Board</a></li>
+<li><a class="reference internal" href="#cameras-and-usb">Cameras and USB</a></li>
+</ul>
+</div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name">village</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../resources_index.html"><span itemprop="name">RESOURCES</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="2" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../hardware.html"><span itemprop="name">HARDWARE RESOURCES</span></a>
+        <span>/</span>
+        <meta itemprop="position" content="3" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Pinout &amp; Connections</strong>
+        <meta itemprop="position" content="4" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="relative min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+  <div class="copy-page-wrapper relative pb-4 lg:absolute lg:top-8 lg:right-6 xl:right-12">
+  <div id="copy-page-trigger">
+    <button
+      type="button"
+      class="js-copy px-3 py-1 inline-flex items-center gap-1"
+      data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/resources/pinout.md.txt"
+    >
+      <i class="i-lucide" data-icon="copy"></i>
+      <span>Copy page</span>
+    </button>
+    <button class="js-menu px-2 py-1" type="button" aria-label="More actions"
+      aria-haspopup="menu" aria-expanded="false" aria-controls="copy-page-content">
+      <i class="i-lucide chevron-down"></i>
+    </button>
+  </div>
+  <div id="copy-page-content" role="menu" aria-orientation="vertical" aria-hidden="true">
+    <div role="presentation">
+      <div class="flex flex-col" role="group">
+        <button class="js-copy" type="button" role="menuitem"
+          data-url="https://BrainCircuitsBehaviorLab.github.io/village/_sources/resources/pinout.md.txt">
+          <span class="iconify-icon">
+            <i class="i-lucide" data-icon="copy"></i>
+          </span>
+          <span>Copy page</span>
+        </button>
+        <a role="menuitem" href="https://BrainCircuitsBehaviorLab.github.io/village/_sources/resources/pinout.md.txt" target="_blank" rel="nofollow"><iconify-icon icon="bi:markdown"></iconify-icon>
+            <span>View as Markdown</span></a><a role="menuitem" href="https://chatgpt.com/?hints=search&q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/resources/pinout.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:openai"></iconify-icon>
+          <span>Open in ChatGPT</span>
+        </a><a role="menuitem" href="https://claude.ai/new?q=Read%20https%3A//BrainCircuitsBehaviorLab.github.io/village/_sources/resources/pinout.md.txt%20so%20I%20can%20ask%20questions%20about%20it." target="_blank" rel="nofollow">
+          <iconify-icon icon="bi:claude"></iconify-icon>
+          <span>Open in Claude</span>
+        </a></div>
+    </div>
+  </div>
+</div><article class="yue" role="main">
+          <section id="pinout-connections">
+<span id="pinout--connections"></span><h1>Pinout &amp; Connections</h1>
+<p>Where every signal goes: which Raspberry Pi pins the boards use, the I2C addresses, and
+what each connector of the Corridor Board and the Box Board does. It is taken from the
+design files of the boards (see <a class="reference internal" href="list_of_parts.html"><span class="std std-doc">List of Parts &amp; Design Files</span></a>).</p>
+<p>GPIO pins are given by their <strong>BCM number</strong> (as in the settings and the code), with the
+physical position on the 40-pin header in parentheses.</p>
+<hr class="docutils" />
+<section id="raspberry-pi-header">
+<h2>Raspberry Pi Header</h2>
+<a class="reference internal image-reference" href="../_images/pinout.webp"><img alt="Raspberry Pi GPIO pinout (BCM numbering)" src="../_images/pinout.webp" style="width: 100%;" />
+</a>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>BCM (pin)</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>Used by</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>GPIO2 (3)</p></td>
+<td><p>I2C SDA (bus 1)</p></td>
+<td><p>Main HAT, to both satellite boards. Also the Audio HAT (an I2C bus can be shared)</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPIO3 (5)</p></td>
+<td><p>I2C SCL (bus 1)</p></td>
+<td><p>Same as GPIO2</p></td>
+</tr>
+<tr class="row-even"><td><p>GPIO10 (19)</p></td>
+<td><p>SPI0 MOSI (<code class="docutils literal notranslate"><span class="pre">/dev/spidev0.0</span></code>)</p></td>
+<td><p>Main HAT, to the LED strip connector of the Box Board</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPIO15 (10)</p></td>
+<td><p>UART RX (<code class="docutils literal notranslate"><span class="pre">/dev/ttyAMA0</span></code>)</p></td>
+<td><p>Main HAT, from the RFID reader of the Corridor Board</p></td>
+</tr>
+<tr class="row-even"><td><p>GPIO26 (37)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code></p></td>
+<td><p>Main HAT, from the Switch connector of the Box Board</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPIO27 (13)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GPIO_OUT</span></code></p></td>
+<td><p>Free: not wired by the Main HAT. The Audio HAT only routes it to its P1 connector (see the note below)</p></td>
+</tr>
+<tr class="row-even"><td><p>GPIO18, 19, 20, 21 (12, 35, 38, 40)</p></td>
+<td><p>I2S (digital audio)</p></td>
+<td><p>Audio HAT (Raspberry Pi DAC Pro)</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPIO7, 8, 9, 11 (26, 24, 21, 23)</p></td>
+<td><p>SPI0 CE1, CE0, MISO, SCLK</p></td>
+<td><p>Not wired by any board, but taken by the SPI interface enabled for the LED strip</p></td>
+</tr>
+<tr class="row-even"><td><p>GPIO14 (8)</p></td>
+<td><p>UART TX</p></td>
+<td><p>Not wired by any board, but taken by the serial port enabled for the RFID reader</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPIO0, 1 (27, 28)</p></td>
+<td><p>HAT ID EEPROM</p></td>
+<td><p>Reserved by Raspberry Pi for the identification EEPROM of HATs</p></td>
+</tr>
+<tr class="row-even"><td><p>GPIO12, 13 (32, 33)</p></td>
+<td><p>Hardware PWM</p></td>
+<td><p>Only with the old HAT (<code class="docutils literal notranslate"><span class="pre">OLD_VERSION</span></code>): corridor doors 1 and 2. Free with the current HAT</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Free pins:</strong> GPIO4 (7), GPIO5 (29), GPIO6 (31), GPIO12 (32), GPIO13 (33), GPIO16 (36),
+GPIO17 (11), GPIO22 (15), GPIO23 (16), GPIO24 (18) and GPIO25 (22). All the pins of the
+header are also available on top of the HAT stack (see <a class="reference internal" href="../devices/gpio.html"><span class="std std-doc">GPIO</span></a>).</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>According to the official documentation of the Raspberry Pi DAC Pro, its P1 connector
+(the line output) “carries GPIO27, MUTE signal (headphone detect)”. The DAC Pro does
+not drive GPIO27: with it mounted, the pin follows the Raspberry Pi’s own pull-up and
+pull-down resistors (checked with <code class="docutils literal notranslate"><span class="pre">pinctrl</span></code>), so it can be used as <code class="docutils literal notranslate"><span class="pre">GPIO_OUT</span></code>. Just
+leave the GPIO27 pin of the P1 connector unconnected.</p>
+</div>
+<p>The power pins of the header (5 V, 3.3 V and GND) are not listed. The Main HAT and the
+satellite boards take their power from the 5 V supply connected to the Main HAT.</p>
+</section>
+<hr class="docutils" />
+<section id="i2c-bus">
+<h2>I2C Bus</h2>
+<p>All the I2C devices share bus 1 (GPIO2/3). The Main HAT carries it to both satellite
+boards through the Ethernet cables. On each board, a PCA9306 level translator connects
+it to the PWM chip, which runs at 5 V.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Address</p></th>
+<th class="head"><p>Device</p></th>
+<th class="head"><p>Board</p></th>
+<th class="head"><p>Setting</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x44</p></td>
+<td><p>Temperature and humidity sensor (SHT31)</p></td>
+<td><p>Corridor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMP_SENSOR_ADDRESS</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>0x48</p></td>
+<td><p>Scale ADC (ADS1114)</p></td>
+<td><p>Corridor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SCALE_ADDRESS</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>0x49</p></td>
+<td><p>Scale ADC (ADS1114), optional box scale</p></td>
+<td><p>Box</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SCALE_BOX_ADDRESS</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>0x4C</p></td>
+<td><p>DAC chip (PCM5242), optional</p></td>
+<td><p>Audio HAT (DAC Pro)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>0x55</p></td>
+<td><p>PWM chip (PCA9685): motors and lights</p></td>
+<td><p>Corridor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CHIP_CORRIDOR_ADDRESS</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>0x6A</p></td>
+<td><p>PWM chip (PCA9685): motors and lights</p></td>
+<td><p>Box</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CHIP_BOX_ADDRESS</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The addresses are set by the boards (address pins wired on the PCB): the settings only
+tell the software where to find each device. When the bus is scanned
+(<code class="docutils literal notranslate"><span class="pre">i2cdetect</span> <span class="pre">-y</span> <span class="pre">1</span></code>):</p>
+<ul class="simple">
+<li><p><strong>0x4C</strong> shows as <code class="docutils literal notranslate"><span class="pre">UU</span></code>: the address is in use by the sound driver, so it is not
+probed.</p></li>
+<li><p><strong>0x70</strong> also appears: both PCA9685 answer at this address too, their “all call”
+address, enabled by default. It is not used.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="main-hat">
+<h2>Main HAT</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Connector</p></th>
+<th class="head"><p>Function</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>J8</p></td>
+<td><p>40-pin header, to the Raspberry Pi</p></td>
+</tr>
+<tr class="row-odd"><td><p>J7</p></td>
+<td><p>Power input (5 V)</p></td>
+</tr>
+<tr class="row-even"><td><p>J1, J3</p></td>
+<td><p>Power outputs to the satellite boards, each with its own 5 A fuse (F1, F2). Both carry the same supply: either one can go to either board</p></td>
+</tr>
+<tr class="row-odd"><td><p>J2 (<code class="docutils literal notranslate"><span class="pre">BBOX</span></code>)</p></td>
+<td><p>Ethernet connector to the Box Board (J1)</p></td>
+</tr>
+<tr class="row-even"><td><p>J4 (<code class="docutils literal notranslate"><span class="pre">Corridor</span></code>)</p></td>
+<td><p>Ethernet connector to the Corridor Board (J8)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The Ethernet connectors carry I2C and the other signals, not a network. Each pin of the
+connector on the Main HAT goes to the same pin of the connector on the satellite board,
+so standard (straight) Ethernet cables are used.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>RJ45 pin</p></th>
+<th class="head"><p>To the Box Board (J2)</p></th>
+<th class="head"><p>To the Corridor Board (J4)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1, 3, 5, 7</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>I2C SCL</p></td>
+<td><p>RFID data (to GPIO15)</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>I2C SDA</p></td>
+<td><p>I2C SCL</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>LED strip data (from GPIO10)</p></td>
+<td><p>I2C SDA</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>Switch (to GPIO26)</p></td>
+<td><p>Not connected</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="corridor-board">
+<h2>Corridor Board</h2>
+<p>The labels are the ones printed on the board. The PWM channels are those of its PCA9685
+(0x55), set in the code (<code class="docutils literal notranslate"><span class="pre">MOTOR1_CORRIDOR_INDEX</span></code>, …, in <code class="docutils literal notranslate"><span class="pre">village/settings.py</span></code>; they
+are not shown in <code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code>).</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Connector (label)</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>PWM channel</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>J8 (<code class="docutils literal notranslate"><span class="pre">Corridor</span></code>)</p></td>
+<td><p>Ethernet connector, from the Main HAT (J4)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>J10</p></td>
+<td><p>Power input (5 V), from the Main HAT</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>J4 (<code class="docutils literal notranslate"><span class="pre">RFID</span></code>)</p></td>
+<td><p>RFID reader: 3.3 V supply, and its data to GPIO15</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>J6 (<code class="docutils literal notranslate"><span class="pre">SCALE</span></code>)</p></td>
+<td><p>Load cell of the corridor scale</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>J5 (<code class="docutils literal notranslate"><span class="pre">Servo</span> <span class="pre">1</span></code>)</p></td>
+<td><p>Motor 1: door 1, the one closer to the home cage</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td><p>J2 (<code class="docutils literal notranslate"><span class="pre">Servo</span> <span class="pre">2</span></code>)</p></td>
+<td><p>Motor 2: door 2, the one closer to the operant box</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-even"><td><p>J3 (<code class="docutils literal notranslate"><span class="pre">Servo</span> <span class="pre">3</span></code>)</p></td>
+<td><p>Motor 3 (optional)</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>J9 (<code class="docutils literal notranslate"><span class="pre">Servo</span> <span class="pre">4</span></code>)</p></td>
+<td><p>Motor 4 (optional)</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>J1 (<code class="docutils literal notranslate"><span class="pre">LED</span></code>)</p></td>
+<td><p>Visible light, switched by a MOSFET</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-odd"><td><p>J7 (8-way terminal block)</p></td>
+<td><p>Infrared lights: 4 outputs, each a <code class="docutils literal notranslate"><span class="pre">+</span></code>/<code class="docutils literal notranslate"><span class="pre">−</span></code> pair</p></td>
+<td><p>0 to 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The temperature and humidity sensor (SHT31) is mounted on the board itself.</p>
+</section>
+<hr class="docutils" />
+<section id="box-board">
+<h2>Box Board</h2>
+<p>The PWM channels are those of its PCA9685 (0x6A), set in the code (<code class="docutils literal notranslate"><span class="pre">MOTOR1_BOX_INDEX</span></code>,
+…).</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Connector (label)</p></th>
+<th class="head"><p>Function</p></th>
+<th class="head"><p>PWM channel</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>J1</p></td>
+<td><p>Ethernet connector, from the Main HAT (J2)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>J12</p></td>
+<td><p>Power input (5 V), from the Main HAT</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>J3 (<code class="docutils literal notranslate"><span class="pre">Servo1</span></code>)</p></td>
+<td><p>Motor 1</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>J9 (<code class="docutils literal notranslate"><span class="pre">Servo2</span></code>)</p></td>
+<td><p>Motor 2</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>J4 (<code class="docutils literal notranslate"><span class="pre">Servo3</span></code>)</p></td>
+<td><p>Motor 3</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-odd"><td><p>J5 (<code class="docutils literal notranslate"><span class="pre">Servo4</span></code>)</p></td>
+<td><p>Motor 4</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td><p>J6 (<code class="docutils literal notranslate"><span class="pre">Servo5</span></code>)</p></td>
+<td><p>Motor 5</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-odd"><td><p>J11 (<code class="docutils literal notranslate"><span class="pre">Servo6</span></code>)</p></td>
+<td><p>Motor 6</p></td>
+<td><p>9</p></td>
+</tr>
+<tr class="row-even"><td><p>J8 (<code class="docutils literal notranslate"><span class="pre">Servo7</span></code>)</p></td>
+<td><p>Motor 7</p></td>
+<td><p>10</p></td>
+</tr>
+<tr class="row-odd"><td><p>J2 (<code class="docutils literal notranslate"><span class="pre">LED</span></code>)</p></td>
+<td><p>Visible light, switched by a MOSFET</p></td>
+<td><p>11</p></td>
+</tr>
+<tr class="row-even"><td><p>J7 (8-way terminal block)</p></td>
+<td><p>Infrared lights: 4 outputs, each a <code class="docutils literal notranslate"><span class="pre">+</span></code>/<code class="docutils literal notranslate"><span class="pre">−</span></code> pair</p></td>
+<td><p>0 to 3</p></td>
+</tr>
+<tr class="row-odd"><td><p>J10 (<code class="docutils literal notranslate"><span class="pre">LED</span></code>, 3 pins)</p></td>
+<td><p>Addressable LED strip: <code class="docutils literal notranslate"><span class="pre">+</span></code> (5 V), <code class="docutils literal notranslate"><span class="pre">S</span></code> (data, from GPIO10), <code class="docutils literal notranslate"><span class="pre">−</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>J13 (<code class="docutils literal notranslate"><span class="pre">Switch</span></code>)</p></td>
+<td><p>Switch: 3.3 V and the switch signal, to GPIO26 (<code class="docutils literal notranslate"><span class="pre">GPIO_IN</span></code>)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>J14</p></td>
+<td><p>Load cell of the optional box scale</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The servo connectors have the pins <code class="docutils literal notranslate"><span class="pre">−</span></code> (GND), <code class="docutils literal notranslate"><span class="pre">+</span></code> (5 V) and <code class="docutils literal notranslate"><span class="pre">S</span></code> (signal), on both boards.
+The infrared outputs have inverted logic (the <code class="docutils literal notranslate"><span class="pre">−</span></code> side is switched to ground), which the
+software takes into account.</p>
+<p>A switch on J13 connects the 3.3 V pin to the signal pin when it is activated, so
+<code class="docutils literal notranslate"><span class="pre">GPIO_IN_PULL</span></code> must be <code class="docutils literal notranslate"><span class="pre">DOWN</span></code> (the default) (see <a class="reference internal" href="../devices/gpio.html"><span class="std std-doc">GPIO</span></a>).</p>
+</section>
+<hr class="docutils" />
+<section id="cameras-and-usb">
+<h2>Cameras and USB</h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Device</p></th>
+<th class="head"><p>Where</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Box camera</p></td>
+<td><p>One of the two camera connectors of the Raspberry Pi 5: camera 0 for the software (<code class="docutils literal notranslate"><span class="pre">CAM_BOX_INDEX</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Corridor camera</p></td>
+<td><p>The other camera connector: camera 1 (<code class="docutils literal notranslate"><span class="pre">CAM_CORRIDOR_INDEX</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Behavioral controller (Bpod, Arduino…)</p></td>
+<td><p>The bottom USB port next to the Ethernet jack, which the system links to <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> (see <a class="reference internal" href="software_installation.html"><span class="std std-doc">Software Installation</span></a>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Head-Fixed Board (optional)</p></td>
+<td><p>Any USB port: it is found automatically (see <a class="reference internal" href="../devices/head_fixed.html"><span class="std std-doc">Head-Fixed Board</span></a>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="hardware_rats.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Assembly Guide (Rat Version)</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="../software.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">SOFTWARE RESOURCES</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
+</div>
+<footer class="sy-foot">
+  <div class="sy-foot-inner sy-container mx-auto">
+    <div class="sy-foot-reserved md:flex justify-between items-center">
+      <div class="sy-foot-copyright">
+        <p>© <a href="https://braincircuitsbehavior.org">Brain Circuits and Behavior Lab</a></p>
+        <p>Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://shibuya.lepture.com">Shibuya theme</a>.</p>
+      </div>
+      <div style="font-size: 0.85rem; display: flex; gap: 1.2rem;">
+        <a href="https://github.com/BrainCircuitsBehaviorLab/village">GitHub</a>
+        <span>Contact: <a href="mailto:braincircuitsbehavior@gmail.com">braincircuitsbehavior@gmail.com</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+      <script src="../_static/documentation_options.js?v=c8d96840"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+      <script src="../_static/shibuya.js?v=50760d75"></script>
+      <script src="../_static/lightbox.js?v=687af727"></script>
+      <script src="../_static/chatbot-widget.js?v=733c9952"></script></body>
+</html>

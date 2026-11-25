@@ -71,7 +71,8 @@ A custom main HAT is mounted onto the Raspberry Pi 5 to handle power and data
 distribution. It receives a 5V power supply and connects to two specialized
 satellite boards using Ethernet cables for data and separate jack-connector cables
 for power. All the parts are listed in [List of Parts & Design Files](../resources/list_of_parts.md),
-and the [Assembly Guide](../resources/hardware.md) shows how to put them together.
+the [Assembly Guide](../resources/hardware.md) shows how to put them together, and
+[Pinout & Connections](../resources/pinout.md) shows where every signal goes.
 
 ---
 

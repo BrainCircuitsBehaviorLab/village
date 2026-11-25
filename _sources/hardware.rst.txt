@@ -13,3 +13,4 @@ HARDWARE RESOURCES
     resources/hardware.md
     resources/hardware_large.md
     resources/hardware_rats.md
+    resources/pinout.md
