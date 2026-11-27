@@ -29,6 +29,7 @@ from PyQt5.QtWidgets import QWidget
 from village.classes.null_classes import NullCamera
 from village.custom_classes.camera_area_base import CameraAreaBase
 from village.manager import manager
+from village.scripts.camera_stream import CameraStream
 from village.scripts.error_queue import error_queue
 from village.scripts.log import log
 from village.scripts.time_utils import TimeUtils, time_utils
@@ -317,6 +318,11 @@ class Camera:
 
         self.task_is_running = False
 
+        # live view in a web browser (BOX only, CAM_BOX_STREAM)
+        self.stream: CameraStream | None = None
+        if name == "BOX" and settings.get("CAM_BOX_STREAM") == Active.ON:
+            self.start_stream()
+
         self.cam.start()
         self.watchdog_timer.start()
 
@@ -452,6 +458,38 @@ class Camera:
         ae_mode, ev, _mode_name = decode_exposure_setting(value)
         self.cam.set_controls({"ExposureValue": ev, "AeExposureMode": ae_mode})
 
+    def start_stream(self) -> None:
+        """Starts the live view of the camera in a web browser, at
+        http://<raspberry address>:<CAM_BOX_STREAM_PORT>. It shows the frames
+        as they are recorded, with the status bar and the drawings."""
+        port = int(settings.get("CAM_BOX_STREAM_PORT"))
+        # picamera2's XBGR8888 and BGR888 give the channels in RGB order
+        rgb_order = self.config["main"]["format"] in ("XBGR8888", "BGR888")
+        try:
+            self.stream = CameraStream(
+                port,
+                int(settings.get("CAM_PREVIEWS_FRAMERATE")),
+                settings.get("SYSTEM_NAME") + " " + self.name,
+                rgb_order,
+            )
+        except OSError as e:
+            try:
+                error_queue.put_nowait(
+                    (
+                        "cam",
+                        "Camera "
+                        + self.name
+                        + ": could not start the web view on port "
+                        + str(port)
+                        + " ("
+                        + str(e)
+                        + ").",
+                        "",
+                    )
+                )
+            except queue.Full:
+                pass
+
     def start_camera(self) -> None:
         """Starts the camera capture."""
         self.cam.start()
@@ -469,6 +507,8 @@ class Camera:
         camera can't be used after this.
         """
         self.watchdog_timer.stop()
+        if self.stream is not None:
+            self.stream.close()
         try:
             self.cam.stop()
         except Exception:
@@ -922,6 +962,8 @@ class Camera:
                     manager.camera_draw.draw(self)
                 except Exception:
                     self._report_user_code_error("camera draw")
+                if self.stream is not None:
+                    self.stream.offer(self.frame)
                 self.write_csv()
                 if self.name == "BOX" and self.is_recording:
                     self.areas_box_ok()

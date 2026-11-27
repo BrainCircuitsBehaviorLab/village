@@ -25,7 +25,7 @@ Some initial settings must be configured before the system can be used.  Navigat
     ```
 
 
-*   **`CAMERA SETTINGS`:** Enable or disable real-time animal tracking for the operant box camera. If computer-vision-based tracking is not required for your paradigm, disabling it will significantly reduce CPU overhead. While resolution and frame-rate parameters are customizable, the default settings (**640x480 at 30 fps**) are highly optimized and thoroughly validated for low-latency processing.
+*   **`CAMERA SETTINGS`:** Enable or disable real-time animal tracking for the operant box camera. If computer-vision-based tracking is not required for your paradigm, disabling it will significantly reduce CPU overhead. While resolution and frame-rate parameters are customizable, the default settings (**640x480 at 30 fps**) are highly optimized and thoroughly validated for low-latency processing. `CAM_BOX_STREAM` shows the box camera live in a web browser of another computer on the same network (see [Camera](../devices/camera.md#watching-the-box-from-another-computer)).
 
 *   **`SOUND SETTINGS`:** If your experimental protocols involve acoustic stimuli, enable `USE_SOUNDCARD` and select the **RPi DAC Pro** hardware profile from the `SOUND_DEVICE` dropdown menu.
 

@@ -21,6 +21,33 @@ to the animal's position. The lens distortion of the cameras can be measured wit
 
 ---
 
+### Watching the Box from Another Computer
+
+The box camera can be watched live in a web browser, from any computer on the same
+network as the Raspberry Pi, without a remote desktop. Turn on `CAM_BOX_STREAM`
+(`SETTINGS` → `CAMERA SETTINGS`; the system restarts) and open
+`http://<address>:8000` in the browser, where `<address>` is the address of the
+Raspberry Pi (shown by `hostname -I` in a terminal of the Pi) and `8000` is
+`CAM_BOX_STREAM_PORT`.
+
+- It shows the same image as the recorded video, with the status bar and the
+  drawings, at `CAM_PREVIEWS_FRAMERATE` frames per second.
+- Several boxes can be watched at the same time, one browser tab or window for each.
+  The name of the tab is the `SYSTEM_NAME` of the box.
+- It costs nothing while nobody is watching. While someone is, each frame sent is
+  compressed once (a few milliseconds), whatever the number of viewers, without
+  delaying the camera.
+- If the system restarts, the page reconnects by itself.
+
+```{admonition} No password
+:class: warning
+Anyone who can reach the Raspberry Pi on the network can open the page. Use it on
+the network of the lab, and do not make the port reachable from the internet: to
+watch from outside, connect to the lab network first (e.g. with a VPN).
+```
+
+---
+
 ### Using It in Tasks
 
 The simplest way to overlay text on the camera feed is to call `write_text()` from

@@ -488,9 +488,26 @@ also be affected and should therefore be measured.""",
         "CAM_PREVIEWS_FRAMERATE",
         5,
         int,
-        """The number of frames per second for both camera previews. This setting does
-not affect the frame rate at which videos are recorded. The recommended value is 5 fps,
-which provides a clear view of the system activity while keeping CPU usage low.""",
+        """The number of frames per second for both camera previews (also for the web
+view of the box camera, CAM_BOX_STREAM). This setting does not affect the frame rate at
+which videos are recorded. The recommended value is 5 fps, which provides a clear view
+of the system activity while keeping CPU usage low.""",
+    ),
+    Setting(
+        "CAM_BOX_STREAM",
+        "OFF",
+        Active,
+        """Shows the box camera live in a web browser of any computer on the same
+network, at http://<raspberry address>:<CAM_BOX_STREAM_PORT> (the address is given by
+hostname -I). It shows the same image as the recorded video, at
+CAM_PREVIEWS_FRAMERATE. The page has no password: do not make it reachable from the
+internet.""",
+    ),
+    Setting(
+        "CAM_BOX_STREAM_PORT",
+        8000,
+        int,
+        "The network port of the web view of the box camera (CAM_BOX_STREAM).",
     ),
 ]
 

@@ -79,7 +79,9 @@ MENU_TOOLTIPS: dict[str, str] = {
     "CONTROLLER SETTINGS": (
         "Behavior controller: BPOD, or OTHER (any other microcontroller, or none)."
     ),
-    "CAMERA SETTINGS": ("Camera framerates, resolution and tracking settings."),
+    "CAMERA SETTINGS": (
+        "Camera framerates, resolution, tracking and web view settings."
+    ),
     "SOUND SETTINGS": "Soundcard and audio device configuration.",
     "SCREEN SETTINGS": ("Screen or touchscreen configuration for behavioral stimuli."),
     "LED STRIP SETTINGS": ("LED strip or LED matrix configuration for visual stimuli."),
@@ -105,12 +107,14 @@ _CONDITIONAL_KEYS: dict[str, str] = {
     "USE_BOX_BOARD": "BOX SETTINGS",
     "USE_HEAD_FIXED_BOARD": "HEAD FIXED SETTINGS",
     "CORRIDOR_AREA_EXTRA": "ADVANCED SETTINGS",
+    "CAM_BOX_STREAM": "CAMERA SETTINGS",
 }
 
 # Settings hidden unless another setting has a specific value.
 _HIDDEN_UNLESS: dict[str, tuple[str, Any]] = {
     "AREA_EXTRA_HOURS": ("CORRIDOR_AREA_EXTRA", Active.ON),
     "COLOR_EXTRA": ("CORRIDOR_AREA_EXTRA", Active.ON),
+    "CAM_BOX_STREAM_PORT": ("CAM_BOX_STREAM", Active.ON),
 }
 
 # Enum settings rendered as a combo box instead of a toggle button
@@ -676,6 +680,8 @@ class SettingsLayout(Layout):
             "CAM_CORRIDOR_FRAMERATE",
             "CAM_BOX_FRAMERATE",
             "CAM_BOX_RESOLUTION",
+            "CAM_BOX_STREAM",
+            "CAM_BOX_STREAM_PORT",
             "DETECTION_DURATION",
             "TIME_BETWEEN_DETECTIONS",
             "MIN_WEIGHT_THRESHOLD",
