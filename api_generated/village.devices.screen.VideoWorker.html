@@ -425,6 +425,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.benchmark_ledstrip_latency.main.html">main</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="village.scripts.camera_stream.html">camera_stream</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="village.scripts.camera_stream.CameraStream.html">CameraStream</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="village.scripts.check_gpio_in.main.html">main</a></li>
@@ -618,7 +622,7 @@ Maintains synchronization with real-time based on the video’s FPS.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_latest_qimage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QImage.__or__()'</span> <span class="pre">id='137391009670288'&gt;</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.get_latest_qimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">get_latest_qimage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.QImage.__or__()'</span> <span class="pre">id='137418746414544'&gt;</span></span></span><a class="reference internal" href="../_modules/village/devices/screen.html#VideoWorker.get_latest_qimage"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Returns the current video frame.</p>
 <p>The decode loop paces itself to real time, so the latest decoded frame
 is the one to show now. paintGL samples this at the vsync rate.</p>
@@ -685,7 +689,7 @@ is the one to show now. paintGL samples this at the vsync rate.</p>
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c8d96840"></script>
+      <script src="../_static/documentation_options.js?v=5e5a3daf"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>

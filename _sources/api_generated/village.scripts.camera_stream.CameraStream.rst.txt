@@ -1,0 +1,27 @@
+CameraStream
+============
+
+.. currentmodule:: village.scripts.camera_stream
+
+.. autoclass:: CameraStream
+   :members:
+   :show-inheritance:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :no-index:
+   
+      ~CameraStream.__init__
+      ~CameraStream.close
+      ~CameraStream.offer
+   
+   
+
+   
+   
+   

@@ -32,6 +32,7 @@
    :recursive:
 
    benchmark_ledstrip_latency
+   camera_stream
    check_gpio_in
    check_head_fixed
    csv_tail

@@ -425,6 +425,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.benchmark_ledstrip_latency.main.html">main</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.camera_stream.html">camera_stream</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.camera_stream.CameraStream.html">CameraStream</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
@@ -605,7 +609,7 @@ data-aria-dark="Switch to auto color mode">
 <p>The system automatically creates a symlink named <code class="docutils literal notranslate"><span class="pre">/dev/controller</span></code> pointing directly to any device connected to the bottom USB port adjacent to the Raspberry Pi’s native RJ45 Ethernet jack.</p>
 </div>
 </li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>:</strong> Enable or disable real-time animal tracking for the operant box camera. If computer-vision-based tracking is not required for your paradigm, disabling it will significantly reduce CPU overhead. While resolution and frame-rate parameters are customizable, the default settings (<strong>640x480 at 30 fps</strong>) are highly optimized and thoroughly validated for low-latency processing.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>:</strong> Enable or disable real-time animal tracking for the operant box camera. If computer-vision-based tracking is not required for your paradigm, disabling it will significantly reduce CPU overhead. While resolution and frame-rate parameters are customizable, the default settings (<strong>640x480 at 30 fps</strong>) are highly optimized and thoroughly validated for low-latency processing. <code class="docutils literal notranslate"><span class="pre">CAM_BOX_STREAM</span></code> shows the box camera live in a web browser of another computer on the same network (see <a class="reference internal" href="../devices/camera.html#watching-the-box-from-another-computer"><span class="std std-ref">Camera</span></a>).</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SOUND</span> <span class="pre">SETTINGS</span></code>:</strong> If your experimental protocols involve acoustic stimuli, enable <code class="docutils literal notranslate"><span class="pre">USE_SOUNDCARD</span></code> and select the <strong>RPi DAC Pro</strong> hardware profile from the <code class="docutils literal notranslate"><span class="pre">SOUND_DEVICE</span></code> dropdown menu.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">SCREEN</span> <span class="pre">SETTINGS</span></code>:</strong> If your behavioral arena features a display module or touchscreen interface for visual stimulus presentation, specify the hardware type in <code class="docutils literal notranslate"><span class="pre">USE_SCREEN</span></code> and calibrate the remaining parameters.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">LED</span> <span class="pre">STRIP</span> <span class="pre">SETTINGS</span></code>:</strong> Electrical configuration for the LED strip enabled via <code class="docutils literal notranslate"><span class="pre">LED_STRIP_BOX</span></code> in <code class="docutils literal notranslate"><span class="pre">BOX</span> <span class="pre">SETTINGS</span></code>: the <code class="docutils literal notranslate"><span class="pre">SPI_DEVICE</span></code> path, <code class="docutils literal notranslate"><span class="pre">NUMBER_OF_LEDS</span></code>, <code class="docutils literal notranslate"><span class="pre">SPI_SPEED_KHZ</span></code>, and the pixel color order (<code class="docutils literal notranslate"><span class="pre">PIXEL_TYPE</span></code>).</p></li>
@@ -657,7 +661,7 @@ data-aria-dark="Switch to auto color mode">
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c8d96840"></script>
+      <script src="../_static/documentation_options.js?v=5e5a3daf"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>

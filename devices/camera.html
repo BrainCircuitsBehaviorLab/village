@@ -425,6 +425,10 @@ data-aria-dark="Switch to auto color mode">
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.benchmark_ledstrip_latency.main.html">main</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.camera_stream.html">camera_stream</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.camera_stream.CameraStream.html">CameraStream</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.html">check_gpio_in</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.default_pull.html">default_pull</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api_generated/village.scripts.check_gpio_in.main.html">main</a></li>
@@ -509,6 +513,7 @@ data-aria-dark="Switch to auto color mode">
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
 <li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#watching-the-box-from-another-computer">Watching the Box from Another Computer</a></li>
 <li><a class="reference internal" href="#using-it-in-tasks">Using It in Tasks</a></li>
 <li><a class="reference internal" href="#reacting-to-the-animals-position">Reacting to the Animal&#8217;s Position</a></li>
 <li><a class="reference internal" href="#custom-detection-area">Custom Detection Area</a><ul>
@@ -607,6 +612,32 @@ The animal’s position is only tracked when <code class="docutils literal notra
 (<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>), which is needed for <code class="docutils literal notranslate"><span class="pre">TRIGGER</span></code> areas and for reacting
 to the animal’s position. The lens distortion of the cameras can be measured with the
 <a class="reference internal" href="../calibrations/camera.html"><span class="std std-doc">Camera Calibration</span></a>.</p>
+</section>
+<hr class="docutils" />
+<section id="watching-the-box-from-another-computer">
+<h2>Watching the Box from Another Computer</h2>
+<p>The box camera can be watched live in a web browser, from any computer on the same
+network as the Raspberry Pi, without a remote desktop. Turn on <code class="docutils literal notranslate"><span class="pre">CAM_BOX_STREAM</span></code>
+(<code class="docutils literal notranslate"><span class="pre">SETTINGS</span></code> → <code class="docutils literal notranslate"><span class="pre">CAMERA</span> <span class="pre">SETTINGS</span></code>; the system restarts) and open
+<code class="docutils literal notranslate"><span class="pre">http://&lt;address&gt;:8000</span></code> in the browser, where <code class="docutils literal notranslate"><span class="pre">&lt;address&gt;</span></code> is the address of the
+Raspberry Pi (shown by <code class="docutils literal notranslate"><span class="pre">hostname</span> <span class="pre">-I</span></code> in a terminal of the Pi) and <code class="docutils literal notranslate"><span class="pre">8000</span></code> is
+<code class="docutils literal notranslate"><span class="pre">CAM_BOX_STREAM_PORT</span></code>.</p>
+<ul class="simple">
+<li><p>It shows the same image as the recorded video, with the status bar and the
+drawings, at <code class="docutils literal notranslate"><span class="pre">CAM_PREVIEWS_FRAMERATE</span></code> frames per second.</p></li>
+<li><p>Several boxes can be watched at the same time, one browser tab or window for each.
+The name of the tab is the <code class="docutils literal notranslate"><span class="pre">SYSTEM_NAME</span></code> of the box.</p></li>
+<li><p>It costs nothing while nobody is watching. While someone is, each frame sent is
+compressed once (a few milliseconds), whatever the number of viewers, without
+delaying the camera.</p></li>
+<li><p>If the system restarts, the page reconnects by itself.</p></li>
+</ul>
+<div class="warning admonition">
+<p class="admonition-title">No password</p>
+<p>Anyone who can reach the Raspberry Pi on the network can open the page. Use it on
+the network of the lab, and do not make the port reachable from the internet: to
+watch from outside, connect to the lab network first (e.g. with a VPN).</p>
+</div>
 </section>
 <hr class="docutils" />
 <section id="using-it-in-tasks">
@@ -1015,7 +1046,7 @@ pixel count: <code class="docutils literal notranslate"><span class="pre">0</spa
     </div>
   </div>
 </footer>
-      <script src="../_static/documentation_options.js?v=c8d96840"></script>
+      <script src="../_static/documentation_options.js?v=5e5a3daf"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
